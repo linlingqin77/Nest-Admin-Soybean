@@ -33,25 +33,26 @@ export class DecryptInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest<Request>();
 
-    // 检查请求头中的加密密钥（前端发送的格式）
-    const encryptKey = request.headers['encrypt-key'] as string;
+    // 检查请求头是否标识为加密请求
+    const isEncrypted = request.headers['x-encrypted'] === 'true';
 
-    if (!encryptKey || !request.body) {
+    if (!isEncrypted || !request.body) {
       return next.handle();
     }
 
     try {
-      // 前端发送的是：headers['encrypt-key'] = RSA加密的AES密钥，body = AES加密的数据字符串
-      const encryptedData = typeof request.body === 'string' ? request.body : JSON.stringify(request.body);
+      const { encryptedKey, encryptedData } = request.body;
 
-      // 解密请求体
-      const decryptedBody = this.cryptoService.decryptRequest(encryptKey, encryptedData);
-      request.body = decryptedBody;
+      if (encryptedKey && encryptedData) {
+        // 解密请求体
+        const decryptedBody = this.cryptoService.decryptRequest(encryptedKey, encryptedData);
+        request.body = decryptedBody;
 
-      // 保存 AES 密钥用于响应加密
-      (request as any).__aesKey = this.cryptoService['rsaDecrypt'](encryptKey);
+        // 保存 AES 密钥用于响应加密
+        (request as any).__aesKey = this.cryptoService['rsaDecrypt'](encryptedKey);
 
-      this.logger.debug('Request body decrypted successfully');
+        this.logger.debug('Request body decrypted successfully');
+      }
     } catch (error) {
       this.logger.error('Failed to decrypt request body:', error.message);
       // 解密失败时，保持原始请求体，让后续处理决定如何响应
@@ -89,10 +90,10 @@ export class EncryptInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
 
-    // 检查请求头中是否有加密密钥（表示前端请求了加密）
-    const encryptKey = request.headers['encrypt-key'] as string;
+    // 检查请求头是否要求加密响应
+    const requireEncrypt = request.headers['x-encrypted'] === 'true';
 
-    if (!encryptKey) {
+    if (!requireEncrypt) {
       return next.handle();
     }
 
@@ -103,8 +104,8 @@ export class EncryptInterceptor implements NestInterceptor {
           const aesKey = (request as any).__aesKey;
           const encrypted = this.cryptoService.encryptResponse(data, aesKey);
 
-          // 设置响应头，返回加密的 AES 密钥给前端
-          response.setHeader('encrypt-key', encryptKey);
+          // 设置响应头标识
+          response.setHeader('X-Encrypted', 'true');
 
           this.logger.debug('Response body encrypted successfully');
 
