@@ -26,7 +26,7 @@ const naiveDateLocale = computed(() => {
 });
 
 const watermarkProps = computed<WatermarkProps>(() => {
-  const appTitle = import.meta.env.VITE_APP_TITLE || 'RuoYi-Vue-Plus';
+  const appTitle = import.meta.env.VITE_APP_TITLE || 'Nest-Admin';
   const content =
     themeStore.watermark.enableUserName && userInfo.user?.userName
       ? `${userInfo.user?.nickName}@${appTitle} ${userInfo.user?.userName}`
@@ -49,13 +49,8 @@ const watermarkProps = computed<WatermarkProps>(() => {
 </script>
 
 <template>
-  <NConfigProvider
-    :theme="naiveDarkTheme"
-    :theme-overrides="themeStore.naiveTheme"
-    :locale="naiveLocale"
-    :date-locale="naiveDateLocale"
-    class="h-full"
-  >
+  <NConfigProvider :theme="naiveDarkTheme" :theme-overrides="themeStore.naiveTheme" :locale="naiveLocale"
+    :date-locale="naiveDateLocale" class="h-full">
     <AppProvider>
       <RouterView class="bg-layout" />
       <NWatermark v-if="themeStore.watermark.visible" v-bind="watermarkProps" />

@@ -61,7 +61,7 @@
   },
   "watermark": {
     "visible": false,
-    "text": "SoybeanAdmin",
+    "text": "Nest-Admin",
     "enableUserName": false,
     "enableTime": true,
     "timeFormat": "YYYY-MM-DD HH:mm:ss"
