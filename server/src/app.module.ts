@@ -7,7 +7,9 @@ import { JwtAuthGuard } from 'src/common/guards/auth.guard';
 import { PermissionGuard } from 'src/common/guards/permission.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { TenantMiddleware, TenantGuard, TenantModule } from './common/tenant';
-import { CryptoModule, DecryptInterceptor, EncryptInterceptor } from './common/crypto';
+import { CryptoModule, DecryptInterceptor } from './common/crypto';
+import { LoggerModule } from './common/logger';
+import { ClsModule } from './common/cls';
 
 import { MainModule } from './module/main/main.module';
 import { UploadModule } from './module/upload/upload.module';
@@ -32,6 +34,10 @@ import { PrismaModule } from './prisma/prisma.module';
         abortEarly: false,
       },
     }),
+    // Pino 日志模块
+    LoggerModule,
+    // CLS 上下文模块 (Request ID)
+    ClsModule,
     // 数据库改为 Prisma + PostgreSQL
     PrismaModule,
     // 多租户模块
@@ -48,15 +54,10 @@ import { PrismaModule } from './prisma/prisma.module';
     ResourceModule,
   ],
   providers: [
-    // 解密拦截器 (最先执行)
+    // 解密拦截器 (解密前端加密请求)
     {
       provide: APP_INTERCEPTOR,
       useClass: DecryptInterceptor,
-    },
-    // 加密拦截器 (最后执行)
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: EncryptInterceptor,
     },
     // 租户守卫
     {

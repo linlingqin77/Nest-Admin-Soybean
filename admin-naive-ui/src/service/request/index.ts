@@ -3,12 +3,11 @@ import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, createFlatRequest } from '@s
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg, sessionStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
-import { decryptBase64, decryptWithAes, encryptBase64, encryptWithAes, generateAesKey } from '@/utils/crypto';
-import { decrypt, encrypt } from '@/utils/jsencrypt';
+import { encryptBase64, encryptWithAes, generateAesKey } from '@/utils/crypto';
+import { encrypt } from '@/utils/jsencrypt';
 import { getAuthorization, handleExpiredRequest, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
 
-const encryptHeader = import.meta.env.VITE_HEADER_FLAG || 'encrypt-key';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
@@ -48,14 +47,6 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     isBackendSuccess(response) {
       // when the backend response code is "0000"(default), it means the request is success
       // to change this logic by yourself, you can modify the `VITE_SERVICE_SUCCESS_CODE` in `.env` file
-      if (import.meta.env.VITE_APP_ENCRYPT === 'Y' && response.headers[encryptHeader]) {
-        const keyStr = response.headers[encryptHeader];
-        const data = String(response.data);
-        const base64Str = decrypt(keyStr);
-        const aesKey = decryptBase64(base64Str.toString());
-        const decryptData = decryptWithAes(data, aesKey);
-        response.data = JSON.parse(decryptData);
-      }
       return String(response.data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },
     async onBackendFail(response, instance) {
@@ -216,11 +207,21 @@ function handleEncrypt(config: InternalAxiosRequestConfig) {
     if (isEncrypt && (config.method === 'post' || config.method === 'put')) {
       // 生成一个 AES 密钥
       const aesKey = generateAesKey();
-      config.headers[encryptHeader] = encrypt(encryptBase64(aesKey));
-      config.data =
+      // 使用 RSA 加密 AES 密钥
+      const encryptedKey = encrypt(encryptBase64(aesKey));
+      // 使用 AES 加密请求数据
+      const encryptedData =
         typeof config.data === 'object'
           ? encryptWithAes(JSON.stringify(config.data), aesKey)
           : encryptWithAes(config.data, aesKey);
+
+      // 设置加密标识头
+      config.headers['x-encrypted'] = 'true';
+      // 请求体改为统一格式
+      config.data = {
+        encryptedKey,
+        encryptedData
+      };
     }
   }
 }

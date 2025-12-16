@@ -38,7 +38,7 @@ type GenTableWithColumns = GenTable & { columns: GenTableColumn[] };
 
 @Injectable()
 export class ToolService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   private async fetchTableDetail(where: Prisma.GenTableWhereInput): Promise<GenTableWithColumns | null> {
     const criteria: Prisma.GenTableWhereInput = { delFlag: '0', ...where };
@@ -447,6 +447,15 @@ export class ToolService {
       })),
       total: Number(totalRes[0]?.total ?? 0),
     });
+  }
+
+  /**
+   * 获取数据源名称列表
+   * @returns
+   */
+  async getDataNames() {
+    // 目前只支持单数据源，返回默认数据源名称
+    return ResultData.ok(['master']);
   }
 
   /**

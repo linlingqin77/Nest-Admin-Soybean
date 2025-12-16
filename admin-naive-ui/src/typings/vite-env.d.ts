@@ -113,10 +113,10 @@ declare namespace Env {
     /** The launch editor */
     readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
     readonly VITE_APP_CLIENT_ID?: string;
+    /** 接口加密功能开关 */
     readonly VITE_APP_ENCRYPT?: CommonType.YesOrNo;
-    readonly VITE_HEADER_FLAG?: string;
+    /** RSA 公钥 (用于加密 AES 密钥发送给后端) */
     readonly VITE_APP_RSA_PUBLIC_KEY?: string;
-    readonly VITE_APP_RSA_PRIVATE_KEY?: string;
     readonly VITE_APP_WEBSOCKET: CommonType.YesOrNo;
     readonly VITE_APP_SSE: CommonType.YesOrNo;
   }

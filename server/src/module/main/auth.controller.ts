@@ -14,7 +14,7 @@ import { ClientInfo, ClientInfoDto } from 'src/common/decorators/common.decorato
 import { NotRequireAuth, User, UserDto } from 'src/module/system/user/user.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
 import { TenantContext, IgnoreTenant } from 'src/common/tenant';
-import { SkipDecrypt, SkipEncrypt } from 'src/common/crypto';
+import { SkipDecrypt } from 'src/common/crypto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 /**
@@ -50,7 +50,6 @@ export class AuthController {
   @Get('tenant/list')
   @NotRequireAuth()
   @IgnoreTenant()
-  @SkipEncrypt()
   async getTenantList(): Promise<ResultData> {
     const tenantEnabled = this.configService.get<boolean>('tenant.enabled', true);
 
@@ -105,7 +104,6 @@ export class AuthController {
   })
   @Get('code')
   @NotRequireAuth()
-  @SkipEncrypt()
   async getCaptchaCode(): Promise<ResultData> {
     // 检查是否开启验证码
     const enable = await this.sysConfigService.getConfigValue('sys.account.captchaEnabled');
@@ -269,7 +267,6 @@ export class AuthController {
   })
   @Get('publicKey')
   @NotRequireAuth()
-  @SkipEncrypt()
   async getPublicKey(): Promise<ResultData> {
     // TODO: 从 CryptoService 获取公钥
     return ResultData.ok({ publicKey: '' });

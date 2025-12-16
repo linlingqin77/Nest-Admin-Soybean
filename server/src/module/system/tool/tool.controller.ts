@@ -12,7 +12,7 @@ import { BusinessType } from 'src/common/constant/business.constant';
 @Controller('tool')
 @ApiBearerAuth('Authorization')
 export class ToolController {
-  constructor(private readonly toolService: ToolService) {}
+  constructor(private readonly toolService: ToolService) { }
 
   @Api({
     summary: '数据表列表',
@@ -30,6 +30,15 @@ export class ToolController {
   @Get('/gen/db/list')
   genDbList(@Query() query: GenDbTableList) {
     return this.toolService.genDbList(query);
+  }
+
+  @Api({
+    summary: '查询数据源名称列表',
+    description: '获取可用的数据源名称',
+  })
+  @Get('/gen/getDataNames')
+  getDataNames() {
+    return this.toolService.getDataNames();
   }
 
   @Api({

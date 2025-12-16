@@ -5,9 +5,20 @@ import { CacheModule } from './cache/cache.module';
 import { LoginlogModule } from './loginlog/loginlog.module';
 import { OnlineModule } from './online/online.module';
 import { OperlogModule } from './operlog/operlog.module';
+import { HealthModule } from './health/health.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
-  imports: [JobModule, ServerModule, CacheModule, LoginlogModule, OnlineModule, OperlogModule],
+  imports: [
+    JobModule,
+    ServerModule,
+    CacheModule,
+    LoginlogModule,
+    OnlineModule,
+    OperlogModule,
+    HealthModule,
+    MetricsModule,
+  ],
   exports: [JobModule],
 })
-export class MonitorModule {}
+export class MonitorModule { }

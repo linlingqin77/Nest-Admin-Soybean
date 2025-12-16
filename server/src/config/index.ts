@@ -41,6 +41,30 @@ export default () => ({
       dir:
         process.env.LOG_DIR ||
         (env === 'production' ? '/var/log/nest-admin' : '../logs'),
+      level: process.env.LOG_LEVEL || (env === 'production' ? 'info' : 'debug'),
+      prettyPrint: bool(process.env.LOG_PRETTY_PRINT, env === 'development'),
+      excludePaths: json(process.env.LOG_EXCLUDE_PATHS, [
+        '/health',
+        '/metrics',
+        '/api-docs',
+        '/favicon.ico',
+      ]),
+      sensitiveFields: json(process.env.LOG_SENSITIVE_FIELDS, [
+        'password',
+        'passwd',
+        'pwd',
+        'token',
+        'accessToken',
+        'refreshToken',
+        'access_token',
+        'refresh_token',
+        'authorization',
+        'cookie',
+        'secret',
+        'secretKey',
+        'apiKey',
+        'api_key',
+      ]),
     },
     file: {
       isLocal: bool(process.env.FILE_IS_LOCAL, env !== 'production'),

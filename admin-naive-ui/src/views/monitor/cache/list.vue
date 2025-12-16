@@ -217,6 +217,25 @@ function handleKeyRowClick(row: { key: string }) {
   handleCacheValue(row.key);
 }
 
+// 为 NDataTable 提供 row-props
+function handleNameRowProps(row: Api.Monitor.CacheName) {
+  return {
+    style: 'cursor: pointer;',
+    onClick: () => {
+      handleNameRowClick(row);
+    }
+  };
+}
+
+function handleKeyRowProps(row: { key: string }) {
+  return {
+    style: 'cursor: pointer;',
+    onClick: () => {
+      handleKeyRowClick(row);
+    }
+  };
+}
+
 // 初始化
 getCacheNames();
 </script>
@@ -235,16 +254,8 @@ getCacheNames();
             </NButton>
           </template>
           <NSpin :show="namesLoading">
-            <NDataTable
-              :columns="nameColumns"
-              :data="cacheNames"
-              :max-height="500"
-              :row-key="(row: Api.Monitor.CacheName) => row.cacheName"
-              :row-props="
-                (row: Api.Monitor.CacheName) => ({ style: 'cursor: pointer', onClick: () => handleNameRowClick(row) })
-              "
-              striped
-            />
+            <NDataTable :columns="nameColumns" :data="cacheNames" :max-height="500"
+              :row-key="(row: Api.Monitor.CacheName) => row.cacheName" :row-props="handleNameRowProps" striped />
           </NSpin>
         </NCard>
       </NGi>
@@ -260,16 +271,8 @@ getCacheNames();
             </NButton>
           </template>
           <NSpin :show="keysLoading">
-            <NDataTable
-              :columns="keyColumns"
-              :data="cacheKeys"
-              :max-height="500"
-              :row-key="(row: { key: string }) => row.key"
-              :row-props="
-                (row: { key: string }) => ({ style: 'cursor: pointer', onClick: () => handleKeyRowClick(row) })
-              "
-              striped
-            />
+            <NDataTable :columns="keyColumns" :data="cacheKeys" :max-height="500"
+              :row-key="(row: { key: string }) => row.key" :row-props="handleKeyRowProps" striped />
           </NSpin>
         </NCard>
       </NGi>

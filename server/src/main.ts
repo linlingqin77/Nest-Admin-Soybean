@@ -6,8 +6,9 @@ import { mw as requestIpMw } from 'request-ip';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
 import { HttpExceptionsFilter } from 'src/common/filters/http-exceptions-filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import path from 'path';
 import { writeFileSync } from 'fs';
 
@@ -40,8 +41,17 @@ const API_INFO = {
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true, // 开启跨域访问
+    bufferLogs: true, // 缓冲日志
   });
   const config = app.get(ConfigService);
+
+  // 使用 Pino Logger
+  app.useLogger(app.get(PinoLogger));
+  app.flushLogs(); // 刷新缓冲的日志
+
+  // 信任代理（nginx 反向代理时需要，否则 express-rate-limit 会报错）
+  app.set('trust proxy', 1);
+
   // 设置访问频率
   app.use(
     rateLimit({
@@ -118,6 +128,12 @@ async function bootstrap() {
   const port = config.get<number>('app.port') || 8080;
   await app.listen(port);
 
-  console.log(`Nest-Admin 服务启动成功`, '\n', '服务地址', `http://localhost:${port}${prefix}/`, '\n', 'swagger 文档地址', `http://localhost:${port}${prefix}/swagger-ui/`);
+  // 使用 Logger 而不是 console.log
+  const logger = new Logger('Bootstrap');
+  logger.log(`Nest-Admin 服务启动成功`);
+  logger.log(`服务地址: http://localhost:${port}${prefix}/`);
+  logger.log(`Swagger 文档: http://localhost:${port}${prefix}/swagger-ui/`);
+  logger.log(`健康检查: http://localhost:${port}${prefix}/health`);
+  logger.log(`Prometheus 指标: http://localhost:${port}${prefix}/metrics`);
 }
 bootstrap();

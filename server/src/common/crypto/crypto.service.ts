@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
+import * as forge from 'node-forge';
 
 /**
  * 加解密服务
@@ -29,18 +30,41 @@ export class CryptoService implements OnModuleInit {
 
     if (this.enabled) {
       // 从配置加载或生成 RSA 密钥对
-      this.publicKey = this.configService.get<string>('crypto.rsaPublicKey', '');
-      this.privateKey = this.configService.get<string>('crypto.rsaPrivateKey', '');
+      const publicKeyConfig = this.configService.get<string>('crypto.rsaPublicKey', '');
+      const privateKeyConfig = this.configService.get<string>('crypto.rsaPrivateKey', '');
 
-      if (!this.publicKey || !this.privateKey) {
+      if (!publicKeyConfig || !privateKeyConfig) {
         this.logger.warn('RSA keys not configured, generating new key pair...');
         this.generateRsaKeyPair();
+      } else {
+        // 处理公钥格式：如果不是 PEM 格式，则转换
+        this.publicKey = this.normalizePemKey(publicKeyConfig, 'PUBLIC KEY');
+        // 处理私钥格式：如果不是 PEM 格式，则转换
+        this.privateKey = this.normalizePemKey(privateKeyConfig, 'PRIVATE KEY');
       }
 
       this.logger.log('Crypto service initialized with RSA+AES encryption');
     } else {
       this.logger.log('Crypto service disabled');
     }
+  }
+
+  /**
+   * 将 Base64 密钥转换为 PEM 格式
+   * 如果已经是 PEM 格式则直接返回
+   */
+  private normalizePemKey(key: string, type: 'PUBLIC KEY' | 'PRIVATE KEY'): string {
+    const trimmedKey = key.trim();
+
+    // 已经是 PEM 格式
+    if (trimmedKey.startsWith('-----BEGIN')) {
+      return trimmedKey;
+    }
+
+    // 将 Base64 格式转换为 PEM 格式
+    // 每 64 个字符换行
+    const base64Lines = trimmedKey.match(/.{1,64}/g) || [];
+    return `-----BEGIN ${type}-----\n${base64Lines.join('\n')}\n-----END ${type}-----`;
   }
 
   /**
@@ -83,18 +107,20 @@ export class CryptoService implements OnModuleInit {
 
   /**
    * RSA 解密 (使用私钥解密前端发送的 AES 密钥)
+   * 使用 node-forge 库以支持 PKCS1 v1.5 填充 (与前端 JSEncrypt 兼容)
    */
   rsaDecrypt(encryptedData: string): string {
     try {
-      const buffer = Buffer.from(encryptedData, 'base64');
-      const decrypted = crypto.privateDecrypt(
-        {
-          key: this.privateKey,
-          padding: crypto.constants.RSA_PKCS1_PADDING,
-        },
-        buffer,
-      );
-      return decrypted.toString('utf8');
+      // 将 PEM 格式私钥转换为 forge 私钥对象
+      const privateKeyObj = forge.pki.privateKeyFromPem(this.privateKey);
+
+      // Base64 解码
+      const encryptedBytes = forge.util.decode64(encryptedData);
+
+      // 使用 PKCS1 v1.5 填充解密
+      const decrypted = privateKeyObj.decrypt(encryptedBytes, 'RSAES-PKCS1-V1_5');
+
+      return decrypted;
     } catch (error) {
       this.logger.error('RSA decrypt error:', error.message);
       throw new Error('RSA decrypt failed');
@@ -103,18 +129,18 @@ export class CryptoService implements OnModuleInit {
 
   /**
    * RSA 加密 (使用公钥加密 AES 密钥返回给前端)
+   * 使用 node-forge 库以支持 PKCS1 v1.5 填充 (与前端 JSEncrypt 兼容)
    */
   rsaEncrypt(data: string): string {
     try {
-      const buffer = Buffer.from(data, 'utf8');
-      const encrypted = crypto.publicEncrypt(
-        {
-          key: this.publicKey,
-          padding: crypto.constants.RSA_PKCS1_PADDING,
-        },
-        buffer,
-      );
-      return encrypted.toString('base64');
+      // 将 PEM 格式公钥转换为 forge 公钥对象
+      const publicKeyObj = forge.pki.publicKeyFromPem(this.publicKey);
+
+      // 使用 PKCS1 v1.5 填充加密
+      const encrypted = publicKeyObj.encrypt(data, 'RSAES-PKCS1-V1_5');
+
+      // Base64 编码
+      return forge.util.encode64(encrypted);
     } catch (error) {
       this.logger.error('RSA encrypt error:', error.message);
       throw new Error('RSA encrypt failed');
@@ -122,21 +148,32 @@ export class CryptoService implements OnModuleInit {
   }
 
   /**
-   * AES 解密 (ECB 模式，PKCS7 填充)
-   * 与 Soybean 前端保持一致
+   * AES 解密 (CBC 模式，PKCS7 填充)
+   * 密文格式: IV(16字节) + 加密数据，整体 Base64 编码
+   * 与前端 crypto.ts 保持一致
    */
   aesDecrypt(encryptedData: string, aesKey: string): string {
     try {
-      // 确保 AES key 是 16 字节 (128位)
-      const key = this.normalizeAesKey(aesKey);
+      // 确保 AES key 是 32 字节 (256位) - 与前端 CryptoJS 保持一致
+      const key = this.normalizeAesKey(aesKey, 32);
 
-      const decipher = crypto.createDecipheriv('aes-128-ecb', key, null);
+      // Base64 解码
+      const ivAndCiphertext = Buffer.from(encryptedData, 'base64');
+
+      // 提取 IV (前16字节)
+      const iv = ivAndCiphertext.subarray(0, 16);
+
+      // 提取密文 (剩余部分)
+      const ciphertext = ivAndCiphertext.subarray(16);
+
+      // 使用 CBC 模式解密 (AES-256)
+      const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
       decipher.setAutoPadding(true); // PKCS7 padding
 
-      let decrypted = decipher.update(encryptedData, 'base64', 'utf8');
-      decrypted += decipher.final('utf8');
+      let decrypted = decipher.update(ciphertext);
+      decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-      return decrypted;
+      return decrypted.toString('utf8');
     } catch (error) {
       this.logger.error('AES decrypt error:', error.message);
       throw new Error('AES decrypt failed');
@@ -144,20 +181,29 @@ export class CryptoService implements OnModuleInit {
   }
 
   /**
-   * AES 加密 (ECB 模式，PKCS7 填充)
-   * 与 Soybean 前端保持一致
+   * AES 加密 (CBC 模式，PKCS7 填充)
+   * 返回格式: IV(16字节) + 加密数据，整体 Base64 编码
+   * 与前端 crypto.ts 保持一致
    */
   aesEncrypt(data: string, aesKey: string): string {
     try {
-      const key = this.normalizeAesKey(aesKey);
+      // 确保 AES key 是 32 字节 (256位) - 与前端 CryptoJS 保持一致
+      const key = this.normalizeAesKey(aesKey, 32);
 
-      const cipher = crypto.createCipheriv('aes-128-ecb', key, null);
+      // 生成随机 IV
+      const iv = crypto.randomBytes(16);
+
+      // 使用 CBC 模式加密 (AES-256)
+      const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
       cipher.setAutoPadding(true); // PKCS7 padding
 
-      let encrypted = cipher.update(data, 'utf8', 'base64');
-      encrypted += cipher.final('base64');
+      let encrypted = cipher.update(data, 'utf8');
+      encrypted = Buffer.concat([encrypted, cipher.final()]);
 
-      return encrypted;
+      // 拼接 IV + 密文
+      const ivAndCiphertext = Buffer.concat([iv, encrypted]);
+
+      return ivAndCiphertext.toString('base64');
     } catch (error) {
       this.logger.error('AES encrypt error:', error.message);
       throw new Error('AES encrypt failed');
@@ -165,18 +211,21 @@ export class CryptoService implements OnModuleInit {
   }
 
   /**
-   * 规范化 AES 密钥到 16 字节
+   * 规范化 AES 密钥到指定字节数
+   * @param key 原始密钥字符串
+   * @param length 目标字节数，默认 32 (AES-256)
    */
-  private normalizeAesKey(key: string): Buffer {
+  private normalizeAesKey(key: string, length: number = 32): Buffer {
     const keyBuffer = Buffer.from(key, 'utf8');
-    if (keyBuffer.length === 16) {
+    if (keyBuffer.length === length) {
       return keyBuffer;
     }
-    // 如果不是 16 字节，进行填充或截断
-    const normalizedKey = Buffer.alloc(16);
-    keyBuffer.copy(normalizedKey, 0, 0, Math.min(keyBuffer.length, 16));
+    // 如果不是指定字节数，进行填充或截断
+    const normalizedKey = Buffer.alloc(length);
+    keyBuffer.copy(normalizedKey, 0, 0, Math.min(keyBuffer.length, length));
     return normalizedKey;
   }
+
 
   /**
    * 生成随机 AES 密钥
@@ -188,15 +237,25 @@ export class CryptoService implements OnModuleInit {
   /**
    * 解密请求数据
    * 前端发送格式: { encryptedKey: string, encryptedData: string }
+   *
+   * 流程:
+   * 1. RSA 解密 encryptedKey 得到 Base64 编码的 AES 密钥
+   * 2. Base64 解码得到原始 AES 密钥
+   * 3. 使用 AES 密钥解密数据
    */
   decryptRequest(encryptedKey: string, encryptedData: string): any {
-    // 1. 使用 RSA 私钥解密 AES 密钥
-    const aesKey = this.rsaDecrypt(encryptedKey);
+    // 1. 使用 RSA 私钥解密 AES 密钥 (得到 Base64 编码的密钥)
+    const aesKeyBase64 = this.rsaDecrypt(encryptedKey);
 
-    // 2. 使用 AES 密钥解密数据
+    // 2. Base64 解码得到原始 AES 密钥
+    const aesKey = Buffer.from(aesKeyBase64, 'base64').toString('utf8');
+
+    this.logger.debug(`Decrypted AES key length: ${aesKey.length}`);
+
+    // 3. 使用 AES 密钥解密数据
     const decryptedJson = this.aesDecrypt(encryptedData, aesKey);
 
-    // 3. 解析 JSON
+    // 4. 解析 JSON
     return JSON.parse(decryptedJson);
   }
 
