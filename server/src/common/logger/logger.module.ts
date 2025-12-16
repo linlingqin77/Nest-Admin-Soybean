@@ -12,10 +12,11 @@ import { createPinoConfig } from './pino-logger.config';
                 const logDir = config.get<string>('app.logger.dir', '../logs');
                 const level = config.get<string>('app.logger.level', 'info');
                 const prettyPrint = config.get<boolean>('app.logger.prettyPrint', false);
+                const toFile = config.get<boolean>('app.logger.toFile', false);
                 const excludePaths = config.get<string[]>('app.logger.excludePaths', []);
                 const sensitiveFields = config.get<string[]>('app.logger.sensitiveFields', []);
 
-                return createPinoConfig(logDir, level, prettyPrint, excludePaths, sensitiveFields);
+                return createPinoConfig(logDir, level, prettyPrint, toFile, excludePaths, sensitiveFields);
             },
         }),
     ],

@@ -28,6 +28,11 @@
     "prisma:reset": "prisma migrate reset --force && npm run prisma:seed:only",
     "redis:flush": "redis-cli -a 123456 -n 2 FLUSHDB",
     "generate:keys": "node scripts/generate-rsa-keys.cjs",
+    "logs:view": "bash scripts/view-logs.sh -t",
+    "logs:error": "bash scripts/view-logs.sh -e",
+    "logs:warn": "bash scripts/view-logs.sh -w",
+    "logs:clean": "bash scripts/view-logs.sh -c",
+    "logs:list": "bash scripts/view-logs.sh -l",
     "deploy:prod": "node scripts/deploy.cjs prod",
     "deploy:test": "node scripts/deploy.cjs test",
     "deploy:dev": "node scripts/deploy.cjs dev"

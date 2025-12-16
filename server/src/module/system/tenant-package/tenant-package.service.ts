@@ -234,6 +234,6 @@ export class TenantPackageService {
                 { title: '备注', dataIndex: 'remark' },
             ],
         };
-        ExportTable(options, res);
+        return await ExportTable(options, res);
     }
 }

@@ -191,7 +191,7 @@ export class ConfigService {
         },
       },
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 
   /**

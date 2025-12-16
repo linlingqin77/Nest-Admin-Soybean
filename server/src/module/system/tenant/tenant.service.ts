@@ -526,6 +526,6 @@ export class TenantService {
                 { title: '创建时间', dataIndex: 'createTime' },
             ],
         };
-        ExportTable(options, res);
+        return await ExportTable(options, res);
     }
 }

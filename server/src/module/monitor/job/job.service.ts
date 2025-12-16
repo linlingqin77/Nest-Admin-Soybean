@@ -247,6 +247,6 @@ export class JobService {
         },
       },
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 }

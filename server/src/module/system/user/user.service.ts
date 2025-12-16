@@ -828,6 +828,6 @@ export class UserService {
         { title: '创建时间', dataIndex: 'createTime', width: 20 },
       ],
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 }

@@ -43,6 +43,7 @@ export default () => ({
         (env === 'production' ? '/var/log/nest-admin-soybean' : '../logs'),
       level: process.env.LOG_LEVEL || (env === 'production' ? 'info' : 'debug'),
       prettyPrint: bool(process.env.LOG_PRETTY_PRINT, env === 'development'),
+      toFile: bool(process.env.LOG_TO_FILE, env === 'production'),
       excludePaths: json(process.env.LOG_EXCLUDE_PATHS, [
         '/health',
         '/metrics',

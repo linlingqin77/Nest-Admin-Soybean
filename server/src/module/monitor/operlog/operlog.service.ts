@@ -230,6 +230,6 @@ export class OperlogService {
         businessType: operatorTypeDictMap,
       },
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 }

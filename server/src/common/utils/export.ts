@@ -104,6 +104,13 @@ export async function ExportTable(
   });
 
   const buffer = await workbook.xlsx.writeBuffer();
+
+  // 检查响应头是否已发送
+  if (res.headersSent) {
+    console.error('Headers already sent, cannot export file');
+    return;
+  }
+
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   res.setHeader('Content-Disposition', 'attachment;filename=sheet.xlsx');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');

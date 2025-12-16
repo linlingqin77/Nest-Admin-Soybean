@@ -113,7 +113,8 @@ export function useDownload() {
 
       const response = await fetch(fullUrl, requestOptions);
 
-      if (response.status !== 200) {
+      // 检查2xx范围的成功状态码
+      if (!response.ok) {
         throw new Error(errorCodeRecord.default);
       }
 

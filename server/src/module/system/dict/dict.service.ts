@@ -243,7 +243,7 @@ export class DictService {
         { title: '状态', dataIndex: 'status' },
       ],
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 
   /**
@@ -264,7 +264,7 @@ export class DictService {
         { title: '备注', dataIndex: 'remark' },
       ],
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 
   /**

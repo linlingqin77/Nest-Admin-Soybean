@@ -161,6 +161,6 @@ export class LoginlogService {
         },
       },
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 }

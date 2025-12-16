@@ -1,15 +1,29 @@
 import { Params } from 'nestjs-pino';
 import { Request, Response } from 'express';
 import { TenantContext } from '../tenant';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function createPinoConfig(
     logDir: string,
     level: string,
     prettyPrint: boolean,
+    toFile: boolean,
     excludePaths: string[],
     sensitiveFields: string[],
 ): Params {
     const env = process.env.NODE_ENV || 'development';
+
+    // 创建日志目录
+    if (toFile) {
+        const absoluteLogDir = path.isAbsolute(logDir)
+            ? logDir
+            : path.resolve(process.cwd(), logDir);
+
+        if (!fs.existsSync(absoluteLogDir)) {
+            fs.mkdirSync(absoluteLogDir, { recursive: true });
+        }
+    }
 
     // 脱敏路径
     const redactPaths = sensitiveFields.flatMap((field) => [
@@ -20,6 +34,63 @@ export function createPinoConfig(
         `**.${field}`,
     ]);
 
+    // 配置日志传输 - 同时支持控制台和文件输出
+    let transport: any;
+
+    if (prettyPrint && toFile) {
+        // 开发环境:同时输出到控制台(美化)和文件
+        const absoluteLogDir = path.isAbsolute(logDir)
+            ? logDir
+            : path.resolve(process.cwd(), logDir);
+
+        transport = {
+            targets: [
+                {
+                    target: 'pino-pretty',
+                    level,
+                    options: {
+                        colorize: true,
+                        translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
+                        ignore: 'pid,hostname',
+                        singleLine: false,
+                    },
+                },
+                {
+                    target: 'pino/file',
+                    level,
+                    options: {
+                        destination: path.join(absoluteLogDir, `app-${env}-${new Date().toISOString().split('T')[0]}.log`),
+                        mkdir: true,
+                    },
+                },
+            ],
+        };
+    } else if (prettyPrint) {
+        // 仅美化控制台输出
+        transport = {
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
+                ignore: 'pid,hostname',
+                singleLine: false,
+            },
+        };
+    } else if (toFile) {
+        // 仅文件输出(JSON格式)
+        const absoluteLogDir = path.isAbsolute(logDir)
+            ? logDir
+            : path.resolve(process.cwd(), logDir);
+
+        transport = {
+            target: 'pino/file',
+            options: {
+                destination: path.join(absoluteLogDir, `app-${env}-${new Date().toISOString().split('T')[0]}.log`),
+                mkdir: true,
+            },
+        };
+    }
+
     return {
         pinoHttp: {
             level,
@@ -27,17 +98,7 @@ export function createPinoConfig(
                 paths: redactPaths,
                 censor: '***REDACTED***',
             },
-            transport: prettyPrint
-                ? {
-                    target: 'pino-pretty',
-                    options: {
-                        colorize: true,
-                        translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
-                        ignore: 'pid,hostname',
-                        singleLine: false,
-                    },
-                }
-                : undefined,
+            transport,
 
             // JSON 格式日志文件 (生产环境)
             ...(!prettyPrint && {
@@ -61,7 +122,7 @@ export function createPinoConfig(
                 };
             },
 
-            // 自定义序列化器
+            // 自定义序列化器 - 增强调试信息
             serializers: {
                 req(req) {
                     return {
@@ -74,14 +135,33 @@ export function createPinoConfig(
                         body: req.raw.body,
                         headers: {
                             host: req.headers.host,
+                            'content-type': req.headers['content-type'],
                             'user-agent': req.headers['user-agent'],
                             referer: req.headers.referer,
+                            'x-tenant-id': req.headers['x-tenant-id'],
+                            'x-encrypted': req.headers['x-encrypted'],
                         },
                     };
                 },
                 res(res) {
                     return {
                         statusCode: res.statusCode,
+                        // 添加响应头信息便于调试
+                        headers: res.getHeaders ? {
+                            'content-type': res.getHeader('content-type'),
+                            'content-length': res.getHeader('content-length'),
+                        } : {},
+                    };
+                },
+                err(err) {
+                    return {
+                        type: err.constructor.name,
+                        message: err.message,
+                        stack: env === 'development' ? err.stack : undefined,
+                        code: err.code,
+                        // 添加额外的错误信息
+                        ...(err.response && { response: err.response }),
+                        ...(err.status && { status: err.status }),
                     };
                 },
             },

@@ -153,6 +153,6 @@ export class PostService {
         { title: '状态', dataIndex: 'status' },
       ],
     };
-    ExportTable(options, res);
+    return await ExportTable(options, res);
   }
 }
