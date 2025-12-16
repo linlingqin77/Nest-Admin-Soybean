@@ -2481,3 +2481,271 @@
 {"level":30,"time":1765886237974,"pid":4533,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"健康检查: http://localhost:8080/api/health"}
 {"level":30,"time":1765886237974,"pid":4533,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"Prometheus 指标: http://localhost:8080/api/metrics"}
 {"level":30,"time":1765886237978,"pid":4533,"hostname":"macdeMacBook-Air.local","context":"RedisModule","msg":"default: connected successfully to the server"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"NestFactory","msg":"Starting Nest application..."}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ClsModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ClsModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ClsCommonModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"CommonModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"SystemModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"PassportModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"MonitorModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"HttpModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"PrometheusModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ServerModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ResourceModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ClsRootModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"AxiosModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ScheduleModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ClsPluginsModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"MetricsModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"TerminusModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"PrismaModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"TenantModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"JwtModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"CryptoModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"RedisModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"RedisModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"AuthModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"UploadModule dependencies initialized"}
+{"level":30,"time":1765886700651,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"LoginlogModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"NoticeModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"TenantPackageModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"ToolModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"JobModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"OperlogModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"DeptModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"DictModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"TenantModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"CacheModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"OnlineModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"PostModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"SysConfigModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"RoleModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"MainModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"MenuModule dependencies initialized"}
+{"level":30,"time":1765886700652,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"InstanceLoader","msg":"UserModule dependencies initialized"}
+{"level":50,"time":1765886700703,"pid":5326,"hostname":"macdeMacBook-Air.local","msg":"Duplicate DTO detected: \"TenantVo\" is defined multiple times with different schemas.\nConsider using unique class names or applying @ApiExtraModels() decorator with custom schema names.\nNote: This will throw an error in the next major version."}
+{"level":20,"time":1765886700729,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"ClsModule","msg":"Mounting ClsMiddleware to *"}
+{"level":30,"time":1765886700730,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"MainController {/api}:"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/login, POST} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/logout, POST} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/register, POST} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/registerUser, GET} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/captchaImage, GET} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/getInfo, GET} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/getRouters, GET} route"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"AuthController {/api/auth}:"}
+{"level":30,"time":1765886700731,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/tenant/list, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/code, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/login, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/register, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/logout, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/social/callback, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/auth/publicKey, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"UploadController {/api/common/upload}:"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload/chunk/uploadId, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload/chunk, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload/chunk/merge, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload/chunk/result, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/common/upload/cos/authorization, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"ConfigController {/api/system/config}:"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/list, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/:id, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/configKey/:id, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config, PUT} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/updateByKey, PUT} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/refreshCache, DELETE} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/:id, DELETE} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/config/export, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"DeptController {/api/system/dept}:"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept, POST} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept/list, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept/optionselect, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept/:id, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept/list/exclude/:id, GET} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept, PUT} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dept/:id, DELETE} route"}
+{"level":30,"time":1765886700732,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"DictController {/api/system/dict}:"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type, POST} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/refreshCache, DELETE} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/:id, DELETE} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type, PUT} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/list, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/optionselect, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/:id, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data, POST} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data/:id, DELETE} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data, PUT} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data/list, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data/:id, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data/type/:id, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/type/export, POST} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/dict/data/export, POST} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"MenuController {/api/system/menu}:"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/getRouters, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu, POST} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/list, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/treeselect, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/roleMenuTreeselect/:menuId, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/tenantPackageMenuTreeselect/:packageId, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/:menuId, GET} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu, PUT} route"}
+{"level":30,"time":1765886700733,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/cascade/:menuIds, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/menu/:menuId, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"NoticeController {/api/system/notice}:"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/notice, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/notice/list, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/notice/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/notice, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/notice/:id, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"PostController {/api/system/post}:"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/list, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/optionselect, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/deptTree, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/:ids, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/post/export, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"RoleController {/api/system/role}:"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/list, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/optionselect, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/deptTree/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/dataScope, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/changeStatus, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/:id, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/authUser/allocatedList, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/authUser/unallocatedList, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/authUser/cancel, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/authUser/cancelAll, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/authUser/selectAll, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/role/export, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"TenantController {/api/system/tenant}:"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/list, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/syncTenantDict, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/syncTenantPackage, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/syncTenantConfig, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/:ids, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/export, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"TenantPackageController {/api/system/tenant/package}:"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package, POST} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package/list, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package/selectList, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package/:id, GET} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package, PUT} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package/:ids, DELETE} route"}
+{"level":30,"time":1765886700734,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/tenant/package/export, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"ToolController {/api/tool}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/db/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/getDataNames, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/importTable, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/synchDb/:tableName, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/:id, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/:id, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/batchGenCode/zip, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/tool/gen/preview/:id, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"UserController {/api/system/user}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/getInfo, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/profile, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/profile, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/profile/avatar, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/profile/updatePwd, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/deptTree, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/authRole/:id, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/authRole, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/optionselect, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/list/dept/:deptId, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/:userId, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/changeStatus, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/resetPwd, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/:id, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/system/user/export, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"JobController {/api/monitor/job}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/:jobId, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/changeStatus, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/:jobIds, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/run, PUT} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/job/export, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"JobLogController {/api/monitor/jobLog}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/jobLog/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/jobLog/clean, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/jobLog/export, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"ServerController {/api/monitor/server}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/server, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"CacheController {/api/monitor/cache}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/getNames, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/getKeys/:id, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/getValue/:cacheName/:cacheKey, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/clearCacheName/:cacheName, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/clearCacheKey/:cacheKey, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/cache/clearCacheAll, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"LoginlogController {/api/monitor/logininfor}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/logininfor/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/logininfor/clean, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/logininfor/unlock/:username, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/logininfor/:id, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/logininfor/export, POST} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"OnlineController {/api/monitor/online}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/online/list, GET} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/online/:token, DELETE} route"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"OperlogController {/api/monitor/operlog}:"}
+{"level":30,"time":1765886700735,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/operlog/clean, DELETE} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/operlog/list, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/operlog/:operId, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/operlog/:operId, DELETE} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/monitor/operlog/export, POST} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/health/liveness, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/health/readiness, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"MetricsController {/api}:"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/metrics, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"PrometheusController {/api/metrics}:"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/metrics, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RoutesResolver","msg":"SseController {/api/resource}:"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/resource/sse, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/resource/sse/close, GET} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/resource/sse/send, POST} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/resource/sse/broadcast, POST} route"}
+{"level":30,"time":1765886700736,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RouterExplorer","msg":"Mapped {/api/resource/sse/count, POST} route"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: task.noParams"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: task.params"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: task.clearTemp"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: task.monitorSystem"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: task.backupDatabase"}
+{"level":30,"time":1765886700740,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"TaskService","msg":"注册任务: dailyBackup"}
+{"level":30,"time":1765886700745,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"PrismaService","msg":"Prisma connected to PostgreSQL successfully."}
+{"level":30,"time":1765886700745,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"CryptoService","msg":"Crypto service initialized with RSA+AES encryption"}
+{"level":30,"time":1765886700746,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"NestApplication","msg":"Nest application successfully started"}
+{"level":30,"time":1765886700747,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"Nest-Admin-Soybean 服务启动成功"}
+{"level":30,"time":1765886700747,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"服务地址: http://localhost:8080/api/"}
+{"level":30,"time":1765886700747,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"Swagger 文档: http://localhost:8080/api/swagger-ui/"}
+{"level":30,"time":1765886700747,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"健康检查: http://localhost:8080/api/health"}
+{"level":30,"time":1765886700747,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"Bootstrap","msg":"Prometheus 指标: http://localhost:8080/api/metrics"}
+{"level":30,"time":1765886700750,"pid":5326,"hostname":"macdeMacBook-Air.local","context":"RedisModule","msg":"default: connected successfully to the server"}
