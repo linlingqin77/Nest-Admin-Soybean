@@ -12,6 +12,7 @@ import { TenantMiddleware, TenantGuard, TenantModule } from './common/tenant';
 import { CryptoModule, DecryptInterceptor } from './common/crypto';
 import { LoggerModule } from './common/logger';
 import { ClsModule } from './common/cls';
+import { TransactionalInterceptor } from './common/interceptors/transactional.interceptor';
 
 import { MainModule } from './module/main/main.module';
 import { UploadModule } from './module/upload/upload.module';
@@ -65,6 +66,11 @@ import { PrismaModule } from './prisma/prisma.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: DecryptInterceptor,
+    },
+    // 事务拦截器 (自动处理 @Transactional 装饰器)
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransactionalInterceptor,
     },
     // 租户守卫
     {

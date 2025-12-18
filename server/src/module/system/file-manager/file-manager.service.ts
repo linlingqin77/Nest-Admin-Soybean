@@ -1,6 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
+import { BusinessException } from 'src/common/exceptions';
 import { CreateFolderDto, UpdateFolderDto, ListFolderDto, ListFileDto, MoveFileDto, RenameFileDto, CreateShareDto, GetShareDto } from './dto';
 import { TenantContext } from 'src/common/tenant/tenant.context';
 import { PaginationHelper } from 'src/common/utils/pagination.helper';
@@ -11,6 +13,8 @@ import * as path from 'path';
 
 @Injectable()
 export class FileManagerService {
+  private readonly logger = new Logger(FileManagerService.name);
+
   constructor(private readonly prisma: PrismaService) { }
 
   // ==================== 文件夹管理 ====================
@@ -28,13 +32,15 @@ export class FileManagerService {
         tenantId,
         parentId,
         folderName,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
 
-    if (exists) {
-      return ResultData.fail(500, '同级目录下已存在相同名称的文件夹');
-    }
+    BusinessException.throwIf(
+      exists !== null,
+      '同级目录下已存在相同名称的文件夹',
+      ResponseCode.DATA_ALREADY_EXISTS
+    );
 
     // 构建文件夹路径
     let folderPath = '/';
@@ -42,9 +48,11 @@ export class FileManagerService {
       const parent = await this.prisma.sysFileFolder.findUnique({
         where: { folderId: parentId },
       });
-      if (!parent || parent.delFlag === '1') {
-        return ResultData.fail(500, '父文件夹不存在');
-      }
+      BusinessException.throwIf(
+        !parent || parent.delFlag === '1',
+        '父文件夹不存在',
+        ResponseCode.DATA_NOT_FOUND
+      );
       folderPath = `${parent.folderPath}${parent.folderName}/`;
     }
 
@@ -61,7 +69,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok(folder);
+    return Result.ok(folder);
   }
 
   /**
@@ -76,7 +84,7 @@ export class FileManagerService {
     });
 
     if (!folder || folder.tenantId !== tenantId) {
-      return ResultData.fail(500, '文件夹不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件夹不存在');
     }
 
     // 如果修改了名称，检查是否重复
@@ -86,14 +94,16 @@ export class FileManagerService {
           tenantId,
           parentId: folder.parentId,
           folderName,
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
           folderId: { not: folderId },
         },
       });
 
-      if (exists) {
-        return ResultData.fail(500, '同级目录下已存在相同名称的文件夹');
-      }
+      BusinessException.throwIf(
+        exists !== null,
+        '同级目录下已存在相同名称的文件夹',
+        ResponseCode.DATA_ALREADY_EXISTS
+      );
     }
 
     const updated = await this.prisma.sysFileFolder.update({
@@ -107,7 +117,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok(updated);
+    return Result.ok(updated);
   }
 
   /**
@@ -121,7 +131,7 @@ export class FileManagerService {
     });
 
     if (!folder || folder.tenantId !== tenantId) {
-      return ResultData.fail(500, '文件夹不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件夹不存在');
     }
 
     // 检查是否有子文件夹
@@ -129,26 +139,30 @@ export class FileManagerService {
       where: {
         tenantId,
         parentId: folderId,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
 
-    if (hasChildren > 0) {
-      return ResultData.fail(500, '该文件夹下存在子文件夹，无法删除');
-    }
+    BusinessException.throwIf(
+      hasChildren > 0,
+      '该文件夹下存在子文件夹，无法删除',
+      ResponseCode.DATA_IN_USE
+    );
 
     // 检查是否有文件
     const hasFiles = await this.prisma.sysUpload.count({
       where: {
         tenantId,
         folderId,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
 
-    if (hasFiles > 0) {
-      return ResultData.fail(500, '该文件夹下存在文件，无法删除');
-    }
+    BusinessException.throwIf(
+      hasFiles > 0,
+      '该文件夹下存在文件，无法删除',
+      ResponseCode.DATA_IN_USE
+    );
 
     await this.prisma.sysFileFolder.update({
       where: { folderId },
@@ -159,7 +173,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -171,7 +185,7 @@ export class FileManagerService {
 
     const where: Prisma.SysFileFolderWhereInput = {
       tenantId,
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (parentId !== undefined) {
@@ -187,7 +201,7 @@ export class FileManagerService {
       orderBy: [{ orderNum: 'asc' }, { createTime: 'desc' }],
     });
 
-    return ResultData.ok(folders);
+    return Result.ok(folders);
   }
 
   /**
@@ -199,7 +213,7 @@ export class FileManagerService {
     const folders = await this.prisma.sysFileFolder.findMany({
       where: {
         tenantId,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
       orderBy: [{ orderNum: 'asc' }, { createTime: 'desc' }],
     });
@@ -214,7 +228,7 @@ export class FileManagerService {
         }));
     };
 
-    return ResultData.ok(buildTree());
+    return Result.ok(buildTree());
   }
 
   // ==================== 文件管理 ====================
@@ -228,13 +242,13 @@ export class FileManagerService {
 
     const where: Prisma.SysUploadWhereInput = {
       tenantId,
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     // folderId 筛选：支持 0 表示根目录，undefined 表示所有文件
     if (folderId !== undefined) {
       where.folderId = folderId;
-      console.log('[文件筛选] 按文件夹ID筛选:', folderId);
+      this.logger.debug('[文件筛选] 按文件夹ID筛选:', folderId);
     }
 
     if (fileName) {
@@ -247,19 +261,19 @@ export class FileManagerService {
       const extList = exts.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
       if (extList.length > 0) {
         where.ext = { in: extList };
-        console.log('[文件筛选] 按扩展名筛选:', extList);
+        this.logger.debug('[文件筛选] 按扩展名筛选:', extList);
       }
     } else if (ext) {
       // 单个扩展名
       where.ext = ext;
-      console.log('[文件筛选] 按单个扩展名:', ext);
+      this.logger.debug('[文件筛选] 按单个扩展名:', ext);
     }
 
     if (storageType) {
       where.storageType = storageType;
     }
 
-    console.log('[文件查询] 查询条件:', JSON.stringify(where, null, 2));
+    this.logger.debug('[文件查询] 查询条件:', JSON.stringify(where, null, 2));
 
     const { skip, take } = PaginationHelper.getPagination(query);
 
@@ -275,7 +289,7 @@ export class FileManagerService {
       { where },
     );
 
-    return ResultData.ok({ rows, total });
+    return Result.ok({ rows, total });
   }
 
   /**
@@ -292,7 +306,7 @@ export class FileManagerService {
       });
 
       if (!targetFolder || targetFolder.tenantId !== tenantId || targetFolder.delFlag === '1') {
-        return ResultData.fail(500, '目标文件夹不存在');
+        return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '目标文件夹不存在');
       }
     }
 
@@ -308,7 +322,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -323,7 +337,7 @@ export class FileManagerService {
     });
 
     if (!file || file.tenantId !== tenantId) {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
 
     const updated = await this.prisma.sysUpload.update({
@@ -335,7 +349,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok(updated);
+    return Result.ok(updated);
   }
 
   /**
@@ -356,7 +370,7 @@ export class FileManagerService {
       });
     }
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -370,10 +384,10 @@ export class FileManagerService {
     });
 
     if (!file || file.tenantId !== tenantId || file.delFlag === '1') {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
 
-    return ResultData.ok(file);
+    return Result.ok(file);
   }
 
   // ==================== 文件分享 ====================
@@ -391,7 +405,7 @@ export class FileManagerService {
     });
 
     if (!file || file.tenantId !== tenantId || file.delFlag === '1') {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
 
     // 计算过期时间
@@ -413,7 +427,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok({
+    return Result.ok({
       shareId: share.shareId,
       shareUrl: `/share/${share.shareId}`,
       shareCode: share.shareCode,
@@ -432,22 +446,22 @@ export class FileManagerService {
     });
 
     if (!share || share.status === '1') {
-      return ResultData.fail(500, '分享不存在或已失效');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '分享不存在或已失效');
     }
 
     // 验证分享码
     if (share.shareCode && share.shareCode !== shareCode) {
-      return ResultData.fail(500, '分享码错误');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '分享码错误');
     }
 
     // 验证是否过期
     if (share.expireTime && share.expireTime < new Date()) {
-      return ResultData.fail(500, '分享已过期');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '分享已过期');
     }
 
     // 验证下载次数
     if (share.maxDownload > 0 && share.downloadCount >= share.maxDownload) {
-      return ResultData.fail(500, '下载次数已达上限');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '下载次数已达上限');
     }
 
     // 获取文件信息
@@ -456,10 +470,10 @@ export class FileManagerService {
     });
 
     if (!file || file.delFlag === '1') {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
 
-    return ResultData.ok({
+    return Result.ok({
       shareInfo: share,
       fileInfo: file,
     });
@@ -476,7 +490,7 @@ export class FileManagerService {
       },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -490,15 +504,15 @@ export class FileManagerService {
     });
 
     if (!share || share.tenantId !== tenantId) {
-      return ResultData.fail(500, '分享不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '分享不存在');
     }
 
     await this.prisma.sysFileShare.update({
       where: { shareId },
-      data: { status: '1' },
+      data: { status: StatusEnum.STOP },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -518,6 +532,6 @@ export class FileManagerService {
       orderBy: { createTime: 'desc' },
     });
 
-    return ResultData.ok(shares);
+    return Result.ok(shares);
   }
 }

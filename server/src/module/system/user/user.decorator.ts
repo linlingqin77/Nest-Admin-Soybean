@@ -23,20 +23,24 @@ export const UserTool = createParamDecorator((data: unknown, ctx: ExecutionConte
 
   const userName = request.user?.user?.userName;
 
-  const injectCreate = (data: any) => {
-    if (data.createBy) {
-      return;
+  const injectCreate = <T>(data: T): T => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obj = data as any;
+    if (!obj.createBy) {
+      obj.createBy = userName;
     }
-    data.createBy = userName;
-
-    return injectUpdate(data);
+    if (!obj.updateBy) {
+      obj.updateBy = userName;
+    }
+    return data;
   };
 
-  const injectUpdate = (data: any) => {
-    if (data.updateBy) {
-      return;
+  const injectUpdate = <T>(data: T): T => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obj = data as any;
+    if (!obj.updateBy) {
+      obj.updateBy = userName;
     }
-    data.updateBy = userName;
     return data;
   };
 
@@ -44,6 +48,6 @@ export const UserTool = createParamDecorator((data: unknown, ctx: ExecutionConte
 });
 
 export type UserToolType = {
-  injectCreate: <T extends { [key: string]: any }>(data: T) => T & { createBy?: string };
-  injectUpdate: <T extends { [key: string]: any }>(data: T) => T & { updateBy?: string };
+  injectCreate: <T>(data: T) => T;
+  injectUpdate: <T>(data: T) => T;
 };

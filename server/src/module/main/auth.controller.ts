@@ -5,9 +5,10 @@ import { MainService } from './main.service';
 import { AuthLoginDto, AuthRegisterDto, SocialLoginDto } from './dto/auth.dto';
 import { LoginTokenVo, CaptchaCodeVo, LoginTenantVo, UserInfoVo } from './vo/auth.vo';
 import { createMath } from 'src/common/utils/captcha';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
 import { GenerateUUID } from 'src/common/utils/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
+import { StatusEnum } from 'src/common/enum/index';
 import { CacheEnum } from 'src/common/enum/index';
 import { ConfigService as SysConfigService } from 'src/module/system/config/config.service';
 import { ClientInfo, ClientInfoDto } from 'src/common/decorators/common.decorator';
@@ -35,7 +36,7 @@ export class AuthController {
     private readonly sysConfigService: SysConfigService,
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   /**
    * 获取租户列表 - GET /auth/tenant/list
@@ -50,7 +51,7 @@ export class AuthController {
   @Get('tenant/list')
   @NotRequireAuth()
   @IgnoreTenant()
-  async getTenantList(): Promise<ResultData> {
+  async getTenantList(): Promise<Result> {
     const tenantEnabled = this.configService.get<boolean>('tenant.enabled', true);
 
     const result: LoginTenantVo = {
@@ -62,7 +63,7 @@ export class AuthController {
       try {
         // 查询所有正常状态的租户
         const tenants = await this.prisma.sysTenant.findMany({
-          where: { status: '0' },
+          where: { status: StatusEnum.NORMAL },
           select: {
             tenantId: true,
             companyName: true,
@@ -89,7 +90,7 @@ export class AuthController {
       }
     }
 
-    return ResultData.ok(result);
+    return Result.ok(result);
   }
 
   /**
@@ -104,7 +105,7 @@ export class AuthController {
   })
   @Get('code')
   @NotRequireAuth()
-  async getCaptchaCode(): Promise<ResultData> {
+  async getCaptchaCode(): Promise<Result> {
     // 检查是否开启验证码
     const enable = await this.sysConfigService.getConfigValue('sys.account.captchaEnabled');
     const captchaEnabled: boolean = enable === 'true';
@@ -123,11 +124,11 @@ export class AuthController {
         await this.redisService.set(CacheEnum.CAPTCHA_CODE_KEY + result.uuid, captchaInfo.text.toLowerCase(), 1000 * 60 * 5);
       } catch (err) {
         this.logger.error('生成验证码错误:', err);
-        return ResultData.fail(500, '生成验证码错误，请重试');
+        return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '生成验证码错误，请重试');
       }
     }
 
-    return ResultData.ok(result);
+    return Result.ok(result);
   }
 
   /**
@@ -145,7 +146,7 @@ export class AuthController {
   @HttpCode(200)
   @NotRequireAuth()
   @ApiHeader({ name: 'tenant-id', description: '租户ID', required: false })
-  async login(@Body() loginDto: AuthLoginDto, @ClientInfo() clientInfo: ClientInfoDto, @Headers('tenant-id') headerTenantId?: string): Promise<ResultData> {
+  async login(@Body() loginDto: AuthLoginDto, @ClientInfo() clientInfo: ClientInfoDto, @Headers('tenant-id') headerTenantId?: string): Promise<Result> {
     // 优先使用 header 中的租户ID，其次使用 body 中的
     const tenantId = headerTenantId || loginDto.tenantId || TenantContext.SUPER_TENANT_ID;
 
@@ -178,7 +179,7 @@ export class AuthController {
           openid: '',
         };
 
-        return ResultData.ok(loginToken);
+        return Result.ok(loginToken);
       }
 
       return result;
@@ -199,10 +200,10 @@ export class AuthController {
   @HttpCode(200)
   @NotRequireAuth()
   @ApiHeader({ name: 'tenant-id', description: '租户ID', required: false })
-  async register(@Body() registerDto: AuthRegisterDto, @Headers('tenant-id') headerTenantId?: string): Promise<ResultData> {
+  async register(@Body() registerDto: AuthRegisterDto, @Headers('tenant-id') headerTenantId?: string): Promise<Result> {
     // 验证密码一致性
     if (registerDto.password !== registerDto.confirmPassword) {
-      return ResultData.fail(400, '两次输入的密码不一致');
+      return Result.fail(ResponseCode.BAD_REQUEST, '两次输入的密码不一致');
     }
 
     const tenantId = headerTenantId || registerDto.tenantId || TenantContext.SUPER_TENANT_ID;
@@ -231,7 +232,7 @@ export class AuthController {
   @NotRequireAuth()
   @Post('logout')
   @HttpCode(200)
-  async logout(@User() user: UserDto, @ClientInfo() clientInfo: ClientInfoDto): Promise<ResultData> {
+  async logout(@User() user: UserDto, @ClientInfo() clientInfo: ClientInfoDto): Promise<Result> {
     if (user?.token) {
       await this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
     }
@@ -251,9 +252,9 @@ export class AuthController {
   @Post('social/callback')
   @HttpCode(200)
   @NotRequireAuth()
-  async socialCallback(@Body() socialDto: SocialLoginDto): Promise<ResultData> {
+  async socialCallback(@Body() socialDto: SocialLoginDto): Promise<Result> {
     // TODO: 实现社交登录逻辑
-    return ResultData.fail(501, '社交登录功能暂未实现');
+    return Result.fail(ResponseCode.NOT_IMPLEMENTED, '社交登录功能暂未实现');
   }
 
   /**
@@ -267,9 +268,9 @@ export class AuthController {
   })
   @Get('publicKey')
   @NotRequireAuth()
-  async getPublicKey(): Promise<ResultData> {
+  async getPublicKey(): Promise<Result> {
     // TODO: 从 CryptoService 获取公钥
-    return ResultData.ok({ publicKey: '' });
+    return Result.ok({ publicKey: '' });
   }
 
   /**

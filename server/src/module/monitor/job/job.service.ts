@@ -3,10 +3,12 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Prisma } from '@prisma/client';
 import { CreateJobDto, ListJobDto } from './dto/create-job.dto';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { BusinessException } from 'src/common/exceptions/index';
 import { FormatDateFields } from 'src/common/utils/index';
 import { TaskService } from './task.service';
 import { ExportTable } from 'src/common/utils/export';
+import { StatusEnum } from 'src/common/enum/index';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -24,7 +26,7 @@ export class JobService {
 
   // 初始化任务
   private async initializeJobs() {
-    const jobs = await this.prisma.sysJob.findMany({ where: { status: '0' } });
+    const jobs = await this.prisma.sysJob.findMany({ where: { status: StatusEnum.NORMAL } });
     jobs.forEach((job) => {
       this.addCronJob(job.jobName, job.cronExpression, job.invokeTarget);
     });
@@ -60,16 +62,14 @@ export class JobService {
       this.prisma.sysJob.count({ where }),
     ]);
 
-    return ResultData.ok({ rows: FormatDateFields(list), total });
+    return Result.page(FormatDateFields(list), total);
   }
 
   // 获取单个任务
   async getJob(jobId: number) {
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
-    if (!job) {
-      throw new Error('任务不存在');
-    }
-    return ResultData.ok(job);
+    BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
+    return Result.ok(job);
   }
 
   // 创建任务
@@ -87,15 +87,13 @@ export class JobService {
       this.addCronJob(job.jobName, job.cronExpression, createJobDto.invokeTarget);
     }
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   // 更新任务
   async update(jobId: number, updateJobDto: Partial<CreateJobDto>, userName: string) {
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
-    if (!job) {
-      throw new Error('任务不存在');
-    }
+    BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
     const nextStatus = updateJobDto.status ?? job.status;
     const nextCron = updateJobDto.cronExpression ?? job.cronExpression;
@@ -122,7 +120,7 @@ export class JobService {
       },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   // 删除任务
@@ -144,15 +142,13 @@ export class JobService {
         jobId: { in: ids },
       },
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   // 改变任务状态
   async changeStatus(jobId: number, status: string, userName: string) {
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
-    if (!job) {
-      throw new Error('任务不存在');
-    }
+    BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
     const cronJob = this.getCronJob(job.jobName);
 
@@ -179,19 +175,17 @@ export class JobService {
       },
     });
 
-    return ResultData.ok();
+    return Result.ok();
   }
 
   // 立即执行一次
   async run(jobId: number) {
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
-    if (!job) {
-      throw new Error('任务不存在');
-    }
+    BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
     // 执行任务
     await this.taskService.executeTask(job.invokeTarget, job.jobName, job.jobGroup);
-    return ResultData.ok();
+    return Result.ok();
   }
 
   // 添加定时任务到调度器

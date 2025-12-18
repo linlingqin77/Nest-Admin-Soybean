@@ -1,50 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { ListToTree, FormatDateFields } from 'src/common/utils/index';
 import { ExportTable } from 'src/common/utils/export';
 
-import { DataScopeEnum } from 'src/common/enum/index';
+import { DataScopeEnum, DelFlagEnum, StatusEnum } from 'src/common/enum/index';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { MenuService } from '../menu/menu.service';
 import { CreateRoleDto, UpdateRoleDto, ListRoleDto, ChangeRoleStatusDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { RoleRepository } from './role.repository';
 
 @Injectable()
 export class RoleService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly roleRepo: RoleRepository,
     private readonly menuService: MenuService,
   ) { }
+  @Transactional()
   async create(createRoleDto: CreateRoleDto) {
     const { menuIds = [], ...rolePayload } = createRoleDto as CreateRoleDto & { menuIds?: number[] };
 
-    const role = await this.prisma.$transaction(async (tx) => {
-      const createdRole = await tx.sysRole.create({
-        data: {
-          ...rolePayload,
-          roleSort: rolePayload.roleSort ?? 0,
-          status: rolePayload.status ?? '0',
-          delFlag: '0',
-          createBy: '',
-          updateBy: '',
-        },
-      });
-      if (menuIds.length > 0) {
-        await tx.sysRoleMenu.createMany({
-          data: menuIds.map((menuId) => ({ roleId: createdRole.roleId, menuId })),
-          skipDuplicates: true,
-        });
-      }
-      return createdRole;
+    const createdRole = await this.prisma.sysRole.create({
+      data: {
+        ...rolePayload,
+        roleSort: rolePayload.roleSort ?? 0,
+        status: rolePayload.status ?? '0',
+        delFlag: DelFlagEnum.NORMAL,
+      },
     });
 
-    return ResultData.ok(role);
+    if (menuIds.length > 0) {
+      await this.prisma.sysRoleMenu.createMany({
+        data: menuIds.map((menuId) => ({ roleId: createdRole.roleId, menuId })),
+        skipDuplicates: true,
+      });
+    }
+
+    return Result.ok(createdRole);
   }
 
   async findAll(query: ListRoleDto) {
     const where: Prisma.SysRoleWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.roleName) {
@@ -74,70 +74,62 @@ export class RoleService {
       };
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysRole.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: { roleSort: 'asc' },
-      }),
-      this.prisma.sysRole.count({ where }),
-    ]);
+    const { list, total } = await this.roleRepo.findPageWithMenuCount(
+      where,
+      query.skip,
+      query.take,
+      { roleSort: 'asc' },
+    );
 
     const formattedList = FormatDateFields(list);
 
-    return ResultData.ok({
-      rows: formattedList,
-      total,
-    });
+    return Result.page(formattedList, total);
   }
 
   async findOne(roleId: number) {
-    const res = await this.prisma.sysRole.findUnique({
-      where: {
-        roleId,
-      },
-    });
-    return ResultData.ok(res);
+    const res = await this.roleRepo.findById(roleId);
+    return Result.ok(res);
   }
 
+  @Transactional()
   async update(updateRoleDto: UpdateRoleDto) {
     const { menuIds = [], ...rolePayload } = updateRoleDto as UpdateRoleDto & { menuIds?: number[] };
 
-    const res = await this.prisma.$transaction(async (tx) => {
-      await tx.sysRoleMenu.deleteMany({ where: { roleId: updateRoleDto.roleId } });
+    await this.prisma.sysRoleMenu.deleteMany({ where: { roleId: updateRoleDto.roleId } });
 
-      if (menuIds.length > 0) {
-        await tx.sysRoleMenu.createMany({
-          data: menuIds.map((menuId) => ({ roleId: updateRoleDto.roleId, menuId })),
-        });
-      }
+    if (menuIds.length > 0) {
+      await this.prisma.sysRoleMenu.createMany({
+        data: menuIds.map((menuId) => ({ roleId: updateRoleDto.roleId, menuId })),
+      });
+    }
 
-      return tx.sysRole.update({ where: { roleId: updateRoleDto.roleId }, data: rolePayload });
+    const res = await this.prisma.sysRole.update({
+      where: { roleId: updateRoleDto.roleId },
+      data: rolePayload
     });
 
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
+  @Transactional()
   async dataScope(updateRoleDto: UpdateRoleDto) {
     const { deptIds = [], ...rolePayload } = updateRoleDto as UpdateRoleDto & { deptIds?: number[] };
 
-    const res = await this.prisma.$transaction(async (tx) => {
-      await tx.sysRoleDept.deleteMany({ where: { roleId: updateRoleDto.roleId } });
+    await this.prisma.sysRoleDept.deleteMany({ where: { roleId: updateRoleDto.roleId } });
 
-      if (deptIds.length > 0) {
-        await tx.sysRoleDept.createMany({
-          data: deptIds.map((deptId) => ({ roleId: updateRoleDto.roleId, deptId })),
-        });
-      }
+    if (deptIds.length > 0) {
+      await this.prisma.sysRoleDept.createMany({
+        data: deptIds.map((deptId) => ({ roleId: updateRoleDto.roleId, deptId })),
+      });
+    }
 
-      return tx.sysRole.update({ where: { roleId: updateRoleDto.roleId }, data: rolePayload });
+    const res = await this.prisma.sysRole.update({
+      where: { roleId: updateRoleDto.roleId },
+      data: rolePayload
     });
 
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async changeStatus(changeStatusDto: ChangeRoleStatusDto) {
@@ -145,7 +137,7 @@ export class RoleService {
       where: { roleId: changeStatusDto.roleId },
       data: { status: changeStatusDto.status },
     });
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async remove(roleIds: number[]) {
@@ -159,13 +151,13 @@ export class RoleService {
         delFlag: '1',
       },
     });
-    return ResultData.ok(data.count);
+    return Result.ok(data.count);
   }
 
   async deptTree(roleId: number) {
     const res = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
     const tree = ListToTree(
@@ -180,7 +172,7 @@ export class RoleService {
     const checkedKeys = deptIds.map((item) => {
       return item.deptId;
     });
-    return ResultData.ok({
+    return Result.ok({
       depts: tree,
       checkedKeys: checkedKeys,
     });
@@ -209,7 +201,7 @@ export class RoleService {
       return [];
     }
     const permission = await this.menuService.findMany({
-      where: { delFlag: '0', status: '0', menuId: { in: menuIds } },
+      where: { delFlag: DelFlagEnum.NORMAL, status: StatusEnum.NORMAL, menuId: { in: menuIds } },
     });
     return permission;
   }
@@ -219,8 +211,8 @@ export class RoleService {
    */
   async optionselect(roleIds?: number[]) {
     const where: Prisma.SysRoleWhereInput = {
-      delFlag: '0',
-      status: '0',
+      delFlag: DelFlagEnum.NORMAL,
+      status: StatusEnum.NORMAL,
     };
     if (roleIds && roleIds.length > 0) {
       where.roleId = { in: roleIds };
@@ -229,7 +221,7 @@ export class RoleService {
       where,
       orderBy: { roleSort: 'asc' },
     });
-    return ResultData.ok(list);
+    return Result.ok(list);
   }
 
   /**

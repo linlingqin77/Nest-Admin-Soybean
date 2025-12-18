@@ -1,6 +1,6 @@
 import { UploadService } from './upload.service';
 import { createPrismaMock, PrismaMock } from 'src/test-utils/prisma-mock';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 
 jest.mock('cos-nodejs-sdk-v5', () => {
   const Cos = jest.fn().mockImplementation(() => ({
@@ -74,6 +74,6 @@ describe('UploadService', () => {
   it('should proxy cos authorization response', async () => {
     const res = await service.getAuthorization('test.txt');
     expect(COS.getAuthorization).toHaveBeenCalled();
-    expect(res).toEqual(ResultData.ok({ sign: 'signature' }));
+    expect(res).toEqual(Result.ok({ sign: 'signature' }));
   });
 });

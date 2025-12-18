@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { MainService } from './main.service';
 import { RegisterDto, LoginDto } from './dto/index';
 import { createMath } from 'src/common/utils/captcha';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
 import { GenerateUUID } from 'src/common/utils/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum } from 'src/common/enum/index';
@@ -22,7 +22,7 @@ export class MainController {
     private readonly mainService: MainService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   @Api({
     summary: '用户登录',
@@ -73,7 +73,7 @@ export class MainController {
     //是否开启验证码
     const res = await this.configService.getConfigValue('sys.account.registerUser');
     const enable = res === 'true';
-    return ResultData.ok(enable, '操作成功');
+    return Result.ok(enable, '操作成功');
   }
 
   @Api({
@@ -99,9 +99,9 @@ export class MainController {
         data.uuid = GenerateUUID();
         await this.redisService.set(CacheEnum.CAPTCHA_CODE_KEY + data.uuid, captchaInfo.text.toLowerCase(), 1000 * 60 * 5);
       }
-      return ResultData.ok(data, '操作成功');
+      return Result.ok(data, '操作成功');
     } catch (err) {
-      return ResultData.fail(500, '生成验证码错误，请重试');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '生成验证码错误，请重试');
     }
   }
 

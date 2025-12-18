@@ -11,7 +11,7 @@ export const dtoTem = (options) => {
   return `
 import { IsString, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsArray } from 'class-validator';
 import { ApiProperty, OmitType, IntersectionType } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { CharEnum } from 'src/common/enum/index';
 import { Type } from 'class-transformer';
 
@@ -24,7 +24,7 @@ export class Create${Lodash.upperFirst(BusinessName)}Dto extends ${getOmitTypeSt
 
 export class Update${Lodash.upperFirst(BusinessName)}Dto extends ${getOmitTypeStr(`Base${Lodash.upperFirst(BusinessName)}Dto`, editExclude)}{}
 
-export class Query${Lodash.upperFirst(BusinessName)}Dto extends ${getOmitTypeStr(`IntersectionType(Base${Lodash.upperFirst(BusinessName)}Dto, PagingDto)`, queryExclude)}{}
+export class Query${Lodash.upperFirst(BusinessName)}Dto extends ${getOmitTypeStr(`IntersectionType(Base${Lodash.upperFirst(BusinessName)}Dto, PageQueryDto)`, queryExclude)}{}
 
 export class List${Lodash.upperFirst(BusinessName)}Dto extends ${getOmitTypeStr(`Base${Lodash.upperFirst(BusinessName)}Dto`, listExclude)}{}
 `;

@@ -1,7 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions/index';
+import { ResponseCode } from 'src/common/response';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { isNotEmpty } from 'class-validator';
 import { TableName, GenDbTableList, GenTableList, GenTableUpdate } from './dto/create-genTable-dto';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { FormatDate, FormatDateFields, GetNowDate } from 'src/common/utils/index';
 import toolConfig from './config';
 import { GenConstants } from 'src/common/constant/gen.constant';
@@ -12,6 +15,7 @@ import archiver from 'archiver';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { UserDto } from 'src/module/system/user/user.decorator';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, GenTable, GenTableColumn } from '@prisma/client';
 import { Response } from 'express';
@@ -41,13 +45,13 @@ export class ToolService {
   constructor(private readonly prisma: PrismaService) { }
 
   private async fetchTableDetail(where: Prisma.GenTableWhereInput): Promise<GenTableWithColumns | null> {
-    const criteria: Prisma.GenTableWhereInput = { delFlag: '0', ...where };
+    const criteria: Prisma.GenTableWhereInput = { delFlag: DelFlagEnum.NORMAL, ...where };
     const table = await this.prisma.genTable.findFirst({ where: criteria });
     if (!table) {
       return null;
     }
     const columns = await this.prisma.genTableColumn.findMany({
-      where: { tableId: table.tableId, delFlag: '0' },
+      where: { tableId: table.tableId, delFlag: DelFlagEnum.NORMAL },
       orderBy: { sort: 'asc' },
     });
     return { ...table, columns };
@@ -88,10 +92,8 @@ export class ToolService {
    * @returns
    */
   async findAll(query: GenTableList) {
-    const page = Number(query.pageNum ?? 1);
-    const size = Number(query.pageSize ?? 10);
     const where: Prisma.GenTableWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
     if (query.tableNames) {
       where.tableName = { contains: query.tableNames };
@@ -102,16 +104,13 @@ export class ToolService {
     const [list, total] = await this.prisma.$transaction([
       this.prisma.genTable.findMany({
         where,
-        skip: (page - 1) * size,
-        take: size,
+        skip: query.skip,
+        take: query.take,
         orderBy: { tableId: 'desc' },
       }),
       this.prisma.genTable.count({ where }),
     ]);
-    return ResultData.ok({
-      rows: FormatDateFields(list),
-      total: total,
-    });
+    return Result.page(FormatDateFields(list), total);
   }
 
   /**
@@ -143,8 +142,8 @@ export class ToolService {
         genType: '0',
         genPath: '/',
         options: '',
-        status: '0',
-        delFlag: '0',
+        status: StatusEnum.NORMAL,
+        delFlag: DelFlagEnum.NORMAL,
         tplCategory: 'crud',
         tplWebType: 'element-plus',
       };
@@ -157,7 +156,7 @@ export class ToolService {
         await this.prisma.genTableColumn.create({ data: this.mapColumnPayload(column) });
       }
     }
-    return ResultData.ok('添加成功');
+    return Result.ok('添加成功');
   }
 
   /**
@@ -166,12 +165,12 @@ export class ToolService {
    */
   async synchDb(tableName: string) {
     const table = await this.findOneByTableName(tableName);
-    if (!table) throw new BadRequestException('同步数据失败，原表结构不存在！');
+    if (!table) throw new BusinessException(ResponseCode.BUSINESS_ERROR, '同步数据失败，原表结构不存在！');
     const tableColumns = table.columns ?? [];
     //更改后的数据库表的列信息
     const columns: DbColumnRow[] = await this.getTableColumnInfo(tableName);
 
-    if (!columns || !columns?.length) throw new BadRequestException('同步数据失败，原表结构不存在！');
+    if (!columns || !columns?.length) throw new BusinessException(ResponseCode.BUSINESS_ERROR, '同步数据失败，原表结构不存在！');
     //存储之前就存在已生成的列信息
     const tableColumnMap: Record<string, GenTableColumn> = {};
     for (const v of tableColumns) {
@@ -208,7 +207,7 @@ export class ToolService {
         await this.prisma.genTableColumn.deleteMany({ where: { columnId: { in: delColumns } } });
       }
     }
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -277,7 +276,7 @@ export class ToolService {
    */
   async findOne(id: number) {
     const info = await this.fetchTableDetail({ tableId: id });
-    return ResultData.ok({ info });
+    return Result.ok({ info });
   }
 
   /**
@@ -288,7 +287,7 @@ export class ToolService {
   async findOneByTableName(tableName: string): Promise<GenTableWithColumns> {
     const data = await this.fetchTableDetail({ tableName });
     if (!data) {
-      throw new BadRequestException('表不存在');
+      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '表不存在');
     }
     return data;
   }
@@ -306,7 +305,7 @@ export class ToolService {
     }
     const { columns, ...tableData } = genTableUpdate;
     await this.prisma.genTable.update({ where: { tableId: +genTableUpdate.tableId }, data: tableData });
-    return ResultData.ok({ genTableUpdate });
+    return Result.ok({ genTableUpdate });
   }
 
   /**
@@ -314,9 +313,11 @@ export class ToolService {
    * @param id
    * @returns
    */
+  @Transactional()
   async remove(id: number) {
-    await this.prisma.$transaction([this.prisma.genTableColumn.deleteMany({ where: { tableId: id } }), this.prisma.genTable.delete({ where: { tableId: id } })]);
-    return ResultData.ok();
+    await this.prisma.genTableColumn.deleteMany({ where: { tableId: id } });
+    await this.prisma.genTable.delete({ where: { tableId: id } });
+    return Result.ok();
   }
 
   /**
@@ -345,7 +346,7 @@ export class ToolService {
       tableNamesList.map(async (item) => {
         const data = await this.fetchTableDetail({ tableName: item });
         if (!data) {
-          throw new BadRequestException(`表 ${item} 不存在`);
+          throw new BusinessException(ResponseCode.BUSINESS_ERROR, `表 ${item} 不存在`);
         }
         const primaryKey = await this.getPrimaryKey(data.columns);
         return { primaryKey, BusinessName: capitalize(data.businessName), ...data, columns: data.columns };
@@ -395,18 +396,17 @@ export class ToolService {
   async preview(id: number) {
     const data = await this.fetchTableDetail({ tableId: id });
     if (!data) {
-      throw new BadRequestException('表不存在');
+      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '表不存在');
     }
     const primaryKey = await this.getPrimaryKey(data.columns);
     const info = { primaryKey, BusinessName: capitalize(data.businessName), ...data, columns: data.columns };
-    return ResultData.ok(templateIndex(info));
+    return Result.ok(templateIndex(info));
   }
   /**
    * 查询db数据库列表
    * @returns
    */
   async genDbList(q: GenDbTableList) {
-    const offset = (q.pageNum - 1) * q.pageSize;
     let filterClause = Prisma.sql``;
     if (isNotEmpty(q.tableName)) {
       filterClause = Prisma.sql`${filterClause} AND t.table_name ILIKE ${`%${q.tableName}%`}`;
@@ -431,15 +431,15 @@ export class ToolService {
         NOW() AS "updateTime"
       ${baseSql}
       ORDER BY t.table_name DESC
-      OFFSET ${offset}
-      LIMIT ${q.pageSize}
+      OFFSET ${q.skip}
+      LIMIT ${q.take}
     `;
     const countSql = Prisma.sql`
       SELECT COUNT(*)::bigint AS total
       ${baseSql}
     `;
     const [list, totalRes] = await Promise.all([this.prisma.$queryRaw<DbTableRow[]>(listSql), this.prisma.$queryRaw<Array<{ total: bigint }>>(countSql)]);
-    return ResultData.ok({
+    return Result.ok({
       list: list.map((item) => ({
         ...item,
         createTime: FormatDate(item.createTime),
@@ -455,7 +455,7 @@ export class ToolService {
    */
   async getDataNames() {
     // 目前只支持单数据源，返回默认数据源名称
-    return ResultData.ok(['master']);
+    return Result.ok(['master']);
   }
 
   /**

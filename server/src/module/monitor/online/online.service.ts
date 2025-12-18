@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum } from 'src/common/enum/index';
 import { FormatDateFields, Paginate } from 'src/common/utils/index';
@@ -17,10 +17,7 @@ export class OnlineService {
 
     // 如果没有在线用户，返回空数据
     if (!keys || keys.length === 0) {
-      return ResultData.ok({
-        rows: [],
-        total: 0,
-      });
+      return Result.page([], 0);
     }
 
     const data = await this.redisService.mget(keys);
@@ -53,14 +50,11 @@ export class OnlineService {
     // 格式化时间字段
     const formattedList = FormatDateFields(list, ['loginTime']);
 
-    return ResultData.ok({
-      rows: formattedList,
-      total: allUsers.length,
-    });
+    return Result.page(formattedList, allUsers.length);
   }
 
   async delete(token: string) {
     await this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${token}`);
-    return ResultData.ok();
+    return Result.ok();
   }
 }

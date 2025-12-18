@@ -1,6 +1,6 @@
 import { IsString, IsJSON, IsEnum, IsPhoneNumber, IsArray, Min, Length, IsOptional, IsBoolean, IsNumber, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 
 export class CreateGenTableCloumnDto {
   @ApiProperty({ type: Number, description: '归属表编号' })

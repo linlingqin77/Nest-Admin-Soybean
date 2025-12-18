@@ -1,12 +1,14 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
+import { DelFlagEnum } from 'src/common/enum/index';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { Response } from 'express';
 import { CreatePostDto, UpdatePostDto, ListPostDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DeptService } from '../dept/dept.service';
+import { PostRepository } from './post.repository';
 
 @Injectable()
 export class PostService {
@@ -14,28 +16,26 @@ export class PostService {
     private readonly prisma: PrismaService,
     @Inject(forwardRef(() => DeptService))
     private readonly deptService: DeptService,
+    private readonly postRepo: PostRepository,
   ) { }
   async create(createPostDto: CreatePostDto) {
-    await this.prisma.sysPost.create({
-      data: {
-        deptId: createPostDto.deptId,
-        postCode: createPostDto.postCode,
-        postCategory: createPostDto.postCategory,
-        postName: createPostDto.postName,
-        postSort: createPostDto.postSort ?? 0,
-        status: createPostDto.status ?? '0',
-        remark: createPostDto.remark ?? '',
-        createBy: '',
-        updateBy: '',
-        delFlag: '0',
-      },
+    await this.postRepo.create({
+      deptId: createPostDto.deptId,
+      postCode: createPostDto.postCode,
+      postCategory: createPostDto.postCategory,
+      postName: createPostDto.postName,
+      postSort: createPostDto.postSort ?? 0,
+      status: createPostDto.status ?? '0',
+      remark: createPostDto.remark ?? '',
+      delFlag: DelFlagEnum.NORMAL,
+      ...createPostDto,
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async findAll(query: ListPostDto) {
     const where: Prisma.SysPostWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.postName) {
@@ -60,70 +60,33 @@ export class PostService {
       where.deptId = { in: deptIds };
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
+    const { list, total } = await this.postRepo.findPageWithFilter(where, query.skip, query.take);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysPost.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: { postSort: 'asc' },
-      }),
-      this.prisma.sysPost.count({ where }),
-    ]);
-
-    return ResultData.ok({
-      rows: FormatDateFields(list),
-      total,
-    });
+    return Result.page(FormatDateFields(list), total);
   }
 
   async findOne(postId: number) {
-    const res = await this.prisma.sysPost.findUnique({
-      where: {
-        postId,
-      },
-    });
-    return ResultData.ok(res);
+    const res = await this.postRepo.findById(postId);
+    return Result.ok(res);
   }
 
   async update(updatePostDto: UpdatePostDto) {
-    const res = await this.prisma.sysPost.update({ where: { postId: updatePostDto.postId }, data: updatePostDto });
-    return ResultData.ok(res);
+    const res = await this.postRepo.update(updatePostDto.postId, updatePostDto);
+    return Result.ok(res);
   }
 
   async remove(postIds: string[]) {
-    const ids = postIds.map((item) => Number(item));
-    const data = await this.prisma.sysPost.updateMany({
-      where: {
-        postId: {
-          in: ids,
-        },
-      },
-      data: {
-        delFlag: '1',
-      },
-    });
-    return ResultData.ok(data.count);
+    const ids = postIds.map((id) => Number(id));
+    const data = await this.postRepo.softDeleteBatch(ids);
+    return Result.ok(data);
   }
 
   /**
    * 获取岗位选择框列表
    */
   async optionselect(deptId?: number, postIds?: number[]) {
-    const where: Prisma.SysPostWhereInput = {
-      delFlag: '0',
-      status: '0',
-    };
-    if (postIds && postIds.length > 0) {
-      where.postId = { in: postIds };
-    }
-    const list = await this.prisma.sysPost.findMany({
-      where,
-      orderBy: { postSort: 'asc' },
-    });
-    return ResultData.ok(list);
+    const list = await this.postRepo.findForSelect(deptId, postIds);
+    return Result.ok(list);
   }
 
   /**
@@ -131,7 +94,7 @@ export class PostService {
    */
   async deptTree() {
     const tree = await this.deptService.deptTree();
-    return ResultData.ok(tree);
+    return Result.ok(tree);
   }
 
   /**

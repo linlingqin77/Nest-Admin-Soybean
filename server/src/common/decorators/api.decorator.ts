@@ -1,6 +1,6 @@
 import { Type, applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiBody, ApiExtraModels, ApiOkResponse, ApiResponse, ApiParam, ApiQuery, ApiHeader, ApiConsumes, ApiProduces, ApiSecurity, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { ResultData } from '../utils/result';
+import { Result } from '../response';
 
 /**
  * 路径参数配置
@@ -435,7 +435,7 @@ export const Api = (options: ApiOptions) => {
   }
 
   // 11. 收集需要额外注册的模型
-  const extraModels: Type<any>[] = [ResultData];
+  const extraModels: Type<any>[] = [Result];
   const isBaseType = type && baseTypeNames.includes(type.name);
   if (type && !isBaseType) {
     extraModels.push(type);
@@ -461,7 +461,7 @@ export const Api = (options: ApiOptions) => {
     description: '操作成功',
     schema: {
       allOf: [
-        { $ref: getSchemaPath(ResultData) },
+        { $ref: getSchemaPath(Result) },
         {
           properties: {
             data: dataSchema,
@@ -569,7 +569,7 @@ export const Api = (options: ApiOptions) => {
  * 保留用于向后兼容
  */
 export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArray?: boolean, isPager?: boolean) => {
-  const extraModels: Type<any>[] = [ResultData];
+  const extraModels: Type<any>[] = [Result];
   const isBaseType = model && baseTypeNames.includes(model.name);
   if (model && !isBaseType) {
     extraModels.push(model);
@@ -582,7 +582,7 @@ export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArra
     ApiOkResponse({
       schema: {
         allOf: [
-          { $ref: getSchemaPath(ResultData) },
+          { $ref: getSchemaPath(Result) },
           {
             properties: {
               data: dataSchema,

@@ -7,7 +7,7 @@ import { RequireRole } from 'src/common/decorators/require-role.decorator';
 import { UploadService } from 'src/module/upload/upload.service';
 import { CreateUserDto, UpdateUserDto, ListUserDto, ChangeUserStatusDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { User, UserDto, UserTool, UserToolType } from 'src/module/system/user/user.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
@@ -39,7 +39,7 @@ export class UserController {
     delete safeUser.password;
 
     // 返回 Soybean 前端期望的格式
-    return ResultData.ok({
+    return Result.ok({
       user: safeUser,
       roles: user.roles || [],
       permissions: user.permissions || [],
@@ -54,7 +54,7 @@ export class UserController {
   @RequirePermission('system:user:query')
   @Get('/profile')
   profile(@User() user: UserDto) {
-    return ResultData.ok(user.user);
+    return Result.ok(user.user);
   }
 
   @Api({
@@ -85,7 +85,7 @@ export class UserController {
   @UseInterceptors(FileInterceptor('avatarfile'))
   async avatar(@UploadedFile() avatarfile: Express.Multer.File, @User() user: UserDto) {
     const res = await this.uploadService.singleFileUpload(avatarfile);
-    return ResultData.ok({ imgUrl: res.fileName });
+    return Result.ok({ imgUrl: res.fileName });
   }
 
   @Api({

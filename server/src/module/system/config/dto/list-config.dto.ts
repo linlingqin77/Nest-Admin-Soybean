@@ -1,9 +1,9 @@
 import { IsString, IsEnum, Length, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { ConfigTypeEnum, ConfigTypeEnumSchema } from 'src/common/enum';
 
-export class ListConfigDto extends PagingDto {
+export class ListConfigDto extends PageQueryDto {
   @ApiProperty({ required: false, description: '参数名称' })
   @IsOptional()
   @IsString()

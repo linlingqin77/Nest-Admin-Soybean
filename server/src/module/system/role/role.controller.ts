@@ -11,7 +11,7 @@ import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
 
 import { UserService } from '../user/user.service';
-import { User, UserDto } from 'src/module/system/user/user.decorator';
+import { User, UserDto, UserTool, UserToolType } from 'src/module/system/user/user.decorator';
 
 @ApiTags('角色管理')
 @Controller('system/role')
@@ -20,7 +20,7 @@ export class RoleController {
   constructor(
     private readonly roleService: RoleService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   @Api({
     summary: '角色管理-创建',
@@ -30,8 +30,8 @@ export class RoleController {
   @RequirePermission('system:role:add')
   @Operlog({ businessType: BusinessType.INSERT })
   @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.roleService.create(createRoleDto);
+  create(@Body() createRoleDto: CreateRoleDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.roleService.create(injectCreate(createRoleDto));
   }
 
   @Api({

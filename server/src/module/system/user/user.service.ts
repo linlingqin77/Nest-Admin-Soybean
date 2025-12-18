@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { BusinessException } from 'src/common/exceptions';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import * as bcrypt from 'bcryptjs';
 import { Response } from 'express';
@@ -9,8 +10,9 @@ import { ExportTable } from 'src/common/utils/export';
 import { PaginationHelper } from 'src/common/utils/pagination.helper';
 
 import { CacheEnum, DelFlagEnum, StatusEnum, DataScopeEnum } from 'src/common/enum/index';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { LOGIN_TOKEN_EXPIRESIN, SYS_USER_TYPE } from 'src/common/constant/index';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
 import { CreateUserDto, UpdateUserDto, ListUserDto, ChangeUserStatusDto, ResetPwdDto, AllocatedListDto, UpdateProfileDto, UpdatePwdDto } from './dto/index';
 import { RegisterDto, LoginDto } from '../../main/dto/index';
 import { AuthUserCancelDto, AuthUserCancelAllDto, AuthUserSelectAllDto } from '../role/dto/index';
@@ -24,6 +26,7 @@ import { ClientInfoDto } from 'src/common/decorators/common.decorator';
 import { Cacheable, CacheEvict } from 'src/common/decorators/redis.decorator';
 import { Captcha } from 'src/common/decorators/captcha.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserRepository } from './user.repository';
 
 type UserWithDept = SysUser & { dept?: SysDept | null };
 type UserWithRelations = UserWithDept & { roles?: SysRole[]; posts?: SysPost[] };
@@ -32,6 +35,7 @@ type UserWithRelations = UserWithDept & { roles?: SysRole[]; posts?: SysPost[] }
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly userRepo: UserRepository,
     private readonly roleService: RoleService,
     private readonly deptService: DeptService,
     private readonly jwtService: JwtService,
@@ -131,6 +135,7 @@ export class UserService {
     return undefined;
   }
 
+  @Transactional()
   async create(createUserDto: CreateUserDto) {
     const salt = bcrypt.genSaltSync(10);
     if (createUserDto.password) {
@@ -138,46 +143,34 @@ export class UserService {
     }
     const { postIds = [], roleIds = [], ...userPayload } = createUserDto as CreateUserDto & { postIds?: number[]; roleIds?: number[] };
 
-    const user = await this.prisma.sysUser.create({
-      data: {
-        ...userPayload,
-        userType: SYS_USER_TYPE.CUSTOM,
-        phonenumber: userPayload.phonenumber ?? '',
-        sex: userPayload.sex ?? '0',
-        status: userPayload.status ?? '0',
-        avatar: '',
-        delFlag: '0',
-        loginIp: '',
-        createBy: '',
-        updateBy: '',
-      },
+    const user = await this.userRepo.create({
+      ...userPayload,
+      userType: SYS_USER_TYPE.CUSTOM,
+      phonenumber: userPayload.phonenumber ?? '',
+      sex: userPayload.sex ?? '0',
+      status: userPayload.status ?? '0',
+      avatar: '',
+      delFlag: DelFlagEnum.NORMAL,
+      loginIp: '',
     });
 
-    const tasks: Prisma.PrismaPromise<unknown>[] = [];
-
+    // 关联岗位
     if (postIds.length > 0) {
-      tasks.push(
-        this.prisma.sysUserPost.createMany({
-          data: postIds.map((postId) => ({ userId: user.userId, postId })),
-          skipDuplicates: true,
-        }),
-      );
+      await this.prisma.sysUserPost.createMany({
+        data: postIds.map((postId) => ({ userId: user.userId, postId })),
+        skipDuplicates: true,
+      });
     }
 
+    // 关联角色
     if (roleIds.length > 0) {
-      tasks.push(
-        this.prisma.sysUserRole.createMany({
-          data: roleIds.map((roleId) => ({ userId: user.userId, roleId })),
-          skipDuplicates: true,
-        }),
-      );
+      await this.prisma.sysUserRole.createMany({
+        data: roleIds.map((roleId) => ({ userId: user.userId, roleId })),
+        skipDuplicates: true,
+      });
     }
 
-    if (tasks.length) {
-      await this.prisma.$transaction(tasks);
-    }
-
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async findAll(query: ListUserDto, user: UserType['user']) {
@@ -243,7 +236,7 @@ export class UserService {
       loginDate: user.loginDate ? FormatDate(user.loginDate) : null,
     }));
 
-    return ResultData.ok({
+    return Result.ok({
       rows,
       total,
     });
@@ -252,7 +245,7 @@ export class UserService {
   async findPostAndRoleAll() {
     const [posts, roles] = await Promise.all([this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }), this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } })]);
 
-    return ResultData.ok({
+    return Result.ok({
       posts,
       roles,
     });
@@ -260,15 +253,10 @@ export class UserService {
 
   @Cacheable(CacheEnum.SYS_USER_KEY, '{userId}')
   async findOne(userId: number) {
-    const data = await this.prisma.sysUser.findFirst({
-      where: {
-        delFlag: DelFlagEnum.NORMAL,
-        userId,
-      },
-    });
+    const data = await this.userRepo.findById(userId);
 
     if (!data) {
-      return ResultData.ok(null);
+      return Result.ok(null);
     }
 
     const [dept, postList, allPosts, roleIds, allRoles] = await Promise.all([
@@ -286,7 +274,7 @@ export class UserService {
       roles: allRoles.filter((role) => roleIds.includes(role.roleId)),
     };
 
-    return ResultData.ok({
+    return Result.ok({
       data: enrichedData,
       postIds,
       posts: allPosts,
@@ -296,8 +284,9 @@ export class UserService {
   }
 
   @CacheEvict(CacheEnum.SYS_USER_KEY, '{updateUserDto.userId}')
+  @Transactional()
   async update(updateUserDto: UpdateUserDto, userId: number) {
-    if (updateUserDto.userId === 1) throw new BadRequestException('非法操作！');
+    if (updateUserDto.userId === 1) throw new BusinessException(ResponseCode.BUSINESS_ERROR, '非法操作！');
 
     updateUserDto.roleIds = updateUserDto.roleIds.filter((v) => v != 1);
 
@@ -307,26 +296,22 @@ export class UserService {
 
     const { postIds = [], roleIds = [], ...rest } = updateUserDto as UpdateUserDto & { postIds?: number[]; roleIds?: number[] };
 
-    const tasks: Prisma.PrismaPromise<unknown>[] = [];
-
+    // 更新岗位关联
     if (postIds.length > 0) {
-      tasks.push(this.prisma.sysUserPost.deleteMany({ where: { userId: updateUserDto.userId } }));
-      tasks.push(
-        this.prisma.sysUserPost.createMany({
-          data: postIds.map((postId) => ({ userId: updateUserDto.userId, postId })),
-          skipDuplicates: true,
-        }),
-      );
+      await this.prisma.sysUserPost.deleteMany({ where: { userId: updateUserDto.userId } });
+      await this.prisma.sysUserPost.createMany({
+        data: postIds.map((postId) => ({ userId: updateUserDto.userId, postId })),
+        skipDuplicates: true,
+      });
     }
 
+    // 更新角色关联
     if (roleIds.length > 0) {
-      tasks.push(this.prisma.sysUserRole.deleteMany({ where: { userId: updateUserDto.userId } }));
-      tasks.push(
-        this.prisma.sysUserRole.createMany({
-          data: roleIds.map((roleId) => ({ userId: updateUserDto.userId, roleId })),
-          skipDuplicates: true,
-        }),
-      );
+      await this.prisma.sysUserRole.deleteMany({ where: { userId: updateUserDto.userId } });
+      await this.prisma.sysUserRole.createMany({
+        data: roleIds.map((roleId) => ({ userId: updateUserDto.userId, roleId })),
+        skipDuplicates: true,
+      });
     }
 
     const updateData = { ...rest } as Prisma.SysUserUpdateInput;
@@ -336,16 +321,12 @@ export class UserService {
     delete (updateData as any).roleIds;
     delete (updateData as any).postIds;
 
-    tasks.push(
-      this.prisma.sysUser.update({
-        where: { userId: updateUserDto.userId },
-        data: updateData,
-      }),
-    );
+    const data = await this.prisma.sysUser.update({
+      where: { userId: updateUserDto.userId },
+      data: updateData,
+    });
 
-    const data = await this.prisma.$transaction(tasks);
-
-    return ResultData.ok(data[data.length - 1]);
+    return Result.ok(data);
   }
 
   @CacheEvict(CacheEnum.SYS_USER_KEY, '{userId}')
@@ -355,18 +336,10 @@ export class UserService {
 
   @Captcha('user')
   async login(user: LoginDto, clientInfo: ClientInfoDto) {
-    const data = await this.prisma.sysUser.findFirst({
-      where: {
-        userName: user.userName,
-      },
-      select: {
-        userId: true,
-        password: true,
-      },
-    });
+    const data = await this.userRepo.findByUserName(user.userName);
 
     if (!(data && bcrypt.compareSync(user.password, data.password))) {
-      return ResultData.fail(500, `帐号或密码错误`);
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `帐号或密码错误`);
     }
 
     this.clearCacheByUserId(data.userId);
@@ -374,19 +347,17 @@ export class UserService {
     const userData = await this.getUserinfo(data.userId);
 
     if (userData.delFlag === DelFlagEnum.DELETE) {
-      return ResultData.fail(500, `您已被禁用，如需正常使用请联系管理员`);
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `您已被禁用，如需正常使用请联系管理员`);
     }
     if (userData.status === StatusEnum.STOP) {
-      return ResultData.fail(500, `您已被停用，如需正常使用请联系管理员`);
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `您已被停用，如需正常使用请联系管理员`);
     }
 
     const loginDate = new Date();
+    await this.userRepo.updateLoginTime(data.userId);
     await this.prisma.sysUser.update({
       where: { userId: data.userId },
-      data: {
-        loginDate,
-        loginIp: clientInfo.ipaddr,
-      },
+      data: { loginIp: clientInfo.ipaddr },
     });
 
     const uuid = GenerateUUID();
@@ -423,7 +394,7 @@ export class UserService {
 
     await this.updateRedisToken(uuid, userInfo);
 
-    return ResultData.ok(
+    return Result.ok(
       {
         token,
       },
@@ -476,15 +447,10 @@ export class UserService {
   }
 
   async getUserinfo(userId: number): Promise<UserWithRelations> {
-    const user = await this.prisma.sysUser.findFirst({
-      where: {
-        userId,
-        delFlag: DelFlagEnum.NORMAL,
-      },
-    });
+    const user = await this.userRepo.findById(userId);
 
     if (!user) {
-      throw new BadRequestException('用户不存在');
+      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
     }
 
     const [dept, roleIds, postRelations] = await Promise.all([
@@ -520,25 +486,24 @@ export class UserService {
     if (user.password) {
       user.password = bcrypt.hashSync(user.password, salt);
     }
-    const checkUserNameUnique = await this.prisma.sysUser.findFirst({
-      where: {
-        userName: user.userName,
-      },
-      select: { userName: true },
-    });
+    const checkUserNameUnique = await this.userRepo.findByUserName(user.userName);
     if (checkUserNameUnique) {
-      return ResultData.fail(500, `保存用户'${user.userName}'失败，注册账号已存在`);
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `保存用户'${user.userName}'失败，注册账号已存在`);
     }
-    await this.prisma.sysUser.create({
-      data: {
-        userName: user.userName,
-        nickName: user.userName,
-        password: user.password,
-        loginDate,
-        userType: SYS_USER_TYPE.CUSTOM,
-      },
+    await this.userRepo.create({
+      userName: user.userName,
+      nickName: user.userName,
+      password: user.password,
+      loginDate,
+      userType: SYS_USER_TYPE.CUSTOM,
+      phonenumber: '',
+      sex: '0',
+      avatar: '',
+      status: StatusEnum.NORMAL,
+      delFlag: DelFlagEnum.NORMAL,
+      loginIp: '',
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   createToken(payload: { uuid: string; userId: number }): string {
@@ -558,39 +523,28 @@ export class UserService {
 
   async resetPwd(body: ResetPwdDto) {
     if (body.userId === 1) {
-      return ResultData.fail(500, '系统用户不能重置密码');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '系统用户不能重置密码');
     }
     if (body.password) {
       body.password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(10));
     }
-    await this.prisma.sysUser.update({
-      where: { userId: body.userId },
-      data: { password: body.password },
-    });
-    return ResultData.ok();
+    await this.userRepo.resetPassword(body.userId, body.password);
+    return Result.ok();
   }
 
   async remove(ids: number[]) {
-    const data = await this.prisma.sysUser.updateMany({
-      where: {
-        userId: { in: ids },
-        userType: { not: SYS_USER_TYPE.SYS },
-      },
-      data: {
-        delFlag: DelFlagEnum.DELETE,
-      },
-    });
-    return ResultData.ok(data);
+    const count = await this.userRepo.softDeleteBatch(ids);
+    return Result.ok({ count });
   }
 
   async authRole(userId: number) {
     const [allRoles, user] = await Promise.all([
       this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
-      this.prisma.sysUser.findFirst({ where: { delFlag: DelFlagEnum.NORMAL, userId } }),
+      this.userRepo.findById(userId),
     ]);
 
     if (!user) {
-      throw new BadRequestException('用户不存在');
+      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
     }
 
     const dept = user.deptId ? await this.prisma.sysDept.findFirst({ where: { delFlag: DelFlagEnum.NORMAL, deptId: user.deptId } }) : null;
@@ -608,12 +562,13 @@ export class UserService {
       }),
     };
 
-    return ResultData.ok({
+    return Result.ok({
       roles: allRoles,
       user: enrichedUser,
     });
   }
 
+  @Transactional()
   async updateAuthRole(query) {
     let roleIds = query.roleIds.split(',');
     roleIds = roleIds.filter((v) => v != '1');
@@ -625,28 +580,24 @@ export class UserService {
         skipDuplicates: true,
       });
     }
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async changeStatus(changeStatusDto: ChangeUserStatusDto) {
-    const userData = await this.prisma.sysUser.findUnique({
-      where: { userId: changeStatusDto.userId },
-      select: { userType: true },
-    });
+    const userData = await this.userRepo.findById(changeStatusDto.userId);
     if (userData?.userType === SYS_USER_TYPE.SYS) {
-      return ResultData.fail(500, '系统角色不可停用');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '系统角色不可停用');
     }
 
-    const res = await this.prisma.sysUser.update({
-      where: { userId: changeStatusDto.userId },
-      data: { status: changeStatusDto.status },
+    await this.userRepo.update(changeStatusDto.userId, {
+      status: changeStatusDto.status,
     });
-    return ResultData.ok(res);
+    return Result.ok();
   }
 
   async deptTree() {
     const tree = await this.deptService.deptTree();
-    return ResultData.ok(tree);
+    return Result.ok(tree);
   }
 
   async allocatedList(query: AllocatedListDto) {
@@ -655,12 +606,12 @@ export class UserService {
       select: { userId: true },
     });
     if (!relations.length) {
-      return ResultData.ok({ rows: [], total: 0 });
+      return Result.page([], 0);
     }
     const userIds = relations.map((item) => item.userId);
     const where: Prisma.SysUserWhereInput = {
       delFlag: DelFlagEnum.NORMAL,
-      status: '0',
+      status: StatusEnum.NORMAL,
       userId: { in: userIds },
     };
 
@@ -677,7 +628,7 @@ export class UserService {
     const listWithDept = await this.attachDeptInfo(list);
     const formattedList = FormatDateFields(listWithDept);
 
-    return ResultData.ok({ rows: formattedList, total });
+    return Result.page(formattedList, total);
   }
 
   async unallocatedList(query: AllocatedListDto) {
@@ -689,7 +640,7 @@ export class UserService {
 
     const where: Prisma.SysUserWhereInput = {
       delFlag: DelFlagEnum.NORMAL,
-      status: '0',
+      status: StatusEnum.NORMAL,
     };
 
     if (userIds.length > 0) {
@@ -712,7 +663,7 @@ export class UserService {
     const listWithDept = await this.attachDeptInfo(list);
     const formattedList = FormatDateFields(listWithDept);
 
-    return ResultData.ok({ rows: formattedList, total });
+    return Result.page(formattedList, total);
   }
 
   async authUserCancel(data: AuthUserCancelDto) {
@@ -722,9 +673,10 @@ export class UserService {
         roleId: data.roleId,
       },
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
+  @Transactional()
   async authUserCancelAll(data: AuthUserCancelAllDto) {
     const userIds = data.userIds.split(',').map((id) => +id);
     await this.prisma.sysUserRole.deleteMany({
@@ -733,9 +685,10 @@ export class UserService {
         roleId: +data.roleId,
       },
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
+  @Transactional()
   async authUserSelectAll(data: AuthUserSelectAllDto) {
     const userIds = data.userIds.split(',').map((id) => +id);
     const entities = userIds.map((userId) => ({
@@ -743,11 +696,11 @@ export class UserService {
       roleId: +data.roleId,
     }));
     await this.prisma.sysUserRole.createMany({ data: entities, skipDuplicates: true });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async profile(user) {
-    return ResultData.ok(user);
+    return Result.ok(user);
   }
 
   async updateProfile(user: UserType, updateProfileDto: UpdateProfileDto) {
@@ -755,20 +708,20 @@ export class UserService {
     const userData = await this.redisService.get(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
     userData.user = Object.assign(userData.user, updateProfileDto);
     await this.redisService.set(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`, userData);
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async updatePwd(user: UserType, updatePwdDto: UpdatePwdDto) {
     if (updatePwdDto.oldPassword === updatePwdDto.newPassword) {
-      return ResultData.fail(500, '新密码不能与旧密码相同');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '新密码不能与旧密码相同');
     }
     if (bcrypt.compareSync(user.user.password, updatePwdDto.oldPassword)) {
-      return ResultData.fail(500, '修改密码失败，旧密码错误');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '修改密码失败，旧密码错误');
     }
 
     const password = bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10));
-    await this.prisma.sysUser.update({ where: { userId: user.user.userId }, data: { password: password } });
-    return ResultData.ok();
+    await this.userRepo.resetPassword(user.user.userId, password);
+    return Result.ok();
   }
 
   /**
@@ -777,8 +730,8 @@ export class UserService {
   async optionselect() {
     const list = await this.prisma.sysUser.findMany({
       where: {
-        delFlag: '0',
-        status: '0',
+        delFlag: DelFlagEnum.NORMAL,
+        status: StatusEnum.NORMAL,
       },
       select: {
         userId: true,
@@ -786,7 +739,7 @@ export class UserService {
         nickName: true,
       },
     });
-    return ResultData.ok(list);
+    return Result.ok(list);
   }
 
   /**
@@ -796,10 +749,10 @@ export class UserService {
     const list = await this.prisma.sysUser.findMany({
       where: {
         deptId,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
-    return ResultData.ok(list);
+    return Result.ok(list);
   }
 
   async export(res: Response, body: ListUserDto, user: UserType['user']) {

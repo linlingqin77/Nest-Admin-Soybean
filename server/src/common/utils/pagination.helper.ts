@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 export interface PaginatedResult<T> {
   rows: T[];
@@ -31,7 +31,12 @@ export class PaginationHelper {
     return { rows, total };
   }
 
-  static async paginateWithTransaction<T>(prisma: any, model: string, findManyArgs: any, countArgs?: any): Promise<PaginatedResult<T>> {
+  static async paginateWithTransaction<T>(
+    prisma: PrismaClient,
+    model: string,
+    findManyArgs: Prisma.Args<any, 'findMany'>,
+    countArgs?: Prisma.Args<any, 'count'>
+  ): Promise<PaginatedResult<T>> {
     const [rows, total] = await prisma.$transaction([
       prisma[model].findMany(findManyArgs),
       prisma[model].count(countArgs || { where: findManyArgs?.where }),

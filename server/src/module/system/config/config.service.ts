@@ -1,29 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma, SysConfig } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { BusinessException } from 'src/common/exceptions';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { CreateConfigDto, UpdateConfigDto, ListConfigDto } from './dto/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
-import { CacheEnum } from 'src/common/enum/index';
+import { CacheEnum, DelFlagEnum } from 'src/common/enum/index';
 import { Cacheable, CacheEvict } from 'src/common/decorators/redis.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigRepository } from './config.repository';
 
 @Injectable()
 export class ConfigService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
+    private readonly configRepo: ConfigRepository,
   ) { }
   async create(createConfigDto: CreateConfigDto) {
-    await this.prisma.sysConfig.create({ data: createConfigDto });
-    return ResultData.ok();
+    await this.configRepo.create(createConfigDto);
+    return Result.ok();
   }
 
   async findAll(query: ListConfigDto) {
     const where: Prisma.SysConfigWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.configName) {
@@ -49,39 +52,22 @@ export class ConfigService {
       };
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
+    const { list, total } = await this.configRepo.findPageWithFilter(where, query.skip, query.take);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysConfig.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: {
-          createTime: 'desc',
-        },
-      }),
-      this.prisma.sysConfig.count({ where }),
-    ]);
-
-    return ResultData.ok({
+    return Result.ok({
       rows: FormatDateFields(list),
       total,
     });
   }
 
   async findOne(configId: number) {
-    const data = await this.prisma.sysConfig.findUnique({
-      where: {
-        configId,
-      },
-    });
-    return ResultData.ok(data);
+    const data = await this.configRepo.findById(configId);
+    return Result.ok(data);
   }
 
   async findOneByConfigKey(configKey: string) {
     const data = await this.getConfigValue(configKey);
-    return ResultData.ok(data);
+    return Result.ok(data);
   }
 
   /**
@@ -92,57 +78,34 @@ export class ConfigService {
    */
   @Cacheable(CacheEnum.SYS_CONFIG_KEY, '{configKey}')
   async getConfigValue(configKey: string) {
-    const data = await this.prisma.sysConfig.findFirst({
-      where: {
-        configKey,
-        delFlag: '0',
-      },
-    });
+    const data = await this.configRepo.findByConfigKey(configKey);
     return data?.configValue ?? null;
   }
 
   @CacheEvict(CacheEnum.SYS_CONFIG_KEY, '{updateConfigDto.configKey}')
   async update(updateConfigDto: UpdateConfigDto) {
-    await this.prisma.sysConfig.update({
-      where: {
-        configId: updateConfigDto.configId,
-      },
-      data: updateConfigDto,
-    });
-    return ResultData.ok();
+    await this.configRepo.update(updateConfigDto.configId, updateConfigDto);
+    return Result.ok();
   }
 
   /**
    * 根据Key更新配置
    */
   async updateByKey(updateConfigDto: UpdateConfigDto) {
-    const config = await this.prisma.sysConfig.findFirst({
-      where: {
-        configKey: updateConfigDto.configKey,
-        delFlag: '0',
-      },
+    const config = await this.configRepo.findByConfigKey(updateConfigDto.configKey);
+    BusinessException.throwIfNull(config, '参数不存在', ResponseCode.DATA_NOT_FOUND);
+    await this.configRepo.update(config.configId, {
+      configValue: updateConfigDto.configValue,
     });
-    if (!config) {
-      return ResultData.fail(500, '参数不存在');
-    }
-    await this.prisma.sysConfig.update({
-      where: {
-        configId: config.configId,
-      },
-      data: {
-        configValue: updateConfigDto.configValue,
-      },
-    });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async remove(configIds: number[]) {
-    const list = await this.prisma.sysConfig.findMany({
+    const list = await this.configRepo.findMany({
       where: {
         configId: {
           in: configIds,
         },
-        delFlag: '0',
       },
       select: {
         configType: true,
@@ -150,20 +113,13 @@ export class ConfigService {
       },
     });
     const item = list.find((item) => item.configType === 'Y');
-    if (item) {
-      return ResultData.fail(500, `内置参数【${item.configKey}】不能删除`);
-    }
-    const data = await this.prisma.sysConfig.updateMany({
-      where: {
-        configId: {
-          in: configIds,
-        },
-      },
-      data: {
-        delFlag: '1',
-      },
-    });
-    return ResultData.ok(data.count);
+    BusinessException.throwIf(
+      item !== undefined,
+      `内置参数【${item?.configKey}】不能删除`,
+      ResponseCode.OPERATION_FAILED
+    );
+    const data = await this.configRepo.softDeleteBatch(configIds);
+    return Result.ok(data);
   }
 
   /**
@@ -201,7 +157,7 @@ export class ConfigService {
   async resetConfigCache() {
     await this.clearConfigCache();
     await this.loadingConfigCache();
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -216,10 +172,8 @@ export class ConfigService {
    * @returns
    */
   async loadingConfigCache() {
-    const list = await this.prisma.sysConfig.findMany({
-      where: {
-        delFlag: '0',
-      },
+    const list = await this.configRepo.findMany({
+      where: { delFlag: DelFlagEnum.NORMAL },
     });
     list.forEach((item) => {
       if (item.configKey) {

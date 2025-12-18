@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
+import { DelFlagEnum } from 'src/common/enum/index';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { CreateLoginlogDto, ListLoginlogDto } from './dto/index';
@@ -27,7 +28,7 @@ export class LoginlogService {
         os: createLoginlogDto.os ?? '',
         msg: createLoginlogDto.msg ?? '',
         status: createLoginlogDto.status ?? '0',
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
   }
@@ -39,7 +40,7 @@ export class LoginlogService {
    */
   async findAll(query: ListLoginlogDto) {
     const where: Prisma.SysLogininforWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.ipaddr) {
@@ -58,37 +59,27 @@ export class LoginlogService {
       where.status = query.status;
     }
 
-    if (query.params?.beginTime && query.params?.endTime) {
-      where.loginTime = {
-        gte: new Date(query.params.beginTime),
-        lte: new Date(query.params.endTime),
-      };
+    // 使用 getDateRange 便捷方法
+    const dateRange = query.getDateRange?.('loginTime');
+    if (dateRange) {
+      Object.assign(where, dateRange);
     }
 
-    const sortOrder: Prisma.SortOrder = query.isAsc === 'ascending' ? 'asc' : 'desc';
-    const orderBy: Prisma.SysLogininforOrderByWithRelationInput = query.orderByColumn
-      ? ({
-        [query.orderByColumn]: sortOrder,
-      } as Prisma.SysLogininforOrderByWithRelationInput)
-      : { loginTime: 'desc' };
-
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
+    // 使用 getOrderBy 便捷方法
+    const orderBy = query.getOrderBy?.('loginTime') || { loginTime: 'desc' };
 
     const [list, total] = await this.prisma.$transaction([
       this.prisma.sysLogininfor.findMany({
         where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
+        skip: query.skip,
+        take: query.take,
         orderBy,
       }),
       this.prisma.sysLogininfor.count({ where }),
     ]);
 
-    return ResultData.ok({
-      rows: FormatDateFields(list),
-      total,
-    });
+    // 使用 Result.page 便捷方法
+    return Result.page(FormatDateFields(list), total, query.pageNum, query.pageSize);
   }
 
   /**
@@ -106,7 +97,7 @@ export class LoginlogService {
         delFlag: '1',
       },
     });
-    return ResultData.ok(data.count);
+    return Result.ok(data.count);
   }
 
   /**
@@ -119,7 +110,7 @@ export class LoginlogService {
         delFlag: '1',
       },
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -129,7 +120,7 @@ export class LoginlogService {
   async unlock(username: string) {
     // 这里可以根据实际需求清除用户的锁定状态，比如从 Redis 中删除锁定信息
     // 目前简单返回成功
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**

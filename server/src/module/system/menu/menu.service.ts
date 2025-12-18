@@ -1,91 +1,58 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { CreateMenuDto, UpdateMenuDto, ListDeptDto } from './dto/index';
 import { ListToTree, Uniq } from 'src/common/utils/index';
 import { UserService } from '../user/user.service';
 import { buildMenus } from './utils';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MenuRepository } from './menu.repository';
+
 @Injectable()
 export class MenuService {
   constructor(
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly prisma: PrismaService,
-  ) {}
+    private readonly menuRepo: MenuRepository,
+  ) { }
 
   async create(createMenuDto: CreateMenuDto) {
-    const res = await this.prisma.sysMenu.create({
-      data: {
-        ...createMenuDto,
-        path: createMenuDto.path ?? '',
-        icon: createMenuDto.icon ?? '',
-        createBy: '',
-        updateBy: '',
-        delFlag: '0',
-      },
+    const res = await this.menuRepo.create({
+      ...createMenuDto,
+      path: createMenuDto.path ?? '',
+      icon: createMenuDto.icon ?? '',
+      delFlag: DelFlagEnum.NORMAL,
     });
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async findAll(query: ListDeptDto) {
-    const where: Prisma.SysMenuWhereInput = {
-      delFlag: '0',
-    };
-
-    if (query.menuName) {
-      where.menuName = {
-        contains: query.menuName,
-      };
-    }
-    if (query.status) {
-      where.status = query.status;
-    }
-
-    const res = await this.prisma.sysMenu.findMany({
-      where,
-      orderBy: { orderNum: 'asc' },
-    });
-    return ResultData.ok(res);
+    const res = await this.menuRepo.findAllMenus(query?.status);
+    return Result.ok(res);
   }
 
   async treeSelect() {
-    const res = await this.prisma.sysMenu.findMany({
-      where: {
-        delFlag: '0',
-      },
-      orderBy: {
-        orderNum: 'asc',
-      },
-    });
+    const res = await this.menuRepo.findAllMenus();
     const tree = ListToTree(
       res,
       (m) => m.menuId,
       (m) => m.menuName,
     );
-    return ResultData.ok(tree);
+    return Result.ok(tree);
   }
 
   async roleMenuTreeselect(roleId: number): Promise<any> {
-    const res = await this.prisma.sysMenu.findMany({
-      where: {
-        delFlag: '0',
-      },
-      orderBy: [{ orderNum: 'asc' }, { parentId: 'asc' }],
-    });
+    const res = await this.menuRepo.findAllMenus();
     const tree = ListToTree(
       res,
       (m) => m.menuId,
       (m) => m.menuName,
     );
-    const menuIds = await this.prisma.sysRoleMenu.findMany({
-      where: { roleId },
-      select: { menuId: true },
-    });
-    const checkedKeys = menuIds.map((item) => {
-      return item.menuId;
-    });
-    return ResultData.ok({
+    const menuIds = await this.menuRepo.findRoleMenus(roleId);
+    const checkedKeys = menuIds.map((item) => item.menuId);
+    return Result.ok({
       menus: tree,
       checkedKeys: checkedKeys,
     });
@@ -97,7 +64,7 @@ export class MenuService {
   async tenantPackageMenuTreeselect(packageId: number): Promise<any> {
     const res = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
       orderBy: [{ orderNum: 'asc' }, { parentId: 'asc' }],
     });
@@ -108,34 +75,25 @@ export class MenuService {
     );
     // 查询租户套餐关联的菜单ID（如果有对应的表）
     // 暂时返回空数组作为 checkedKeys
-    return ResultData.ok({
+    return Result.ok({
       menus: tree,
       checkedKeys: [],
     });
   }
 
   async findOne(menuId: number) {
-    const res = await this.prisma.sysMenu.findUnique({
-      where: {
-        menuId,
-      },
-    });
-    return ResultData.ok(res);
+    const res = await this.menuRepo.findById(menuId);
+    return Result.ok(res);
   }
 
   async update(updateMenuDto: UpdateMenuDto) {
-    const res = await this.prisma.sysMenu.update({ where: { menuId: updateMenuDto.menuId }, data: updateMenuDto });
-    return ResultData.ok(res);
+    const res = await this.menuRepo.update(updateMenuDto.menuId, updateMenuDto);
+    return Result.ok(res);
   }
 
   async remove(menuId: number) {
-    const data = await this.prisma.sysMenu.update({
-      where: { menuId },
-      data: {
-        delFlag: '1',
-      },
-    });
-    return ResultData.ok(data);
+    const data = await this.menuRepo.softDelete(menuId);
+    return Result.ok(data);
   }
 
   /**
@@ -152,7 +110,7 @@ export class MenuService {
         delFlag: '1',
       },
     });
-    return ResultData.ok(data.count);
+    return Result.ok(data.count);
   }
 
   async findMany(args: Prisma.SysMenuFindManyArgs) {
@@ -172,8 +130,8 @@ export class MenuService {
     if (roleIds.includes(1)) {
       const allMenus = await this.prisma.sysMenu.findMany({
         where: {
-          delFlag: '0',
-          status: '0',
+          delFlag: DelFlagEnum.NORMAL,
+          status: StatusEnum.NORMAL,
         },
         select: {
           menuId: true,
@@ -195,13 +153,13 @@ export class MenuService {
     }
 
     if (menuIds.length === 0) {
-      return ResultData.ok([]);
+      return Result.ok([]);
     }
 
     const menuList = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: '0',
-        status: '0',
+        delFlag: DelFlagEnum.NORMAL,
+        status: StatusEnum.NORMAL,
         menuId: {
           in: menuIds,
         },
@@ -212,6 +170,6 @@ export class MenuService {
     });
     // 构建前端需要的菜单树
     const menuTree = buildMenus(menuList);
-    return ResultData.ok(menuTree);
+    return Result.ok(menuTree);
   }
 }

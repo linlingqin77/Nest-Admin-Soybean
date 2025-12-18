@@ -1,12 +1,12 @@
 import { IsString, IsEnum, Length, IsOptional, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto';
+import { PageQueryDto } from 'src/common/dto';
 import { StatusEnum, StatusEnumSchema } from 'src/common/enum';
 
 /**
  * 用户列表查询 DTO
  */
-export class ListUserDto extends PagingDto {
+export class ListUserDto extends PageQueryDto {
   @ApiProperty({ required: false, description: '部门ID' })
   @IsOptional()
   @IsNumberString()
@@ -45,7 +45,7 @@ export class ListUserDto extends PagingDto {
 /**
  * 已分配用户列表查询 DTO
  */
-export class AllocatedListDto extends PagingDto {
+export class AllocatedListDto extends PageQueryDto {
   @ApiProperty({ required: false, description: '用户账号' })
   @IsOptional()
   @IsString()

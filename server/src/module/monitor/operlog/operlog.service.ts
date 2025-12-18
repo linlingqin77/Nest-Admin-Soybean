@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { FormatDateFields } from 'src/common/utils/index';
 import { AxiosService } from 'src/module/common/axios/axios.service';
 import { QueryOperLogDto } from './dto/operLog.dto';
@@ -80,7 +80,7 @@ export class OperlogService {
     const orderBy =
       query.orderByColumn && query.isAsc
         ? ({
-          [query.orderByColumn]: query.isAsc === 'ascending' ? 'asc' : 'desc',
+          [query.orderByColumn]: query.isAsc === 'asc' ? 'asc' : 'desc',
         } as Prisma.SysOperLogOrderByWithRelationInput)
         : undefined;
 
@@ -93,18 +93,13 @@ export class OperlogService {
     }
 
     if (!isEmpty(query.pageNum) && !isEmpty(query.pageSize)) {
-      const pageSize = Number(query.pageSize);
-      const pageNum = Number(query.pageNum);
-      findManyArgs.skip = pageSize * (pageNum - 1);
-      findManyArgs.take = pageSize;
+      findManyArgs.skip = query.skip;
+      findManyArgs.take = query.take;
     }
 
     const [list, total] = await this.prisma.$transaction([this.prisma.sysOperLog.findMany(findManyArgs), this.prisma.sysOperLog.count({ where })]);
 
-    return ResultData.ok({
-      rows: FormatDateFields(list),
-      total,
-    });
+    return Result.page(FormatDateFields(list), total);
   }
 
   async findOne(id: number) {
@@ -113,12 +108,12 @@ export class OperlogService {
         operId: Number(id),
       },
     });
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async removeAll() {
     await this.prisma.sysOperLog.deleteMany();
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async remove(operId: number) {
@@ -127,7 +122,7 @@ export class OperlogService {
         operId: Number(operId),
       },
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**

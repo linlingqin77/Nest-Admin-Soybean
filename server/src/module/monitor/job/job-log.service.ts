@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ListJobLogDto } from './dto/create-job.dto';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { Response } from 'express';
@@ -29,27 +29,23 @@ export class JobLogService {
       where.status = query.status;
     }
 
-    if (query.params?.beginTime && query.params?.endTime) {
-      where.createTime = {
-        gte: new Date(query.params.beginTime),
-        lte: new Date(query.params.endTime),
-      };
+    // 使用 getDateRange 便捷方法
+    const dateRange = query.getDateRange?.('createTime');
+    if (dateRange) {
+      Object.assign(where, dateRange);
     }
-
-    const take = Number(query.pageSize ?? 10);
-    const skip = take * (Number(query.pageNum ?? 1) - 1);
 
     const [list, total] = await this.prisma.$transaction([
       this.prisma.sysJobLog.findMany({
         where,
-        skip,
-        take,
+        skip: query.skip,
+        take: query.take,
         orderBy: { createTime: 'desc' },
       }),
       this.prisma.sysJobLog.count({ where }),
     ]);
 
-    return ResultData.ok({
+    return Result.ok({
       rows: FormatDateFields(list),
       total,
     });
@@ -60,7 +56,7 @@ export class JobLogService {
    */
   async addJobLog(jobLog: Partial<Prisma.SysJobLogUncheckedCreateInput>) {
     await this.prisma.sysJobLog.create({ data: jobLog as Prisma.SysJobLogUncheckedCreateInput });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -68,7 +64,7 @@ export class JobLogService {
    */
   async clean() {
     await this.prisma.sysJobLog.deleteMany();
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**

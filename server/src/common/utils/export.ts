@@ -4,6 +4,27 @@ import { Response } from 'express';
 import { StatusEnum, SexEnum, DelFlagEnum } from 'src/common/enum/index';
 
 /**
+ * 导出表头配置
+ */
+export interface ExportHeader {
+  title: string;
+  dataIndex: string;
+  width?: number;
+  formateStr?: (value: unknown) => string;
+}
+
+/**
+ * 导出选项配置
+ */
+export interface ExportOptions {
+  data: Record<string, unknown>[];
+  header: ExportHeader[];
+  sheetName?: string;
+  dictMap?: Record<string, Record<string | number, string>>;
+  filename?: string;
+}
+
+/**
  * 通用枚举映射配置
  */
 export const commonExportMap = {
@@ -21,15 +42,7 @@ export const commonExportMap = {
   },
 };
 
-export async function ExportTable(
-  options: {
-    data: any[];
-    header: any[];
-    dictMap?: any;
-    sheetName?: string;
-  },
-  res: Response,
-) {
+export async function ExportTable(options: ExportOptions, res: Response) {
   let data = options.data;
   const workbook = new ExcelJS.Workbook();
   const sheetName = options.sheetName || 'Sheet1';

@@ -8,12 +8,13 @@ import { Api } from 'src/common/decorators/api.decorator';
 import { PostVo, PostListVo } from './vo/post.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('岗位管理')
 @Controller('system/post')
 @ApiBearerAuth('Authorization')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(private readonly postService: PostService) { }
 
   @Api({
     summary: '岗位管理-创建',
@@ -23,8 +24,8 @@ export class PostController {
   @RequirePermission('system:post:add')
   @Operlog({ businessType: BusinessType.INSERT })
   @Post('/')
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.postService.create(injectCreate(createPostDto));
   }
 
   @Api({

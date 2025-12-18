@@ -1,7 +1,7 @@
 import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, OmitType, IntersectionType } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { CharEnum } from 'src/common/enum/index';
 
 export class BaseOperLogDto {
@@ -95,6 +95,6 @@ export class BaseOperLogDto {
   costTime?: number;
 }
 
-export class CreateOperLogDto extends OmitType(BaseOperLogDto, ['operId']) {}
+export class CreateOperLogDto extends OmitType(BaseOperLogDto, ['operId']) { }
 
-export class QueryOperLogDto extends IntersectionType(BaseOperLogDto, PagingDto) {}
+export class QueryOperLogDto extends IntersectionType(BaseOperLogDto, PageQueryDto) { }

@@ -8,7 +8,7 @@ import { RoleService } from './role/role.service';
 import { ToolService } from './tool/tool.service';
 import { UserService } from './user/user.service';
 import { createPrismaMock, PrismaMock } from 'src/test-utils/prisma-mock';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
 import { CacheEnum, DataScopeEnum } from 'src/common/enum/index';
 import { JwtService } from '@nestjs/jwt';
@@ -37,7 +37,7 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new ConfigService(prisma, redisService as any);
+      service = new ConfigService(prisma, redisService as any, {} as any);
     });
 
     it('should paginate config list', async () => {
@@ -68,7 +68,7 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new DeptService(prisma);
+      service = new DeptService(prisma, {} as any);
       redisMock = createRedisMock();
       (service as any).redis = redisMock;
     });
@@ -98,7 +98,7 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new DictService(prisma, redisService as any);
+      service = new DictService(prisma, redisService as any, {} as any, {} as any);
     });
 
     it('should list dict types', async () => {
@@ -129,7 +129,7 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new MenuService(userService as any, prisma);
+      service = new MenuService(userService as any, prisma, {} as any);
     });
 
     it('should return full menu tree for super admin', async () => {
@@ -158,7 +158,7 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new NoticeService(prisma);
+      service = new NoticeService(prisma, {} as any);
     });
 
     it('should list notices', async () => {
@@ -180,17 +180,18 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new PostService(prisma);
+      const deptService = { getChildDeptIds: jest.fn().mockResolvedValue([]) } as any;
+      service = new PostService(prisma, deptService, {} as any);
     });
 
     it('should list posts via prisma transaction', async () => {
       prisma.$transaction.mockResolvedValue([[{ postId: 1 }], 1]);
-      const res = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
+      const res = await service.findAll({ skip: 0, take: 10 } as any);
       expect(res.data.total).toBe(1);
     });
 
     it('should export post list', async () => {
-      jest.spyOn(service, 'findAll').mockResolvedValue(ResultData.ok({ rows: [], total: 0 }));
+      jest.spyOn(service, 'findAll').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
       await service.export({} as any, {} as any);
       expect(ExportTable).toHaveBeenCalled();
     });
@@ -201,11 +202,16 @@ describe('System module services', () => {
     const menuService = {
       findMany: jest.fn(),
     };
+    const roleRepo = {
+      findPageWithMenuCount: jest.fn(),
+      findById: jest.fn(),
+      update: jest.fn(),
+    };
     let service: RoleService;
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new RoleService(prisma, menuService as any);
+      service = new RoleService(prisma, roleRepo as any, menuService as any);
     });
 
     it('should create role with menu bindings inside transaction', async () => {
@@ -300,10 +306,15 @@ describe('System module services', () => {
     const configService = {
       get: jest.fn(),
     };
+    const userRepo = {
+      findByUserName: jest.fn(),
+      findById: jest.fn(),
+      updateLoginTime: jest.fn(),
+    };
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new UserService(prisma, roleService as any, deptService as any, jwtService, redisService as any, configService as any);
+      service = new UserService(prisma, userRepo as any, roleService as any, deptService as any, jwtService, redisService as any, configService as any);
     });
 
     it('should create user with posts and roles', async () => {

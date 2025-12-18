@@ -1,9 +1,9 @@
 import { IsString, IsEnum, Length, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { StatusEnum, StatusEnumSchema } from 'src/common/enum';
 
-export class ListLoginlogDto extends PagingDto {
+export class ListLoginlogDto extends PageQueryDto {
   @ApiProperty({
     required: false,
     description: '登录IP地址',

@@ -1,6 +1,8 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
+import { BusinessException } from 'src/common/exceptions';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { Response } from 'express';
@@ -21,11 +23,11 @@ export class TenantPackageService {
     async create(createTenantPackageDto: CreateTenantPackageDto) {
         // 检查套餐名称是否已存在
         const existPackage = await this.prisma.sysTenantPackage.findFirst({
-            where: { packageName: createTenantPackageDto.packageName, delFlag: '0' },
+            where: { packageName: createTenantPackageDto.packageName, delFlag: DelFlagEnum.NORMAL },
         });
 
         if (existPackage) {
-            throw new HttpException('套餐名称已存在', HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ResponseCode.BAD_REQUEST, '套餐名称已存在');
         }
 
         const menuIds = createTenantPackageDto.menuIds ? createTenantPackageDto.menuIds.join(',') : '';
@@ -37,13 +39,11 @@ export class TenantPackageService {
                 menuCheckStrictly: createTenantPackageDto.menuCheckStrictly ?? false,
                 status: createTenantPackageDto.status ?? '0',
                 remark: createTenantPackageDto.remark,
-                delFlag: '0',
-                createBy: '',
-                updateBy: '',
+                delFlag: DelFlagEnum.NORMAL,
             },
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**
@@ -52,7 +52,7 @@ export class TenantPackageService {
     @IgnoreTenant()
     async findAll(query: ListTenantPackageDto) {
         const where: Prisma.SysTenantPackageWhereInput = {
-            delFlag: '0',
+            delFlag: DelFlagEnum.NORMAL,
         };
 
         if (query.packageName) {
@@ -65,20 +65,18 @@ export class TenantPackageService {
             where.status = query.status;
         }
 
-        const pageSize = Number(query.pageSize ?? 10);
-        const pageNum = Number(query.pageNum ?? 1);
 
         const [list, total] = await this.prisma.$transaction([
             this.prisma.sysTenantPackage.findMany({
                 where,
-                skip: pageSize * (pageNum - 1),
-                take: pageSize,
+                skip: query.skip,
+                take: query.take,
                 orderBy: { createTime: 'desc' },
             }),
             this.prisma.sysTenantPackage.count({ where }),
         ]);
 
-        return ResultData.ok({
+        return Result.ok({
             rows: FormatDateFields(list),
             total,
         });
@@ -91,8 +89,8 @@ export class TenantPackageService {
     async selectList() {
         const list = await this.prisma.sysTenantPackage.findMany({
             where: {
-                status: '0',
-                delFlag: '0',
+                status: StatusEnum.NORMAL,
+                delFlag: DelFlagEnum.NORMAL,
             },
             select: {
                 packageId: true,
@@ -101,7 +99,7 @@ export class TenantPackageService {
             orderBy: { createTime: 'desc' },
         });
 
-        return ResultData.ok(list);
+        return Result.ok(list);
     }
 
     /**
@@ -114,10 +112,10 @@ export class TenantPackageService {
         });
 
         if (!tenantPackage) {
-            throw new HttpException('租户套餐不存在', HttpStatus.NOT_FOUND);
+            throw new BusinessException(ResponseCode.NOT_FOUND, '租户套餐不存在');
         }
 
-        return ResultData.ok(tenantPackage);
+        return Result.ok(tenantPackage);
     }
 
     /**
@@ -133,7 +131,7 @@ export class TenantPackageService {
         });
 
         if (!existPackage) {
-            throw new HttpException('租户套餐不存在', HttpStatus.NOT_FOUND);
+            throw new BusinessException(ResponseCode.NOT_FOUND, '租户套餐不存在');
         }
 
         // 如果修改了套餐名称，检查是否与其他套餐重复
@@ -142,12 +140,12 @@ export class TenantPackageService {
                 where: {
                     packageName: updateData.packageName,
                     packageId: { not: packageId },
-                    delFlag: '0',
+                    delFlag: DelFlagEnum.NORMAL,
                 },
             });
 
             if (duplicateName) {
-                throw new HttpException('套餐名称已存在', HttpStatus.BAD_REQUEST);
+                throw new BusinessException(ResponseCode.BAD_REQUEST, '套餐名称已存在');
             }
         }
 
@@ -161,7 +159,7 @@ export class TenantPackageService {
             },
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**
@@ -173,12 +171,12 @@ export class TenantPackageService {
         const tenantsUsingPackage = await this.prisma.sysTenant.findFirst({
             where: {
                 packageId: { in: packageIds },
-                delFlag: '0',
+                delFlag: DelFlagEnum.NORMAL,
             },
         });
 
         if (tenantsUsingPackage) {
-            throw new HttpException('存在租户正在使用该套餐，无法删除', HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ResponseCode.BAD_REQUEST, '存在租户正在使用该套餐，无法删除');
         }
 
         await this.prisma.sysTenantPackage.updateMany({
@@ -190,7 +188,7 @@ export class TenantPackageService {
             },
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**
@@ -203,7 +201,7 @@ export class TenantPackageService {
         });
 
         if (!existPackage) {
-            throw new HttpException('租户套餐不存在', HttpStatus.NOT_FOUND);
+            throw new BusinessException(ResponseCode.NOT_FOUND, '租户套餐不存在');
         }
 
         await this.prisma.sysTenantPackage.update({
@@ -211,7 +209,7 @@ export class TenantPackageService {
             data: { status },
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**

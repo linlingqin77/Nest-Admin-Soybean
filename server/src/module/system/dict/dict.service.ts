@@ -1,47 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
-import { CacheEnum } from 'src/common/enum/index';
+import { Result } from 'src/common/response';
+import { CacheEnum, DelFlagEnum } from 'src/common/enum/index';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { CreateDictTypeDto, UpdateDictTypeDto, ListDictType, CreateDictDataDto, UpdateDictDataDto, ListDictData } from './dto/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DictTypeRepository, DictDataRepository } from './dict.repository';
+
 @Injectable()
 export class DictService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
+    private readonly dictTypeRepo: DictTypeRepository,
+    private readonly dictDataRepo: DictDataRepository,
   ) { }
   async createType(CreateDictTypeDto: CreateDictTypeDto) {
-    await this.prisma.sysDictType.create({ data: CreateDictTypeDto });
-    return ResultData.ok();
+    await this.dictTypeRepo.create(CreateDictTypeDto);
+    return Result.ok();
   }
 
   async deleteType(dictIds: number[]) {
-    await this.prisma.sysDictType.updateMany({
-      where: {
-        dictId: {
-          in: dictIds,
-        },
-      },
-      data: { delFlag: '1' },
-    });
-    return ResultData.ok();
+    await this.dictTypeRepo.softDeleteBatch(dictIds);
+    return Result.ok();
   }
 
   async updateType(updateDictTypeDto: UpdateDictTypeDto) {
-    await this.prisma.sysDictType.update({
-      where: { dictId: updateDictTypeDto.dictId },
-      data: updateDictTypeDto,
-    });
-    return ResultData.ok();
+    await this.dictTypeRepo.update(updateDictTypeDto.dictId, updateDictTypeDto);
+    return Result.ok();
   }
 
   async findAllType(query: ListDictType) {
     const where: Prisma.SysDictTypeWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.dictName) {
@@ -67,91 +61,49 @@ export class DictService {
       };
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
+    const { list, total } = await this.dictTypeRepo.findPageWithFilter(where, query.skip, query.take);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysDictType.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: { createTime: 'desc' },
-      }),
-      this.prisma.sysDictType.count({ where }),
-    ]);
-
-    return ResultData.ok({
+    return Result.ok({
       rows: FormatDateFields(list),
       total,
     });
   }
 
   async findOneType(dictId: number) {
-    const data = await this.prisma.sysDictType.findUnique({
-      where: {
-        dictId,
-      },
-      select: {
-        dictId: true,
-        dictName: true,
-        dictType: true,
-        status: true,
-        remark: true,
-        createTime: true,
-      },
-    });
-    return ResultData.ok(data);
+    const data = await this.dictTypeRepo.findById(dictId);
+    return Result.ok(data);
   }
 
   async findOptionselect() {
-    const data = await this.prisma.sysDictType.findMany({
-      where: {
-        delFlag: '0',
-      },
-      orderBy: { dictId: 'asc' },
-    });
-    return ResultData.ok(data);
+    const data = await this.dictTypeRepo.findAllForSelect();
+    return Result.ok(data);
   }
 
   // 字典数据
   async createDictData(createDictDataDto: CreateDictDataDto) {
-    await this.prisma.sysDictData.create({
-      data: {
-        ...createDictDataDto,
-        dictSort: createDictDataDto.dictSort ?? 0,
-        status: createDictDataDto.status ?? '0',
-        isDefault: 'N',
-        createBy: '',
-        updateBy: '',
-        delFlag: '0',
-      },
+    await this.dictDataRepo.create({
+      ...createDictDataDto,
+      dictSort: createDictDataDto.dictSort ?? 0,
+      status: createDictDataDto.status ?? '0',
+      isDefault: 'N',
+      delFlag: DelFlagEnum.NORMAL,
     });
-    return ResultData.ok();
+    return Result.ok();
   }
 
   async deleteDictData(dictIds: number[]) {
-    await this.prisma.sysDictData.updateMany({
-      where: {
-        dictCode: {
-          in: dictIds,
-        },
-      },
-      data: { delFlag: '1' },
-    });
-    return ResultData.ok();
+    await this.dictDataRepo.softDeleteBatch(dictIds);
+    return Result.ok();
   }
 
   async updateDictData(updateDictDataDto: UpdateDictDataDto) {
-    await this.prisma.sysDictData.update({
-      where: { dictCode: updateDictDataDto.dictCode },
-      data: updateDictDataDto,
-    });
-    return ResultData.ok();
+    await this.dictDataRepo.update(updateDictDataDto.dictCode, updateDictDataDto);
+    return Result.ok();
   }
 
   async findAllData(query: ListDictData) {
     const where: Prisma.SysDictDataWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.dictLabel) {
@@ -168,20 +120,9 @@ export class DictService {
       where.status = query.status;
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
+    const { list, total } = await this.dictDataRepo.findPageWithFilter(where, query.skip, query.take);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysDictData.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: { dictSort: 'asc' },
-      }),
-      this.prisma.sysDictData.count({ where }),
-    ]);
-
-    return ResultData.ok({
+    return Result.ok({
       rows: FormatDateFields(list),
       total,
     });
@@ -199,30 +140,20 @@ export class DictService {
 
     if (data) {
       // 如果缓存中存在，则直接返回缓存数据
-      return ResultData.ok(data);
+      return Result.ok(data);
     }
 
     // 从数据库中查询字典数据
-    data = await this.prisma.sysDictData.findMany({
-      where: {
-        dictType,
-        delFlag: '0',
-      },
-      orderBy: { dictSort: 'asc' },
-    });
+    data = await this.dictDataRepo.findByDictType(dictType);
 
     // 将查询到的数据存入Redis缓存，并返回数据
     await this.redisService.set(`${CacheEnum.SYS_DICT_KEY}${dictType}`, data);
-    return ResultData.ok(data);
+    return Result.ok(data);
   }
 
   async findOneDictData(dictCode: number) {
-    const data = await this.prisma.sysDictData.findUnique({
-      where: {
-        dictCode,
-      },
-    });
-    return ResultData.ok(data);
+    const data = await this.dictDataRepo.findById(dictCode);
+    return Result.ok(data);
   }
 
   /**
@@ -274,7 +205,7 @@ export class DictService {
   async resetDictCache() {
     await this.clearDictCache();
     await this.loadingDictCache();
-    return ResultData.ok();
+    return Result.ok();
   }
 
   /**
@@ -295,7 +226,7 @@ export class DictService {
   async loadingDictCache() {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
       orderBy: [{ dictType: 'asc' }, { dictSort: 'asc' }],
     });

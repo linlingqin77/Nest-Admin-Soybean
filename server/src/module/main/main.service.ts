@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ResultData } from 'src/common/utils/result';
-import { SUCCESS_CODE } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
+import { SUCCESS_CODE } from 'src/common/response';
 import { UserService } from '../system/user/user.service';
 import { LoginlogService } from '../monitor/loginlog/loginlog.service';
 import { AxiosService } from 'src/module/common/axios/axios.service';
 import { RegisterDto, LoginDto } from './dto/index';
 import { MenuService } from '../system/menu/menu.service';
 import { ClientInfoDto } from 'src/common/decorators/common.decorator';
+import { StatusEnum } from 'src/common/enum/index';
 @Injectable()
 export class MainService {
   constructor(
@@ -24,7 +25,7 @@ export class MainService {
   async login(user: LoginDto, clientInfo: ClientInfoDto) {
     const loginLog = {
       ...clientInfo,
-      status: '0',
+      status: StatusEnum.NORMAL,
       msg: '',
     };
 
@@ -38,7 +39,7 @@ export class MainService {
       });
 
     const loginRes = await this.userService.login(user, loginLog);
-    loginLog.status = loginRes.code === SUCCESS_CODE ? '0' : '1';
+    loginLog.status = loginRes.code === SUCCESS_CODE ? StatusEnum.NORMAL : StatusEnum.STOP;
     loginLog.msg = loginRes.msg;
     this.loginlogService.create(loginLog);
     return loginRes;
@@ -50,7 +51,7 @@ export class MainService {
   async logout(clientInfo: ClientInfoDto) {
     const loginLog = {
       ...clientInfo,
-      status: '0',
+      status: StatusEnum.NORMAL,
       msg: '退出成功',
     };
 
@@ -64,7 +65,7 @@ export class MainService {
       });
 
     this.loginlogService.create(loginLog);
-    return ResultData.ok();
+    return Result.ok();
   }
   /**
    * 注册
@@ -85,6 +86,6 @@ export class MainService {
    */
   async getRouters(userId: number) {
     const menus = await this.menuService.getMenuListByUserId(userId);
-    return ResultData.ok(menus);
+    return Result.ok(menus);
   }
 }

@@ -8,12 +8,13 @@ import { MenuVo, MenuTreeVo, RoleMenuTreeSelectVo } from './vo/menu.vo';
 import { User, UserDto } from 'src/module/system/user/user.decorator';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('菜单管理')
 @Controller('system/menu')
 @ApiBearerAuth('Authorization')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(private readonly menuService: MenuService) { }
 
   @Api({
     summary: '菜单管理-获取路由',

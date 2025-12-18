@@ -7,12 +7,13 @@ import { RequirePermission } from 'src/common/decorators/require-premission.deco
 import { Api } from 'src/common/decorators/api.decorator';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { User } from 'src/module/system/user/user.decorator';
 
 @ApiTags('定时任务管理')
 @Controller('monitor/job')
 @ApiBearerAuth('Authorization')
 export class JobController {
-  constructor(private readonly jobService: JobService) {}
+  constructor(private readonly jobService: JobService) { }
 
   @Api({
     summary: '获取定时任务列表',
@@ -43,8 +44,8 @@ export class JobController {
   @Post()
   @RequirePermission('monitor:job:add')
   @Operlog({ businessType: BusinessType.INSERT })
-  add(@Body() createJobDto: CreateJobDto, @Req() req: any) {
-    return this.jobService.create(createJobDto, req.user?.userName);
+  add(@Body() createJobDto: CreateJobDto, @User('user.userName') userName: string) {
+    return this.jobService.create(createJobDto, userName);
   }
 
   @Api({
@@ -54,8 +55,8 @@ export class JobController {
   @Put('changeStatus')
   @RequirePermission('monitor:job:changeStatus')
   @Operlog({ businessType: BusinessType.UPDATE })
-  changeStatus(@Body('jobId') jobId: number, @Body('status') status: string, @Req() req: any) {
-    return this.jobService.changeStatus(jobId, status, req.user?.userName);
+  changeStatus(@Body('jobId') jobId: number, @Body('status') status: string, @User('user.userName') userName: string) {
+    return this.jobService.changeStatus(jobId, status, userName);
   }
 
   @Api({
@@ -65,8 +66,8 @@ export class JobController {
   @Put('')
   @RequirePermission('monitor:job:edit')
   @Operlog({ businessType: BusinessType.UPDATE })
-  update(@Body('jobId') jobId: number, @Body() updateJobDto: Partial<CreateJobDto>, @Req() req: any) {
-    return this.jobService.update(jobId, updateJobDto, req.user?.userName);
+  update(@Body('jobId') jobId: number, @Body() updateJobDto: Partial<CreateJobDto>, @User('user.userName') userName: string) {
+    return this.jobService.update(jobId, updateJobDto, userName);
   }
 
   @Api({

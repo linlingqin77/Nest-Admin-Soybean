@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { mw as requestIpMw } from 'request-ip';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
-import { HttpExceptionsFilter } from 'src/common/filters/http-exceptions-filter';
+import { GlobalExceptionFilter } from 'src/common/filters/global-exception.filter';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger as PinoLogger } from 'nestjs-pino';
@@ -102,7 +102,7 @@ async function bootstrap() {
       },
     })
   );
-  app.useGlobalFilters(new HttpExceptionsFilter());
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // web 安全，防常见漏洞
   // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问

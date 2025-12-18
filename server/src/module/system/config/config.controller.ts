@@ -8,12 +8,13 @@ import { Api } from 'src/common/decorators/api.decorator';
 import { ConfigVo, ConfigListVo } from './vo/config.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('参数设置')
 @Controller('system/config')
 @ApiBearerAuth('Authorization')
 export class ConfigController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) { }
 
   @Api({
     summary: '参数设置-创建',
@@ -23,9 +24,8 @@ export class ConfigController {
   @RequirePermission('system:config:add')
   @Operlog({ businessType: BusinessType.INSERT })
   @Post()
-  create(@Body() createConfigDto: CreateConfigDto, @Request() req) {
-    createConfigDto['createBy'] = req.user.userName;
-    return this.configService.create(createConfigDto);
+  create(@Body() createConfigDto: CreateConfigDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.configService.create(injectCreate(createConfigDto));
   }
 
   @Api({

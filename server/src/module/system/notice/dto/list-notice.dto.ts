@@ -1,9 +1,9 @@
 import { IsString, IsEnum, Length, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { NoticeTypeEnum, NoticeTypeEnumSchema } from 'src/common/enum';
 
-export class ListNoticeDto extends PagingDto {
+export class ListNoticeDto extends PageQueryDto {
   @ApiProperty({ required: false, description: '公告标题' })
   @IsOptional()
   @IsString()

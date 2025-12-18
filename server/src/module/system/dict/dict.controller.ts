@@ -8,12 +8,13 @@ import { Api } from 'src/common/decorators/api.decorator';
 import { DictTypeVo, DictTypeListVo, DictDataVo, DictDataListVo } from './vo/dict.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('字典管理')
 @Controller('system/dict')
 @ApiBearerAuth('Authorization')
 export class DictController {
-  constructor(private readonly dictService: DictService) {}
+  constructor(private readonly dictService: DictService) { }
 
   //字典类型
   @Api({
@@ -25,9 +26,8 @@ export class DictController {
   @Operlog({ businessType: BusinessType.INSERT })
   @HttpCode(200)
   @Post('/type')
-  createType(@Body() createDictTypeDto: CreateDictTypeDto, @Request() req) {
-    createDictTypeDto['createBy'] = req.user.userName;
-    return this.dictService.createType(createDictTypeDto);
+  createType(@Body() createDictTypeDto: CreateDictTypeDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.dictService.createType(injectCreate(createDictTypeDto));
   }
 
   @Api({
@@ -111,9 +111,8 @@ export class DictController {
   @Operlog({ businessType: BusinessType.INSERT })
   @HttpCode(200)
   @Post('/data')
-  createDictData(@Body() createDictDataDto: CreateDictDataDto, @Request() req) {
-    createDictDataDto['createBy'] = req.user.userName;
-    return this.dictService.createDictData(createDictDataDto);
+  createDictData(@Body() createDictDataDto: CreateDictDataDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.dictService.createDictData(injectCreate(createDictDataDto));
   }
 
   @Api({

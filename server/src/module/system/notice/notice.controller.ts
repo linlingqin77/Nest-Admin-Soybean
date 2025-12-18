@@ -8,12 +8,13 @@ import { Api } from 'src/common/decorators/api.decorator';
 import { NoticeVo, NoticeListVo } from './vo/notice.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('通知公告')
 @Controller('system/notice')
 @ApiBearerAuth('Authorization')
 export class NoticeController {
-  constructor(private readonly noticeService: NoticeService) {}
+  constructor(private readonly noticeService: NoticeService) { }
 
   @Api({
     summary: '通知公告-创建',
@@ -23,9 +24,8 @@ export class NoticeController {
   @RequirePermission('system:notice:add')
   @Operlog({ businessType: BusinessType.INSERT })
   @Post()
-  create(@Body() createConfigDto: CreateNoticeDto, @Request() req) {
-    createConfigDto['createBy'] = req.user.userName;
-    return this.noticeService.create(createConfigDto);
+  create(@Body() createConfigDto: CreateNoticeDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.noticeService.create(injectCreate(createConfigDto));
   }
 
   @Api({

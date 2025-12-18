@@ -25,7 +25,7 @@ export class OperlogInterceptor implements NestInterceptor {
       .pipe(
         map((resultData) => {
           const costTime = Date.now() - now;
-          // 对于导出等特殊操作,可能没有标准的ResultData格式
+          // 对于导出等特殊操作,可能没有标准的Result格式
           if (!resultData || typeof resultData !== 'object' || !('code' in resultData)) {
             // 文件下载等操作,记录为成功
             this.logService.logAction({ costTime, resultData: { code: 200 }, handlerName, title: summary, businessType: logConfig?.businessType });

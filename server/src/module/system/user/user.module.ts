@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { UserRepository } from './user.repository';
 
 @Global()
 @Module({
@@ -16,7 +17,7 @@ import { UserController } from './user.controller';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserRepository],
   exports: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

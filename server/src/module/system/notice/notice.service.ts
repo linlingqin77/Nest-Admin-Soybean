@@ -1,21 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
+import { DelFlagEnum } from 'src/common/enum/index';
 import { FormatDateFields } from 'src/common/utils/index';
 import { CreateNoticeDto, UpdateNoticeDto, ListNoticeDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { NoticeRepository } from './notice.repository';
 
 @Injectable()
 export class NoticeService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly noticeRepo: NoticeRepository,
+  ) { }
   async create(createNoticeDto: CreateNoticeDto) {
-    await this.prisma.sysNotice.create({ data: createNoticeDto });
-    return ResultData.ok();
+    await this.noticeRepo.create(createNoticeDto);
+    return Result.ok();
   }
 
   async findAll(query: ListNoticeDto) {
     const where: Prisma.SysNoticeWhereInput = {
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (query.noticeTitle) {
@@ -41,55 +46,27 @@ export class NoticeService {
       };
     }
 
-    const pageSize = Number(query.pageSize ?? 10);
-    const pageNum = Number(query.pageNum ?? 1);
 
-    const [list, total] = await this.prisma.$transaction([
-      this.prisma.sysNotice.findMany({
-        where,
-        skip: pageSize * (pageNum - 1),
-        take: pageSize,
-        orderBy: { createTime: 'desc' },
-      }),
-      this.prisma.sysNotice.count({ where }),
-    ]);
+    const { list, total } = await this.noticeRepo.findPageWithFilter(where, query.skip, query.take);
 
-    return ResultData.ok({
+    return Result.ok({
       rows: FormatDateFields(list),
       total,
     });
   }
 
   async findOne(noticeId: number) {
-    const data = await this.prisma.sysNotice.findUnique({
-      where: {
-        noticeId,
-      },
-    });
-    return ResultData.ok(data);
+    const data = await this.noticeRepo.findById(noticeId);
+    return Result.ok(data);
   }
 
   async update(updateNoticeDto: UpdateNoticeDto) {
-    await this.prisma.sysNotice.update({
-      where: {
-        noticeId: updateNoticeDto.noticeId,
-      },
-      data: updateNoticeDto,
-    });
-    return ResultData.ok();
+    await this.noticeRepo.update(updateNoticeDto.noticeId, updateNoticeDto);
+    return Result.ok();
   }
 
   async remove(noticeIds: number[]) {
-    const data = await this.prisma.sysNotice.updateMany({
-      where: {
-        noticeId: {
-          in: noticeIds,
-        },
-      },
-      data: {
-        delFlag: '1',
-      },
-    });
-    return ResultData.ok(data.count);
+    const data = await this.noticeRepo.softDeleteBatch(noticeIds);
+    return Result.ok(data);
   }
 }

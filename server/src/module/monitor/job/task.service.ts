@@ -2,6 +2,8 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Task, TaskRegistry } from 'src/common/decorators/task.decorator';
 import { JobLogService } from './job-log.service';
+import { BusinessException } from 'src/common/exceptions/index';
+import { ResponseCode } from 'src/common/response';
 
 @Injectable()
 export class TaskService implements OnModuleInit {
@@ -13,7 +15,7 @@ export class TaskService implements OnModuleInit {
   constructor(
     private moduleRef: ModuleRef,
     private jobLogService: JobLogService,
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.initializeTasks();
@@ -68,18 +70,14 @@ export class TaskService implements OnModuleInit {
       const regex = /^([^(]+)(?:\((.*)\))?$/;
       const match = invokeTarget.match(regex);
 
-      if (!match) {
-        throw new Error('调用目标格式错误');
-      }
+      BusinessException.throwIfNull(match, '调用目标格式错误', ResponseCode.PARAM_INVALID);
 
       const [, methodName, paramsStr] = match;
       const params = paramsStr ? this.parseParams(paramsStr) : [];
 
       // 获取任务方法
       const taskFn = this.taskMap.get(methodName);
-      if (!taskFn) {
-        throw new Error(`任务 ${methodName} 不存在`);
-      }
+      BusinessException.throwIfNull(taskFn, `任务 ${methodName} 不存在`, ResponseCode.DATA_NOT_FOUND);
       // 执行任务
       await taskFn(...params);
       return true;

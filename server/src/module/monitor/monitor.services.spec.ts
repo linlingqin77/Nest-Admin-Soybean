@@ -7,7 +7,7 @@ import { OnlineService } from './online/online.service';
 import { OperlogService } from './operlog/operlog.service';
 import { ServerService } from './server/server.service';
 import { createPrismaMock, PrismaMock } from 'src/test-utils/prisma-mock';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
 import { ModuleRef } from '@nestjs/core';
 import * as nodeDiskInfo from 'node-disk-info';
@@ -71,9 +71,9 @@ describe('Monitor module services', () => {
 
     it('should list job logs with pagination', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobLogId: 1 }], 1]);
-      const res = await service.list({ pageNum: 1, pageSize: 10 });
+      const res = await service.list({ skip: 0, take: 10 } as any);
       expect(prisma.$transaction).toHaveBeenCalled();
-      expect(res.data).toEqual({ list: [{ jobLogId: 1 }], total: 1 });
+      expect(res.data).toEqual({ rows: [{ jobLogId: 1 }], total: 1 });
     });
 
     it('should add a job log record', async () => {
@@ -129,7 +129,7 @@ describe('Monitor module services', () => {
     });
 
     it('should export job list to excel', async () => {
-      jest.spyOn(service, 'list').mockResolvedValue(ResultData.ok({ rows: [], total: 0 }));
+      jest.spyOn(service, 'list').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
       await service.export({} as any, {} as any);
       expect(ExportTable).toHaveBeenCalled();
     });
@@ -141,7 +141,7 @@ describe('Monitor module services', () => {
       get: jest.fn(),
     } as unknown as ModuleRef;
     const jobLogService = {
-      addJobLog: jest.fn().mockResolvedValue(ResultData.ok()),
+      addJobLog: jest.fn().mockResolvedValue(Result.ok()),
     };
 
     beforeEach(() => {
@@ -181,7 +181,7 @@ describe('Monitor module services', () => {
 
     it('should query login logs via prisma transaction', async () => {
       prisma.$transaction.mockResolvedValue([[{ infoId: 1 }], 1]);
-      const res = await service.findAll({ pageNum: 1, pageSize: 10 });
+      const res = await service.findAll({ skip: 0, take: 10 } as any);
       expect(res.data.total).toBe(1);
     });
 
@@ -242,7 +242,7 @@ describe('Monitor module services', () => {
     } as any;
     const axiosService = { getIpAddress: jest.fn().mockResolvedValue('Beijing') };
     const dictService = {
-      findOneDataType: jest.fn().mockResolvedValue(ResultData.ok([{ dictValue: '1', dictLabel: '系统' }])),
+      findOneDataType: jest.fn().mockResolvedValue(Result.ok([{ dictValue: '1', dictLabel: '系统' }])),
     };
 
     beforeEach(() => {
@@ -256,7 +256,7 @@ describe('Monitor module services', () => {
     });
 
     it('should export logs via ExportTable', async () => {
-      jest.spyOn(service, 'findAll').mockResolvedValue(ResultData.ok({ rows: [], total: 0 }));
+      jest.spyOn(service, 'findAll').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
       await service.export({} as any, {} as any);
       expect(ExportTable).toHaveBeenCalled();
     });

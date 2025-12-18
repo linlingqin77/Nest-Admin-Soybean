@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import os, { networkInterfaces } from 'os';
 import path from 'path';
 import * as nodeDiskInfo from 'node-disk-info';
@@ -24,7 +24,7 @@ export class ServerService {
       sys,
       sysFiles,
     };
-    return ResultData.ok(data);
+    return Result.ok(data);
   }
 
   async getDiskStatus() {

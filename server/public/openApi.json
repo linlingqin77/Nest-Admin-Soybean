@@ -24,7 +24,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -133,7 +133,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -258,7 +258,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -374,7 +374,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -490,7 +490,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -599,7 +599,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -707,7 +707,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -818,7 +818,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -927,7 +927,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1056,7 +1056,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1185,7 +1185,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1301,7 +1301,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1426,7 +1426,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1542,7 +1542,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1678,7 +1678,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1793,7 +1793,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -1928,7 +1928,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2053,7 +2053,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2178,7 +2178,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2303,7 +2303,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2428,7 +2428,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2450,14 +2450,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -2561,7 +2554,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2670,31 +2663,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -2710,9 +2697,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -2754,7 +2754,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2872,7 +2872,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -2988,7 +2988,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3113,7 +3113,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3238,7 +3238,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3353,7 +3353,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3478,7 +3478,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3606,7 +3606,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3729,7 +3729,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3863,7 +3863,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -3974,7 +3974,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4095,7 +4095,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4211,7 +4211,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4359,7 +4359,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4480,7 +4480,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4603,7 +4603,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4718,7 +4718,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4843,7 +4843,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -4966,7 +4966,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5068,31 +5068,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -5108,9 +5102,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -5152,7 +5159,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5260,7 +5267,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5381,7 +5388,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5504,7 +5511,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5629,7 +5636,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5752,7 +5759,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -5854,31 +5861,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -5894,9 +5895,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -5939,7 +5953,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6057,7 +6071,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6178,7 +6192,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6306,7 +6320,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6424,7 +6438,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6545,7 +6559,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6567,14 +6581,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -6678,7 +6685,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6812,7 +6819,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -6923,7 +6930,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7044,7 +7051,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7162,7 +7169,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7280,7 +7287,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7396,7 +7403,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7521,7 +7528,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7646,7 +7653,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7668,14 +7675,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -7779,7 +7779,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -7888,31 +7888,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -7928,9 +7922,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -7970,7 +7977,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8088,7 +8095,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8204,7 +8211,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8329,7 +8336,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8351,14 +8358,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -8462,7 +8462,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8571,31 +8571,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -8611,9 +8605,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -8664,7 +8671,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8789,7 +8796,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -8900,7 +8907,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9025,7 +9032,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9143,7 +9150,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9268,7 +9275,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9396,7 +9403,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9418,14 +9425,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -9529,7 +9529,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9638,31 +9638,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -9678,9 +9672,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -9734,7 +9741,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9851,7 +9858,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -9972,7 +9979,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10090,7 +10097,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10206,7 +10213,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10331,7 +10338,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10456,7 +10463,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10565,31 +10572,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -10605,9 +10606,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -10648,7 +10662,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10750,31 +10764,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -10790,9 +10798,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -10833,7 +10854,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -10951,7 +10972,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11076,7 +11097,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11201,7 +11222,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11326,7 +11347,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11454,7 +11475,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11476,14 +11497,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -11587,7 +11601,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11696,31 +11710,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -11736,9 +11744,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -11815,7 +11836,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -11923,7 +11944,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12057,7 +12078,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12172,7 +12193,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12297,7 +12318,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12415,7 +12436,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12540,7 +12561,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12668,7 +12689,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12690,14 +12711,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -12801,7 +12815,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -12910,31 +12924,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -12950,9 +12958,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -12982,7 +13003,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13090,7 +13111,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13211,7 +13232,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13329,7 +13350,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13454,7 +13475,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13566,31 +13587,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -13606,9 +13621,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           }
         ],
@@ -13620,7 +13648,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13729,31 +13757,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -13769,9 +13791,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           }
         ],
@@ -13783,7 +13818,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -13898,7 +13933,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14023,7 +14058,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14045,14 +14080,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -14158,7 +14186,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14283,7 +14311,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14406,7 +14434,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14531,7 +14559,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14656,7 +14684,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14781,7 +14809,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -14896,7 +14924,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15011,7 +15039,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15127,7 +15155,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15262,7 +15290,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15277,14 +15305,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -15390,7 +15411,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15515,7 +15536,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15537,14 +15558,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -15638,7 +15652,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15754,7 +15768,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -15863,31 +15877,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -15903,9 +15911,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -15976,7 +15997,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16084,7 +16105,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16205,7 +16226,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16332,7 +16353,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16447,7 +16468,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16572,7 +16593,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16697,7 +16718,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16815,7 +16836,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -16940,7 +16961,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17065,7 +17086,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17190,7 +17211,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17317,7 +17338,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17339,14 +17360,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -17449,7 +17463,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17572,7 +17586,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17705,7 +17719,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17819,7 +17833,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -17999,7 +18013,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18123,7 +18137,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18145,14 +18159,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -18257,7 +18264,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18279,14 +18286,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -18381,7 +18381,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18504,7 +18504,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18628,7 +18628,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18650,14 +18650,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -18769,7 +18762,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -18890,7 +18883,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19013,7 +19006,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19035,14 +19028,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -19137,7 +19123,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19252,7 +19238,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19377,7 +19363,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19502,7 +19488,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19524,14 +19510,7 @@
             }
           },
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
             "description": "未登录或登录已过期",
@@ -19625,7 +19604,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19740,7 +19719,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19865,7 +19844,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -19980,7 +19959,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20105,7 +20084,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20217,31 +20196,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -20257,9 +20230,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -20300,7 +20286,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20415,7 +20401,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20540,7 +20526,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20658,7 +20644,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20766,7 +20752,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20874,7 +20860,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -20999,7 +20985,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21133,7 +21119,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21251,7 +21237,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21376,7 +21362,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21491,7 +21477,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21600,31 +21586,25 @@
         "parameters": [
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -21640,9 +21620,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           },
           {
@@ -21684,7 +21677,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21792,7 +21785,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -21917,7 +21910,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22042,7 +22035,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22167,7 +22160,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22326,7 +22319,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22444,7 +22437,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22559,7 +22552,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22825,31 +22818,25 @@
           },
           {
             "name": "pageNum",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "当前分页",
+            "description": "页码",
             "schema": {
+              "minimum": 1,
               "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
-            "in": "query",
-            "description": "每页数量",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "params",
             "required": false,
             "in": "query",
-            "description": "时间范围",
+            "description": "每页条数",
             "schema": {
-              "$ref": "#/components/schemas/DateParamsDTO"
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
             }
           },
           {
@@ -22865,9 +22852,22 @@
             "name": "isAsc",
             "required": false,
             "in": "query",
-            "description": "排序规则",
+            "description": "排序方向",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "params",
+            "required": false,
+            "in": "query",
+            "description": "时间范围",
+            "schema": {
+              "$ref": "#/components/schemas/DateRangeDto"
             }
           }
         ],
@@ -22879,7 +22879,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -22997,7 +22997,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -23113,7 +23113,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -23238,7 +23238,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ResultData"
+                      "$ref": "#/components/schemas/Result"
                     },
                     {
                       "properties": {
@@ -23914,14 +23914,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "security": [
@@ -23941,14 +23934,7 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "security": [
@@ -23968,14 +23954,7 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "security": [
@@ -23995,14 +23974,7 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResultData"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "security": [
@@ -24049,21 +24021,28 @@
       }
     },
     "schemas": {
-      "ResultData": {
+      "Result": {
         "type": "object",
         "properties": {
           "code": {
             "type": "number",
-            "default": 200
+            "description": "响应码",
+            "example": 200
           },
           "msg": {
             "type": "string",
-            "default": "操作成功"
+            "description": "响应消息",
+            "example": "操作成功"
+          },
+          "data": {
+            "type": "object",
+            "description": "响应数据"
           }
         },
         "required": [
           "code",
-          "msg"
+          "msg",
+          "data"
         ]
       },
       "LoginVo": {
@@ -24869,20 +24848,20 @@
           "total"
         ]
       },
-      "DateParamsDTO": {
+      "DateRangeDto": {
         "type": "object",
         "properties": {
           "beginTime": {
-            "type": "string"
+            "type": "string",
+            "description": "开始时间",
+            "example": "2024-01-01"
           },
           "endTime": {
-            "type": "string"
+            "type": "string",
+            "description": "结束时间",
+            "example": "2024-12-31"
           }
-        },
-        "required": [
-          "beginTime",
-          "endTime"
-        ]
+        }
       },
       "UpdateConfigDto": {
         "type": "object",
@@ -24944,29 +24923,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "configName": {
             "type": "string",
@@ -24987,11 +24973,7 @@
               }
             ]
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "CreateDeptDto": {
         "type": "object",
@@ -25521,29 +25503,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "dictName": {
             "type": "string",
@@ -25564,11 +25553,7 @@
               }
             ]
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "MenuTypeEnum": {
         "type": "string",
@@ -26245,29 +26230,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "postName": {
             "type": "string",
@@ -26292,11 +26284,7 @@
             "type": "string",
             "description": "所属部门ID"
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "CreateRoleDto": {
         "type": "object",
@@ -26687,29 +26675,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "roleName": {
             "type": "string",
@@ -26737,11 +26732,7 @@
             "maxLength": 100,
             "description": "角色ID"
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "CreateTenantDto": {
         "type": "object",
@@ -26944,29 +26935,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "tenantId": {
             "type": "string",
@@ -26998,11 +26996,7 @@
             "type": "string",
             "description": "结束时间"
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "CreateTenantPackageDto": {
         "type": "object",
@@ -27182,29 +27176,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "packageName": {
             "type": "string",
@@ -27214,11 +27215,7 @@
             "type": "string",
             "description": "状态(0正常 1停用)"
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "TableName": {
         "type": "object",
@@ -27757,29 +27754,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "deptId": {
             "type": "string",
@@ -27814,11 +27818,7 @@
               }
             ]
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "CreateFolderDto": {
         "type": "object",
@@ -28008,29 +28008,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "jobName": {
             "type": "string",
@@ -28046,11 +28053,7 @@
             "type": "string",
             "description": "状态（0正常 1暂停）"
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "ServerInfoVo": {
         "type": "object",
@@ -28309,29 +28312,36 @@
         "properties": {
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           },
           "ipaddr": {
             "type": "string",
@@ -28352,11 +28362,7 @@
               }
             ]
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       },
       "OnlineUserVo": {
         "type": "object",
@@ -28616,35 +28622,38 @@
           },
           "pageNum": {
             "type": "number",
-            "description": "当前分页",
-            "default": 1
+            "default": 1,
+            "minimum": 1,
+            "description": "页码"
           },
           "pageSize": {
             "type": "number",
-            "description": "每页数量",
-            "default": 10
-          },
-          "params": {
-            "description": "时间范围",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DateParamsDTO"
-              }
-            ]
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "每页条数"
           },
           "orderByColumn": {
             "type": "string",
             "description": "排序字段"
           },
           "isAsc": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "type": "string",
-            "description": "排序规则"
+            "description": "排序方向"
+          },
+          "params": {
+            "description": "时间范围",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DateRangeDto"
+              }
+            ]
           }
-        },
-        "required": [
-          "pageNum",
-          "pageSize"
-        ]
+        }
       }
     }
   }

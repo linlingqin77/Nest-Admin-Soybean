@@ -1,6 +1,6 @@
 import { IsString, IsJSON, IsEnum, IsPhoneNumber, IsArray, Min, Length, IsOptional, IsBoolean, IsNumber, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 import { genTableCloumnUpdate } from './create-genTableCloumn-dto';
 export class CreateGenTableDto {
   @ApiProperty({ type: String, description: '表名称' })
@@ -35,7 +35,7 @@ export class UpdateGenTableDto extends CreateGenTableDto {
   @ApiProperty({ type: Number, description: '编号' })
   public tableId: number;
 }
-export class GenDbTableList extends PagingDto {
+export class GenDbTableList extends PageQueryDto {
   @IsString()
   @IsOptional()
   tableName?: string;
@@ -61,7 +61,7 @@ export class TableId {
   tableIds: string;
 }
 
-export class GenTableList extends PagingDto {
+export class GenTableList extends PageQueryDto {
   @IsString()
   @IsOptional()
   tableNames?: string;

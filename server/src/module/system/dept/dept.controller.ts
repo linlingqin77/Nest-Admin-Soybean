@@ -8,12 +8,13 @@ import { DeptVo } from './vo/dept.vo';
 import { DeptTreeNodeVo } from 'src/common/dto/dept-tree-node.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
+import { UserTool, UserToolType } from '../user/user.decorator';
 
 @ApiTags('部门管理')
 @Controller('system/dept')
 @ApiBearerAuth('Authorization')
 export class DeptController {
-  constructor(private readonly deptService: DeptService) {}
+  constructor(private readonly deptService: DeptService) { }
 
   @Api({
     summary: '部门管理-创建',
@@ -24,8 +25,8 @@ export class DeptController {
   @Operlog({ businessType: BusinessType.INSERT })
   @Post()
   @HttpCode(200)
-  create(@Body() createDeptDto: CreateDeptDto) {
-    return this.deptService.create(createDeptDto);
+  create(@Body() createDeptDto: CreateDeptDto, @UserTool() { injectCreate }: UserToolType) {
+    return this.deptService.create(injectCreate(createDeptDto));
   }
 
   @Api({

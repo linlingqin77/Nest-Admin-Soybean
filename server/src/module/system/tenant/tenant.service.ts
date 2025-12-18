@@ -1,12 +1,15 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
+import { BusinessException } from 'src/common/exceptions';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { Response } from 'express';
 import { CreateTenantDto, UpdateTenantDto, ListTenantDto, SyncTenantPackageDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IgnoreTenant } from 'src/common/tenant/tenant.decorator';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum } from 'src/common/enum/cache.enum';
 import { hashSync } from 'bcryptjs';
@@ -24,6 +27,7 @@ export class TenantService {
      * 创建租户
      */
     @IgnoreTenant()
+    @Transactional()
     async create(createTenantDto: CreateTenantDto) {
         // 自动生成租户ID（6位数字，从100001开始）
         let tenantId = createTenantDto.tenantId;
@@ -42,62 +46,56 @@ export class TenantService {
         });
 
         if (existTenant) {
-            throw new HttpException('租户ID已存在', HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ResponseCode.BAD_REQUEST, '租户ID已存在');
         }
 
         // 检查企业名称是否已存在
         const existCompany = await this.prisma.sysTenant.findFirst({
-            where: { companyName: createTenantDto.companyName, delFlag: '0' },
+            where: { companyName: createTenantDto.companyName, delFlag: DelFlagEnum.NORMAL },
         });
 
         if (existCompany) {
-            throw new HttpException('企业名称已存在', HttpStatus.BAD_REQUEST);
+            throw new BusinessException(ResponseCode.BAD_REQUEST, '企业名称已存在');
         }
 
         // 加密密码
         const hashedPassword = hashSync(createTenantDto.password, 10);
 
         try {
-            await this.prisma.$transaction(async (tx) => {
-                // 创建租户
-                await tx.sysTenant.create({
-                    data: {
-                        tenantId,
-                        contactUserName: createTenantDto.contactUserName,
-                        contactPhone: createTenantDto.contactPhone,
-                        companyName: createTenantDto.companyName,
-                        licenseNumber: createTenantDto.licenseNumber,
-                        address: createTenantDto.address,
-                        intro: createTenantDto.intro,
-                        domain: createTenantDto.domain,
-                        packageId: createTenantDto.packageId,
-                        expireTime: createTenantDto.expireTime,
-                        accountCount: createTenantDto.accountCount ?? -1,
-                        status: createTenantDto.status ?? '0',
-                        remark: createTenantDto.remark,
-                        delFlag: '0',
-                        createBy: '',
-                        updateBy: '',
-                    },
-                });
-
-                // 创建租户管理员账号
-                await tx.sysUser.create({
-                    data: {
-                        tenantId,
-                        userName: createTenantDto.username,
-                        nickName: '租户管理员',
-                        userType: '00',
-                        password: hashedPassword,
-                        status: '0',
-                        delFlag: '0',
-                        createBy: '',
-                        updateBy: '',
-                    },
-                });
+            // 创建租户
+            await this.prisma.sysTenant.create({
+                data: {
+                    tenantId,
+                    contactUserName: createTenantDto.contactUserName,
+                    contactPhone: createTenantDto.contactPhone,
+                    companyName: createTenantDto.companyName,
+                    licenseNumber: createTenantDto.licenseNumber,
+                    address: createTenantDto.address,
+                    intro: createTenantDto.intro,
+                    domain: createTenantDto.domain,
+                    packageId: createTenantDto.packageId,
+                    expireTime: createTenantDto.expireTime,
+                    accountCount: createTenantDto.accountCount ?? -1,
+                    status: createTenantDto.status ?? '0',
+                    remark: createTenantDto.remark,
+                    delFlag: DelFlagEnum.NORMAL,
+                },
             });
 
-            return ResultData.ok();
+            // 创建租户管理员账号
+            await this.prisma.sysUser.create({
+                data: {
+                    tenantId,
+                    userName: createTenantDto.username,
+                    nickName: '租户管理员',
+                    userType: '00',
+                    password: hashedPassword,
+                    status: StatusEnum.NORMAL,
+                    delFlag: DelFlagEnum.NORMAL,
+                },
+            });
+
+            return Result.ok();
         } catch (error) {
             this.logger.error('创建租户失败', error);
             throw new HttpException('创建租户失败', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,7 +108,7 @@ export class TenantService {
     @IgnoreTenant()
     async findAll(query: ListTenantDto) {
         const where: Prisma.SysTenantWhereInput = {
-            delFlag: '0',
+            delFlag: DelFlagEnum.NORMAL,
         };
 
         if (query.tenantId) {
@@ -148,37 +146,34 @@ export class TenantService {
             };
         }
 
-        const pageSize = Number(query.pageSize ?? 10);
-        const pageNum = Number(query.pageNum ?? 1);
 
         const [list, total] = await this.prisma.$transaction([
             this.prisma.sysTenant.findMany({
                 where,
-                skip: pageSize * (pageNum - 1),
-                take: pageSize,
+                skip: query.skip,
+                take: query.take,
                 orderBy: { createTime: 'desc' },
             }),
             this.prisma.sysTenant.count({ where }),
         ]);
 
-        // 获取套餐名称
-        const listWithPackage = await Promise.all(
-            list.map(async (item) => {
-                let packageName = '';
-                if (item.packageId) {
-                    const pkg = await this.prisma.sysTenantPackage.findUnique({
-                        where: { packageId: item.packageId },
-                    });
-                    packageName = pkg?.packageName || '';
-                }
-                return {
-                    ...item,
-                    packageName,
-                };
-            }),
-        );
+        // 优化：使用单次查询获取所有套餐名称，避免 N+1 问题
+        const packageIds = list.map(item => item.packageId).filter(Boolean);
+        const packages = packageIds.length > 0
+            ? await this.prisma.sysTenantPackage.findMany({
+                where: { packageId: { in: packageIds } },
+                select: { packageId: true, packageName: true }
+            })
+            : [];
 
-        return ResultData.ok({
+        const packageMap = new Map(packages.map(pkg => [pkg.packageId, pkg.packageName]));
+
+        const listWithPackage = list.map(item => ({
+            ...item,
+            packageName: item.packageId ? (packageMap.get(item.packageId) || '') : '',
+        }));
+
+        return Result.ok({
             rows: FormatDateFields(listWithPackage),
             total,
         });
@@ -194,10 +189,10 @@ export class TenantService {
         });
 
         if (!tenant) {
-            throw new HttpException('租户不存在', HttpStatus.NOT_FOUND);
+            throw new BusinessException(ResponseCode.NOT_FOUND, '租户不存在');
         }
 
-        return ResultData.ok(tenant);
+        return Result.ok(tenant);
     }
 
     /**
@@ -213,7 +208,7 @@ export class TenantService {
         });
 
         if (!existTenant) {
-            throw new HttpException('租户不存在', HttpStatus.NOT_FOUND);
+            throw new BusinessException(ResponseCode.NOT_FOUND, '租户不存在');
         }
 
         // 如果修改了企业名称，检查是否与其他租户重复
@@ -222,12 +217,12 @@ export class TenantService {
                 where: {
                     companyName: updateData.companyName,
                     id: { not: id },
-                    delFlag: '0',
+                    delFlag: DelFlagEnum.NORMAL,
                 },
             });
 
             if (duplicateName) {
-                throw new HttpException('企业名称已存在', HttpStatus.BAD_REQUEST);
+                throw new BusinessException(ResponseCode.BAD_REQUEST, '企业名称已存在');
             }
         }
 
@@ -236,7 +231,7 @@ export class TenantService {
             data: updateData,
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**
@@ -253,13 +248,14 @@ export class TenantService {
             },
         });
 
-        return ResultData.ok();
+        return Result.ok();
     }
 
     /**
      * 同步租户字典
      */
     @IgnoreTenant()
+    @Transactional()
     async syncTenantDict() {
         this.logger.log('开始同步租户字典');
 
@@ -267,8 +263,8 @@ export class TenantService {
             // 获取所有非超管租户
             const tenants = await this.prisma.sysTenant.findMany({
                 where: {
-                    status: '0',
-                    delFlag: '0',
+                    status: StatusEnum.NORMAL,
+                    delFlag: DelFlagEnum.NORMAL,
                     tenantId: { not: '000000' }
                 },
                 select: { tenantId: true, companyName: true },
@@ -279,7 +275,7 @@ export class TenantService {
             // 获取超级管理员租户的字典类型
             const superTenantId = '000000';
             const dictTypes = await this.prisma.sysDictType.findMany({
-                where: { tenantId: superTenantId, delFlag: '0' },
+                where: { tenantId: superTenantId, delFlag: DelFlagEnum.NORMAL },
             });
 
             this.logger.log(`找到 ${dictTypes.length} 个字典类型需要同步`);
@@ -309,7 +305,7 @@ export class TenantService {
                                 dictType: dictType.dictType,
                                 status: dictType.status,
                                 remark: dictType.remark,
-                                delFlag: '0',
+                                delFlag: DelFlagEnum.NORMAL,
                                 createBy: 'system',
                                 updateBy: 'system',
                             },
@@ -320,7 +316,7 @@ export class TenantService {
                             where: {
                                 tenantId: superTenantId,
                                 dictType: dictType.dictType,
-                                delFlag: '0',
+                                delFlag: DelFlagEnum.NORMAL,
                             },
                         });
 
@@ -339,7 +335,7 @@ export class TenantService {
                                         isDefault: dictData.isDefault,
                                         status: dictData.status,
                                         remark: dictData.remark,
-                                        delFlag: '0',
+                                        delFlag: DelFlagEnum.NORMAL,
                                         createBy: 'system',
                                         updateBy: 'system',
                                     })),
@@ -359,7 +355,7 @@ export class TenantService {
 
             this.logger.log(`字典同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个`);
 
-            return ResultData.ok({
+            return Result.ok({
                 message: `同步完成`,
                 detail: {
                     tenants: tenants.length,
@@ -390,7 +386,7 @@ export class TenantService {
             });
 
             if (!tenant) {
-                throw new HttpException('租户不存在', HttpStatus.NOT_FOUND);
+                throw new BusinessException(ResponseCode.NOT_FOUND, '租户不存在');
             }
 
             // 获取套餐信息
@@ -399,7 +395,7 @@ export class TenantService {
             });
 
             if (!tenantPackage) {
-                throw new HttpException('租户套餐不存在', HttpStatus.NOT_FOUND);
+                throw new BusinessException(ResponseCode.NOT_FOUND, '租户套餐不存在');
             }
 
             // 更新租户套餐
@@ -414,7 +410,7 @@ export class TenantService {
                 // 这里可以实现菜单权限同步逻辑
             }
 
-            return ResultData.ok();
+            return Result.ok();
         } catch (error) {
             this.logger.error('同步租户套餐失败', error);
             throw new HttpException('同步租户套餐失败', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -432,8 +428,8 @@ export class TenantService {
             // 获取所有非超管租户
             const tenants = await this.prisma.sysTenant.findMany({
                 where: {
-                    status: '0',
-                    delFlag: '0',
+                    status: StatusEnum.NORMAL,
+                    delFlag: DelFlagEnum.NORMAL,
                     tenantId: { not: '000000' }
                 },
                 select: { tenantId: true, companyName: true },
@@ -444,7 +440,7 @@ export class TenantService {
             // 获取超级管理员租户的配置
             const superTenantId = '000000';
             const configs = await this.prisma.sysConfig.findMany({
-                where: { tenantId: superTenantId, delFlag: '0' },
+                where: { tenantId: superTenantId, delFlag: DelFlagEnum.NORMAL },
             });
 
             this.logger.log(`找到 ${configs.length} 个配置项需要同步`);
@@ -466,7 +462,7 @@ export class TenantService {
                             configValue: config.configValue,
                             configType: config.configType,
                             remark: config.remark,
-                            delFlag: '0',
+                            delFlag: DelFlagEnum.NORMAL,
                             createBy: 'system',
                             updateBy: 'system',
                         })),
@@ -484,7 +480,7 @@ export class TenantService {
 
             this.logger.log(`配置同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个`);
 
-            return ResultData.ok({
+            return Result.ok({
                 message: '同步完成',
                 detail: {
                     tenants: tenants.length,

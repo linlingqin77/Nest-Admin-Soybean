@@ -1,5 +1,5 @@
 import { MainService } from './main.service';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 
 describe('MainService', () => {
   let service: MainService;
@@ -22,7 +22,7 @@ describe('MainService', () => {
 
   it('should record successful login attempts', async () => {
     const loginDto = { userName: 'admin', password: 'admin123' };
-    const loginResult = ResultData.ok({ token: 'jwt-token' }, '登录成功');
+    const loginResult = Result.ok({ token: 'jwt-token' }, '登录成功');
     userService.login.mockResolvedValue(loginResult);
 
     const res = await service.login(loginDto as any, clientInfo as any);
@@ -34,7 +34,7 @@ describe('MainService', () => {
 
   it('should record failed login attempts', async () => {
     const loginDto = { userName: 'admin', password: 'bad' };
-    const loginResult = ResultData.fail(500, '帐号或密码错误');
+    const loginResult = Result.fail(500, '帐号或密码错误');
     userService.login.mockResolvedValue(loginResult);
 
     await service.login(loginDto as any, clientInfo as any);

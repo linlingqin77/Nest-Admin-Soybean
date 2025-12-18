@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ResultData } from 'src/common/utils/result';
+import { Result, ResponseCode } from 'src/common/response';
+import { StatusEnum } from 'src/common/enum/index';
 import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 import { GenerateUUID } from 'src/common/utils/index';
 import fs from 'fs';
@@ -92,7 +93,7 @@ export class UploadService {
    */
   async getChunkUploadId() {
     const uploadId = GenerateUUID();
-    return ResultData.ok({
+    return Result.ok({
       uploadId: uploadId,
     });
   }
@@ -109,10 +110,10 @@ export class UploadService {
     }
     const chunckFilePath = path.posix.join(chunckDirPath, `${body.uploadId}${body.fileName}@${body.index}`);
     if (fs.existsSync(chunckFilePath)) {
-      return ResultData.ok();
+      return Result.ok();
     } else {
       fs.writeFileSync(chunckFilePath, file.buffer);
-      return ResultData.ok();
+      return Result.ok();
     }
   }
 
@@ -127,9 +128,9 @@ export class UploadService {
     const chunckDirPath = path.posix.join(baseDirPath, this.thunkDir, body.uploadId);
     const chunckFilePath = path.posix.join(chunckDirPath, `${body.uploadId}${body.fileName}@${body.index}`);
     if (!fs.existsSync(chunckFilePath)) {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     } else {
-      return ResultData.ok();
+      return Result.ok();
     }
   }
 
@@ -159,7 +160,7 @@ export class UploadService {
     const sourceFilesDir = path.posix.join(baseDirPath, this.thunkDir, uploadId);
 
     if (!fs.existsSync(sourceFilesDir)) {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
 
     //对文件重命名
@@ -204,7 +205,7 @@ export class UploadService {
           storageType: 'cos',
         },
       });
-      return ResultData.ok(data);
+      return Result.ok(data);
     }
     await this.prisma.sysUpload.create({
       data: {
@@ -216,7 +217,7 @@ export class UploadService {
         storageType: 'local',
       },
     });
-    return ResultData.ok(data);
+    return Result.ok(data);
   }
 
   /**
@@ -398,12 +399,12 @@ export class UploadService {
     });
 
     if (data) {
-      return ResultData.ok({
+      return Result.ok({
         data: data,
         msg: data.status === '0' ? '上传成功' : '上传中',
       });
     } else {
-      return ResultData.fail(500, '文件不存在');
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');
     }
   }
 
@@ -425,7 +426,7 @@ export class UploadService {
         SliceSize: 1024 * 1024 * 5 /* 触发分块上传的阈值，超过5MB使用分块上传，非必须 */,
         onProgress: (progressData) => {
           if (progressData.percent === 1) {
-            this.prisma.sysUpload.updateMany({ where: { fileName: targetFile }, data: { status: '0' } });
+            this.prisma.sysUpload.updateMany({ where: { fileName: targetFile }, data: { status: StatusEnum.NORMAL } });
           }
         },
       });
@@ -465,7 +466,7 @@ export class UploadService {
       Key: Key,
       Expires: 60,
     });
-    return ResultData.ok({
+    return Result.ok({
       sign: authorization,
     });
   }

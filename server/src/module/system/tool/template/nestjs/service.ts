@@ -12,7 +12,7 @@ export const serviceTem = (options) => {
   return `
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ResultData } from 'src/common/utils/result';
+import { Result } from 'src/common/response';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Create${Lodash.upperFirst(BusinessName)}Dto, Update${Lodash.upperFirst(BusinessName)}Dto, Query${Lodash.upperFirst(BusinessName)}Dto } from './dto/${businessName}.dto';
 import { isEmpty } from 'src/common/utils';
@@ -25,7 +25,7 @@ export class ${Lodash.upperFirst(BusinessName)}Service {
     const res = await this.prisma.${delegateName}.create({
       data: create${Lodash.upperFirst(BusinessName)}Dto,
     });
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async findAll(query: Query${Lodash.upperFirst(BusinessName)}Dto) {
@@ -49,7 +49,7 @@ ${selectLine}    };
       this.prisma.${delegateName}.count({ where }),
     ]);
 
-    return ResultData.ok({
+    return Result.ok({
       rows: list,
       total,
     });
@@ -62,7 +62,7 @@ ${selectLine}    };
         ${primaryKey}: ${primaryKey},
       },
     });
-    return ResultData.ok(res);
+    return Result.ok(res);
   }
 
   async update(update${Lodash.upperFirst(BusinessName)}Dto: Update${Lodash.upperFirst(BusinessName)}Dto) {
@@ -72,7 +72,7 @@ ${selectLine}    };
       },
       data: update${Lodash.upperFirst(BusinessName)}Dto,
     });
-    return ResultData.ok({ value: Boolean(res) });
+    return Result.ok({ value: Boolean(res) });
   }
 
   async remove(${primaryKey}s: ${primaryKeyType}[]) {
@@ -86,7 +86,7 @@ ${selectLine}    };
         delFlag: '1',
       },
     });
-    return ResultData.ok({ value: res.count >= 1 });
+    return Result.ok({ value: res.count >= 1 });
   }
 }`;
 };

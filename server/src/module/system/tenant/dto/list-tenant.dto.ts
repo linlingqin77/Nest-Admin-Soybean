@@ -1,8 +1,8 @@
 import { IsString, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PagingDto } from 'src/common/dto/index';
+import { PageQueryDto } from 'src/common/dto/index';
 
-export class ListTenantDto extends PagingDto {
+export class ListTenantDto extends PageQueryDto {
     @ApiProperty({ required: false, description: '租户ID' })
     @IsOptional()
     @IsString()
