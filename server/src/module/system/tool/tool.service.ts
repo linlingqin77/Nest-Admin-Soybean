@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { BusinessException } from 'src/common/exceptions';
 import { ResponseCode } from 'src/common/response';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';

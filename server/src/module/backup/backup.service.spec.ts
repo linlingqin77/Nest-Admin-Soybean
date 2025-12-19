@@ -1,14 +1,16 @@
 import { BackupService } from './backup.service';
+import { Logger } from '@nestjs/common';
 
 describe('BackupService', () => {
   let service: BackupService;
-  const logSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined);
+  let logSpy: jest.SpyInstance;
 
   beforeEach(() => {
     service = new BackupService();
+    logSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     logSpy.mockRestore();
   });
 

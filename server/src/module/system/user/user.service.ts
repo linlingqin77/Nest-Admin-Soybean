@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { BusinessException } from 'src/common/exceptions';
 import { RedisService } from 'src/module/common/redis/redis.service';
@@ -28,6 +28,12 @@ import { Captcha } from 'src/common/decorators/captcha.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from './user.repository';
 
+// 导入子服务
+import { UserAuthService } from './services/user-auth.service';
+import { UserProfileService } from './services/user-profile.service';
+import { UserRoleService } from './services/user-role.service';
+import { UserExportService } from './services/user-export.service';
+
 type UserWithDept = SysUser & { dept?: SysDept | null };
 type UserWithRelations = UserWithDept & { roles?: SysRole[]; posts?: SysPost[] };
 
@@ -41,7 +47,17 @@ export class UserService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    // 注入子服务
+    @Inject(forwardRef(() => UserAuthService))
+    private readonly userAuthService: UserAuthService,
+    @Inject(forwardRef(() => UserProfileService))
+    private readonly userProfileService: UserProfileService,
+    @Inject(forwardRef(() => UserRoleService))
+    private readonly userRoleService: UserRoleService,
+    private readonly userExportService: UserExportService,
   ) { }
+
+  // ==================== 私有辅助方法 ====================
 
   private async attachDeptInfo(users: SysUser[]): Promise<UserWithDept[]> {
     if (!users.length) {
@@ -134,6 +150,8 @@ export class UserService {
     }
     return undefined;
   }
+
+  // ==================== 用户CRUD操作 (保留在UserService) ====================
 
   @Transactional()
   async create(createUserDto: CreateUserDto) {
@@ -329,264 +347,15 @@ export class UserService {
     return Result.ok(data);
   }
 
-  @CacheEvict(CacheEnum.SYS_USER_KEY, '{userId}')
-  clearCacheByUserId(userId: number) {
-    return userId;
-  }
-
-  @Captcha('user')
-  async login(user: LoginDto, clientInfo: ClientInfoDto) {
-    const data = await this.userRepo.findByUserName(user.userName);
-
-    if (!(data && bcrypt.compareSync(user.password, data.password))) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `帐号或密码错误`);
-    }
-
-    this.clearCacheByUserId(data.userId);
-
-    const userData = await this.getUserinfo(data.userId);
-
-    if (userData.delFlag === DelFlagEnum.DELETE) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `您已被禁用，如需正常使用请联系管理员`);
-    }
-    if (userData.status === StatusEnum.STOP) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `您已被停用，如需正常使用请联系管理员`);
-    }
-
-    const loginDate = new Date();
-    await this.userRepo.updateLoginTime(data.userId);
-    await this.prisma.sysUser.update({
-      where: { userId: data.userId },
-      data: { loginIp: clientInfo.ipaddr },
-    });
-
-    const uuid = GenerateUUID();
-    const token = this.createToken({ uuid: uuid, userId: userData.userId });
-    const permissions = await this.getUserPermissions(userData.userId);
-    const deptData = userData.deptId ? await this.prisma.sysDept.findFirst({ where: { deptId: userData.deptId }, select: { deptName: true } }) : null;
-
-    userData['deptName'] = deptData?.deptName || '';
-    const roles = (userData.roles ?? []).map((item) => item.roleKey);
-
-    const safeDept = (userData.dept as any) ?? ({} as any);
-    const safeRoles = (userData.roles as any) ?? [];
-    const safePosts = (userData.posts as any) ?? [];
-    const userInfo: Partial<UserType> = {
-      browser: clientInfo.browser,
-      ipaddr: clientInfo.ipaddr,
-      loginLocation: clientInfo.loginLocation,
-      loginTime: loginDate,
-      os: clientInfo.os,
-      deviceType: clientInfo.deviceType,
-      permissions: permissions,
-      roles: roles,
-      token: uuid,
-      user: {
-        ...(userData as unknown as UserType['user']),
-        dept: safeDept,
-        roles: safeRoles,
-        posts: safePosts,
-      },
-      userId: userData.userId,
-      userName: userData.userName,
-      deptId: userData.deptId,
-    };
-
-    await this.updateRedisToken(uuid, userInfo);
-
-    return Result.ok(
-      {
-        token,
-      },
-      '登录成功',
-    );
-  }
-
-  async updateRedisUserRolesAndPermissions(uuid: string, userId: number) {
-    const userData = await this.getUserinfo(userId);
-
-    const permissions = await this.getUserPermissions(userId);
-    const roles = (userData.roles ?? []).map((item) => item.roleKey);
-
-    await this.updateRedisToken(uuid, {
-      permissions: permissions,
-      roles: roles,
-    });
-  }
-
-  async updateRedisToken(token: string, metaData: Partial<UserType>) {
-    const oldMetaData = await this.redisService.get(`${CacheEnum.LOGIN_TOKEN_KEY}${token}`);
-
-    let newMetaData = metaData;
-    if (oldMetaData) {
-      newMetaData = Object.assign(oldMetaData, metaData);
-    }
-
-    await this.redisService.set(`${CacheEnum.LOGIN_TOKEN_KEY}${token}`, newMetaData, LOGIN_TOKEN_EXPIRESIN);
-  }
-
-  async getRoleIds(userIds: Array<number>) {
-    if (!userIds.length) {
-      return [];
-    }
-    const roleList = await this.prisma.sysUserRole.findMany({
-      where: {
-        userId: { in: userIds },
-      },
-      select: { roleId: true },
-    });
-    const roleIds = roleList.map((item) => item.roleId);
-    return Uniq(roleIds);
-  }
-
-  async getUserPermissions(userId: number) {
-    const roleIds = await this.getRoleIds([userId]);
-    const list = await this.roleService.getPermissionsByRoleIds(roleIds);
-    const permissions = Uniq(list.map((item) => item.perms)).filter((item) => item);
-    return permissions;
-  }
-
-  async getUserinfo(userId: number): Promise<UserWithRelations> {
-    const user = await this.userRepo.findById(userId);
-
-    if (!user) {
-      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
-    }
-
-    const [dept, roleIds, postRelations] = await Promise.all([
-      user.deptId ? this.prisma.sysDept.findFirst({ where: { deptId: user.deptId, delFlag: DelFlagEnum.NORMAL } }) : Promise.resolve(null),
-      this.getRoleIds([userId]),
-      this.prisma.sysUserPost.findMany({ where: { userId }, select: { postId: true } }),
-    ]);
-
-    const posts = postRelations.length
-      ? await this.prisma.sysPost.findMany({
-        where: {
-          delFlag: DelFlagEnum.NORMAL,
-          postId: {
-            in: postRelations.map((item) => item.postId),
-          },
-        },
-      })
-      : [];
-
-    const roles = roleIds.length ? await this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL, roleId: { in: roleIds } } }) : [];
-
-    return {
-      ...user,
-      dept,
-      posts,
-      roles,
-    };
-  }
-
-  async register(user: RegisterDto) {
-    const loginDate = new Date();
-    const salt = bcrypt.genSaltSync(10);
-    if (user.password) {
-      user.password = bcrypt.hashSync(user.password, salt);
-    }
-    const checkUserNameUnique = await this.userRepo.findByUserName(user.userName);
-    if (checkUserNameUnique) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, `保存用户'${user.userName}'失败，注册账号已存在`);
-    }
-    await this.userRepo.create({
-      userName: user.userName,
-      nickName: user.userName,
-      password: user.password,
-      loginDate,
-      userType: SYS_USER_TYPE.CUSTOM,
-      phonenumber: '',
-      sex: '0',
-      avatar: '',
-      status: StatusEnum.NORMAL,
-      delFlag: DelFlagEnum.NORMAL,
-      loginIp: '',
-    });
-    return Result.ok();
-  }
-
-  createToken(payload: { uuid: string; userId: number }): string {
-    const accessToken = this.jwtService.sign(payload);
-    return accessToken;
-  }
-
-  parseToken(token: string) {
-    try {
-      if (!token) return null;
-      const payload = this.jwtService.verify(token.replace('Bearer ', ''));
-      return payload;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  async resetPwd(body: ResetPwdDto) {
-    if (body.userId === 1) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '系统用户不能重置密码');
-    }
-    if (body.password) {
-      body.password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(10));
-    }
-    await this.userRepo.resetPassword(body.userId, body.password);
-    return Result.ok();
-  }
-
   async remove(ids: number[]) {
     const count = await this.userRepo.softDeleteBatch(ids);
     return Result.ok({ count });
   }
 
-  async authRole(userId: number) {
-    const [allRoles, user] = await Promise.all([
-      this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
-      this.userRepo.findById(userId),
-    ]);
-
-    if (!user) {
-      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
-    }
-
-    const dept = user.deptId ? await this.prisma.sysDept.findFirst({ where: { delFlag: DelFlagEnum.NORMAL, deptId: user.deptId } }) : null;
-    const roleIds = await this.getRoleIds([userId]);
-
-    const enrichedUser: UserWithRelations = {
-      ...user,
-      dept,
-      roles: allRoles.filter((item) => {
-        if (roleIds.includes(item.roleId)) {
-          (item as any).flag = true;
-          return true;
-        }
-        return true;
-      }),
-    };
-
-    return Result.ok({
-      roles: allRoles,
-      user: enrichedUser,
-    });
-  }
-
-  @Transactional()
-  async updateAuthRole(query) {
-    let roleIds = query.roleIds.split(',');
-    roleIds = roleIds.filter((v) => v != '1');
-
-    if (roleIds.length > 0) {
-      await this.prisma.sysUserRole.deleteMany({ where: { userId: query.userId } });
-      await this.prisma.sysUserRole.createMany({
-        data: roleIds.map((id) => ({ userId: query.userId, roleId: +id })),
-        skipDuplicates: true,
-      });
-    }
-    return Result.ok();
-  }
-
   async changeStatus(changeStatusDto: ChangeUserStatusDto) {
     const userData = await this.userRepo.findById(changeStatusDto.userId);
     if (userData?.userType === SYS_USER_TYPE.SYS) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '系统角色不可停用');
+      return Result.fail(ResponseCode.BUSINESS_ERROR, '系统角色不可停用');
     }
 
     await this.userRepo.update(changeStatusDto.userId, {
@@ -600,133 +369,6 @@ export class UserService {
     return Result.ok(tree);
   }
 
-  async allocatedList(query: AllocatedListDto) {
-    const relations = await this.prisma.sysUserRole.findMany({
-      where: { roleId: +query.roleId },
-      select: { userId: true },
-    });
-    if (!relations.length) {
-      return Result.page([], 0);
-    }
-    const userIds = relations.map((item) => item.userId);
-    const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
-      status: StatusEnum.NORMAL,
-      userId: { in: userIds },
-    };
-
-    if (query.userName) {
-      where.userName = { contains: query.userName };
-    }
-    if (query.phonenumber) {
-      where.phonenumber = { contains: query.phonenumber };
-    }
-
-    const { skip, take } = PaginationHelper.getPagination(query);
-    const [list, total] = await this.prisma.$transaction([this.prisma.sysUser.findMany({ where, skip, take, orderBy: { createTime: 'desc' } }), this.prisma.sysUser.count({ where })]);
-
-    const listWithDept = await this.attachDeptInfo(list);
-    const formattedList = FormatDateFields(listWithDept);
-
-    return Result.page(formattedList, total);
-  }
-
-  async unallocatedList(query: AllocatedListDto) {
-    const relations = await this.prisma.sysUserRole.findMany({
-      where: { roleId: +query.roleId },
-      select: { userId: true },
-    });
-    const userIds = relations.map((item) => item.userId);
-
-    const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
-      status: StatusEnum.NORMAL,
-    };
-
-    if (userIds.length > 0) {
-      where.userId = {
-        notIn: userIds,
-      };
-    }
-
-    if (query.userName) {
-      where.userName = { contains: query.userName };
-    }
-
-    if (query.phonenumber) {
-      where.phonenumber = { contains: query.phonenumber };
-    }
-
-    const { skip, take } = PaginationHelper.getPagination(query);
-    const [list, total] = await this.prisma.$transaction([this.prisma.sysUser.findMany({ where, skip, take, orderBy: { createTime: 'desc' } }), this.prisma.sysUser.count({ where })]);
-
-    const listWithDept = await this.attachDeptInfo(list);
-    const formattedList = FormatDateFields(listWithDept);
-
-    return Result.page(formattedList, total);
-  }
-
-  async authUserCancel(data: AuthUserCancelDto) {
-    await this.prisma.sysUserRole.deleteMany({
-      where: {
-        userId: data.userId,
-        roleId: data.roleId,
-      },
-    });
-    return Result.ok();
-  }
-
-  @Transactional()
-  async authUserCancelAll(data: AuthUserCancelAllDto) {
-    const userIds = data.userIds.split(',').map((id) => +id);
-    await this.prisma.sysUserRole.deleteMany({
-      where: {
-        userId: { in: userIds },
-        roleId: +data.roleId,
-      },
-    });
-    return Result.ok();
-  }
-
-  @Transactional()
-  async authUserSelectAll(data: AuthUserSelectAllDto) {
-    const userIds = data.userIds.split(',').map((id) => +id);
-    const entities = userIds.map((userId) => ({
-      userId,
-      roleId: +data.roleId,
-    }));
-    await this.prisma.sysUserRole.createMany({ data: entities, skipDuplicates: true });
-    return Result.ok();
-  }
-
-  async profile(user) {
-    return Result.ok(user);
-  }
-
-  async updateProfile(user: UserType, updateProfileDto: UpdateProfileDto) {
-    await this.prisma.sysUser.update({ where: { userId: user.user.userId }, data: updateProfileDto });
-    const userData = await this.redisService.get(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
-    userData.user = Object.assign(userData.user, updateProfileDto);
-    await this.redisService.set(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`, userData);
-    return Result.ok();
-  }
-
-  async updatePwd(user: UserType, updatePwdDto: UpdatePwdDto) {
-    if (updatePwdDto.oldPassword === updatePwdDto.newPassword) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '新密码不能与旧密码相同');
-    }
-    if (bcrypt.compareSync(user.user.password, updatePwdDto.oldPassword)) {
-      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '修改密码失败，旧密码错误');
-    }
-
-    const password = bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10));
-    await this.userRepo.resetPassword(user.user.userId, password);
-    return Result.ok();
-  }
-
-  /**
-   * 获取用户选择框列表
-   */
   async optionselect() {
     const list = await this.prisma.sysUser.findMany({
       where: {
@@ -742,9 +384,6 @@ export class UserService {
     return Result.ok(list);
   }
 
-  /**
-   * 根据部门ID获取用户列表
-   */
   async findByDeptId(deptId: number) {
     const list = await this.prisma.sysUser.findMany({
       where: {
@@ -755,28 +394,107 @@ export class UserService {
     return Result.ok(list);
   }
 
+  // ==================== 认证相关 - 委托给 UserAuthService ====================
+
+  @CacheEvict(CacheEnum.SYS_USER_KEY, '{userId}')
+  clearCacheByUserId(userId: number) {
+    return userId;
+  }
+
+  @Captcha('user')
+  async login(user: LoginDto, clientInfo: ClientInfoDto) {
+    return this.userAuthService.login(user, clientInfo);
+  }
+
+  async register(user: RegisterDto) {
+    return this.userAuthService.register(user);
+  }
+
+  createToken(payload: { uuid: string; userId: number }): string {
+    return this.userAuthService.createToken(payload);
+  }
+
+  parseToken(token: string) {
+    return this.userAuthService.parseToken(token);
+  }
+
+  async updateRedisToken(token: string, metaData: Partial<UserType>) {
+    return this.userAuthService.updateRedisToken(token, metaData);
+  }
+
+  async updateRedisUserRolesAndPermissions(uuid: string, userId: number) {
+    return this.userAuthService.updateRedisUserRolesAndPermissions(uuid, userId);
+  }
+
+  async getRoleIds(userIds: Array<number>) {
+    return this.userAuthService.getRoleIds(userIds);
+  }
+
+  async getUserPermissions(userId: number) {
+    return this.userAuthService.getUserPermissions(userId);
+  }
+
+  async getUserinfo(userId: number): Promise<UserWithRelations> {
+    return this.userAuthService.getUserinfo(userId);
+  }
+
+  // ==================== 个人资料相关 - 委托给 UserProfileService ====================
+
+  async profile(user) {
+    return this.userProfileService.profile(user);
+  }
+
+  async updateProfile(user: UserType, updateProfileDto: UpdateProfileDto) {
+    return this.userProfileService.updateProfile(user, updateProfileDto);
+  }
+
+  async updatePwd(user: UserType, updatePwdDto: UpdatePwdDto) {
+    return this.userProfileService.updatePwd(user, updatePwdDto);
+  }
+
+  async resetPwd(body: ResetPwdDto) {
+    return this.userProfileService.resetPwd(body);
+  }
+
+  // ==================== 角色分配相关 - 委托给 UserRoleService ====================
+
+  async authRole(userId: number) {
+    return this.userRoleService.authRole(userId);
+  }
+
+  @Transactional()
+  async updateAuthRole(query) {
+    return this.userRoleService.updateAuthRole(query);
+  }
+
+  async allocatedList(query: AllocatedListDto) {
+    return this.userRoleService.allocatedList(query);
+  }
+
+  async unallocatedList(query: AllocatedListDto) {
+    return this.userRoleService.unallocatedList(query);
+  }
+
+  async authUserCancel(data: AuthUserCancelDto) {
+    return this.userRoleService.authUserCancel(data);
+  }
+
+  @Transactional()
+  async authUserCancelAll(data: AuthUserCancelAllDto) {
+    return this.userRoleService.authUserCancelAll(data);
+  }
+
+  @Transactional()
+  async authUserSelectAll(data: AuthUserSelectAllDto) {
+    return this.userRoleService.authUserSelectAll(data);
+  }
+
+  // ==================== 导出相关 - 委托给 UserExportService ====================
+
   async export(res: Response, body: ListUserDto, user: UserType['user']) {
     delete body.pageNum;
     delete body.pageSize;
     const list = await this.findAll(body, user);
-    const options = {
-      sheetName: '用户数据',
-      data: list.data.rows,
-      header: [
-        { title: '用户序号', dataIndex: 'userId' },
-        { title: '登录名称', dataIndex: 'userName' },
-        { title: '用户昵称', dataIndex: 'nickName' },
-        { title: '用户邮箱', dataIndex: 'email' },
-        { title: '手机号码', dataIndex: 'phonenumber' },
-        { title: '用户性别', dataIndex: 'sex' },
-        { title: '账号状态', dataIndex: 'status' },
-        { title: '最后登录IP', dataIndex: 'loginIp' },
-        { title: '最后登录时间', dataIndex: 'loginDate', width: 20 },
-        { title: '部门', dataIndex: 'deptName' },
-        { title: '部门负责人', dataIndex: 'dept.leader' },
-        { title: '创建时间', dataIndex: 'createTime', width: 20 },
-      ],
-    };
-    return await ExportTable(options, res);
+    return this.userExportService.export(res, list.data);
   }
 }

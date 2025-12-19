@@ -70,7 +70,7 @@ describe('UploadService', () => {
   it('should append timestamp when generating new filename', () => {
     const nowSpy = jest.spyOn(Date.prototype, 'getTime').mockReturnValue(1700000000000);
     const value = service.getNewFileName('demo.txt');
-    expect(value).toBe('demo.txt_1700000000000');
+    expect(value).toBe('demo_1700000000000.txt');
     nowSpy.mockRestore();
   });
 

@@ -314,7 +314,27 @@ describe('System module services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new UserService(prisma, userRepo as any, roleService as any, deptService as any, jwtService, redisService as any, configService as any);
+      const userAuthService = {
+        getRoleIds: jest.fn().mockResolvedValue([[1]]),
+        login: jest.fn(),
+        register: jest.fn(),
+      } as any;
+      const userProfileService = {} as any;
+      const userRoleService = {} as any;
+      const userExportService = {} as any;
+      service = new UserService(
+        prisma,
+        userRepo as any,
+        roleService as any,
+        deptService as any,
+        jwtService,
+        redisService as any,
+        configService as any,
+        userAuthService,
+        userProfileService,
+        userRoleService,
+        userExportService,
+      );
     });
 
     it('should create user with posts and roles', async () => {

@@ -6,6 +6,7 @@ import { BusinessException, AuthenticationException, AuthorizationException, Val
 import { ResponseCode } from '../response/response.interface';
 import { Controller, Get, Module, BadRequestException, HttpException } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
+import { ClsService, ClsModule } from 'nestjs-cls';
 
 // 测试用控制器
 @Controller('test')
@@ -52,6 +53,7 @@ class TestController {
 }
 
 @Module({
+  imports: [ClsModule.forRoot({ global: true })],
   controllers: [TestController],
   providers: [
     {
@@ -60,7 +62,7 @@ class TestController {
     },
   ],
 })
-class TestModule {}
+class TestModule { }
 
 describe('GlobalExceptionFilter (e2e)', () => {
   let app: INestApplication;

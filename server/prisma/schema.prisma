@@ -181,6 +181,8 @@ model SysDept {
   @@index([tenantId, status])
   @@index([tenantId, parentId])
   @@index([status])
+  @@index([tenantId, delFlag, status])
+  @@index([parentId])
   @@map("sys_dept")
 }
 
@@ -244,6 +246,7 @@ model SysJob {
   remark         String?   @db.VarChar(500)
 
   @@index([tenantId, status])
+  @@index([invokeTarget])
   @@map("sys_job")
 }
 
@@ -278,6 +281,8 @@ model SysLogininfor {
   @@index([userName])
   @@index([status])
   @@index([loginTime])
+  @@index([tenantId, userName, loginTime])
+  @@index([tenantId, status, loginTime])
   @@map("sys_logininfor")
 }
 
@@ -307,6 +312,8 @@ model SysMenu {
   @@index([tenantId, status])
   @@index([tenantId, parentId])
   @@index([status])
+  @@index([tenantId, delFlag, status])
+  @@index([parentId, orderNum])
   @@map("sys_menu")
 }
 
@@ -324,6 +331,9 @@ model SysNotice {
   delFlag       String    @default("0") @map("del_flag") @db.Char(1)
   remark        String?   @db.VarChar(500)
 
+  @@index([tenantId, status])
+  @@index([tenantId, noticeType])
+  @@index([tenantId, createTime])
   @@map("sys_notice")
 }
 
@@ -352,6 +362,8 @@ model SysOperLog {
   @@index([status])
   @@index([operTime])
   @@index([businessType])
+  @@index([tenantId, status, operTime])
+  @@index([tenantId, operName, operTime])
   @@map("sys_oper_log")
 }
 
@@ -373,6 +385,7 @@ model SysPost {
 
   @@index([tenantId, status])
   @@index([deptId])
+  @@index([tenantId, delFlag, status])
   @@map("sys_post")
 }
 

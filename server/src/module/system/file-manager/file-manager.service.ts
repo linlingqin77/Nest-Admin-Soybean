@@ -1,4 +1,4 @@
-import { Injectable, Logger, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Result, ResponseCode } from 'src/common/response';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
@@ -763,7 +763,7 @@ export class FileManagerService {
     });
 
     if (!targetVersion || targetVersion.tenantId !== tenantId || targetVersion.delFlag !== '0') {
-      throw new BadRequestException('目标版本不存在');
+      throw new BusinessException(ResponseCode.DATA_NOT_FOUND, '目标版本不存在');
     }
 
     // 获取当前最新版本
@@ -780,12 +780,12 @@ export class FileManagerService {
     });
 
     if (!latestFile) {
-      throw new BadRequestException('当前最新版本不存在');
+      throw new BusinessException(ResponseCode.DATA_NOT_FOUND, '当前最新版本不存在');
     }
 
     // 检查isLatest状态（冲突检测）
     if (!latestFile.isLatest) {
-      throw new ConflictException('文件已被修改，请刷新后重试');
+      throw new BusinessException(ResponseCode.DATA_IN_USE, '文件已被修改，请刷新后重试');
     }
 
     // 使用事务创建新版本
@@ -883,7 +883,7 @@ export class FileManagerService {
     const { fileId, tenantId } = this.fileAccessService.verifyAccessToken(token);
 
     if (fileId !== uploadId) {
-      throw new BadRequestException('令牌与文件不匹配');
+      throw new BusinessException(ResponseCode.PARAM_INVALID, '令牌与文件不匹配');
     }
 
     // 获取文件信息
@@ -892,7 +892,7 @@ export class FileManagerService {
     });
 
     if (!file || file.tenantId !== tenantId || file.delFlag !== '0') {
-      throw new BadRequestException('文件不存在');
+      throw new BusinessException(ResponseCode.DATA_NOT_FOUND, '文件不存在');
     }
 
     // 增加下载次数
@@ -909,13 +909,13 @@ export class FileManagerService {
       const relativePath = file.url.split(serveRoot)[1];
 
       if (!relativePath) {
-        throw new BadRequestException('文件路径无效');
+        throw new BusinessException(ResponseCode.PARAM_INVALID, '文件路径无效');
       }
 
       const filePath = path.join(baseDir, relativePath);
 
       if (!fs.existsSync(filePath)) {
-        throw new BadRequestException('文件不存在');
+        throw new BusinessException(ResponseCode.DATA_NOT_FOUND, '文件不存在');
       }
 
       res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(file.fileName)}"`);
@@ -945,7 +945,7 @@ export class FileManagerService {
     });
 
     if (files.length === 0) {
-      throw new BadRequestException('没有可下载的文件');
+      throw new BusinessException(ResponseCode.DATA_NOT_FOUND, '没有可下载的文件');
     }
 
     // 创建zip压缩流
