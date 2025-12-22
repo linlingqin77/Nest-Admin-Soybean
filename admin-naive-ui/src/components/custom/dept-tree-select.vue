@@ -21,12 +21,15 @@ const { loading, startLoading, endLoading } = useLoading();
 
 async function getDeptList() {
   startLoading();
-  const { error, data } = await fetchGetDeptTree();
-  if (error) return;
-  options.value = data;
-  // 设置默认展开的节点
-  if (data?.length && !expandedKeys.value.length) {
-    expandedKeys.value = [data[0].id];
+  try {
+    const { data } = await fetchGetDeptTree();
+    options.value = data;
+    // 设置默认展开的节点
+    if (data?.length && !expandedKeys.value.length) {
+      expandedKeys.value = [data[0].id];
+    }
+  } catch {
+    // error handled by request interceptor
   }
   endLoading();
 }

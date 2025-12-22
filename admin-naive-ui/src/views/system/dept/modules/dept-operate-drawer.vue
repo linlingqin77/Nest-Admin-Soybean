@@ -164,6 +164,9 @@ async function getUserData() {
   startUserLoading();
   try {
     const { data } = await fetchGetDeptUserList(props.rowData.deptId);
+    if (!data) {
+      return;
+    }
     if (data.length === 0) {
       placeholder.value = $t('page.system.dept.placeholder.deptUserIsEmptyLeaderPlaceHolder');
       disabled.value = true;

@@ -259,18 +259,23 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init auth route */
   async function initAuthRoute() {
-    // check if user info is initialized
-    if (!authStore.userInfo.user?.userId) {
-      await authStore.initUserInfo();
-    }
+    try {
+      // check if user info is initialized
+      if (!authStore.userInfo.user?.userId) {
+        await authStore.initUserInfo();
+      }
 
-    if (authRouteMode.value === 'static') {
-      initStaticAuthRoute();
-    } else {
-      await initDynamicAuthRoute();
-    }
+      if (authRouteMode.value === 'static') {
+        initStaticAuthRoute();
+      } else {
+        await initDynamicAuthRoute();
+      }
 
-    tabStore.initHomeTab();
+      tabStore.initHomeTab();
+    } catch (error) {
+      // if init auth route failed, reset store
+      authStore.resetStore();
+    }
   }
 
   /** Init static auth route */
@@ -292,9 +297,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init dynamic auth route */
   async function initDynamicAuthRoute() {
-    const { data, error } = await fetchGetRoutes();
+    try {
+      const { data } = await fetchGetRoutes();
 
-    if (!error) {
+      if (!data) {
+        authStore.resetStore();
+        return;
+      }
+
       addAuthRoutes(data);
 
       handleConstantAndAuthRoutes();
@@ -302,7 +312,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       handleUpdateRootRouteRedirect(routeHome.value);
 
       setIsInitAuthRoute(true);
-    } else {
+    } catch (error) {
       // if fetch user routes failed, reset store
       authStore.resetStore();
     }

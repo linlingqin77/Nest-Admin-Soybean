@@ -26,17 +26,24 @@ const { loading, startLoading, endLoading } = useLoading();
 
 async function getMenuList() {
   startLoading();
-  const { error, data } = await fetchGetMenuList();
-  if (error) return;
-  options.value = [
-    {
-      menuId: 0,
-      menuName: '根目录',
-      icon: 'material-symbols:home-outline-rounded',
-      children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
+  try {
+    const { data } = await fetchGetMenuList();
+    if (!data) {
+      return;
     }
-  ] as Api.System.MenuList;
-  endLoading();
+    options.value = [
+      {
+        menuId: 0,
+        menuName: '根目录',
+        icon: 'material-symbols:home-outline-rounded',
+        children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
+      }
+    ] as Api.System.MenuList;
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endLoading();
+  }
 }
 
 onMounted(() => {

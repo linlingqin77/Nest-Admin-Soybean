@@ -32,16 +32,19 @@ const attrs: TreeSelectProps = useAttrs();
 
 async function getMenuList() {
   loading.value = true;
-  const { error, data } = await fetchGetMenuTreeSelect();
-  if (error) return;
-  options.value = [
-    {
-      id: 0,
-      label: '根目录',
-      icon: 'material-symbols:home-outline-rounded',
-      children: data
-    }
-  ] as Api.System.MenuList;
+  try {
+    const { data } = await fetchGetMenuTreeSelect();
+    options.value = [
+      {
+        id: 0,
+        label: '根目录',
+        icon: 'material-symbols:home-outline-rounded',
+        children: data
+      }
+    ] as Api.System.MenuList;
+  } catch {
+    // error handled by request interceptor
+  }
   // 折叠到只显示根节点
   loading.value = false;
 }

@@ -96,9 +96,12 @@ async function handleResetSearchParams() {
 }
 
 async function getDataNames() {
-  const { error, data: dataNames } = await fetchGetGenDataNames();
-  if (error) return;
-  dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
+  try {
+    const { data: dataNames } = await fetchGetGenDataNames();
+    dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
+  } catch {
+    // error handled by request interceptor
+  }
 }
 
 watch(visible, async () => {

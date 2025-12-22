@@ -145,9 +145,23 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
         backendErrorCode = String(error.response?.status || '');
       }
 
-      // the error message is displayed in the modal
+      // 处理登出代码
+      const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       const modalLogoutCodes = import.meta.env.VITE_SERVICE_MODAL_LOGOUT_CODES?.split(',') || [];
-      if (modalLogoutCodes.includes(backendErrorCode)) {
+      const allLogoutCodes = [...logoutCodes, ...modalLogoutCodes].filter(code => code);
+      
+      if (allLogoutCodes.includes(backendErrorCode)) {
+        // HTTP 401 状态码，需要执行登出
+        const authStore = useAuthStore();
+        
+        // 如果已经在登录页，不需要处理
+        if (!window.location.pathname?.startsWith('/login')) {
+          // 取消所有待处理的请求
+          flatRequest.cancelAllRequest();
+          
+          // 执行登出并跳转
+          authStore.resetStore();
+        }
         return;
       }
 

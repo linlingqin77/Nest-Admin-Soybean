@@ -63,6 +63,9 @@ async function handleFetchTenantList() {
   startTenantLoading();
   try {
     const { data } = await fetchTenantList();
+    if (!data) {
+      return;
+    }
     tenantEnabled.value = data.tenantEnabled;
     if (data.tenantEnabled) {
       tenantOption.value = data.voList.map(tenant => {
@@ -102,6 +105,9 @@ async function handleFetchCaptchaCode() {
   startCodeLoading();
   try {
     const { data } = await fetchCaptchaCode();
+    if (!data) {
+      return;
+    }
     captchaEnabled.value = data.captchaEnabled;
     if (data.captchaEnabled && data.img) {
       model.uuid = data.uuid;

@@ -69,10 +69,17 @@ async function handleUpdateModelWhenEdit() {
 
   if (props.rowData) {
     Object.assign(model, props.rowData);
-    const { error, data } = await fetchGetRoleDeptTreeSelect(props.rowData.roleId!);
-    if (error) return;
-    deptOptions.value = data.depts;
-    model.deptIds = data.checkedKeys;
+    try {
+      const { data } = await fetchGetRoleDeptTreeSelect(props.rowData.roleId!);
+      if (!data) {
+        endDeptLoading();
+        return;
+      }
+      deptOptions.value = data.depts;
+      model.deptIds = data.checkedKeys;
+    } catch {
+      // error handled by request interceptor
+    }
   }
   endDeptLoading();
 }

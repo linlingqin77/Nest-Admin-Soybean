@@ -99,14 +99,20 @@ const rules: Record<RuleKey, App.Global.FormRule | App.Global.FormRule[]> = {
 const packageOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 async function getPackageOptions() {
   startPackageLoading();
-  const { error, data } = await fetchGetTenantPackageSelectList();
-  if (!error) {
+  try {
+    const { data } = await fetchGetTenantPackageSelectList();
+    if (!data) {
+      return;
+    }
     packageOptions.value = data.map(item => ({
       label: item.packageName,
       value: item.packageId
     }));
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endPackageLoading();
   }
-  endPackageLoading();
 }
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {

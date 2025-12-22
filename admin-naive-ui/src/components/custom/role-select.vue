@@ -25,13 +25,14 @@ const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 
 async function getRoleOptions() {
   startRoleLoading();
-  const { error, data } = await fetchGetRoleSelect();
-
-  if (!error) {
+  try {
+    const { data } = await fetchGetRoleSelect();
     roleOptions.value = data.map(item => ({
       label: item.roleName,
       value: item.roleId
     }));
+  } catch {
+    // error handled by request interceptor
   }
   endRoleLoading();
 }

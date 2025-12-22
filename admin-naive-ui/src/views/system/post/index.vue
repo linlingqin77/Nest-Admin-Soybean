@@ -202,11 +202,14 @@ const selectedKeys = ref<string[]>([]);
 async function getDeptOptions() {
   // 加载
   startTreeLoading();
-  const { data: tree, error } = await fetchGetPostDeptSelect();
-  if (!error) {
+  try {
+    const { data: tree } = await fetchGetPostDeptSelect();
     deptData.value = tree;
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endTreeLoading();
   }
-  endTreeLoading();
 }
 getDeptOptions();
 

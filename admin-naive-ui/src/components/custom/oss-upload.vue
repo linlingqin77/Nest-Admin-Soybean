@@ -21,16 +21,18 @@ const fileList = ref<UploadFileInfo[]>([]);
 async function handleFetchOssList(ossIds: string[]) {
   startLoading();
   try {
-    const { error, data } = await fetchGetOssListByIds(ossIds);
-    if (error) return;
+    const { data } = await fetchGetOssListByIds(ossIds);
+    if (!data) {
+      return;
+    }
     fileList.value = data.map(item => ({
       id: String(item.ossId),
       url: item.url,
       name: item.originalName,
       status: 'finished'
     }));
-  } catch (error) {
-    window.$message?.error(`获取文件列表失败: ${error}`);
+  } catch {
+    // error handled by request interceptor
   } finally {
     endLoading();
   }

@@ -90,6 +90,9 @@ async function handleUpdateModelWhenEdit() {
     Object.assign(model, props.rowData);
     try {
       const { data } = await fetchGetRoleMenuTreeSelect(model.roleId!);
+      if (!data) {
+        return;
+      }
       model.menuIds = data.checkedKeys;
       menuOptions.value = data.menus;
     } catch {

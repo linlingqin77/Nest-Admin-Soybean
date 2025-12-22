@@ -29,16 +29,17 @@ const attrs: TreeSelectProps = useAttrs();
 
 async function getDeptList() {
   loading.value = true;
-  const { error, data } = await fetchGetDeptTree();
-  if (error) return;
-
-  // 确保 options.value 是数组
-  if (data) {
-    options.value = Array.isArray(data) ? data : [data];
-  } else {
-    options.value = [];
+  try {
+    const { data } = await fetchGetDeptTree();
+    // 确保 options.value 是数组
+    if (data) {
+      options.value = Array.isArray(data) ? data : [data];
+    } else {
+      options.value = [];
+    }
+  } catch {
+    // error handled by request interceptor
   }
-
   loading.value = false;
 }
 

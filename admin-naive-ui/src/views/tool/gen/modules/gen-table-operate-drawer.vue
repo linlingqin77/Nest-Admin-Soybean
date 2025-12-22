@@ -90,11 +90,14 @@ const infoRules: Record<InfoRuleKey, App.Global.FormRule> = {
 async function getGenTableInfo() {
   if (!props.rowData?.tableId) return;
   startLoading();
-  // request
-  const { error, data } = await fetchGetGenTableInfo(props.rowData.tableId);
-  if (error) return;
-  genTableInfo.value = data;
-  endLoading();
+  try {
+    const { data } = await fetchGetGenTableInfo(props.rowData.tableId);
+    genTableInfo.value = data;
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endLoading();
+  }
 }
 
 function closeDrawer() {
@@ -153,14 +156,21 @@ const { loading: dictLoading, startLoading: startDictLoading, endLoading: endDic
 
 async function getDictOptions() {
   startDictLoading();
-  const { error, data } = await fetchGetDictTypeOption();
-  if (error) return;
-  dictOptions.value = data.map(dict => ({
-    value: dict.dictType!,
-    class: 'gen-dict-select',
-    label: dict.dictName
-  }));
-  endDictLoading();
+  try {
+    const { data } = await fetchGetDictTypeOption();
+    if (!data) {
+      return;
+    }
+    dictOptions.value = data.map(dict => ({
+      value: dict.dictType!,
+      class: 'gen-dict-select',
+      label: dict.dictName
+    }));
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endDictLoading();
+  }
 }
 
 const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [

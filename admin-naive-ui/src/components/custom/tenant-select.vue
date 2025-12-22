@@ -70,6 +70,9 @@ async function handleFetchTenantList() {
   startLoading();
   try {
     const { data } = await fetchTenantList();
+    if (!data) {
+      return;
+    }
     enabled.value = data.tenantEnabled;
     if (data.tenantEnabled) {
       tenantOption.value = data.voList.map(tenant => {

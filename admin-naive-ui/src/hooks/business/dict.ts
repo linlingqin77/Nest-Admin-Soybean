@@ -19,15 +19,21 @@ export function useDict(dictType: string, immediate: boolean = true) {
       data.value = dicts;
       return;
     }
-    const { data: dictData, error } = await fetchGetDictDataByType(dictType);
-    if (error) return;
-    dictData.forEach(dict => {
-      if (dict.dictLabel?.startsWith(`dict.${dictType}.`)) {
-        dict.dictLabel = $t(dict.dictLabel as App.I18n.I18nKey);
+    try {
+      const { data: dictData } = await fetchGetDictDataByType(dictType);
+      if (!dictData) {
+        return;
       }
-    });
-    dictStore.setDict(dictType, dictData);
-    data.value = dictData;
+      dictData.forEach(dict => {
+        if (dict.dictLabel?.startsWith(`dict.${dictType}.`)) {
+          dict.dictLabel = $t(dict.dictLabel as App.I18n.I18nKey);
+        }
+      });
+      dictStore.setDict(dictType, dictData);
+      data.value = dictData;
+    } catch {
+      // error handled by request interceptor
+    }
   }
 
   async function getRecord() {

@@ -38,15 +38,19 @@ watch(
 
 async function getPostOptions() {
   startPostLoading();
-  const { error, data } = await fetchGetPostSelect(props.deptId!);
-
-  if (!error) {
-    postOptions.value = data.map(item => ({
-      label: item.postName,
-      value: item.postId
-    }));
+  try {
+    const { data } = await fetchGetPostSelect(props.deptId!);
+    if (data) {
+      postOptions.value = data.map(item => ({
+        label: item.postName,
+        value: item.postId
+      }));
+    }
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endPostLoading();
   }
-  endPostLoading();
 }
 </script>
 

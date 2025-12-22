@@ -39,10 +39,10 @@ const cacheForm = ref({
 async function getCacheNames() {
   startNamesLoading();
   try {
-    const { error, data } = await fetchGetCacheNames();
-    if (!error) {
-      cacheNames.value = data || [];
-    }
+    const { data } = await fetchGetCacheNames();
+    cacheNames.value = data || [];
+  } catch {
+    // error handled by request interceptor
   } finally {
     endNamesLoading();
   }
@@ -61,10 +61,10 @@ async function getCacheKeys(cacheName: string) {
   currentCacheName.value = cacheName;
   startKeysLoading();
   try {
-    const { error, data } = await fetchGetCacheKeys(cacheName);
-    if (!error) {
-      cacheKeys.value = (data || []).map(key => ({ key }));
-    }
+    const { data } = await fetchGetCacheKeys(cacheName);
+    cacheKeys.value = (data || []).map(key => ({ key }));
+  } catch {
+    // error handled by request interceptor
   } finally {
     endKeysLoading();
   }
@@ -82,9 +82,13 @@ async function refreshCacheKeys() {
 async function handleCacheValue(cacheKey: string) {
   if (!currentCacheName.value || !cacheKey) return;
 
-  const { error, data } = await fetchGetCacheValue(currentCacheName.value, cacheKey);
-  if (!error && data) {
-    cacheForm.value = data;
+  try {
+    const { data } = await fetchGetCacheValue(currentCacheName.value, cacheKey);
+    if (data) {
+      cacheForm.value = data;
+    }
+  } catch {
+    // error handled by request interceptor
   }
 }
 

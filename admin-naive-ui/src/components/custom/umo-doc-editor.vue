@@ -48,13 +48,15 @@ async function handleSave(content: { html: string }) {
 }
 
 async function handleFileUpload(file: File) {
-  const { error, data } = await fetchUploadFile(file);
-  if (error) throw new Error(error.message || '上传失败');
-
-  return {
-    id: data.ossId,
-    url: data.url
-  };
+  try {
+    const { data } = await fetchUploadFile(file);
+    return {
+      id: data.ossId,
+      url: data.url
+    };
+  } catch (error: any) {
+    throw new Error(error.message || '上传失败');
+  }
 }
 
 function handleFileDelete(id: CommonType.IdType) {

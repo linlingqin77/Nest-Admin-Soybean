@@ -25,15 +25,17 @@ const userOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 
 async function getUserOptions() {
   startUserLoading();
-  const { error, data } = await fetchGetUserSelect();
-
-  if (!error) {
+  try {
+    const { data } = await fetchGetUserSelect();
     userOptions.value = data.map(item => ({
       label: `${item.nickName} ( ${item.userName} )`,
       value: item.userId
     }));
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endUserLoading();
   }
-  endUserLoading();
 }
 
 getUserOptions();

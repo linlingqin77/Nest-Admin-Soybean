@@ -75,6 +75,9 @@ async function handleUpdateModelWhenEdit() {
     Object.assign(model, createDefaultModel());
     try {
       const { data } = await fetchGetTenantPackageMenuTreeSelect(0);
+      if (!data) {
+        return;
+      }
       model.menuIds = data.checkedKeys;
       menuOptions.value = data.menus;
     } catch {
@@ -88,6 +91,9 @@ async function handleUpdateModelWhenEdit() {
     Object.assign(model, { ...props.rowData, menuIds: [] });
     try {
       const { data } = await fetchGetTenantPackageMenuTreeSelect(model.packageId!);
+      if (!data) {
+        return;
+      }
       model.menuIds = data.checkedKeys;
       menuOptions.value = data.menus;
     } catch {

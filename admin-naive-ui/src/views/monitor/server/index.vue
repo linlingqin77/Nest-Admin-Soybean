@@ -17,10 +17,10 @@ const tableProps = useTableProps();
 async function getServerInfo() {
   startLoading();
   try {
-    const { error, data } = await fetchGetServerInfo();
-    if (!error) {
-      serverInfo.value = data;
-    }
+    const { data } = await fetchGetServerInfo();
+    serverInfo.value = data;
+  } catch {
+    // error handled by request interceptor
   } finally {
     endLoading();
   }

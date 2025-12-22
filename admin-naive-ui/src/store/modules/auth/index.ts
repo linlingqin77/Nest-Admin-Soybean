@@ -112,9 +112,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       grantType: loginForm.grantType ?? 'password'
     };
 
-    const { data: loginToken, error } = await fetchLogin(loginData);
+    try {
+      const { data: loginToken } = await fetchLogin(loginData);
 
-    if (!error) {
+      if (!loginToken) {
+        window.$message?.error('登录失败，请重试');
+        return;
+      }
+
       const pass = await loginByToken(loginToken);
 
       if (pass) {
@@ -134,13 +139,13 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         //   duration: 4500
         // });
       }
-    } else {
+    } catch (error) {
       resetStore();
     }
 
     endLoading();
 
-    return error ? Promise.reject(error) : Promise.resolve();
+    return Promise.resolve();
   }
 
   async function loginByToken(loginToken: Api.Auth.LoginToken) {
@@ -161,25 +166,30 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   }
 
   async function getUserInfo() {
-    const { data: info, error } = await fetchGetUserInfo();
-
-    if (!error) {
+    try {
+      const { data: info } = await fetchGetUserInfo();
+      if (!info) {
+        return false;
+      }
       // update store
       Object.assign(userInfo, info);
-
       return true;
+    } catch (error) {
+      return false;
     }
-
-    return false;
   }
 
   async function initUserInfo() {
     const hasToken = getToken();
 
     if (hasToken) {
-      const pass = await getUserInfo();
-
-      if (!pass) {
+      try {
+        const pass = await getUserInfo();
+        if (!pass) {
+          resetStore();
+        }
+      } catch (error) {
+        // 获取用户信息失败，清除认证状态
         resetStore();
       }
     }

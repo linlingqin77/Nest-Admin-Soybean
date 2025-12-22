@@ -233,9 +233,12 @@ function handleUpload(type: 'file' | 'image') {
 }
 
 async function getConfigKey() {
-  const { data: previewStr, error } = await fetchGetConfigByKey('sys.oss.previewListResource');
-  if (error) return;
-  setPreview(previewStr === 'true');
+  try {
+    const { data: previewStr } = await fetchGetConfigByKey('sys.oss.previewListResource');
+    setPreview(previewStr === 'true');
+  } catch {
+    // error handled by request interceptor
+  }
 }
 
 onMounted(() => {

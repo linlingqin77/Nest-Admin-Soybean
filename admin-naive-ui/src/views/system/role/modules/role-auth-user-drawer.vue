@@ -143,15 +143,21 @@ async function handleSubmit() {
   // 批量取消用户授权
   const cancelUserIds = checkedUserIds.value.filter(item => !checkedRowKeys.value.includes(item));
   if (cancelUserIds.length > 0) {
-    const { error: cancelError } = await fetchUpdateRoleAuthUserCancel(props.rowData!.roleId, cancelUserIds);
-    if (cancelError) return;
+    try {
+      await fetchUpdateRoleAuthUserCancel(props.rowData!.roleId, cancelUserIds);
+    } catch {
+      return;
+    }
   }
 
   // 批量选择用户授权
   const addUserIds = checkedRowKeys.value.filter(item => !checkedUserIds.value.includes(item));
   if (addUserIds.length > 0) {
-    const { error: addError } = await fetchUpdateRoleAuthUser(props.rowData!.roleId, addUserIds);
-    if (addError) return;
+    try {
+      await fetchUpdateRoleAuthUser(props.rowData!.roleId, addUserIds);
+    } catch {
+      return;
+    }
   }
 
   window.$message?.success($t('common.updateSuccess'));

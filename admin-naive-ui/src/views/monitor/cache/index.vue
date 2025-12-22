@@ -19,17 +19,16 @@ async function getCacheInfo() {
   fetchError.value = null;
 
   try {
-    const { error, data } = await fetchGetMonitorCacheInfo();
-    if (!error) {
-      cacheInfo.value = data;
+    const { data } = await fetchGetMonitorCacheInfo();
+    cacheInfo.value = data;
 
-      // 确保在数据更新后调用图表更新
-      nextTick(() => {
-        updateCharts();
-        // 单独调用内存图表更新
-        updateMemoryChart();
-      });
-    } else {
+    // 确保在数据更新后调用图表更新
+    nextTick(() => {
+      updateCharts();
+      // 单独调用内存图表更新
+      updateMemoryChart();
+    });
+  } catch {
       fetchError.value = '获取缓存信息失败';
     }
   } catch {

@@ -80,16 +80,22 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
 
 async function getUserInfo(id: CommonType.IdType = '') {
   startLoading();
-  const { error, data } = await fetchGetUserInfo(id);
-  if (!error) {
+  try {
+    const { data } = await fetchGetUserInfo(id);
+    if (!data) {
+      return;
+    }
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
     roleOptions.value = data.roles.map(role => ({
       label: role.roleName,
       value: role.roleId
     }));
+  } catch {
+    // error handled by request interceptor
+  } finally {
+    endLoading();
   }
-  endLoading();
 }
 
 function handleUpdateModelWhenEdit() {
