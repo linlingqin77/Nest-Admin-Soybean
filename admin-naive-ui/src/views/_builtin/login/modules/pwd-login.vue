@@ -30,8 +30,8 @@ const tenantOption = ref<SelectOption[]>([]);
 
 const model: Api.Auth.PwdLoginForm = reactive({
   tenantId: '000000',
-  username: 'admin',
-  password: 'admin123',
+  username: '',
+  password: '',
 });
 
 // 演示账户快速填充
