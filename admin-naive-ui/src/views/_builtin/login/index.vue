@@ -32,7 +32,7 @@ const moduleMap: Record<UnionKey.LoginModule, LoginModule> = {
   'code-login': { label: loginModuleRecord['code-login'], component: CodeLogin },
   register: { label: loginModuleRecord.register, component: Register },
   'reset-pwd': { label: loginModuleRecord['reset-pwd'], component: ResetPwd },
-  'bind-wechat': { label: loginModuleRecord['bind-wechat'], component: BindWechat }
+  'bind-wechat': { label: loginModuleRecord['bind-wechat'], component: BindWechat },
 };
 
 const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);

@@ -6,7 +6,7 @@ import { useCaptcha } from '@/hooks/business/captcha';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'CodeLogin'
+  name: 'CodeLogin',
 });
 
 const { toggleLoginModule } = useRouterPush();
@@ -20,7 +20,7 @@ interface FormModel {
 
 const model: FormModel = reactive({
   phone: '',
-  code: ''
+  code: '',
 });
 
 const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
@@ -28,7 +28,7 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 
   return {
     phone: formRules.phone,
-    code: formRules.code
+    code: formRules.code,
   };
 });
 

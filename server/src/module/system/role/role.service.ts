@@ -19,7 +19,7 @@ export class RoleService {
     private readonly prisma: PrismaService,
     private readonly roleRepo: RoleRepository,
     private readonly menuService: MenuService,
-  ) { }
+  ) {}
   @Transactional()
   async create(createRoleDto: CreateRoleDto) {
     const { menuIds = [], ...rolePayload } = createRoleDto as CreateRoleDto & { menuIds?: number[] };
@@ -75,13 +75,9 @@ export class RoleService {
       };
     }
 
-
-    const { list, total } = await this.roleRepo.findPageWithMenuCount(
-      where,
-      query.skip,
-      query.take,
-      { roleSort: 'asc' },
-    );
+    const { list, total } = await this.roleRepo.findPageWithMenuCount(where, query.skip, query.take, {
+      roleSort: 'asc',
+    });
 
     const formattedList = FormatDateFields(list);
 
@@ -107,7 +103,7 @@ export class RoleService {
 
     const res = await this.prisma.sysRole.update({
       where: { roleId: updateRoleDto.roleId },
-      data: rolePayload
+      data: rolePayload,
     });
 
     return Result.ok(res);
@@ -127,7 +123,7 @@ export class RoleService {
 
     const res = await this.prisma.sysRole.update({
       where: { roleId: updateRoleDto.roleId },
-      data: rolePayload
+      data: rolePayload,
     });
 
     return Result.ok(res);

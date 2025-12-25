@@ -3,7 +3,7 @@ import { transformRecordToOption } from '@/utils/common';
 /** enable status */
 export const enableStatusRecord: Record<Api.Common.EnableStatus, string> = {
   '0': '正常',
-  '1': '停用'
+  '1': '停用',
 };
 
 export const enableStatusOptions = transformRecordToOption(enableStatusRecord);
@@ -11,7 +11,7 @@ export const enableStatusOptions = transformRecordToOption(enableStatusRecord);
 /** yes or no status */
 export const yesOrNoStatusRecord: Record<Api.Common.YesOrNoStatus, string> = {
   Y: '是',
-  N: '否'
+  N: '否',
 };
 
 export const yesOrNoStatusOptions = transformRecordToOption(yesOrNoStatusRecord);
@@ -20,7 +20,7 @@ export const yesOrNoStatusOptions = transformRecordToOption(yesOrNoStatusRecord)
 export const menuTypeRecord: Record<Api.System.MenuType, string> = {
   M: '目录',
   C: '菜单',
-  F: '按钮'
+  F: '按钮',
 };
 
 export const menuTypeOptions = transformRecordToOption(menuTypeRecord);
@@ -29,7 +29,7 @@ export const menuTypeOptions = transformRecordToOption(menuTypeRecord);
 export const menuIsFrameRecord: Record<Api.System.IsMenuFrame, string> = {
   '0': '是',
   '1': '否',
-  '2': 'iframe'
+  '2': 'iframe',
 };
 
 export const menuIsFrameOptions = transformRecordToOption(menuIsFrameRecord);
@@ -37,7 +37,7 @@ export const menuIsFrameOptions = transformRecordToOption(menuIsFrameRecord);
 /** menu icon type */
 export const menuIconTypeRecord: Record<Api.System.IconType, string> = {
   '1': 'iconify',
-  '2': '本地图标'
+  '2': '本地图标',
 };
 
 export const menuIconTypeOptions = transformRecordToOption(menuIconTypeRecord);
@@ -50,7 +50,7 @@ export const genJavaTypeRecord: Record<Api.Tool.JavaType, string> = {
   Double: 'Double',
   BigDecimal: 'BigDecimal',
   Date: 'Date',
-  Boolean: 'Boolean'
+  Boolean: 'Boolean',
 };
 
 export const genJavaTypeOptions = transformRecordToOption(genJavaTypeRecord);
@@ -64,7 +64,7 @@ export const genQueryTypeRecord: Record<Api.Tool.QueryType, string> = {
   LT: '<',
   LE: '<=',
   LIKE: 'LIKE',
-  BETWEEN: 'BETWEEN'
+  BETWEEN: 'BETWEEN',
 };
 
 export const genQueryTypeOptions = transformRecordToOption(genQueryTypeRecord);
@@ -79,7 +79,7 @@ export const genHtmlTypeRecord: Record<Api.Tool.HtmlType, string> = {
   datetime: '日期时间控件',
   imageUpload: '图片上传',
   fileUpload: '文件上传',
-  editor: '富文本控件'
+  editor: '富文本控件',
 };
 
 export const genHtmlTypeOptions = transformRecordToOption(genHtmlTypeRecord);
@@ -87,7 +87,7 @@ export const genHtmlTypeOptions = transformRecordToOption(genHtmlTypeRecord);
 /** gen type */
 export const genTypeRecord: Record<Api.Tool.GenType, string> = {
   '0': 'ZIP 压缩包',
-  '1': '自定义路径'
+  '1': '自定义路径',
 };
 
 export const genTypeOptions = transformRecordToOption(genTypeRecord);
@@ -95,7 +95,7 @@ export const genTypeOptions = transformRecordToOption(genTypeRecord);
 /** gen type */
 export const genTplCategoryRecord: Record<Api.Tool.TplCategory, string> = {
   crud: '单表（增删改查）',
-  tree: '树表（增删改查）'
+  tree: '树表（增删改查）',
 };
 
 export const genTplCategoryOptions = transformRecordToOption(genTplCategoryRecord);
@@ -103,7 +103,7 @@ export const genTplCategoryOptions = transformRecordToOption(genTplCategoryRecor
 /** oss config is https */
 export const ossConfigIsHttpsRecord: Record<Api.Common.YesOrNoStatus, string> = {
   Y: 'https://',
-  N: 'http://'
+  N: 'http://',
 };
 
 export const ossConfigIsHttpsOptions = transformRecordToOption(ossConfigIsHttpsRecord);
@@ -112,7 +112,7 @@ export const ossConfigIsHttpsOptions = transformRecordToOption(ossConfigIsHttpsR
 export const ossAccessPolicyRecord: Record<Api.System.OssAccessPolicy, string> = {
   '0': '私有',
   '1': '公有',
-  '2': '自定义'
+  '2': '自定义',
 };
 
 export const ossAccessPolicyOptions = transformRecordToOption(ossAccessPolicyRecord);
@@ -124,7 +124,7 @@ export const dataScopeRecord: Record<Api.System.DataScope, string> = {
   '3': '本部门数据权限',
   '4': '本部门及以下数据权限',
   '5': '仅本人数据权限',
-  '6': '部门及以下或本人数据权限'
+  '6': '部门及以下或本人数据权限',
 };
 
 export const dataScopeOptions = transformRecordToOption(dataScopeRecord);

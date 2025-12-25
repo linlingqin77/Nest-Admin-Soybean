@@ -6,7 +6,7 @@ import { useThemeStore } from '@/store/modules/theme';
 
 defineOptions({
   name: 'DataTable',
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 interface Props {

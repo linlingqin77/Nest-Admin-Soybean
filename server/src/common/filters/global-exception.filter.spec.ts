@@ -2,7 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { GlobalExceptionFilter } from './global-exception.filter';
-import { BusinessException, AuthenticationException, AuthorizationException, ValidationException } from '../exceptions/business.exception';
+import {
+  BusinessException,
+  AuthenticationException,
+  AuthorizationException,
+  ValidationException,
+} from '../exceptions/business.exception';
 import { ResponseCode } from '../response/response.interface';
 import { Controller, Get, Module, BadRequestException, HttpException } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
@@ -62,7 +67,7 @@ class TestController {
     },
   ],
 })
-class TestModule { }
+class TestModule {}
 
 describe('GlobalExceptionFilter (e2e)', () => {
   let app: INestApplication;

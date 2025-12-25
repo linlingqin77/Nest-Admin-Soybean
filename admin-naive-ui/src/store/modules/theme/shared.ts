@@ -42,7 +42,7 @@ export function initThemeSettings() {
 export function createThemeToken(
   colors: App.Theme.ThemeColor,
   tokens?: App.Theme.ThemeSetting['tokens'],
-  recommended = false
+  recommended = false,
 ) {
   const paletteColors = createThemePaletteColors(colors, recommended);
 
@@ -52,27 +52,27 @@ export function createThemeToken(
     colors: {
       ...paletteColors,
       nprogress: paletteColors.primary,
-      ...light.colors
+      ...light.colors,
     },
     boxShadow: {
-      ...light.boxShadow
-    }
+      ...light.boxShadow,
+    },
   };
 
   const darkThemeTokens: App.Theme.ThemeTokenCSSVars = {
     colors: {
       ...themeTokens.colors,
-      ...dark?.colors
+      ...dark?.colors,
     },
     boxShadow: {
       ...themeTokens.boxShadow,
-      ...dark?.boxShadow
-    }
+      ...dark?.boxShadow,
+    },
   };
 
   return {
     themeTokens,
-    darkThemeTokens
+    darkThemeTokens,
   };
 }
 
@@ -86,7 +86,7 @@ function createThemePaletteColors(colors: App.Theme.ThemeColor, recommended = fa
   const colorKeys = Object.keys(colors) as App.Theme.ThemeColorKey[];
   const colorPaletteVar = {} as App.Theme.ThemePaletteColor;
 
-  colorKeys.forEach(key => {
+  colorKeys.forEach((key) => {
     const colorMap = getColorPalette(colors[key], recommended);
 
     colorPaletteVar[key] = colorMap.get(500)!;
@@ -211,19 +211,19 @@ interface NaiveColorAction {
  */
 function getNaiveThemeColors(colors: App.Theme.ThemeColor, recommended = false) {
   const colorActions: NaiveColorAction[] = [
-    { scene: '', handler: color => color },
-    { scene: 'Suppl', handler: color => color },
-    { scene: 'Hover', handler: color => getPaletteColorByNumber(color, 500, recommended) },
-    { scene: 'Pressed', handler: color => getPaletteColorByNumber(color, 700, recommended) },
-    { scene: 'Active', handler: color => addColorAlpha(color, 0.1) }
+    { scene: '', handler: (color) => color },
+    { scene: 'Suppl', handler: (color) => color },
+    { scene: 'Hover', handler: (color) => getPaletteColorByNumber(color, 500, recommended) },
+    { scene: 'Pressed', handler: (color) => getPaletteColorByNumber(color, 700, recommended) },
+    { scene: 'Active', handler: (color) => addColorAlpha(color, 0.1) },
   ];
 
   const themeColors: NaiveThemeColor = {};
 
   const colorEntries = Object.entries(colors) as [App.Theme.ThemeColorKey, string][];
 
-  colorEntries.forEach(color => {
-    colorActions.forEach(action => {
+  colorEntries.forEach((color) => {
+    colorActions.forEach((action) => {
       const [colorType, colorValue] = color;
       const colorKey: NaiveColorKey = `${colorType}Color${action.scene}`;
       themeColors[colorKey] = action.handler(colorValue);
@@ -253,7 +253,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 6px',
         paddingSmall: '0 8px',
         paddingMedium: '0 10px',
-        paddingLarge: '0 12px'
+        paddingLarge: '0 12px',
       },
       Input: {
         heightTiny: '18px',
@@ -267,7 +267,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 6px',
         paddingSmall: '0 8px',
         paddingMedium: '0 10px',
-        paddingLarge: '0 12px'
+        paddingLarge: '0 12px',
       },
       InputNumber: {
         heightTiny: '18px',
@@ -277,7 +277,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Select: {
         heightTiny: '18px',
@@ -287,7 +287,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       DatePicker: {
         heightTiny: '18px',
@@ -297,7 +297,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       TimePicker: {
         heightTiny: '18px',
@@ -307,7 +307,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Checkbox: {
         fontSizeTiny: '11px',
@@ -317,7 +317,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         sizeTiny: '12px',
         sizeSmall: '14px',
         sizeMedium: '16px',
-        sizeLarge: '18px'
+        sizeLarge: '18px',
       },
       Radio: {
         fontSizeTiny: '11px',
@@ -327,14 +327,14 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         radioSizeTiny: '12px',
         radioSizeSmall: '14px',
         radioSizeMedium: '16px',
-        radioSizeLarge: '18px'
+        radioSizeLarge: '18px',
       },
       Switch: {
         heightTiny: '14px',
         heightSmall: '16px',
         heightMedium: '18px',
         heightLarge: '20px',
-        fontSize: '11px'
+        fontSize: '11px',
       },
       TreeSelect: {
         heightTiny: '18px',
@@ -344,7 +344,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Cascader: {
         heightTiny: '18px',
@@ -354,13 +354,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Transfer: {
         fontSize: '11px',
         itemHeightSmall: '20px',
         itemHeightMedium: '24px',
-        itemHeightLarge: '28px'
+        itemHeightLarge: '28px',
       },
       AutoComplete: {
         heightTiny: '18px',
@@ -370,10 +370,10 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '11px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Upload: {
-        fontSize: '11px'
+        fontSize: '11px',
       },
       Tag: {
         heightTiny: '16px',
@@ -387,7 +387,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 4px',
         paddingSmall: '0 6px',
         paddingMedium: '0 7px',
-        paddingLarge: '0 8px'
+        paddingLarge: '0 8px',
       },
       Card: {
         fontSize: '11px',
@@ -396,21 +396,21 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         titleFontSizeLarge: '15px',
         paddingSmall: '10px 12px',
         paddingMedium: '12px 14px',
-        paddingLarge: '14px 16px'
+        paddingLarge: '14px 16px',
       },
       Modal: {
         fontSize: '11px',
         titleFontSize: '14px',
         paddingSmall: '10px 12px',
         paddingMedium: '12px 14px',
-        paddingLarge: '14px 16px'
+        paddingLarge: '14px 16px',
       },
       Drawer: {
         fontSize: '11px',
         titleFontSize: '14px',
         headerPadding: '10px 12px',
         bodyPadding: '10px 12px',
-        footerPadding: '8px 10px'
+        footerPadding: '8px 10px',
       },
       Tabs: {
         tabFontSizeSmall: '11px',
@@ -418,7 +418,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         tabFontSizeLarge: '13px',
         tabPaddingSmall: '4px 8px',
         tabPaddingMedium: '5px 10px',
-        tabPaddingLarge: '6px 12px'
+        tabPaddingLarge: '6px 12px',
       },
       Pagination: {
         itemSizeSmall: '18px',
@@ -432,36 +432,36 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         inputWidthLarge: '42px',
         selectWidthSmall: '60px',
         selectWidthMedium: '72px',
-        selectWidthLarge: '84px'
+        selectWidthLarge: '84px',
       },
       Breadcrumb: {
         fontSize: '11px',
-        itemLineHeight: '1.3'
+        itemLineHeight: '1.3',
       },
       Steps: {
         stepHeaderFontSizeSmall: '11px',
         stepHeaderFontSizeMedium: '12px',
-        stepHeaderFontSizeLarge: '13px'
+        stepHeaderFontSizeLarge: '13px',
       },
       Popover: {
         fontSize: '11px',
-        padding: '6px 8px'
+        padding: '6px 8px',
       },
       Tooltip: {
         fontSize: '10px',
-        padding: '2px 6px'
+        padding: '2px 6px',
       },
       Dropdown: {
         fontSize: '11px',
         optionHeightSmall: '24px',
         optionHeightMedium: '28px',
         optionHeightLarge: '32px',
-        padding: '2px'
+        padding: '2px',
       },
       Menu: {
         fontSize: '11px',
         itemHeight: '30px',
-        itemIconSize: '14px'
+        itemIconSize: '14px',
       },
       Form: {
         labelFontSizeTopSmall: '11px',
@@ -474,7 +474,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         labelHeightMedium: '22px',
         labelHeightLarge: '26px',
         feedbackFontSize: '10px',
-        feedbackPadding: '1px 0 3px 0'
+        feedbackPadding: '1px 0 3px 0',
       },
       DataTable: {
         thSmall: '32px',
@@ -492,8 +492,8 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         thPaddingLarge: '10px 14px',
         tdPaddingSmall: '6px 10px',
         tdPaddingMedium: '8px 12px',
-        tdPaddingLarge: '10px 14px'
-      }
+        tdPaddingLarge: '10px 14px',
+      },
     },
     small: {
       Button: {
@@ -505,7 +505,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '14px',
         paddingSmall: '0 10px',
         paddingMedium: '0 12px',
-        paddingLarge: '0 14px'
+        paddingLarge: '0 14px',
       },
       Input: {
         heightSmall: '24px',
@@ -516,7 +516,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '14px',
         paddingSmall: '0 8px',
         paddingMedium: '0 10px',
-        paddingLarge: '0 12px'
+        paddingLarge: '0 12px',
       },
       InputNumber: {
         heightSmall: '24px',
@@ -524,7 +524,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Select: {
         heightSmall: '24px',
@@ -532,7 +532,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       DatePicker: {
         heightSmall: '24px',
@@ -540,7 +540,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       TimePicker: {
         heightSmall: '24px',
@@ -548,7 +548,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Checkbox: {
         fontSizeSmall: '12px',
@@ -556,7 +556,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '14px',
         sizeSmall: '14px',
         sizeMedium: '16px',
-        sizeLarge: '18px'
+        sizeLarge: '18px',
       },
       Radio: {
         fontSizeSmall: '12px',
@@ -564,13 +564,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '14px',
         radioSizeSmall: '14px',
         radioSizeMedium: '16px',
-        radioSizeLarge: '18px'
+        radioSizeLarge: '18px',
       },
       Switch: {
         heightSmall: '18px',
         heightMedium: '20px',
         heightLarge: '22px',
-        fontSize: '12px'
+        fontSize: '12px',
       },
       TreeSelect: {
         heightSmall: '24px',
@@ -578,7 +578,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Cascader: {
         heightSmall: '24px',
@@ -586,13 +586,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Transfer: {
         fontSize: '12px',
         itemHeightSmall: '24px',
         itemHeightMedium: '28px',
-        itemHeightLarge: '32px'
+        itemHeightLarge: '32px',
       },
       AutoComplete: {
         heightSmall: '24px',
@@ -600,10 +600,10 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '32px',
         fontSizeSmall: '12px',
         fontSizeMedium: '13px',
-        fontSizeLarge: '14px'
+        fontSizeLarge: '14px',
       },
       Upload: {
-        fontSize: '12px'
+        fontSize: '12px',
       },
       Tag: {
         heightSmall: '18px',
@@ -614,7 +614,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '13px',
         paddingSmall: '0 6px',
         paddingMedium: '0 8px',
-        paddingLarge: '0 10px'
+        paddingLarge: '0 10px',
       },
       Card: {
         fontSize: '12px',
@@ -623,21 +623,21 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         titleFontSizeLarge: '16px',
         paddingSmall: '14px 16px',
         paddingMedium: '16px 20px',
-        paddingLarge: '18px 24px'
+        paddingLarge: '18px 24px',
       },
       Modal: {
         fontSize: '12px',
         titleFontSize: '15px',
         paddingSmall: '14px 16px',
         paddingMedium: '16px 20px',
-        paddingLarge: '18px 24px'
+        paddingLarge: '18px 24px',
       },
       Drawer: {
         fontSize: '12px',
         titleFontSize: '15px',
         headerPadding: '14px 16px',
         bodyPadding: '14px 16px',
-        footerPadding: '10px 14px'
+        footerPadding: '10px 14px',
       },
       Tabs: {
         tabFontSizeSmall: '12px',
@@ -645,7 +645,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         tabFontSizeLarge: '14px',
         tabPaddingSmall: '6px 12px',
         tabPaddingMedium: '8px 14px',
-        tabPaddingLarge: '10px 16px'
+        tabPaddingLarge: '10px 16px',
       },
       Pagination: {
         itemSizeSmall: '22px',
@@ -659,36 +659,36 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         inputWidthLarge: '48px',
         selectWidthSmall: '72px',
         selectWidthMedium: '84px',
-        selectWidthLarge: '96px'
+        selectWidthLarge: '96px',
       },
       Breadcrumb: {
         fontSize: '12px',
-        itemLineHeight: '1.4'
+        itemLineHeight: '1.4',
       },
       Steps: {
         stepHeaderFontSizeSmall: '12px',
         stepHeaderFontSizeMedium: '13px',
-        stepHeaderFontSizeLarge: '14px'
+        stepHeaderFontSizeLarge: '14px',
       },
       Popover: {
         fontSize: '12px',
-        padding: '10px 12px'
+        padding: '10px 12px',
       },
       Tooltip: {
         fontSize: '11px',
-        padding: '4px 8px'
+        padding: '4px 8px',
       },
       Dropdown: {
         fontSize: '12px',
         optionHeightSmall: '28px',
         optionHeightMedium: '32px',
         optionHeightLarge: '36px',
-        padding: '4px'
+        padding: '4px',
       },
       Menu: {
         fontSize: '12px',
         itemHeight: '36px',
-        itemIconSize: '16px'
+        itemIconSize: '16px',
       },
       Form: {
         labelFontSizeTopSmall: '12px',
@@ -701,7 +701,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         labelHeightMedium: '28px',
         labelHeightLarge: '32px',
         feedbackFontSize: '11px',
-        feedbackPadding: '2px 0 6px 0'
+        feedbackPadding: '2px 0 6px 0',
       },
       DataTable: {
         thSmall: '36px',
@@ -719,8 +719,8 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         thPaddingLarge: '12px 16px',
         tdPaddingSmall: '8px 12px',
         tdPaddingMedium: '10px 14px',
-        tdPaddingLarge: '12px 16px'
-      }
+        tdPaddingLarge: '12px 16px',
+      },
     },
     medium: {
       Button: {
@@ -732,7 +732,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '15px',
         paddingSmall: '0 12px',
         paddingMedium: '0 16px',
-        paddingLarge: '0 18px'
+        paddingLarge: '0 18px',
       },
       Input: {
         heightSmall: '28px',
@@ -743,7 +743,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '15px',
         paddingSmall: '0 10px',
         paddingMedium: '0 12px',
-        paddingLarge: '0 14px'
+        paddingLarge: '0 14px',
       },
       InputNumber: {
         heightSmall: '28px',
@@ -751,7 +751,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       Select: {
         heightSmall: '28px',
@@ -759,7 +759,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       DatePicker: {
         heightSmall: '28px',
@@ -767,7 +767,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       TimePicker: {
         heightSmall: '28px',
@@ -775,7 +775,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       Checkbox: {
         fontSizeSmall: '13px',
@@ -783,7 +783,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '15px',
         sizeSmall: '16px',
         sizeMedium: '18px',
-        sizeLarge: '20px'
+        sizeLarge: '20px',
       },
       Radio: {
         fontSizeSmall: '13px',
@@ -791,13 +791,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '15px',
         radioSizeSmall: '16px',
         radioSizeMedium: '18px',
-        radioSizeLarge: '20px'
+        radioSizeLarge: '20px',
       },
       Switch: {
         heightSmall: '20px',
         heightMedium: '22px',
         heightLarge: '24px',
-        fontSize: '13px'
+        fontSize: '13px',
       },
       TreeSelect: {
         heightSmall: '28px',
@@ -805,7 +805,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       Cascader: {
         heightSmall: '28px',
@@ -813,13 +813,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       Transfer: {
         fontSize: '13px',
         itemHeightSmall: '28px',
         itemHeightMedium: '32px',
-        itemHeightLarge: '36px'
+        itemHeightLarge: '36px',
       },
       AutoComplete: {
         heightSmall: '28px',
@@ -827,10 +827,10 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         heightLarge: '40px',
         fontSizeSmall: '13px',
         fontSizeMedium: '14px',
-        fontSizeLarge: '15px'
+        fontSizeLarge: '15px',
       },
       Upload: {
-        fontSize: '13px'
+        fontSize: '13px',
       },
       Tag: {
         heightSmall: '20px',
@@ -841,7 +841,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeLarge: '14px',
         paddingSmall: '0 8px',
         paddingMedium: '0 10px',
-        paddingLarge: '0 12px'
+        paddingLarge: '0 12px',
       },
       Card: {
         fontSize: '13px',
@@ -850,21 +850,21 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         titleFontSizeLarge: '17px',
         paddingSmall: '16px 20px',
         paddingMedium: '20px 24px',
-        paddingLarge: '24px 28px'
+        paddingLarge: '24px 28px',
       },
       Modal: {
         fontSize: '13px',
         titleFontSize: '16px',
         paddingSmall: '16px 20px',
         paddingMedium: '20px 24px',
-        paddingLarge: '24px 28px'
+        paddingLarge: '24px 28px',
       },
       Drawer: {
         fontSize: '13px',
         titleFontSize: '16px',
         headerPadding: '16px 20px',
         bodyPadding: '16px 20px',
-        footerPadding: '12px 16px'
+        footerPadding: '12px 16px',
       },
       Tabs: {
         tabFontSizeSmall: '13px',
@@ -872,7 +872,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         tabFontSizeLarge: '15px',
         tabPaddingSmall: '8px 14px',
         tabPaddingMedium: '10px 16px',
-        tabPaddingLarge: '12px 18px'
+        tabPaddingLarge: '12px 18px',
       },
       Pagination: {
         itemSizeSmall: '24px',
@@ -886,16 +886,16 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         inputWidthLarge: '56px',
         selectWidthSmall: '80px',
         selectWidthMedium: '96px',
-        selectWidthLarge: '108px'
+        selectWidthLarge: '108px',
       },
       Breadcrumb: {
         fontSize: '13px',
-        itemLineHeight: '1.5'
+        itemLineHeight: '1.5',
       },
       Steps: {
         stepHeaderFontSizeSmall: '13px',
         stepHeaderFontSizeMedium: '14px',
-        stepHeaderFontSizeLarge: '15px'
+        stepHeaderFontSizeLarge: '15px',
       },
       Popover: {
         fontSize: '13px',
@@ -910,7 +910,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
           labelHeightMedium: '34px',
           labelHeightLarge: '40px',
           feedbackFontSize: '12px',
-          feedbackPadding: '3px 0 8px 0'
+          feedbackPadding: '3px 0 8px 0',
         },
         DataTable: {
           thSmall: '40px',
@@ -928,13 +928,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
           thPaddingLarge: '14px 18px',
           tdPaddingSmall: '10px 14px',
           tdPaddingMedium: '12px 16px',
-          tdPaddingLarge: '14px 18px'
-        }
+          tdPaddingLarge: '14px 18px',
+        },
       },
       large: {
         Size: '13px',
         itemHeight: '40px',
-        itemIconSize: '18px'
+        itemIconSize: '18px',
       },
       Form: {
         labelFontSizeTopSmall: '13px',
@@ -947,8 +947,8 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         labelHeightMedium: '34px',
         labelHeightLarge: '40px',
         feedbackFontSize: '12px',
-        feedbackPadding: '3px 0 8px 0'
-      }
+        feedbackPadding: '3px 0 8px 0',
+      },
     },
     large: {
       Button: {
@@ -963,7 +963,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 16px',
         paddingSmall: '0 20px',
         paddingMedium: '0 24px',
-        paddingLarge: '0 28px'
+        paddingLarge: '0 28px',
       },
       Input: {
         heightTiny: '36px',
@@ -977,7 +977,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 14px',
         paddingSmall: '0 16px',
         paddingMedium: '0 18px',
-        paddingLarge: '0 20px'
+        paddingLarge: '0 20px',
       },
       InputNumber: {
         heightTiny: '36px',
@@ -987,7 +987,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       Select: {
         heightTiny: '36px',
@@ -997,7 +997,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       DatePicker: {
         heightTiny: '36px',
@@ -1007,7 +1007,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       TimePicker: {
         heightTiny: '36px',
@@ -1017,7 +1017,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       Checkbox: {
         fontSizeTiny: '15px',
@@ -1027,7 +1027,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         sizeTiny: '20px',
         sizeSmall: '22px',
         sizeMedium: '24px',
-        sizeLarge: '26px'
+        sizeLarge: '26px',
       },
       Radio: {
         fontSizeTiny: '15px',
@@ -1037,14 +1037,14 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         radioSizeTiny: '20px',
         radioSizeSmall: '22px',
         radioSizeMedium: '24px',
-        radioSizeLarge: '26px'
+        radioSizeLarge: '26px',
       },
       Switch: {
         heightTiny: '26px',
         heightSmall: '28px',
         heightMedium: '30px',
         heightLarge: '32px',
-        fontSize: '15px'
+        fontSize: '15px',
       },
       TreeSelect: {
         heightTiny: '36px',
@@ -1054,7 +1054,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       Cascader: {
         heightTiny: '36px',
@@ -1064,13 +1064,13 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       Transfer: {
         fontSize: '15px',
         itemHeightSmall: '36px',
         itemHeightMedium: '40px',
-        itemHeightLarge: '44px'
+        itemHeightLarge: '44px',
       },
       AutoComplete: {
         heightTiny: '36px',
@@ -1080,10 +1080,10 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         fontSizeTiny: '15px',
         fontSizeSmall: '16px',
         fontSizeMedium: '17px',
-        fontSizeLarge: '18px'
+        fontSizeLarge: '18px',
       },
       Upload: {
-        fontSize: '15px'
+        fontSize: '15px',
       },
       Tag: {
         heightTiny: '26px',
@@ -1097,7 +1097,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         paddingTiny: '0 12px',
         paddingSmall: '0 14px',
         paddingMedium: '0 16px',
-        paddingLarge: '0 18px'
+        paddingLarge: '0 18px',
       },
       Card: {
         fontSize: '15px',
@@ -1106,21 +1106,21 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         titleFontSizeLarge: '19px',
         paddingSmall: '20px 26px',
         paddingMedium: '26px 32px',
-        paddingLarge: '32px 40px'
+        paddingLarge: '32px 40px',
       },
       Modal: {
         fontSize: '15px',
         titleFontSize: '18px',
         paddingSmall: '20px 26px',
         paddingMedium: '26px 32px',
-        paddingLarge: '32px 40px'
+        paddingLarge: '32px 40px',
       },
       Drawer: {
         fontSize: '15px',
         titleFontSize: '18px',
         headerPadding: '20px 26px',
         bodyPadding: '20px 26px',
-        footerPadding: '16px 20px'
+        footerPadding: '16px 20px',
       },
       Tabs: {
         tabFontSizeSmall: '15px',
@@ -1128,7 +1128,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         tabFontSizeLarge: '17px',
         tabPaddingSmall: '12px 18px',
         tabPaddingMedium: '14px 20px',
-        tabPaddingLarge: '16px 24px'
+        tabPaddingLarge: '16px 24px',
       },
       Pagination: {
         itemSizeSmall: '30px',
@@ -1142,36 +1142,36 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         inputWidthLarge: '70px',
         selectWidthSmall: '100px',
         selectWidthMedium: '120px',
-        selectWidthLarge: '140px'
+        selectWidthLarge: '140px',
       },
       Breadcrumb: {
         fontSize: '15px',
-        itemLineHeight: '1.7'
+        itemLineHeight: '1.7',
       },
       Steps: {
         stepHeaderFontSizeSmall: '15px',
         stepHeaderFontSizeMedium: '16px',
-        stepHeaderFontSizeLarge: '17px'
+        stepHeaderFontSizeLarge: '17px',
       },
       Popover: {
         fontSize: '15px',
-        padding: '16px 20px'
+        padding: '16px 20px',
       },
       Tooltip: {
         fontSize: '14px',
-        padding: '10px 14px'
+        padding: '10px 14px',
       },
       Dropdown: {
         fontSize: '15px',
         optionHeightSmall: '40px',
         optionHeightMedium: '44px',
         optionHeightLarge: '48px',
-        padding: '10px'
+        padding: '10px',
       },
       Menu: {
         fontSize: '15px',
         itemHeight: '48px',
-        itemIconSize: '22px'
+        itemIconSize: '22px',
       },
       Form: {
         labelFontSizeTopSmall: '15px',
@@ -1184,7 +1184,7 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         labelHeightMedium: '44px',
         labelHeightLarge: '52px',
         feedbackFontSize: '14px',
-        feedbackPadding: '5px 0 12px 0'
+        feedbackPadding: '5px 0 12px 0',
       },
       DataTable: {
         thSmall: '48px',
@@ -1202,9 +1202,9 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
         thPaddingLarge: '18px 26px',
         tdPaddingSmall: '14px 18px',
         tdPaddingMedium: '16px 22px',
-        tdPaddingLarge: '18px 26px'
-      }
-    }
+        tdPaddingLarge: '18px 26px',
+      },
+    },
   };
 
   return sizeMap[size] as GlobalThemeOverrides;
@@ -1220,21 +1220,21 @@ function getComponentSizeOverrides(size: UnionKey.ThemeComponentSize): GlobalThe
 export function getNaiveTheme(
   colors: App.Theme.ThemeColor,
   settings: App.Theme.ThemeSetting,
-  overrides?: GlobalThemeOverrides
+  overrides?: GlobalThemeOverrides,
 ) {
   const { primary: colorLoading } = colors;
 
   const theme: GlobalThemeOverrides = {
     common: {
       ...getNaiveThemeColors(colors, settings.recommendColor),
-      borderRadius: `${settings.themeRadius}px`
+      borderRadius: `${settings.themeRadius}px`,
     },
     LoadingBar: {
-      colorLoading
+      colorLoading,
     },
     Tag: {
-      borderRadius: `${settings.themeRadius}px`
-    }
+      borderRadius: `${settings.themeRadius}px`,
+    },
   };
 
   // Apply component size overrides

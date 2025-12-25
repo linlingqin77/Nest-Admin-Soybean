@@ -9,4 +9,4 @@ import { DeptRepository } from './dept.repository';
   providers: [DeptService, DeptRepository],
   exports: [DeptService],
 })
-export class DeptModule { }
+export class DeptModule {}

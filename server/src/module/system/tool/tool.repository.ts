@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 /**
  * 代码生成表仓储层
- * 
+ *
  * @description 封装代码生成表的数据访问逻辑
  */
 @Injectable()
@@ -39,7 +39,7 @@ export class ToolRepository extends SoftDeleteRepository<GenTable, Prisma.GenTab
   /**
    * 查询生成表详情（包含列信息）
    */
-  async findByIdWithColumns(tableId: number): Promise<GenTable & { columns: any[] } | null> {
+  async findByIdWithColumns(tableId: number): Promise<(GenTable & { columns: any[] }) | null> {
     return this.prisma.genTable.findUnique({
       where: { tableId },
       include: {
@@ -53,7 +53,7 @@ export class ToolRepository extends SoftDeleteRepository<GenTable, Prisma.GenTab
   /**
    * 根据表名查询生成表（包含列信息）
    */
-  async findByTableNameWithColumns(tableName: string): Promise<GenTable & { columns: any[] } | null> {
+  async findByTableNameWithColumns(tableName: string): Promise<(GenTable & { columns: any[] }) | null> {
     return this.prisma.genTable.findFirst({
       where: { tableName },
       include: {
@@ -88,7 +88,7 @@ export class ToolRepository extends SoftDeleteRepository<GenTable, Prisma.GenTab
       tableName,
       delFlag: '0',
     };
-    
+
     if (excludeId) {
       where.tableId = { not: excludeId };
     }

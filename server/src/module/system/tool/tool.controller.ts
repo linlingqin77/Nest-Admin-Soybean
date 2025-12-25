@@ -12,7 +12,7 @@ import { BusinessType } from 'src/common/constant/business.constant';
 @Controller('tool')
 @ApiBearerAuth('Authorization')
 export class ToolController {
-  constructor(private readonly toolService: ToolService) { }
+  constructor(private readonly toolService: ToolService) {}
 
   @Api({
     summary: '数据表列表',

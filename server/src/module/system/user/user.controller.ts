@@ -1,11 +1,32 @@
-import { Controller, Get, Post, Body, Put, Param, Query, Res, Delete, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Query,
+  Res,
+  Delete,
+  Request,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { Response } from 'express';
 import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
 import { RequireRole } from 'src/common/decorators/require-role.decorator';
 import { UploadService } from 'src/module/upload/upload.service';
-import { CreateUserDto, UpdateUserDto, ListUserDto, ChangeUserStatusDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto } from './dto/index';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  ListUserDto,
+  ChangeUserStatusDto,
+  ResetPwdDto,
+  UpdateProfileDto,
+  UpdatePwdDto,
+} from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Result } from 'src/common/response';
 import { User, UserDto, UserTool, UserToolType } from 'src/module/system/user/user.decorator';

@@ -1564,7 +1564,7 @@ export const colorNames: [hex: string, name: string][] = [
   ['#ffff99', 'Pale Canary'],
   ['#ffffb4', 'Portafino'],
   ['#fffff0', 'Ivory'],
-  ['#ffffff', 'White']
+  ['#ffffff', 'White'],
 ];
 
 /**

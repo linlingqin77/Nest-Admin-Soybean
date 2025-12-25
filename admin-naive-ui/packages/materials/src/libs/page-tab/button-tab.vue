@@ -3,7 +3,7 @@ import type { PageTabProps } from '../../types';
 import style from './index.module.css';
 
 defineOptions({
-  name: 'ButtonTab'
+  name: 'ButtonTab',
 });
 
 defineProps<PageTabProps>();
@@ -41,7 +41,7 @@ defineSlots<Slots>();
       style['button-tab'],
       { [style['button-tab_dark']]: darkMode },
       { [style['button-tab_active']]: active },
-      { [style['button-tab_active_dark']]: active && darkMode }
+      { [style['button-tab_active_dark']]: active && darkMode },
     ]"
   >
     <slot name="prefix"></slot>

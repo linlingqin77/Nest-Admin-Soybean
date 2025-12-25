@@ -3,7 +3,7 @@ import { NDivider, NTag } from 'naive-ui';
 import {
   fetchBatchDeleteOssConfig,
   fetchGetOssConfigList,
-  fetchUpdateOssConfigStatus
+  fetchUpdateOssConfigStatus,
 } from '@/service/api/system/oss-config';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -16,7 +16,7 @@ import OssConfigOperateDrawer from './modules/oss-config-operate-drawer.vue';
 import OssConfigSearch from './modules/oss-config-search.vue';
 
 defineOptions({
-  name: 'OssConfigList'
+  name: 'OssConfigList',
 });
 
 useDict('sys_yes_no');
@@ -32,7 +32,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetOssConfigList,
   apiParams: {
@@ -43,43 +43,43 @@ const {
     configKey: null,
     bucketName: null,
     region: null,
-    status: null
+    status: null,
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'configKey',
       title: '配置名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'bucketName',
       title: '桶名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'endpoint',
       title: '访问站点',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'region',
       title: '域',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'accessPolicy',
@@ -97,7 +97,7 @@ const {
           return <NTag type="warning">自定义</NTag>;
         }
         return null;
-      }
+      },
     },
     {
       key: 'status',
@@ -112,20 +112,20 @@ const {
             onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
           />
         );
-      }
+      },
     },
     {
       key: 'remark',
       title: '备注',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => {
+      render: (row) => {
         const divider = () => {
           if (!hasAuth('system:ossConfig:edit') || !hasAuth('system:ossConfig:remove')) {
             return null;
@@ -171,9 +171,9 @@ const {
             {deleteBtn()}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -207,13 +207,13 @@ async function edit(ossConfigId: CommonType.IdType) {
 async function handleStatusChange(
   row: Api.System.OssConfig,
   value: Api.Common.EnableStatus,
-  callback: (flag: boolean) => void
+  callback: (flag: boolean) => void,
 ) {
   try {
     await fetchUpdateOssConfigStatus({
       configKey: row.configKey,
       ossConfigId: row.ossConfigId,
-      status: value
+      status: value,
     });
     callback(true);
     window.$message?.success('状态修改成功');
@@ -230,16 +230,37 @@ async function handleStatusChange(
     <OssConfigSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="OSS配置列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="hasAuth('system:ossConfig:add')"
-          :show-delete="hasAuth('system:ossConfig:remove')" :show-export="false" @add="handleAdd"
-          @delete="handleBatchDelete" @refresh="getData" />
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:ossConfig:add')"
+          :show-delete="hasAuth('system:ossConfig:remove')"
+          :show-export="false"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @refresh="getData"
+        />
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.ossConfigId"
-        :pagination="mobilePagination" class="sm:h-full" />
-      <OssConfigOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-        @submitted="getData" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.ossConfigId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
+      <OssConfigOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getData"
+      />
     </NCard>
   </div>
 </template>

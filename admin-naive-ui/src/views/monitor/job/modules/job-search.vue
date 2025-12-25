@@ -5,7 +5,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'JobSearch'
+  name: 'JobSearch',
 });
 
 interface Emits {

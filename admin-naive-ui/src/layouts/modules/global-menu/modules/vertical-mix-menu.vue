@@ -15,7 +15,7 @@ import FirstLevelMenu from '../components/first-level-menu.vue';
 import GlobalLogo from '../../global-logo/index.vue';
 
 defineOptions({
-  name: 'VerticalMixMenu'
+  name: 'VerticalMixMenu',
 });
 
 const route = useRoute();
@@ -30,7 +30,7 @@ const {
   activeFirstLevelMenuKey,
   isActiveFirstLevelMenuHasChildren,
   getActiveFirstLevelMenuKey,
-  handleSelectFirstLevelMenu
+  handleSelectFirstLevelMenu,
 } = useMixMenuContext('VerticalMixMenu');
 const { selectedKey } = useMenu();
 
@@ -71,7 +71,7 @@ watch(
   () => {
     updateExpandedKeys();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

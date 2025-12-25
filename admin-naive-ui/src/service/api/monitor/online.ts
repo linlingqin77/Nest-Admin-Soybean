@@ -5,7 +5,7 @@ export function fetchGetOnlineUserList(params?: Api.Monitor.OnlineUserSearchPara
   return request<Api.Monitor.OnlineUserList>({
     url: '/monitor/online/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -17,7 +17,7 @@ export function fetchGetOnlineUserList(params?: Api.Monitor.OnlineUserSearchPara
 export function fetchForceLogout(tokenId: string) {
   return request<boolean>({
     url: `/monitor/online/${tokenId}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 /**
@@ -28,7 +28,7 @@ export function fetchForceLogout(tokenId: string) {
 export function fetchKickOutCurrentDevice(tokenId: string) {
   return request<boolean>({
     url: `/monitor/online/myself/${tokenId}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -37,6 +37,6 @@ export function fetchGetOnlineDeviceList(params?: Api.Monitor.OnlineUserSearchPa
   return request<Api.Monitor.OnlineUserList>({
     url: '/monitor/online',
     method: 'get',
-    params
+    params,
   });
 }

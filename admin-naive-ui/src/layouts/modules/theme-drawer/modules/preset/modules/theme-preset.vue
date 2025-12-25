@@ -6,7 +6,7 @@ import { themeSettings } from '@/theme/settings';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ThemePreset'
+  name: 'ThemePreset',
 });
 
 type ThemePreset = Pick<
@@ -48,14 +48,14 @@ const presets = computed(() =>
       const fileName = path.split('/').pop()?.replace('.json', '') || '';
       return {
         id: fileName,
-        ...(presetData as ThemePreset)
+        ...(presetData as ThemePreset),
       };
     })
     .sort((a, b) => {
       if (a.name === 'default') return -1;
       if (b.name === 'default') return 1;
       return a.name.localeCompare(b.name);
-    })
+    }),
 );
 
 const getPresetName = (preset: ThemePreset): string => {
@@ -99,7 +99,7 @@ const applyPreset = (preset: ThemePreset): void => {
     sider: { ...rest.sider },
     footer: { ...rest.footer },
     watermark: { ...watermark },
-    tokens: { ...rest.tokens }
+    tokens: { ...rest.tokens },
   });
 
   // Apply NaiveUI theme overrides if present

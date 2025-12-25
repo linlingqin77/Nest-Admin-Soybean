@@ -8,8 +8,8 @@ export const ROOT_ROUTE: CustomRoute = {
   redirect: getRoutePath(import.meta.env.VITE_ROUTE_HOME) || '/home',
   meta: {
     title: 'root',
-    constant: true
-  }
+    constant: true,
+  },
 };
 
 const NOT_FOUND_ROUTE: CustomRoute = {
@@ -18,8 +18,8 @@ const NOT_FOUND_ROUTE: CustomRoute = {
   component: 'layout.blank$view.404',
   meta: {
     title: 'not-found',
-    constant: true
-  }
+    constant: true,
+  },
 };
 
 /** builtin routes, it must be constant and setup in vue-router */

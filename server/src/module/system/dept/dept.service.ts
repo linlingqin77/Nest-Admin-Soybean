@@ -17,7 +17,7 @@ export class DeptService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly deptRepo: DeptRepository,
-  ) { }
+  ) {}
 
   @CacheEvict(CacheEnum.SYS_DEPT_KEY, '*')
   @Transactional()
@@ -156,7 +156,9 @@ export class DeptService {
       if (!parent) {
         return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '父级部门不存在');
       }
-      const ancestors = parent.ancestors ? `${parent.ancestors},${updateDeptDto.parentId}` : `${updateDeptDto.parentId}`;
+      const ancestors = parent.ancestors
+        ? `${parent.ancestors},${updateDeptDto.parentId}`
+        : `${updateDeptDto.parentId}`;
       Object.assign(updateDeptDto, { ancestors: ancestors });
     }
     await this.deptRepo.update(updateDeptDto.deptId, updateDeptDto);
@@ -212,7 +214,12 @@ export class DeptService {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         delFlag: DelFlagEnum.NORMAL,
-        OR: [{ deptId }, { ancestors: { contains: `,${deptId}` } }, { ancestors: { startsWith: `${deptId},` } }, { ancestors: { contains: `,${deptId},` } }],
+        OR: [
+          { deptId },
+          { ancestors: { contains: `,${deptId}` } },
+          { ancestors: { startsWith: `${deptId},` } },
+          { ancestors: { contains: `,${deptId},` } },
+        ],
       },
       select: { deptId: true },
     });

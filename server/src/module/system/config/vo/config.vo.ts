@@ -17,7 +17,12 @@ export class ConfigVo {
   @ApiProperty({ description: '参数键值' })
   configValue: string;
 
-  @ApiProperty({ description: '系统内置', enum: ConfigTypeEnum, enumName: 'ConfigTypeEnum', enumSchema: ConfigTypeEnumSchema })
+  @ApiProperty({
+    description: '系统内置',
+    enum: ConfigTypeEnum,
+    enumName: 'ConfigTypeEnum',
+    enumSchema: ConfigTypeEnumSchema,
+  })
   configType: string;
 
   @ApiProperty({ description: '备注' })

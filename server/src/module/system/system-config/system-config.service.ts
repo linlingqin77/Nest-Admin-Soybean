@@ -6,14 +6,14 @@ import { SysSystemConfig } from '@prisma/client';
 
 /**
  * SystemConfigService - 系统级配置服务
- * 
+ *
  * 管理全局系统配置，这些配置不受租户隔离影响
- * 
+ *
  * 特性：
  * 1. 使用 SystemPrismaService（无租户扩展）
  * 2. 使用 @SystemCacheable 装饰器（缓存键不包含 tenant_id）
  * 3. 提供 CRUD 操作和缓存管理
- * 
+ *
  * 适用场景：
  * - 验证码开关 (sys.account.captchaEnabled)
  * - 系统级功能开关
@@ -29,10 +29,10 @@ export class SystemConfigService {
 
   /**
    * 获取系统配置值
-   * 
+   *
    * @param configKey 配置键
    * @returns 配置值，不存在返回 null
-   * 
+   *
    * @example
    * ```typescript
    * const enabled = await this.systemConfigService.getConfigValue('sys.account.captchaEnabled');
@@ -57,7 +57,7 @@ export class SystemConfigService {
 
   /**
    * 获取系统配置对象
-   * 
+   *
    * @param configKey 配置键
    * @returns 完整的配置对象
    */
@@ -76,7 +76,7 @@ export class SystemConfigService {
 
   /**
    * 获取所有系统配置
-   * 
+   *
    * @returns 所有有效的系统配置列表
    */
   @SystemCacheable({
@@ -97,7 +97,7 @@ export class SystemConfigService {
 
   /**
    * 根据配置类型获取配置列表
-   * 
+   *
    * @param configType 配置类型 (Y=系统内置, N=自定义)
    * @returns 指定类型的配置列表
    */
@@ -120,7 +120,7 @@ export class SystemConfigService {
 
   /**
    * 创建系统配置
-   * 
+   *
    * @param data 配置数据
    * @returns 创建的配置对象
    */
@@ -146,7 +146,7 @@ export class SystemConfigService {
 
   /**
    * 更新系统配置
-   * 
+   *
    * @param configKey 配置键
    * @param data 更新数据
    * @returns 更新后的配置对象
@@ -174,7 +174,7 @@ export class SystemConfigService {
 
   /**
    * 删除系统配置（软删除）
-   * 
+   *
    * @param configKey 配置键
    * @param deleteBy 删除操作人
    * @returns 删除后的配置对象
@@ -193,7 +193,7 @@ export class SystemConfigService {
 
   /**
    * 批量更新系统配置
-   * 
+   *
    * @param configs 配置键值对数组
    * @returns 更新的配置数量
    */
@@ -219,7 +219,7 @@ export class SystemConfigService {
 
   /**
    * 刷新配置缓存
-   * 
+   *
    * @param configKey 可选，指定要刷新的配置键，不传则刷新所有
    */
   async refreshCache(configKey?: string): Promise<void> {
@@ -238,7 +238,7 @@ export class SystemConfigService {
 
   /**
    * 检查配置键是否存在
-   * 
+   *
    * @param configKey 配置键
    * @returns 是否存在
    */

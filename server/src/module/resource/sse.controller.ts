@@ -13,12 +13,16 @@ const NotRequireAuth = () => SetMetadata('notRequireAuth', true);
 @Controller('resource')
 @ApiBearerAuth('Authorization')
 export class SseController {
-  constructor(private readonly sseService: SseService) { }
+  constructor(private readonly sseService: SseService) {}
 
   @ApiOperation({ summary: 'SSE连接' })
   @NotRequireAuth()
   @Sse('sse')
-  sse(@Query('Authorization') authorization: string, @Query('clientid') clientid: string, @Req() req: Request): Observable<MessageEvent> {
+  sse(
+    @Query('Authorization') authorization: string,
+    @Query('clientid') clientid: string,
+    @Req() req: Request,
+  ): Observable<MessageEvent> {
     // 从 Authorization 参数中提取 token
     const token = authorization?.replace('Bearer ', '');
 

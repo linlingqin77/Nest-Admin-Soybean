@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 defineOptions({
-  name: 'CronSecond'
+  name: 'CronSecond',
 });
 
 interface Props {
@@ -28,7 +28,7 @@ const specifyList = ref<number[]>([]);
 
 const secondOptions = Array.from({ length: 60 }, (_, i) => ({
   label: i.toString().padStart(2, '0'),
-  value: i
+  value: i,
 }));
 
 const cronValue = computed(() => {
@@ -81,16 +81,16 @@ function parseValue(val: string) {
   }
 }
 
-watch(cronValue, val => {
+watch(cronValue, (val) => {
   emit('change', val);
 });
 
 watch(
   () => props.value,
-  val => {
+  (val) => {
     parseValue(val);
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

@@ -2,7 +2,7 @@
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ReloadButton'
+  name: 'ReloadButton',
 });
 
 interface Props {

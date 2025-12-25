@@ -7,7 +7,7 @@
  * 2. 备份服务器上的旧文件
  * 3. 上传新的 dist 文件到服务器
  * 4. 清理临时文件
- * 
+ *
  * 使用方法：
  * node deploy.js [env]
  * 例如：node deploy.js dev
@@ -125,10 +125,7 @@ async function deploy() {
 
   // 1. 打包前端项目
   console.log(chalk.cyan('📦 步骤 1: 打包前端项目'));
-  const buildSuccess = execCommand(
-    'pnpm run build',
-    '正在打包前端项目...'
-  );
+  const buildSuccess = execCommand('pnpm run build', '正在打包前端项目...');
 
   if (!buildSuccess) {
     console.log(chalk.red('打包失败，部署终止'));
@@ -147,7 +144,7 @@ async function deploy() {
   console.log(chalk.cyan('📦 步骤 2: 压缩文件'));
   const zipFileName = `dist_${formatTime()}.tar.gz`;
   const zipFilePath = path.join(projectRoot, zipFileName);
-  
+
   spinner = ora('正在压缩文件...').start();
   try {
     await compressing.tgz.compressDir(distPath, zipFilePath);
@@ -207,9 +204,7 @@ async function deploy() {
 
             if (checkResult.trim() === 'exists') {
               // 备份现有文件
-              await execRemoteCommand(
-                `cd ${config.remotePath} && tar -czf ${backupFullPath} . 2>/dev/null || true`
-              );
+              await execRemoteCommand(`cd ${config.remotePath} && tar -czf ${backupFullPath} . 2>/dev/null || true`);
               spinner.succeed(chalk.green('✓ 备份完成'));
             } else {
               spinner.info(chalk.yellow('⚠ 远程目录不存在，跳过备份'));
@@ -242,9 +237,7 @@ async function deploy() {
         await execRemoteCommand(`rm -rf ${config.remotePath}/*`);
 
         // 解压文件到目标目录（去除第一层 dist 目录）
-        await execRemoteCommand(
-          `tar -xzf ${remoteZipPath} -C ${config.remotePath} --strip-components=1`
-        );
+        await execRemoteCommand(`tar -xzf ${remoteZipPath} -C ${config.remotePath} --strip-components=1`);
 
         // 删除临时压缩包
         await execRemoteCommand(`rm -f ${remoteZipPath}`);

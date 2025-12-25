@@ -5,7 +5,7 @@ export function fetchGetLoginInforList(params?: Api.Monitor.LoginInforSearchPara
   return request<Api.Monitor.LoginInforList>({
     url: '/monitor/logininfor/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -13,7 +13,7 @@ export function fetchGetLoginInforList(params?: Api.Monitor.LoginInforSearchPara
 export function fetchBatchDeleteLoginInfor(infoIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/monitor/logininfor/${infoIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchBatchDeleteLoginInfor(infoIds: CommonType.IdType[]) {
 export function fetchUnlockLoginInfor(username: string) {
   return request<boolean>({
     url: `/monitor/logininfor/unlock/${username}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -29,6 +29,6 @@ export function fetchUnlockLoginInfor(username: string) {
 export function fetchCleanLoginInfor() {
   return request<boolean>({
     url: '/monitor/logininfor/clean',
-    method: 'delete'
+    method: 'delete',
   });
 }

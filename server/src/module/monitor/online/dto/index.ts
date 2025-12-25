@@ -1,4 +1,14 @@
-import { IsString, IsNumberString, IsEnum, IsPhoneNumber, Min, Length, IsOptional, IsBoolean, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsNumberString,
+  IsEnum,
+  IsPhoneNumber,
+  Min,
+  Length,
+  IsOptional,
+  IsBoolean,
+  IsNumber,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class OnlineListDto {

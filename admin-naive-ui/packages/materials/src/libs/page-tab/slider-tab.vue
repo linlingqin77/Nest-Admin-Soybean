@@ -3,7 +3,7 @@ import type { PageTabProps } from '../../types';
 import style from './index.module.css';
 
 defineOptions({
-  name: 'SliderTab'
+  name: 'SliderTab',
 });
 
 defineProps<PageTabProps>();
@@ -41,7 +41,7 @@ defineSlots<Slots>();
       style['slider-tab'],
       { [style['slider-tab_dark']]: darkMode },
       { [style['slider-tab_active']]: active },
-      { [style['slider-tab_active_dark']]: active && darkMode }
+      { [style['slider-tab_active_dark']]: active && darkMode },
     ]"
   >
     <slot name="prefix"></slot>

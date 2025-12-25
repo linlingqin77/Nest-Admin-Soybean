@@ -10,28 +10,28 @@ export function useFormRules() {
     userName: {
       pattern: REG_USER_NAME,
       message: $t('form.userName.invalid'),
-      trigger: ['change', 'blur']
+      trigger: ['change', 'blur'],
     },
     phone: {
       pattern: REG_PHONE,
       message: $t('form.phone.invalid'),
-      trigger: 'change'
+      trigger: 'change',
     },
     pwd: {
       pattern: REG_PWD,
       message: $t('form.pwd.invalid'),
-      trigger: ['change', 'blur']
+      trigger: ['change', 'blur'],
     },
     code: {
       pattern: REG_CODE_SIX,
       message: $t('form.code.invalid'),
-      trigger: 'change'
+      trigger: 'change',
     },
     email: {
       pattern: REG_EMAIL,
       message: $t('form.email.invalid'),
-      trigger: 'change'
-    }
+      trigger: 'change',
+    },
   } satisfies Record<string, App.Global.FormRule>;
 
   const formRules = {
@@ -40,7 +40,7 @@ export function useFormRules() {
     pwd: [createRequiredRule($t('form.pwd.required')), patternRules.pwd],
     code: [createRequiredRule($t('form.code.required')), patternRules.code],
     email: [createRequiredRule($t('form.email.required')), patternRules.email],
-    tenantId: [createRequiredRule('请选择/输入公司名称')]
+    tenantId: [createRequiredRule('请选择/输入公司名称')],
   } satisfies Record<string, App.Global.FormRule[]>;
 
   /** the default required rule */
@@ -57,7 +57,7 @@ export function useFormRules() {
           return new Error(message);
         }
         return true;
-      }
+      },
     };
   }
 
@@ -77,8 +77,8 @@ export function useFormRules() {
           return Promise.resolve();
         },
         message: $t('form.confirmPwd.invalid'),
-        trigger: 'input'
-      }
+        trigger: 'input',
+      },
     ];
     return confirmPwdRule;
   }
@@ -89,7 +89,7 @@ export function useFormRules() {
     defaultRequiredRule,
     createRequiredRule,
     createConfirmPwdRule,
-    createNumberRequiredRule
+    createNumberRequiredRule,
   };
 }
 
@@ -107,6 +107,6 @@ export function useNaiveForm() {
   return {
     formRef,
     validate,
-    restoreValidation
+    restoreValidation,
   };
 }

@@ -32,4 +32,4 @@ import { AppConfigService } from 'src/config/app-config.service';
   ],
   exports: [BullModule],
 })
-export class BullConfigModule { }
+export class BullConfigModule {}

@@ -4,8 +4,8 @@ import { TenantPackageController } from './tenant-package.controller';
 import { TenantPackageRepository } from './tenant-package.repository';
 
 @Module({
-    controllers: [TenantPackageController],
-    providers: [TenantPackageService, TenantPackageRepository],
-    exports: [TenantPackageService],
+  controllers: [TenantPackageController],
+  providers: [TenantPackageService, TenantPackageRepository],
+  exports: [TenantPackageService],
 })
-export class TenantPackageModule { }
+export class TenantPackageModule {}

@@ -5,9 +5,9 @@ function createColorPaletteVars() {
 
   const colorPaletteVar = {} as App.Theme.ThemePaletteColor;
 
-  colors.forEach(color => {
+  colors.forEach((color) => {
     colorPaletteVar[color] = `rgb(var(--${color}-color))`;
-    colorPaletteNumbers.forEach(number => {
+    colorPaletteNumbers.forEach((number) => {
       colorPaletteVar[`${color}-${number}`] = `rgb(var(--${color}-${number}-color))`;
     });
   });
@@ -25,11 +25,11 @@ export const themeVars: App.Theme.ThemeTokenCSSVars = {
     container: 'rgb(var(--container-bg-color))',
     layout: 'rgb(var(--layout-bg-color))',
     inverted: 'rgb(var(--inverted-bg-color))',
-    'base-text': 'rgb(var(--base-text-color))'
+    'base-text': 'rgb(var(--base-text-color))',
   },
   boxShadow: {
     header: 'var(--header-box-shadow)',
     sider: 'var(--sider-box-shadow)',
-    tab: 'var(--tab-box-shadow)'
-  }
+    tab: 'var(--tab-box-shadow)',
+  },
 };

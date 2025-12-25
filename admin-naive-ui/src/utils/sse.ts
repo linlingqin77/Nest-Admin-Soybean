@@ -18,8 +18,8 @@ export const initSSE = (url: any) => {
       onFailed() {
         // eslint-disable-next-line no-console
         console.error('Failed to connect after 10 retries');
-      }
-    }
+      },
+    },
   });
 
   watch(error, () => {
@@ -33,7 +33,7 @@ export const initSSE = (url: any) => {
     useNoticeStore().addNotice({
       message: data.value,
       read: false,
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString(),
     });
     let content = data.value;
     const noticeType = content.match(/\[dict\.(.*?)\]/)?.[1];
@@ -44,7 +44,7 @@ export const initSSE = (url: any) => {
       title: '消息',
       content,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     });
     data.value = null;
   });

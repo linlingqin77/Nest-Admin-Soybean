@@ -22,7 +22,7 @@ export class MainController {
     private readonly mainService: MainService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   @Api({
     summary: '用户登录',
@@ -101,7 +101,11 @@ export class MainController {
         const captchaInfo = createMath();
         data.img = captchaInfo.data;
         data.uuid = GenerateUUID();
-        await this.redisService.set(CacheEnum.CAPTCHA_CODE_KEY + data.uuid, captchaInfo.text.toLowerCase(), 1000 * 60 * 5);
+        await this.redisService.set(
+          CacheEnum.CAPTCHA_CODE_KEY + data.uuid,
+          captchaInfo.text.toLowerCase(),
+          1000 * 60 * 5,
+        );
       }
       return Result.ok(data, '操作成功');
     } catch (err) {

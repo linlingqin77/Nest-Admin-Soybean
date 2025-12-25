@@ -5,7 +5,7 @@ export function fetchGetNoticeList(params?: Api.System.NoticeSearchParams) {
   return request<Api.System.NoticeList>({
     url: '/system/notice/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreateNotice(data: Api.System.NoticeOperateParams) {
   return request<boolean>({
     url: '/system/notice',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdateNotice(data: Api.System.NoticeOperateParams) {
   return request<boolean>({
     url: '/system/notice',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -31,6 +31,6 @@ export function fetchUpdateNotice(data: Api.System.NoticeOperateParams) {
 export function fetchBatchDeleteNotice(noticeIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/notice/${noticeIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }

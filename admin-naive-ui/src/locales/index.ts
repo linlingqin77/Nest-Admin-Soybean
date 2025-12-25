@@ -7,7 +7,7 @@ const i18n = createI18n({
   locale: localStg.get('lang') || 'zh-CN',
   fallbackLocale: 'en',
   messages,
-  legacy: false
+  legacy: false,
 });
 
 /**

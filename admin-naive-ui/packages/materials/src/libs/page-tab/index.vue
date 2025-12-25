@@ -10,14 +10,14 @@ import SvgClose from './svg-close.vue';
 import style from './index.module.css';
 
 defineOptions({
-  name: 'PageTab'
+  name: 'PageTab',
 });
 
 const props = withDefaults(defineProps<PageTabProps>(), {
   mode: 'chrome',
   commonClass: 'transition-all-300',
   activeColor: ACTIVE_COLOR,
-  closable: true
+  closable: true,
 });
 
 interface Emits {
@@ -32,16 +32,16 @@ const activeTabComponent = computed(() => {
   const tabComponentMap = {
     chrome: {
       component: ChromeTab,
-      class: chromeClass
+      class: chromeClass,
     },
     button: {
       component: ButtonTab,
-      class: buttonClass
+      class: buttonClass,
     },
     slider: {
       component: SliderTab,
-      class: sliderClass
-    }
+      class: sliderClass,
+    },
   } satisfies Record<PageTabMode, { component: Component; class?: string }>;
 
   return tabComponentMap[mode];

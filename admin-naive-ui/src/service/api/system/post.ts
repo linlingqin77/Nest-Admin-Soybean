@@ -5,7 +5,7 @@ export function fetchGetPostList(params?: Api.System.PostSearchParams) {
   return request<Api.System.PostList>({
     url: '/system/post/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreatePost(data: Api.System.PostOperateParams) {
   return request<boolean>({
     url: '/system/post',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdatePost(data: Api.System.PostOperateParams) {
   return request<boolean>({
     url: '/system/post',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -31,7 +31,7 @@ export function fetchUpdatePost(data: Api.System.PostOperateParams) {
 export function fetchBatchDeletePost(postIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/post/${postIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -40,13 +40,13 @@ export function fetchGetPostSelect(deptId?: CommonType.IdType, postIds?: CommonT
   return request<Api.System.Post[]>({
     url: '/system/post/optionselect',
     method: 'get',
-    params: { postIds, deptId }
+    params: { postIds, deptId },
   });
 }
 /** 获取部门选择框列表 */
 export function fetchGetPostDeptSelect() {
   return request<Api.Common.CommonTreeRecord>({
     url: '/system/post/deptTree',
-    method: 'get'
+    method: 'get',
   });
 }

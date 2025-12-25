@@ -10,7 +10,7 @@ import { useRouterPush } from '@/hooks/common/router';
 import { useMenu } from '@/layouts/context';
 
 defineOptions({
-  name: 'VerticalMenu'
+  name: 'VerticalMenu',
 });
 
 const route = useRoute();
@@ -37,7 +37,7 @@ watch(
   () => {
     updateExpandedKeys();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

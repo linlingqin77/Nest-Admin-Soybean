@@ -12,7 +12,7 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({
-  name: 'OnlineTable'
+  name: 'OnlineTable',
 });
 
 useDict('sys_device_type');
@@ -30,9 +30,9 @@ const { columns, data, loading, getData } = useTable({
       key: 'deviceType',
       align: 'center',
       minWidth: 120,
-      render: row => {
+      render: (row) => {
         return <DictTag size="small" value={row.deviceType} dict-code="sys_device_type" />;
-      }
+      },
     },
     { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
     { title: '登录地点', key: 'loginLocation', align: 'center', minWidth: 120 },
@@ -41,21 +41,21 @@ const { columns, data, loading, getData } = useTable({
       key: 'browser',
       align: 'center',
       minWidth: 120,
-      render: row => {
+      render: (row) => {
         return (
           <div class="flex items-center justify-center gap-2">
             <SvgIcon icon={getBrowserIcon(row.browser)} />
             {row.browser}
           </div>
         );
-      }
+      },
     },
     {
       title: '操作系统',
       key: 'os',
       align: 'center',
       minWidth: 120,
-      render: row => {
+      render: (row) => {
         const osName = row.os?.split(' or ')[0] ?? '';
         return (
           <div class="flex items-center justify-center gap-2">
@@ -63,21 +63,21 @@ const { columns, data, loading, getData } = useTable({
             {osName}
           </div>
         );
-      }
+      },
     },
     {
       title: '登录时间',
       key: 'loginTime',
       align: 'center',
       minWidth: 180,
-      render: row => <NTime time={row.loginTime} format="yyyy-MM-dd HH:mm:ss" />
+      render: (row) => <NTime time={row.loginTime} format="yyyy-MM-dd HH:mm:ss" />,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       minWidth: 80,
-      render: row => {
+      render: (row) => {
         return (
           <div class="flex-center gap-8px">
             <ButtonIcon
@@ -92,9 +92,9 @@ const { columns, data, loading, getData } = useTable({
             />
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 /** 强制下线 */
@@ -113,8 +113,17 @@ async function forceLogout(tokenId: string) {
 </script>
 
 <template>
-  <NDataTable :columns="columns" :data="data" v-bind="tableProps" :flex-height="!appStore.isMobile" :scroll-x="962"
-    :loading="loading" remote :row-key="row => row.noticeId" class="h-full" />
+  <NDataTable
+    :columns="columns"
+    :data="data"
+    v-bind="tableProps"
+    :flex-height="!appStore.isMobile"
+    :scroll-x="962"
+    :loading="loading"
+    remote
+    :row-key="(row) => row.noticeId"
+    class="h-full"
+  />
 </template>
 
 <style scoped></style>

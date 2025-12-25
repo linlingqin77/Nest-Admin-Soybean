@@ -100,7 +100,7 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true, // 启用隐式类型转换
       },
-    })
+    }),
   );
   app.useGlobalFilters(new GlobalExceptionFilter());
 

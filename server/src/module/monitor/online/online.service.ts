@@ -6,7 +6,7 @@ import { FormatDateFields, Paginate } from 'src/common/utils/index';
 
 @Injectable()
 export class OnlineService {
-  constructor(private readonly redisService: RedisService) { }
+  constructor(private readonly redisService: RedisService) {}
   /**
    * 日志列表-分页
    * @param query
@@ -24,7 +24,7 @@ export class OnlineService {
 
     // 过滤掉空值并映射为在线用户对象
     const allUsers = data
-      .filter(item => item && item.token)
+      .filter((item) => item && item.token)
       .map((item) => ({
         tokenId: item.token,
         deptName: item.user?.deptName || '',

@@ -6,7 +6,7 @@ import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
 defineOptions({
-  name: 'ThemeSchema'
+  name: 'ThemeSchema',
 });
 
 const themeStore = useThemeStore();
@@ -14,7 +14,7 @@ const themeStore = useThemeStore();
 const icons: Record<UnionKey.ThemeScheme, string> = {
   light: 'material-symbols:sunny',
   dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
+  auto: 'material-symbols:hdr-auto',
 };
 
 function handleSegmentChange(value: string | number) {

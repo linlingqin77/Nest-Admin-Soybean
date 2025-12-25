@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 defineOptions({
-  name: 'CronMonth'
+  name: 'CronMonth',
 });
 
 interface Props {
@@ -38,7 +38,7 @@ const monthOptions = [
   { label: '九月', value: 9 },
   { label: '十月', value: 10 },
   { label: '十一月', value: 11 },
-  { label: '十二月', value: 12 }
+  { label: '十二月', value: 12 },
 ];
 
 const cronValue = computed(() => {
@@ -91,16 +91,16 @@ function parseValue(val: string) {
   }
 }
 
-watch(cronValue, val => {
+watch(cronValue, (val) => {
   emit('change', val);
 });
 
 watch(
   () => props.value,
-  val => {
+  (val) => {
     parseValue(val);
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

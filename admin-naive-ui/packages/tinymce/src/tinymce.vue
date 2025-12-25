@@ -9,7 +9,7 @@ import { plugins as defaultPlugins, toolbar as defaultToolbar } from './tinymce'
 
 defineOptions({
   name: 'TinyMce',
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 type InitOptions = IPropTypes['init'];
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   isDark: false,
   locale: 'zh_CN',
-  uploadHeaders: () => ({})
+  uploadHeaders: () => ({}),
 });
 
 interface Emits {
@@ -47,7 +47,7 @@ const emit = defineEmits<Emits>();
 const tinymceScriptSrc = new URL('../dist/tinymce.min.js', import.meta.url).href;
 
 const content = defineModel<string | null>('modelValue', {
-  default: ''
+  default: '',
 });
 
 const editorRef = shallowRef<EditorType | null>(null);
@@ -84,7 +84,7 @@ watch(
     // 需要先加载组件 也就是v-if为true  然后需要拿到editorRef 必须放在setTimeout(相当于onMounted)
     await nextTick();
     init.value = true;
-  }
+  },
 );
 
 // 取消上传
@@ -130,7 +130,7 @@ const initOptions = computed((): InitOptions => {
         const xhr = new XMLHttpRequest();
 
         // 监听上传进度
-        xhr.upload.addEventListener('progress', event => {
+        xhr.upload.addEventListener('progress', (event) => {
           if (event.lengthComputable) {
             const percentComplete = (event.loaded / event.total) * 100;
             progress(percentComplete);
@@ -154,7 +154,7 @@ const initOptions = computed((): InitOptions => {
         });
 
         // 监听错误事件
-        xhr.addEventListener('error', error => {
+        xhr.addEventListener('error', (error) => {
           reject(error);
         });
 
@@ -176,13 +176,13 @@ const initOptions = computed((): InitOptions => {
         xhr.send(formData);
       });
     },
-    setup: editor => {
+    setup: (editor) => {
       editorRef.value = editor;
       editor.on('init', () => {
         emit('mounted');
         loading.value = false;
       });
-    }
+    },
   };
 });
 

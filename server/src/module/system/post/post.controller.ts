@@ -14,7 +14,7 @@ import { UserTool, UserToolType } from '../user/user.decorator';
 @Controller('system/post')
 @ApiBearerAuth('Authorization')
 export class PostController {
-  constructor(private readonly postService: PostService) { }
+  constructor(private readonly postService: PostService) {}
 
   @Api({
     summary: '岗位管理-创建',

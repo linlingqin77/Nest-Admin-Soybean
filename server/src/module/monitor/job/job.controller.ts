@@ -13,7 +13,7 @@ import { User } from 'src/module/system/user/user.decorator';
 @Controller('monitor/job')
 @ApiBearerAuth('Authorization')
 export class JobController {
-  constructor(private readonly jobService: JobService) { }
+  constructor(private readonly jobService: JobService) {}
 
   @Api({
     summary: '获取定时任务列表',
@@ -66,7 +66,11 @@ export class JobController {
   @Put('')
   @RequirePermission('monitor:job:edit')
   @Operlog({ businessType: BusinessType.UPDATE })
-  update(@Body('jobId') jobId: number, @Body() updateJobDto: Partial<CreateJobDto>, @User('user.userName') userName: string) {
+  update(
+    @Body('jobId') jobId: number,
+    @Body() updateJobDto: Partial<CreateJobDto>,
+    @User('user.userName') userName: string,
+  ) {
     return this.jobService.update(jobId, updateJobDto, userName);
   }
 

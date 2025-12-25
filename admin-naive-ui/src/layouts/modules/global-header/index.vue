@@ -13,7 +13,7 @@ import UserAvatar from './components/user-avatar.vue';
 import MessageButton from './components/message-button.vue';
 
 defineOptions({
-  name: 'GlobalHeader'
+  name: 'GlobalHeader',
 });
 
 interface Props {

@@ -26,7 +26,7 @@ export function useDownload() {
   const getCommonHeaders = (contentType = 'application/octet-stream') => ({
     Authorization: `Bearer ${localStg.get('token')}`,
     Clientid: import.meta.env.VITE_APP_CLIENT_ID!,
-    'Content-Type': contentType
+    'Content-Type': contentType,
   });
 
   /** 通用下载方法 */
@@ -37,7 +37,7 @@ export function useDownload() {
     const tempLink = Object.assign(document.createElement('a'), {
       style: { display: 'none' },
       href: blobURL,
-      download: filename
+      download: filename,
     });
 
     if (typeof tempLink.download === 'undefined') {
@@ -54,7 +54,7 @@ export function useDownload() {
   async function downloadByStream(
     readableStream: ReadableStream<Uint8Array>,
     filename: string,
-    contentLength?: number
+    contentLength?: number,
   ): Promise<void> {
     window.$loading?.endLoading();
     StreamSaver.mitm = '/streamsaver/mitm.html?version=2.0.0';
@@ -100,14 +100,14 @@ export function useDownload() {
     try {
       const requestOptions: RequestInit = {
         method,
-        headers: getCommonHeaders(contentType)
+        headers: getCommonHeaders(contentType),
       };
 
       if (method === 'POST' && params) {
         requestOptions.body = transformToURLSearchParams(params);
         requestOptions.headers = {
           ...requestOptions.headers,
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         };
       }
 
@@ -147,7 +147,7 @@ export function useDownload() {
   const oss = (ossId: CommonType.IdType) =>
     executeDownload({
       method: 'GET',
-      url: `/resource/oss/download/${ossId}`
+      url: `/resource/oss/download/${ossId}`,
     });
 
   /** ZIP文件下载 */
@@ -156,12 +156,12 @@ export function useDownload() {
       method: 'GET',
       url,
       filename,
-      contentType: 'application/octet-stream'
+      contentType: 'application/octet-stream',
     });
 
   return {
     oss,
     zip,
-    download
+    download,
   };
 }

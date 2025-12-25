@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'FormBuildPage'
+  name: 'FormBuildPage',
 });
 </script>
 

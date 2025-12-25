@@ -9,4 +9,4 @@ import { MenuRepository } from './menu.repository';
   providers: [MenuService, MenuRepository],
   exports: [MenuService],
 })
-export class MenuModule { }
+export class MenuModule {}

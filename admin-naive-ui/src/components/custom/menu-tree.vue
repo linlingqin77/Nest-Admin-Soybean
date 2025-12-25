@@ -16,7 +16,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   immediate: true,
-  showHeader: true
+  showHeader: true,
 });
 
 const { bool: expandAll } = useBoolean();
@@ -39,8 +39,8 @@ async function getMenuList() {
         id: 0,
         label: '根目录',
         icon: 'material-symbols:home-outline-rounded',
-        children: data
-      }
+        children: data,
+      },
     ] as Api.System.MenuList;
   } catch {
     // error handled by request interceptor
@@ -102,7 +102,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
 
 function getAllMenuIds(menu: Api.System.MenuList) {
   const menuIds: CommonType.IdType[] = [];
-  menu.forEach(item => {
+  menu.forEach((item) => {
     menuIds.push(item.id!);
     if (item.children) {
       menuIds.push(...getAllMenuIds(item.children));
@@ -114,7 +114,7 @@ function getAllMenuIds(menu: Api.System.MenuList) {
 /** 获取所有叶子节点的 ID（没有子节点的节点） */
 function getLeafMenuIds(menu: Api.System.MenuList): CommonType.IdType[] {
   const leafIds: CommonType.IdType[] = [];
-  menu.forEach(item => {
+  menu.forEach((item) => {
     if (!item.children || item.children.length === 0) {
       // 是叶子节点
       leafIds.push(item.id!);
@@ -138,7 +138,7 @@ function getCheckedMenuIds(isCascade: boolean = false) {
   const menuIds = menuTreeRef.value?.getCheckedData()?.keys as string[];
   const indeterminateData = menuTreeRef.value?.getIndeterminateData();
   if (cascade.value || isCascade) {
-    const parentIds: string[] = indeterminateData?.keys.filter(item => !menuIds?.includes(String(item))) as string[];
+    const parentIds: string[] = indeterminateData?.keys.filter((item) => !menuIds?.includes(String(item))) as string[];
     menuIds?.push(...parentIds);
   }
   return menuIds;
@@ -149,7 +149,7 @@ watch(cascade, () => {
     // 获取当前菜单树中的所有叶子节点ID
     const allLeafIds = getLeafMenuIds(options.value);
     // 筛选出当前选中项中的叶子节点
-    const selectedLeafIds = checkedKeys.value.filter(id => allLeafIds.includes(id));
+    const selectedLeafIds = checkedKeys.value.filter((id) => allLeafIds.includes(id));
     // 重新设置选中状态为只包含叶子节点，让组件基于父子联动规则重新计算父节点状态
     checkedKeys.value = selectedLeafIds;
     return;
@@ -160,7 +160,7 @@ watch(cascade, () => {
 
 defineExpose({
   getCheckedMenuIds,
-  refresh: getMenuList
+  refresh: getMenuList,
 });
 </script>
 

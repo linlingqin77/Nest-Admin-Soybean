@@ -4,7 +4,7 @@ import ChromeTabBg from './chrome-tab-bg.vue';
 import style from './index.module.css';
 
 defineOptions({
-  name: 'ChromeTab'
+  name: 'ChromeTab',
 });
 
 defineProps<PageTabProps>();
@@ -42,7 +42,7 @@ defineSlots<Slots>();
       style['chrome-tab'],
       { [style['chrome-tab_dark']]: darkMode },
       { [style['chrome-tab_active']]: active },
-      { [style['chrome-tab_active_dark']]: active && darkMode }
+      { [style['chrome-tab_active_dark']]: active && darkMode },
     ]"
   >
     <div class=":soy: pointer-events-none absolute left-0 top-0 h-full w-full -z-1" :class="[style['chrome-tab__bg']]">

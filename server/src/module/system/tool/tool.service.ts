@@ -42,7 +42,7 @@ type GenTableWithColumns = GenTable & { columns: GenTableColumn[] };
 
 @Injectable()
 export class ToolService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   private async fetchTableDetail(where: Prisma.GenTableWhereInput): Promise<GenTableWithColumns | null> {
     const criteria: Prisma.GenTableWhereInput = { delFlag: DelFlagEnum.NORMAL, ...where };
@@ -129,7 +129,9 @@ export class ToolService {
       const tableData: Prisma.GenTableCreateInput = {
         tableName,
         tableComment: meta.tableComment?.trim() || tableName,
-        className: toolConfig.autoRemovePre ? StringUtils.toPascalCase(tableName.replace(new RegExp(toolConfig.tablePrefix.join('|')), '')) : StringUtils.toPascalCase(tableName),
+        className: toolConfig.autoRemovePre
+          ? StringUtils.toPascalCase(tableName.replace(new RegExp(toolConfig.tablePrefix.join('|')), ''))
+          : StringUtils.toPascalCase(tableName),
         packageName: toolConfig.packageName,
         moduleName: toolConfig.moduleName,
         businessName: tableName.slice(tableName.lastIndexOf('_') + 1),
@@ -170,7 +172,8 @@ export class ToolService {
     //更改后的数据库表的列信息
     const columns: DbColumnRow[] = await this.getTableColumnInfo(tableName);
 
-    if (!columns || !columns?.length) throw new BusinessException(ResponseCode.BUSINESS_ERROR, '同步数据失败，原表结构不存在！');
+    if (!columns || !columns?.length)
+      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '同步数据失败，原表结构不存在！');
     //存储之前就存在已生成的列信息
     const tableColumnMap: Record<string, GenTableColumn> = {};
     for (const v of tableColumns) {
@@ -192,7 +195,10 @@ export class ToolService {
           column.dictType = prevColumn.dictType;
           column.queryType = prevColumn.queryType;
         }
-        await this.prisma.genTableColumn.update({ where: { columnId: column.columnId }, data: this.mapColumnPayload(column) });
+        await this.prisma.genTableColumn.update({
+          where: { columnId: column.columnId },
+          data: this.mapColumnPayload(column),
+        });
       }
       //插入
       else {
@@ -202,7 +208,9 @@ export class ToolService {
     }
     //删除已经不存在表中数据
     if (tableColumns.length > 0) {
-      const delColumns = tableColumns.filter((v) => !columns.some((z) => z.columnName === v.columnName)).map((v) => v.columnId);
+      const delColumns = tableColumns
+        .filter((v) => !columns.some((z) => z.columnName === v.columnName))
+        .map((v) => v.columnId);
       if (delColumns.length > 0) {
         await this.prisma.genTableColumn.deleteMany({ where: { columnId: { in: delColumns } } });
       }
@@ -357,14 +365,35 @@ export class ToolService {
     for (const item of tableList) {
       const list = templateIndex(item);
       const templates = [
-        { content: list['tool/template/nestjs/entity.ts.vm'], path: `nestjs/${item.BusinessName}/entities/${item.businessName}.entity.ts` },
-        { content: list['tool/template/nestjs/dto.ts.vm'], path: `nestjs/${item.BusinessName}/dto/${item.businessName}.dto.ts` },
-        { content: list['tool/template/nestjs/controller.ts.vm'], path: `nestjs/${item.BusinessName}/${item.businessName}.controller.ts` },
-        { content: list['tool/template/nestjs/service.ts.vm'], path: `nestjs/${item.BusinessName}/${item.businessName}.service.ts` },
-        { content: list['tool/template/nestjs/module.ts.vm'], path: `nestjs/${item.BusinessName}/${item.businessName}.module.ts` },
+        {
+          content: list['tool/template/nestjs/entity.ts.vm'],
+          path: `nestjs/${item.BusinessName}/entities/${item.businessName}.entity.ts`,
+        },
+        {
+          content: list['tool/template/nestjs/dto.ts.vm'],
+          path: `nestjs/${item.BusinessName}/dto/${item.businessName}.dto.ts`,
+        },
+        {
+          content: list['tool/template/nestjs/controller.ts.vm'],
+          path: `nestjs/${item.BusinessName}/${item.businessName}.controller.ts`,
+        },
+        {
+          content: list['tool/template/nestjs/service.ts.vm'],
+          path: `nestjs/${item.BusinessName}/${item.businessName}.service.ts`,
+        },
+        {
+          content: list['tool/template/nestjs/module.ts.vm'],
+          path: `nestjs/${item.BusinessName}/${item.businessName}.module.ts`,
+        },
         { content: list['tool/template/vue/api.js.vm'], path: `vue/${item.BusinessName}/${item.businessName}.js` },
-        { content: list['tool/template/vue/indexVue.vue.vm'], path: `vue/${item.BusinessName}/${item.businessName}/index.vue` },
-        { content: list['tool/template/vue/dialogVue.vue.vm'], path: `vue/${item.BusinessName}/${item.businessName}/components/indexDialog.vue` },
+        {
+          content: list['tool/template/vue/indexVue.vue.vm'],
+          path: `vue/${item.BusinessName}/${item.businessName}/index.vue`,
+        },
+        {
+          content: list['tool/template/vue/dialogVue.vue.vm'],
+          path: `vue/${item.BusinessName}/${item.businessName}/components/indexDialog.vue`,
+        },
       ];
 
       for (const template of templates) {
@@ -440,7 +469,10 @@ export class ToolService {
       SELECT COUNT(*)::bigint AS total
       ${baseSql}
     `;
-    const [list, totalRes] = await Promise.all([this.prisma.$queryRaw<DbTableRow[]>(listSql), this.prisma.$queryRaw<Array<{ total: bigint }>>(countSql)]);
+    const [list, totalRes] = await Promise.all([
+      this.prisma.$queryRaw<DbTableRow[]>(listSql),
+      this.prisma.$queryRaw<Array<{ total: bigint }>>(countSql),
+    ]);
     return Result.ok({
       list: list.map((item) => ({
         ...item,
@@ -514,7 +546,10 @@ export class ToolService {
       column.isList = GenConstants.REQUIRE;
     }
     // 查询字段
-    if (!arraysContains(GenConstants.COLUMNNAME_NOT_QUERY, columnName) && column.htmlType != GenConstants.HTML_TEXTAREA) {
+    if (
+      !arraysContains(GenConstants.COLUMNNAME_NOT_QUERY, columnName) &&
+      column.htmlType != GenConstants.HTML_TEXTAREA
+    ) {
       column.isQuery = GenConstants.REQUIRE;
     }
 
@@ -540,7 +575,11 @@ export class ToolService {
       column.htmlType = GenConstants.HTML_SELECT;
     }
     //日期字段设置日期控件
-    else if (lowerColumnName.includes('time') || lowerColumnName.includes('_date') || lowerColumnName.includes('Date')) {
+    else if (
+      lowerColumnName.includes('time') ||
+      lowerColumnName.includes('_date') ||
+      lowerColumnName.includes('Date')
+    ) {
       column.htmlType = GenConstants.HTML_DATETIME;
       column.queryType = GenConstants.QUERY_BETWEEN;
     }

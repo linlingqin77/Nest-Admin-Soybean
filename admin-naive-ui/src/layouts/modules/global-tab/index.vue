@@ -11,7 +11,7 @@ import BetterScroll from '@/components/custom/better-scroll.vue';
 import ContextMenu from './context-menu.vue';
 
 defineOptions({
-  name: 'GlobalTab'
+  name: 'GlobalTab',
 });
 
 const route = useRoute();
@@ -114,7 +114,7 @@ const dropdown: DropdownConfig = reactive({
   visible: false,
   x: 0,
   y: 0,
-  tabId: ''
+  tabId: '',
 });
 
 function setDropdown(config: Partial<DropdownConfig>) {
@@ -145,7 +145,7 @@ async function handleContextMenu(e: MouseEvent, tabId: string) {
       visible: true,
       x: clientX,
       y: clientY,
-      tabId
+      tabId,
     });
     isClickContextMenu = false;
   }, DURATION);
@@ -164,13 +164,13 @@ watch(
   () => route.fullPath,
   () => {
     tabStore.addTab(route);
-  }
+  },
 );
 watch(
   () => tabStore.activeTabId,
   () => {
     scrollToActiveTab();
-  }
+  },
 );
 
 // init

@@ -18,7 +18,7 @@ import RoleDataScopeDrawer from './modules/role-data-scope-drawer.vue';
 import RoleAuthUserDrawer from './modules/role-auth-user-drawer.vue';
 
 defineOptions({
-  name: 'RoleList'
+  name: 'RoleList',
 });
 
 const appStore = useAppStore();
@@ -40,7 +40,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetRoleList,
   apiParams: {
@@ -51,46 +51,46 @@ const {
     roleName: null,
     roleKey: null,
     status: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'roleName',
       title: '角色名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'roleKey',
       title: '角色权限字符串',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'roleSort',
       title: '显示顺序',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'dataScope',
       title: '数据范围',
       align: 'center',
       minWidth: 180,
-      render: row => {
+      render: (row) => {
         return <NTag type="info">{dataScopeRecord[row.dataScope]}</NTag>;
-      }
+      },
     },
     {
       key: 'status',
@@ -106,20 +106,20 @@ const {
             onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
           />
         );
-      }
+      },
     },
     {
       key: 'createTime',
       title: '创建时间',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 230,
-      render: row => {
+      render: (row) => {
         if (row.roleId === 1) return null;
 
         const editBtn = () => {
@@ -189,9 +189,9 @@ const {
             ))}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -229,12 +229,12 @@ async function handleExport() {
 async function handleStatusChange(
   row: Api.System.Role,
   value: Api.Common.EnableStatus,
-  callback: (flag: boolean) => void
+  callback: (flag: boolean) => void,
 ) {
   try {
     await fetchUpdateRoleStatus({
       roleId: row.roleId,
-      status: value
+      status: value,
     });
     callback(true);
     window.$message?.success('状态修改成功');
@@ -246,13 +246,13 @@ async function handleStatusChange(
 }
 
 function handleDataScope(row: Api.System.Role) {
-  const findItem = data.value.find(item => item.roleId === row.roleId) || null;
+  const findItem = data.value.find((item) => item.roleId === row.roleId) || null;
   editingData.value = jsonClone(findItem);
   openDataScopeDrawer();
 }
 
 function handleAuthUser(row: Api.System.Role) {
-  const findItem = data.value.find(item => item.roleId === row.roleId) || null;
+  const findItem = data.value.find((item) => item.roleId === row.roleId) || null;
   editingData.value = jsonClone(findItem);
   openAuthUserDrawer();
 }
@@ -263,16 +263,38 @@ function handleAuthUser(row: Api.System.Role) {
     <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="角色列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="hasAuth('system:role:add')" :show-delete="hasAuth('system:role:remove')"
-          :show-export="hasAuth('system:role:export')" @add="handleAdd" @delete="handleBatchDelete"
-          @export="handleExport" @refresh="getData" />
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:role:add')"
+          :show-delete="hasAuth('system:role:remove')"
+          :show-export="hasAuth('system:role:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        />
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="1200" :loading="loading" remote :row-key="row => row.roleId"
-        :pagination="mobilePagination" class="sm:h-full" />
-      <RoleOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-        @submitted="getData" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="1200"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.roleId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
+      <RoleOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getData"
+      />
       <RoleDataScopeDrawer v-model:visible="dataScopeDrawerVisible" :row-data="editingData" @submitted="getData" />
       <RoleAuthUserDrawer v-model:visible="authUserDrawerVisible" :row-data="editingData" @submitted="getData" />
     </NCard>

@@ -5,7 +5,7 @@ export function fetchGetOssList(params?: Api.System.OssSearchParams) {
   return request<Api.System.OssList>({
     url: '/resource/oss/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -13,7 +13,7 @@ export function fetchGetOssList(params?: Api.System.OssSearchParams) {
 export function fetchBatchDeleteOss(ossIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/resource/oss/${ossIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchBatchDeleteOss(ossIds: CommonType.IdType[]) {
 export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
   return request<Api.System.Oss[]>({
     url: `/resource/oss/listByIds/${ossIds.join(',')}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -34,7 +34,7 @@ export function fetchUploadFile(file: File) {
     method: 'post',
     data: formData,
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 }

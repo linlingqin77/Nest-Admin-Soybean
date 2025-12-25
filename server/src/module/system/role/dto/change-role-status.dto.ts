@@ -10,7 +10,13 @@ export class ChangeRoleStatusDto {
   @IsNumber()
   roleId: number;
 
-  @ApiProperty({ required: true, description: '角色状态（0正常 1停用）', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
+  @ApiProperty({
+    required: true,
+    description: '角色状态（0正常 1停用）',
+    enum: StatusEnum,
+    enumName: 'StatusEnum',
+    enumSchema: StatusEnumSchema,
+  })
   @IsString()
   @IsEnum(StatusEnum)
   status: string;

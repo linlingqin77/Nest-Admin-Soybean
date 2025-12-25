@@ -4,14 +4,14 @@ import type { TagProps } from 'naive-ui';
 import { isNotNull } from '@/utils/common';
 
 defineOptions({
-  name: 'BooleanTag'
+  name: 'BooleanTag',
 });
 
 const value = defineModel<'0' | '1'>('value', { required: true });
 
 const tagMap: Record<'0' | '1', NaiveUI.ThemeColor> = {
   0: 'success',
-  1: 'error'
+  1: 'error',
 };
 
 const attrs: TagProps = useAttrs();

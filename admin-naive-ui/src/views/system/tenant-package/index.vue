@@ -4,7 +4,7 @@ import { NDivider } from 'naive-ui';
 import {
   fetchBatchDeleteTenantPackage,
   fetchGetTenantPackageList,
-  fetchUpdateTenantPackageStatus
+  fetchUpdateTenantPackageStatus,
 } from '@/service/api/system/tenant-package';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -19,7 +19,7 @@ import TenantPackageSearch from './modules/tenant-package-search.vue';
 import TenantPackageOperateDrawer from './modules/tenant-package-operate-drawer.vue';
 
 defineOptions({
-  name: 'TenantPackageList'
+  name: 'TenantPackageList',
 });
 
 const appStore = useAppStore();
@@ -39,7 +39,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetTenantPackageList,
   apiParams: {
@@ -49,32 +49,32 @@ const {
     // the value can not be undefined, otherwise the property in Form will not be reactive
     packageName: null,
     status: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'packageName',
       title: $t('page.system.tenantPackage.packageName'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'status',
       title: $t('page.system.tenantPackage.status'),
       align: 'center',
       minWidth: 120,
-      render: row => {
+      render: (row) => {
         return (
           <StatusSwitch
             v-model:value={row.status}
@@ -82,20 +82,20 @@ const {
             onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
           />
         );
-      }
+      },
     },
     {
       key: 'remark',
       title: $t('page.system.tenantPackage.remark'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => {
+      render: (row) => {
         const divider = () => {
           if (!hasAuth('system:tenantPackage:edit') || !hasAuth('system:tenantPackage:remove')) {
             return null;
@@ -141,9 +141,9 @@ const {
             {deleteBtn()}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -177,7 +177,7 @@ function handleExport() {
   download(
     '/system/tenant/package/export',
     searchParams,
-    `${$t('page.system.tenantPackage.title')}_${new Date().getTime()}.xlsx`
+    `${$t('page.system.tenantPackage.title')}_${new Date().getTime()}.xlsx`,
   );
 }
 
@@ -185,12 +185,12 @@ function handleExport() {
 async function handleStatusChange(
   row: Api.System.TenantPackage,
   value: Api.Common.EnableStatus,
-  callback: (flag: boolean) => void
+  callback: (flag: boolean) => void,
 ) {
   try {
     await fetchUpdateTenantPackageStatus({
       packageId: row.packageId,
-      status: value
+      status: value,
     });
     callback(true);
     window.$message?.success($t('page.system.tenantPackage.statusChangeSuccess'));
@@ -204,19 +204,45 @@ async function handleStatusChange(
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <TenantPackageSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard :title="$t('page.system.tenantPackage.title')" :bordered="false" size="small"
-      class="card-wrapper sm:flex-1-hidden">
+    <NCard
+      :title="$t('page.system.tenantPackage.title')"
+      :bordered="false"
+      size="small"
+      class="card-wrapper sm:flex-1-hidden"
+    >
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="hasAuth('system:tenantPackage:add')"
-          :show-delete="hasAuth('system:tenantPackage:remove')" :show-export="hasAuth('system:tenantPackage:export')"
-          @add="handleAdd" @delete="handleBatchDelete" @export="handleExport" @refresh="getData" />
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:tenantPackage:add')"
+          :show-delete="hasAuth('system:tenantPackage:remove')"
+          :show-export="hasAuth('system:tenantPackage:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        />
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.packageId"
-        :pagination="mobilePagination" class="sm:h-full" />
-      <TenantPackageOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-        @submitted="getData" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.packageId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
+      <TenantPackageOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getData"
+      />
     </NCard>
   </div>
 </template>

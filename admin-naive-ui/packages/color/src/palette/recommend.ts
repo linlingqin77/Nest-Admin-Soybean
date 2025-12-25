@@ -5,7 +5,7 @@ import type {
   ColorPaletteFamily,
   ColorPaletteFamilyWithNearestPalette,
   ColorPaletteMatch,
-  ColorPaletteNumber
+  ColorPaletteNumber,
 } from '../types';
 
 /**
@@ -18,18 +18,18 @@ export function getRecommendedColorPalette(color: string) {
 
   const colorMap = new Map<ColorPaletteNumber, ColorPalette>();
 
-  colorPaletteFamily.palettes.forEach(palette => {
+  colorPaletteFamily.palettes.forEach((palette) => {
     colorMap.set(palette.number, palette);
   });
 
   const mainColor = colorMap.get(500)!;
-  const matchColor = colorPaletteFamily.palettes.find(palette => palette.hex === color)!;
+  const matchColor = colorPaletteFamily.palettes.find((palette) => palette.hex === color)!;
 
   const colorPalette: ColorPaletteMatch = {
     ...colorPaletteFamily,
     colorMap,
     main: mainColor,
-    match: matchColor
+    match: matchColor,
   };
 
   return colorPalette;
@@ -77,7 +77,7 @@ export function getRecommendedColorPaletteFamily(color: string) {
 
   const colorPaletteFamily: ColorPaletteFamily = {
     name: colorName,
-    palettes: palettes.map(palette => {
+    palettes: palettes.map((palette) => {
       let hexValue = color;
 
       const isSame = number === palette.number;
@@ -91,15 +91,15 @@ export function getRecommendedColorPaletteFamily(color: string) {
         hexValue = transformHslToHex({
           h: newH,
           s: newS,
-          l
+          l,
         });
       }
 
       return {
         hex: hexValue,
-        number: palette.number
+        number: palette.number,
       };
-    })
+    }),
   };
 
   return colorPaletteFamily;
@@ -112,11 +112,11 @@ export function getRecommendedColorPaletteFamily(color: string) {
  * @param families color palette families
  */
 function getNearestColorPaletteFamily(color: string, families: ColorPaletteFamily[]) {
-  const familyWithConfig = families.map(family => {
-    const palettes = family.palettes.map(palette => {
+  const familyWithConfig = families.map((family) => {
+    const palettes = family.palettes.map((palette) => {
       return {
         ...palette,
-        delta: getDeltaE(color, palette.hex)
+        delta: getDeltaE(color, palette.hex),
       };
     });
 
@@ -125,12 +125,12 @@ function getNearestColorPaletteFamily(color: string, families: ColorPaletteFamil
     return {
       ...family,
       palettes,
-      nearestPalette
+      nearestPalette,
     };
   });
 
   const nearestPaletteFamily = familyWithConfig.reduce((prev, curr) =>
-    prev.nearestPalette.delta < curr.nearestPalette.delta ? prev : curr
+    prev.nearestPalette.delta < curr.nearestPalette.delta ? prev : curr,
   );
 
   const { l } = getHsl(color);
@@ -145,7 +145,7 @@ function getNearestColorPaletteFamily(color: string, families: ColorPaletteFamil
       const deltaCurr = Math.abs(currLightness - l);
 
       return deltaPrev < deltaCurr ? prev : curr;
-    })
+    }),
   };
 
   return paletteFamily;

@@ -5,7 +5,7 @@ export function fetchGetRoleList(params?: Api.System.RoleSearchParams) {
   return request<Api.System.RoleList>({
     url: '/system/role/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreateRole(data: Api.System.RoleOperateParams) {
   return request<boolean>({
     url: '/system/role',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdateRole(data: Api.System.RoleOperateParams) {
   return request<boolean>({
     url: '/system/role',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -32,7 +32,7 @@ export function fetchUpdateRoleStatus(data: Api.System.RoleOperateParams) {
   return request<boolean>({
     url: '/system/role/changeStatus',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -41,7 +41,7 @@ export function fetchUpdateRoleDataScope(data: Api.System.RoleOperateParams) {
   return request<boolean>({
     url: '/system/role/dataScope',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -49,7 +49,7 @@ export function fetchUpdateRoleDataScope(data: Api.System.RoleOperateParams) {
 export function fetchBatchDeleteRole(roleIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/role/${roleIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -58,7 +58,7 @@ export function fetchGetRoleSelect(roleIds?: CommonType.IdType[]) {
   return request<Api.System.Role[]>({
     url: '/system/role/optionselect',
     method: 'get',
-    params: { roleIds }
+    params: { roleIds },
   });
 }
 
@@ -66,7 +66,7 @@ export function fetchGetRoleSelect(roleIds?: CommonType.IdType[]) {
 export function fetchGetRoleDeptTreeSelect(roleId: CommonType.IdType) {
   return request<Api.System.RoleDeptTreeSelect>({
     url: `/system/role/deptTree/${roleId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -75,7 +75,7 @@ export function fetchGetRoleUserList(params: Api.System.UserSearchParams) {
   return request<Api.System.UserList>({
     url: `/system/role/authUser/allocatedList`,
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -84,7 +84,7 @@ export function fetchUpdateRoleAuthUser(roleId: CommonType.IdType, userIds: Comm
   return request<boolean>({
     url: '/system/role/authUser/selectAll',
     method: 'put',
-    params: { roleId, userIds: userIds.join(',') }
+    params: { roleId, userIds: userIds.join(',') },
   });
 }
 
@@ -93,6 +93,6 @@ export function fetchUpdateRoleAuthUserCancel(roleId: CommonType.IdType, userIds
   return request<boolean>({
     url: '/system/role/authUser/cancelAll',
     method: 'put',
-    params: { roleId, userIds: userIds.join(',') }
+    params: { roleId, userIds: userIds.join(',') },
   });
 }

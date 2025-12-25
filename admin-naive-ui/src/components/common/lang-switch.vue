@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'LangSwitch'
+  name: 'LangSwitch',
 });
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  showTooltip: true
+  showTooltip: true,
 });
 
 type Emits = {
@@ -38,8 +38,8 @@ const dropdownOptions = computed(() => {
   return props.langOptions.map((option, index) => ({
     ...option,
     props: {
-      class: index < lastIndex ? 'mb-1' : undefined
-    }
+      class: index < lastIndex ? 'mb-1' : undefined,
+    },
   }));
 });
 

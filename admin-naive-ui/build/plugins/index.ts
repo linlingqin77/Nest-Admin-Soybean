@@ -21,7 +21,7 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta, buildTime: string) {
     progress(),
     setupHtmlPlugin(buildTime),
     setupMonacoEditorPlugin(),
-    setupCopyPlugin()
+    setupCopyPlugin(),
   ];
 
   return plugins;

@@ -26,16 +26,36 @@ export class MenuVo {
   @ApiProperty({ description: '路由参数' })
   query: string;
 
-  @ApiProperty({ description: '是否为外链（0是 1否）', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
+  @ApiProperty({
+    description: '是否为外链（0是 1否）',
+    enum: StatusEnum,
+    enumName: 'StatusEnum',
+    enumSchema: StatusEnumSchema,
+  })
   isFrame: string;
 
-  @ApiProperty({ description: '是否缓存（0缓存 1不缓存）', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
+  @ApiProperty({
+    description: '是否缓存（0缓存 1不缓存）',
+    enum: StatusEnum,
+    enumName: 'StatusEnum',
+    enumSchema: StatusEnumSchema,
+  })
   isCache: string;
 
-  @ApiProperty({ description: '菜单类型', enum: MenuTypeEnum, enumName: 'MenuTypeEnum', enumSchema: MenuTypeEnumSchema })
+  @ApiProperty({
+    description: '菜单类型',
+    enum: MenuTypeEnum,
+    enumName: 'MenuTypeEnum',
+    enumSchema: MenuTypeEnumSchema,
+  })
   menuType: string;
 
-  @ApiProperty({ description: '显示状态（0显示 1隐藏）', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
+  @ApiProperty({
+    description: '显示状态（0显示 1隐藏）',
+    enum: StatusEnum,
+    enumName: 'StatusEnum',
+    enumSchema: StatusEnumSchema,
+  })
   visible: string;
 
   @ApiProperty({ description: '菜单状态', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
@@ -118,7 +138,10 @@ export class RouterVo {
   @ApiProperty({ description: '路由参数', required: false })
   query?: string;
 
-  @ApiProperty({ description: '当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式', required: false })
+  @ApiProperty({
+    description: '当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式',
+    required: false,
+  })
   alwaysShow?: boolean;
 
   @ApiProperty({ description: '其他元素', type: RouterMetaVo })

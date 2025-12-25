@@ -4,7 +4,7 @@ import ThemeColor from './modules/theme-color.vue';
 import ThemeRadius from './modules/theme-radius.vue';
 
 defineOptions({
-  name: 'AppearanceSettings'
+  name: 'AppearanceSettings',
 });
 </script>
 

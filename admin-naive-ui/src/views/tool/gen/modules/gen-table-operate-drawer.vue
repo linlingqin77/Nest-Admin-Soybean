@@ -9,7 +9,7 @@ import {
   genJavaTypeOptions,
   genQueryTypeOptions,
   genTplCategoryOptions,
-  genTypeOptions
+  genTypeOptions,
 } from '@/constants/business';
 import { fetchGetDictTypeOption } from '@/service/api/system';
 import { fetchGetGenTableInfo, fetchUpdateGenTable } from '@/service/api/tool';
@@ -19,7 +19,7 @@ import { useTableProps } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'GenTableOperateDrawer'
+  name: 'GenTableOperateDrawer',
 });
 
 interface Props {
@@ -32,7 +32,7 @@ const props = defineProps<Props>();
 const tableProps = useTableProps();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 interface Emits {
@@ -54,7 +54,7 @@ const basicRules: Record<BasicRuleKey, App.Global.FormRule> = {
   tableName: defaultRequiredRule,
   tableComment: defaultRequiredRule,
   className: defaultRequiredRule,
-  functionAuthor: defaultRequiredRule
+  functionAuthor: defaultRequiredRule,
 };
 
 const infoFormRef = ref<FormInst | null>(null);
@@ -84,7 +84,7 @@ const infoRules: Record<InfoRuleKey, App.Global.FormRule> = {
   genPath: defaultRequiredRule,
   treeCode: defaultRequiredRule,
   treeParentCode: defaultRequiredRule,
-  treeName: defaultRequiredRule
+  treeName: defaultRequiredRule,
 };
 
 async function getGenTableInfo() {
@@ -127,7 +127,7 @@ async function handleSubmit() {
     treeCode: info?.treeCode,
     treeName: info?.treeName,
     treeParentCode: info?.treeParentCode,
-    parentMenuId: info?.parentMenuId
+    parentMenuId: info?.parentMenuId,
   };
   genTable.columns = genTableInfo.value?.rows;
 
@@ -161,10 +161,10 @@ async function getDictOptions() {
     if (!data) {
       return;
     }
-    dictOptions.value = data.map(dict => ({
+    dictOptions.value = data.map((dict) => ({
       value: dict.dictType!,
       class: 'gen-dict-select',
-      label: dict.dictName
+      label: dict.dictName,
     }));
   } catch {
     // error handled by request interceptor
@@ -178,96 +178,100 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
     key: 'sort',
     title: $t('common.index'),
     align: 'center',
-    width: 80
+    width: 80,
   },
   {
     key: 'columnName',
     title: '字段列名',
     align: 'left',
-    minWidth: 120
+    minWidth: 120,
   },
   {
     key: 'columnComment',
     title: '字段描述',
     align: 'left',
     minWidth: 120,
-    render: row => <NInput v-model:value={row.columnComment} placeholder="请输入字段描述" />
+    render: (row) => <NInput v-model:value={row.columnComment} placeholder="请输入字段描述" />,
   },
   {
     key: 'columnType',
     title: '物理类型',
     align: 'left',
-    width: 120
+    width: 120,
   },
   {
     key: 'javaType',
     title: 'Java 类型',
     align: 'left',
     width: 136,
-    render: row => <NSelect v-model:value={row.javaType} placeholder="请选择 Java 类型" options={genJavaTypeOptions} />
+    render: (row) => (
+      <NSelect v-model:value={row.javaType} placeholder="请选择 Java 类型" options={genJavaTypeOptions} />
+    ),
   },
   {
     key: 'javaField',
     title: 'Java 属性',
     align: 'left',
     minWidth: 120,
-    render: row => <NInput v-model:value={row.javaField} placeholder="请输入 Java 属性" />
+    render: (row) => <NInput v-model:value={row.javaField} placeholder="请输入 Java 属性" />,
   },
   {
     key: 'isInsert',
     title: '插入',
     align: 'center',
     width: 64,
-    render: row => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isInsert} />
+    render: (row) => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isInsert} />,
   },
   {
     key: 'isEdit',
     title: '编辑',
     align: 'center',
     width: 64,
-    render: row => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isEdit} />
+    render: (row) => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isEdit} />,
   },
   {
     key: 'isList',
     title: '列表',
     align: 'center',
     width: 64,
-    render: row => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isList} />
+    render: (row) => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isList} />,
   },
   {
     key: 'isQuery',
     title: '查询',
     align: 'center',
     width: 64,
-    render: row => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isQuery} />
+    render: (row) => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isQuery} />,
   },
   {
     key: 'queryType',
     title: '查询方式',
     align: 'left',
     width: 130,
-    render: row => <NSelect v-model:value={row.queryType} placeholder="请选择查询方式" options={genQueryTypeOptions} />
+    render: (row) => (
+      <NSelect v-model:value={row.queryType} placeholder="请选择查询方式" options={genQueryTypeOptions} />
+    ),
   },
   {
     key: 'isRequired',
     title: '必填',
     align: 'center',
     width: 64,
-    render: row => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isRequired} />
+    render: (row) => <NCheckbox checked-value="1" unchecked-value="0" v-model:checked={row.isRequired} />,
   },
   {
     key: 'htmlType',
     title: '显示类型',
     align: 'left',
     width: 130,
-    render: row => <NSelect v-model:value={row.htmlType} placeholder="请选择显示类型" options={genHtmlTypeOptions} />
+    render: (row) => <NSelect v-model:value={row.htmlType} placeholder="请选择显示类型" options={genHtmlTypeOptions} />,
   },
   {
     key: 'dictType',
     title: '字典类型',
     align: 'left',
     width: 150,
-    render: row => {
+    render: (row) => {
       if (row.dictType === '') {
         row.dictType = undefined;
       }
@@ -293,8 +297,8 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
           clearable
         />
       );
-    }
-  }
+    },
+  },
 ];
 </script>
 
@@ -304,8 +308,13 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
       <NSpin :show="loading" class="h-full" content-class="h-full">
         <NTabs v-model:value="tab" type="segment" animated class="h-full" pane-class="h-full">
           <NTabPane name="basic" tab="基本信息" display-directive="show">
-            <NForm v-if="genTableInfo?.info" ref="basicFormRef" class="mx-auto max-w-800px" :model="genTableInfo.info"
-              :rules="basicRules">
+            <NForm
+              v-if="genTableInfo?.info"
+              ref="basicFormRef"
+              class="mx-auto max-w-800px"
+              :model="genTableInfo.info"
+              :rules="basicRules"
+            >
               <NGrid :x-gap="16" responsive="screen" item-responsive>
                 <NFormItemGi span="24 s:12" label="表名称" path="tableName">
                   <NInput v-model:value="genTableInfo.info.tableName" />
@@ -327,17 +336,32 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
           </NTabPane>
           <NTabPane name="dragTable" tab="字段信息" display-directive="show">
             <div class="h-full flex-col">
-              <NDataTable :columns="columns" :data="genTableInfo?.rows" v-bind="tableProps"
-                :flex-height="!appStore.isMobile" :scroll-x="1800" remote class="flex-1" />
+              <NDataTable
+                :columns="columns"
+                :data="genTableInfo?.rows"
+                v-bind="tableProps"
+                :flex-height="!appStore.isMobile"
+                :scroll-x="1800"
+                remote
+                class="flex-1"
+              />
             </div>
           </NTabPane>
           <NTabPane name="genInfo" tab="生成信息" display-directive="show">
-            <NForm v-if="genTableInfo?.info" ref="infoFormRef" class="mx-auto max-w-800px" :model="genTableInfo.info"
-              :rules="infoRules">
+            <NForm
+              v-if="genTableInfo?.info"
+              ref="infoFormRef"
+              class="mx-auto max-w-800px"
+              :model="genTableInfo.info"
+              :rules="infoRules"
+            >
               <NGrid :x-gap="16" responsive="screen" item-responsive>
                 <NFormItemGi span="24 s:12" label="生成模板" path="tplCategory">
-                  <NSelect v-model:value="genTableInfo.info.tplCategory" :options="genTplCategoryOptions"
-                    placeholder="请选择生成模板" />
+                  <NSelect
+                    v-model:value="genTableInfo.info.tplCategory"
+                    :options="genTplCategoryOptions"
+                    placeholder="请选择生成模板"
+                  />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" path="packageName">
                   <template #label>
@@ -393,8 +417,12 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                   </template>
                   <NRadioGroup v-model:value="genTableInfo.info.genType">
                     <NSpace :span="16">
-                      <NRadio v-for="option in genTypeOptions" :key="option.value" :label="option.label"
-                        :value="option.value" />
+                      <NRadio
+                        v-for="option in genTypeOptions"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                      />
                     </NSpace>
                   </NRadioGroup>
                 </NFormItemGi>
@@ -414,11 +442,16 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                         <span>树编码字段</span>
                       </div>
                     </template>
-                    <NSelect v-model:value="genTableInfo.info.treeCode" placeholder="请选择树编码字段" :options="genTableInfo.rows.map(column => ({
-                      value: column.columnName,
-                      label: column.columnName + '：' + column.columnComment
-                    }))
-                      " />
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeCode"
+                      placeholder="请选择树编码字段"
+                      :options="
+                        genTableInfo.rows.map((column) => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment,
+                        }))
+                      "
+                    />
                   </NFormItemGi>
                   <NFormItemGi span="24 s:12" path="treeParentCode">
                     <template #label>
@@ -427,11 +460,16 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                         <span>树父编码字段</span>
                       </div>
                     </template>
-                    <NSelect v-model:value="genTableInfo.info.treeParentCode" placeholder="请选择树父编码字段" :options="genTableInfo.rows.map(column => ({
-                      value: column.columnName,
-                      label: column.columnName + '：' + column.columnComment
-                    }))
-                      " />
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeParentCode"
+                      placeholder="请选择树父编码字段"
+                      :options="
+                        genTableInfo.rows.map((column) => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment,
+                        }))
+                      "
+                    />
                   </NFormItemGi>
                   <NFormItemGi span="24 s:12" path="treeName">
                     <template #label>
@@ -440,11 +478,16 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                         <span>树名称字段</span>
                       </div>
                     </template>
-                    <NSelect v-model:value="genTableInfo.info.treeName" placeholder="请选择树名称字段" :options="genTableInfo.rows.map(column => ({
-                      value: column.columnName,
-                      label: column.columnName + '：' + column.columnComment
-                    }))
-                      " />
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeName"
+                      placeholder="请选择树名称字段"
+                      :options="
+                        genTableInfo.rows.map((column) => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment,
+                        }))
+                      "
+                    />
                   </NFormItemGi>
                 </NGrid>
               </template>

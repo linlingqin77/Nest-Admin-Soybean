@@ -5,7 +5,7 @@ export function fetchGetConfigList(params?: Api.System.ConfigSearchParams) {
   return request<Api.System.ConfigList>({
     url: '/system/config/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -13,7 +13,7 @@ export function fetchGetConfigList(params?: Api.System.ConfigSearchParams) {
 export function fetchGetConfigDetail(configKey: string) {
   return request<Api.System.Config>({
     url: `/system/config/configKey/${configKey}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -22,7 +22,7 @@ export function fetchCreateConfig(data: Api.System.ConfigOperateParams) {
   return request<boolean>({
     url: '/system/config',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -31,7 +31,7 @@ export function fetchUpdateConfig(data: Api.System.ConfigOperateParams) {
   return request<boolean>({
     url: '/system/config',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -40,7 +40,7 @@ export function fetchUpdateConfigByKey(data: Api.System.ConfigOperateParams) {
   return request<boolean>({
     url: '/system/config/updateByKey',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -48,7 +48,7 @@ export function fetchUpdateConfigByKey(data: Api.System.ConfigOperateParams) {
 export function fetchBatchDeleteConfig(configIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/config/${configIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -56,7 +56,7 @@ export function fetchBatchDeleteConfig(configIds: CommonType.IdType[]) {
 export function fetchGetConfigByKey(configKey: string) {
   return request<string>({
     url: `/system/config/configKey/${configKey}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -64,6 +64,6 @@ export function fetchGetConfigByKey(configKey: string) {
 export function fetchRefreshCache() {
   return request<boolean>({
     url: `/system/config/refreshCache`,
-    method: 'delete'
+    method: 'delete',
   });
 }

@@ -11,7 +11,7 @@ type GetTableData<A extends NaiveUI.TreeTableApiFn> = NaiveUI.GetTreeTableData<A
 type TableColumn<T> = NaiveUI.TableColumn<T>;
 
 export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
-  config: NaiveUI.NaiveTreeTableConfig<A> & CommonType.TreeConfig & { defaultExpandAll?: boolean }
+  config: NaiveUI.NaiveTreeTableConfig<A> & CommonType.TreeConfig & { defaultExpandAll?: boolean },
 ) {
   const scope = effectScope();
   const appStore = useAppStore();
@@ -23,7 +23,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     idField,
     parentIdField = 'parentId',
     childrenField = 'children',
-    defaultExpandAll = false
+    defaultExpandAll = false,
   } = config;
 
   const SELECTION_KEY = '__selection__';
@@ -41,49 +41,49 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
   } = useHookTable<A, GetTableData<A>, TableColumn<NaiveUI.TableDataWithIndex<GetTableData<A>>>>({
     apiFn,
     apiParams,
     columns: config.columns,
-    transformer: res => {
+    transformer: (res) => {
       const records = res.data || [];
       if (!records.length) return { data: [] };
 
       const treeData = handleTree(records, {
         idField,
         parentIdField,
-        childrenField
+        childrenField,
       });
 
       // if defaultExpandAll is true, expand all nodes
       expandedRowKeys.value = defaultExpandAll
-        ? records.map(item => item[idField])
-        : records.filter(item => item[parentIdField] === 0).map(item => item[idField]) || [];
+        ? records.map((item) => item[idField])
+        : records.filter((item) => item[parentIdField] === 0).map((item) => item[idField]) || [];
 
       return { data: treeData };
     },
-    getColumnChecks: cols => {
+    getColumnChecks: (cols) => {
       const checks: NaiveUI.TableColumnCheck[] = [];
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
           checks.push({
             key: column.key as string,
             title: column.title as string,
-            checked: true
+            checked: true,
           });
         } else if (column.type === 'selection') {
           checks.push({
             key: SELECTION_KEY,
             title: $t('common.check'),
-            checked: true
+            checked: true,
           });
         } else if (column.type === 'expand') {
           checks.push({
             key: EXPAND_KEY,
             title: $t('common.expandColumn'),
-            checked: true
+            checked: true,
           });
         }
       });
@@ -93,7 +93,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     getColumns: (cols, checks) => {
       const columnMap = new Map<string, TableColumn<GetTableData<A>>>();
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
           columnMap.set(column.key as string, column);
         } else if (column.type === 'selection') {
@@ -104,12 +104,12 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
       });
 
       const filteredColumns = checks
-        .filter(item => item.checked)
-        .map(check => columnMap.get(check.key) as TableColumn<GetTableData<A>>);
+        .filter((item) => item.checked)
+        .map((check) => columnMap.get(check.key) as TableColumn<GetTableData<A>>);
 
       return filteredColumns;
     },
-    immediate
+    immediate,
   });
 
   /** 收集所有节点的key */
@@ -117,7 +117,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     const keys: CommonType.IdType[] = [];
 
     const collect = (nodes: any[]) => {
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         keys.push(node[idField]);
         if (node[childrenField]?.length) {
           collect(node[childrenField]);
@@ -148,7 +148,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
       () => appStore.locale,
       () => {
         reloadColumns();
-      }
+      },
     );
   });
 
@@ -170,7 +170,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     expandedRowKeys,
     isCollapse,
     expandAll,
-    collapseAll
+    collapseAll,
   };
 }
 
@@ -228,7 +228,7 @@ export function useTreeTableOperate<T extends TableData = TableData>(_: Ref<T[]>
     checkedRowKeys,
     onBatchDeleted,
     onDeleted,
-    clearCheckedRowKeys
+    clearCheckedRowKeys,
   };
 }
 

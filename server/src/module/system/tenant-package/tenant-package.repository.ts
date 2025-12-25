@@ -5,14 +5,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 /**
  * 租户套餐仓储层
- * 
+ *
  * @description 封装租户套餐的数据访问逻辑
  */
 @Injectable()
-export class TenantPackageRepository extends SoftDeleteRepository<
-  SysTenantPackage,
-  Prisma.SysTenantPackageDelegate
-> {
+export class TenantPackageRepository extends SoftDeleteRepository<SysTenantPackage, Prisma.SysTenantPackageDelegate> {
   constructor(prisma: PrismaService) {
     super(prisma, 'sysTenantPackage');
   }
@@ -99,6 +96,6 @@ export class TenantPackageRepository extends SoftDeleteRepository<
     return packageData.menuIds
       .split(',')
       .filter(Boolean)
-      .map(id => parseInt(id, 10));
+      .map((id) => parseInt(id, 10));
   }
 }

@@ -75,7 +75,7 @@ export function transformColorWithOpacity(color: AnyColor, alpha: number, bgColo
   const resultRgb: RgbColor = {
     r: calRgb(oR, bgR, alpha),
     g: calRgb(oG, bgG, alpha),
-    b: calRgb(oB, bgB, alpha)
+    b: calRgb(oB, bgB, alpha),
   };
 
   return colord(resultRgb).toHex();

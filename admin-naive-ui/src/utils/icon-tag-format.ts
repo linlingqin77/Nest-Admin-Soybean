@@ -10,7 +10,7 @@ export function getRequestMethodTagType(method: string): NaiveUI.ThemeColor {
     DELETE: 'error',
     GET: 'success',
     POST: 'primary',
-    PUT: 'warning'
+    PUT: 'warning',
   };
 
   return colors[methodUpper] ?? 'default';
@@ -29,7 +29,7 @@ const browserOptions = [
   { icon: 'simple-icons:tencentqq', value: 'qq' },
   { icon: 'arcticons:dingtalk', value: 'dingtalk' },
   { icon: 'arcticons:uc-browser', value: 'uc' },
-  { icon: 'ri:baidu-fill', value: 'baidu' }
+  { icon: 'ri:baidu-fill', value: 'baidu' },
 ];
 
 const osOptions = [
@@ -37,7 +37,7 @@ const osOptions = [
   { icon: 'cbi:imac', value: 'osx' },
   { icon: 'devicon:linux', value: 'linux' },
   { icon: 'logos:android-icon', value: 'android' },
-  { icon: 'file-icons:apple', value: 'ios' }
+  { icon: 'file-icons:apple', value: 'ios' },
 ];
 /**
  * 获取浏览器图标
@@ -46,7 +46,7 @@ const osOptions = [
  * @returns 浏览器图标
  */
 export function getBrowserIcon(browser: string): string {
-  const icon = browserOptions.find(item => browser.toLocaleLowerCase().includes(item.value));
+  const icon = browserOptions.find((item) => browser.toLocaleLowerCase().includes(item.value));
   return icon?.icon ?? 'stash:browser-light';
 }
 
@@ -57,6 +57,6 @@ export function getBrowserIcon(browser: string): string {
  * @returns 操作系统图标
  */
 export function getOsIcon(os: string): string {
-  const icon = osOptions.find(item => os.toLocaleLowerCase().includes(item.value));
+  const icon = osOptions.find((item) => os.toLocaleLowerCase().includes(item.value));
   return icon?.icon || 'mingcute:device-fill';
 }

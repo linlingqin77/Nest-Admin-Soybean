@@ -13,7 +13,7 @@ import ConfigOperateDrawer from './modules/config-operate-drawer.vue';
 import ConfigSearch from './modules/config-search.vue';
 
 defineOptions({
-  name: 'ConfigList'
+  name: 'ConfigList',
 });
 
 useDict('sys_yes_no');
@@ -33,7 +33,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetConfigList,
   apiParams: {
@@ -44,37 +44,37 @@ const {
     configName: null,
     configKey: null,
     configType: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'configName',
       title: $t('page.system.config.configName'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'configKey',
       title: $t('page.system.config.configKey'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'configValue',
       title: $t('page.system.config.configValue'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'configType',
@@ -83,7 +83,7 @@ const {
       minWidth: 120,
       render(row) {
         return <DictTag size="small" value={row.configType} dictCode="sys_yes_no" />;
-      }
+      },
     },
     {
       key: 'remark',
@@ -91,8 +91,8 @@ const {
       align: 'center',
       minWidth: 120,
       ellipsis: {
-        tooltip: true
-      }
+        tooltip: true,
+      },
     },
     {
       key: 'createTime',
@@ -100,15 +100,15 @@ const {
       align: 'center',
       minWidth: 120,
       ellipsis: {
-        tooltip: true
-      }
+        tooltip: true,
+      },
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => {
+      render: (row) => {
         const divider = () => {
           if (!hasAuth('system:config:edit') || !hasAuth('system:config:remove')) {
             return null;
@@ -154,9 +154,9 @@ const {
             {deleteBtn()}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -206,10 +206,18 @@ async function handleRefreshCache() {
     <ConfigSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard :title="$t('page.system.config.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="hasAuth('system:config:add')" :show-delete="hasAuth('system:config:remove')"
-          :show-export="hasAuth('system:config:export')" @add="handleAdd" @delete="handleBatchDelete"
-          @export="handleExport" @refresh="getData">
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:config:add')"
+          :show-delete="hasAuth('system:config:remove')"
+          :show-export="hasAuth('system:config:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
           <template #prefix>
             <NButton v-if="hasAuth('system:config:remove')" ghost size="small" @click="handleRefreshCache">
               <template #icon>
@@ -220,11 +228,25 @@ async function handleRefreshCache() {
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.configId"
-        :pagination="mobilePagination" class="sm:h-full" />
-      <ConfigOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-        @submitted="getData" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.configId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
+      <ConfigOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getData"
+      />
     </NCard>
   </div>
 </template>

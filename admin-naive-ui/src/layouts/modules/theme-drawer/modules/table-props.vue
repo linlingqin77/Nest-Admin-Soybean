@@ -6,7 +6,7 @@ import { $t } from '@/locales';
 import SettingItem from '../components/setting-item.vue';
 
 defineOptions({
-  name: 'TableProps'
+  name: 'TableProps',
 });
 
 const themeStore = useThemeStore();

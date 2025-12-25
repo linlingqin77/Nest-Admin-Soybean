@@ -5,21 +5,21 @@ import { useEcharts } from '@/hooks/common/echarts';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'PieChart'
+  name: 'PieChart',
 });
 
 const appStore = useAppStore();
 
 const { domRef, updateOptions } = useEcharts(() => ({
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
   },
   legend: {
     bottom: '1%',
     left: 'center',
     itemStyle: {
-      borderWidth: 0
-    }
+      borderWidth: 0,
+    },
   },
   series: [
     {
@@ -31,37 +31,37 @@ const { domRef, updateOptions } = useEcharts(() => ({
       itemStyle: {
         borderRadius: 10,
         borderColor: '#fff',
-        borderWidth: 1
+        borderWidth: 1,
       },
       label: {
         show: false,
-        position: 'center'
+        position: 'center',
       },
       emphasis: {
         label: {
           show: true,
-          fontSize: '12'
-        }
+          fontSize: '12',
+        },
       },
       labelLine: {
-        show: false
+        show: false,
       },
-      data: [] as { name: string; value: number }[]
-    }
-  ]
+      data: [] as { name: string; value: number }[],
+    },
+  ],
 }));
 
 async function mockData() {
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     setTimeout(resolve, 1000);
   });
 
-  updateOptions(opts => {
+  updateOptions((opts) => {
     opts.series[0].data = [
       { name: $t('page.home.study'), value: 20 },
       { name: $t('page.home.entertainment'), value: 10 },
       { name: $t('page.home.work'), value: 40 },
-      { name: $t('page.home.rest'), value: 30 }
+      { name: $t('page.home.rest'), value: 30 },
     ];
 
     return opts;
@@ -78,7 +78,7 @@ function updateLocale() {
       { name: $t('page.home.study'), value: 20 },
       { name: $t('page.home.entertainment'), value: 10 },
       { name: $t('page.home.work'), value: 40 },
-      { name: $t('page.home.rest'), value: 30 }
+      { name: $t('page.home.rest'), value: 30 },
     ];
 
     return opts;
@@ -93,7 +93,7 @@ watch(
   () => appStore.locale,
   () => {
     updateLocale();
-  }
+  },
 );
 
 // init

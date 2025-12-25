@@ -5,7 +5,7 @@ export function fetchGetDictDataList(params?: Api.System.DictDataSearchParams) {
   return request<Api.System.DictDataList>({
     url: '/system/dict/data/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreateDictData(data: Api.System.DictDataOperateParams) {
   return request<boolean>({
     url: '/system/dict/data',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdateDictData(data: Api.System.DictDataOperateParams) {
   return request<boolean>({
     url: '/system/dict/data',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -31,6 +31,6 @@ export function fetchUpdateDictData(data: Api.System.DictDataOperateParams) {
 export function fetchBatchDeleteDictData(dictCodes: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/dict/data/${dictCodes.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }

@@ -3,7 +3,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Result, ResponseCode } from 'src/common/response';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { BusinessException } from 'src/common/exceptions';
-import { CreateFolderDto, UpdateFolderDto, ListFolderDto, ListFileDto, MoveFileDto, RenameFileDto, CreateShareDto, GetShareDto } from './dto';
+import {
+  CreateFolderDto,
+  UpdateFolderDto,
+  ListFolderDto,
+  ListFileDto,
+  MoveFileDto,
+  RenameFileDto,
+  CreateShareDto,
+  GetShareDto,
+} from './dto';
 import { TenantContext } from 'src/common/tenant/tenant.context';
 import { PaginationHelper } from 'src/common/utils/pagination.helper';
 import { Prisma } from '@prisma/client';
@@ -27,7 +36,7 @@ export class FileManagerService {
     private readonly fileAccessService: FileAccessService,
     private readonly versionService: VersionService,
     private readonly config: AppConfigService,
-  ) { }
+  ) {}
 
   // ==================== 文件夹管理 ====================
 
@@ -48,11 +57,7 @@ export class FileManagerService {
       },
     });
 
-    BusinessException.throwIf(
-      exists !== null,
-      '同级目录下已存在相同名称的文件夹',
-      ResponseCode.DATA_ALREADY_EXISTS
-    );
+    BusinessException.throwIf(exists !== null, '同级目录下已存在相同名称的文件夹', ResponseCode.DATA_ALREADY_EXISTS);
 
     // 构建文件夹路径
     let folderPath = '/';
@@ -60,11 +65,7 @@ export class FileManagerService {
       const parent = await this.prisma.sysFileFolder.findUnique({
         where: { folderId: parentId },
       });
-      BusinessException.throwIf(
-        !parent || parent.delFlag === '1',
-        '父文件夹不存在',
-        ResponseCode.DATA_NOT_FOUND
-      );
+      BusinessException.throwIf(!parent || parent.delFlag === '1', '父文件夹不存在', ResponseCode.DATA_NOT_FOUND);
       folderPath = `${parent.folderPath}${parent.folderName}/`;
     }
 
@@ -111,11 +112,7 @@ export class FileManagerService {
         },
       });
 
-      BusinessException.throwIf(
-        exists !== null,
-        '同级目录下已存在相同名称的文件夹',
-        ResponseCode.DATA_ALREADY_EXISTS
-      );
+      BusinessException.throwIf(exists !== null, '同级目录下已存在相同名称的文件夹', ResponseCode.DATA_ALREADY_EXISTS);
     }
 
     const updated = await this.prisma.sysFileFolder.update({
@@ -155,11 +152,7 @@ export class FileManagerService {
       },
     });
 
-    BusinessException.throwIf(
-      hasChildren > 0,
-      '该文件夹下存在子文件夹，无法删除',
-      ResponseCode.DATA_IN_USE
-    );
+    BusinessException.throwIf(hasChildren > 0, '该文件夹下存在子文件夹，无法删除', ResponseCode.DATA_IN_USE);
 
     // 检查是否有文件
     const hasFiles = await this.prisma.sysUpload.count({
@@ -187,11 +180,7 @@ export class FileManagerService {
       this.logger.warn(`文件夹 ${folderId} 下有 ${hasFiles} 个文件，详细信息:`, files);
     }
 
-    BusinessException.throwIf(
-      hasFiles > 0,
-      '该文件夹下存在文件，无法删除',
-      ResponseCode.DATA_IN_USE
-    );
+    BusinessException.throwIf(hasFiles > 0, '该文件夹下存在文件，无法删除', ResponseCode.DATA_IN_USE);
 
     await this.prisma.sysFileFolder.update({
       where: { folderId },
@@ -287,7 +276,10 @@ export class FileManagerService {
     // 支持单个扩展名或多个扩展名筛选
     if (exts) {
       // 逗号分隔的扩展名列表，使用 IN 查询
-      const extList = exts.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+      const extList = exts
+        .split(',')
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean);
       if (extList.length > 0) {
         where.ext = { in: extList };
         this.logger.debug('[文件筛选] 按扩展名筛选:', extList);
@@ -727,10 +719,7 @@ export class FileManagerService {
     // 查询所有版本
     const versions = await this.prisma.sysUpload.findMany({
       where: {
-        OR: [
-          { uploadId: baseId },
-          { parentFileId: baseId },
-        ],
+        OR: [{ uploadId: baseId }, { parentFileId: baseId }],
         tenantId,
         delFlag: '0',
       },
@@ -774,10 +763,7 @@ export class FileManagerService {
     const baseId = targetVersion.parentFileId || targetVersion.uploadId;
     const latestFile = await this.prisma.sysUpload.findFirst({
       where: {
-        OR: [
-          { uploadId: baseId },
-          { parentFileId: baseId },
-        ],
+        OR: [{ uploadId: baseId }, { parentFileId: baseId }],
         isLatest: true,
         delFlag: '0',
       },
@@ -800,10 +786,7 @@ export class FileManagerService {
       // 更新旧版本的isLatest标志
       this.prisma.sysUpload.updateMany({
         where: {
-          OR: [
-            { uploadId: baseId },
-            { parentFileId: baseId },
-          ],
+          OR: [{ uploadId: baseId }, { parentFileId: baseId }],
           isLatest: true,
         },
         data: { isLatest: false },

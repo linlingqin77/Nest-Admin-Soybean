@@ -36,7 +36,7 @@ export class AuthController {
     private readonly sysConfigService: SysConfigService,
     private readonly config: AppConfigService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   /**
    * 获取租户列表 - GET /auth/tenant/list
@@ -121,7 +121,11 @@ export class AuthController {
         const captchaInfo = createMath();
         result.img = captchaInfo.data;
         result.uuid = GenerateUUID();
-        await this.redisService.set(CacheEnum.CAPTCHA_CODE_KEY + result.uuid, captchaInfo.text.toLowerCase(), 1000 * 60 * 5);
+        await this.redisService.set(
+          CacheEnum.CAPTCHA_CODE_KEY + result.uuid,
+          captchaInfo.text.toLowerCase(),
+          1000 * 60 * 5,
+        );
       } catch (err) {
         this.logger.error('生成验证码错误:', err);
         return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '生成验证码错误，请重试');
@@ -146,7 +150,11 @@ export class AuthController {
   @HttpCode(200)
   @NotRequireAuth()
   @ApiHeader({ name: 'tenant-id', description: '租户ID', required: false })
-  async login(@Body() loginDto: AuthLoginDto, @ClientInfo() clientInfo: ClientInfoDto, @Headers('tenant-id') headerTenantId?: string): Promise<Result> {
+  async login(
+    @Body() loginDto: AuthLoginDto,
+    @ClientInfo() clientInfo: ClientInfoDto,
+    @Headers('tenant-id') headerTenantId?: string,
+  ): Promise<Result> {
     // 优先使用 header 中的租户ID，其次使用 body 中的
     const tenantId = headerTenantId || loginDto.tenantId || TenantContext.SUPER_TENANT_ID;
 

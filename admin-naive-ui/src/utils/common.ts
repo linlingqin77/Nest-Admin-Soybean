@@ -21,14 +21,14 @@ import { $t } from '@/locales';
 export function transformRecordToOption<T extends Record<string, string>>(record: T) {
   return Object.entries(record).map(([value, label]) => ({
     value,
-    label
+    label,
   })) as CommonType.Option<keyof T, T[keyof T]>[];
 }
 
 export function transformRecordToNumberOption<T extends Record<string, string>>(record: T) {
   return Object.entries(record).map(([value, label]) => ({
     value,
-    label
+    label,
   })) as CommonType.Option<keyof T>[];
 }
 
@@ -38,9 +38,9 @@ export function transformRecordToNumberOption<T extends Record<string, string>>(
  * @param options
  */
 export function translateOptions(options: CommonType.Option<string, App.I18n.I18nKey>[]) {
-  return options.map(option => ({
+  return options.map((option) => ({
     ...option,
-    label: $t(option.label)
+    label: $t(option.label),
   }));
 }
 
@@ -60,13 +60,13 @@ export function toggleHtmlClass(className: string) {
 
   return {
     add,
-    remove
+    remove,
   };
 }
 
 /* 驼峰转换下划线 */
 export function humpToLine(str: string, line: string = '-') {
-  let temp = str.replace(/[A-Z]/g, match => {
+  let temp = str.replace(/[A-Z]/g, (match) => {
     return `${line}${match.toLowerCase()}`;
   });
   // 如果首字母是大写，执行replace时会多一个_，这里需要去掉
@@ -107,7 +107,7 @@ export const handleTree = <T extends Record<string, any>>(data: T[], config: Com
     idField,
     parentIdField = 'parentId',
     childrenField = 'children',
-    filterFn = () => true // 添加过滤函数，默认为不过滤
+    filterFn = () => true, // 添加过滤函数，默认为不过滤
   } = config;
 
   // 使用 Map 替代普通对象，提高性能
@@ -279,4 +279,3 @@ export function getFileIcon(ext: string): string {
 
   return 'ant-design:file-unknown-outlined';
 }
-

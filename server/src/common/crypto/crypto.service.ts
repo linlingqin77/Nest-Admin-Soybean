@@ -23,7 +23,7 @@ export class CryptoService implements OnModuleInit {
   // 是否启用加密
   private enabled: boolean = false;
 
-  constructor(private config: AppConfigService) { }
+  constructor(private config: AppConfigService) {}
 
   onModuleInit() {
     this.enabled = this.config.crypto.enabled;
@@ -225,7 +225,6 @@ export class CryptoService implements OnModuleInit {
     keyBuffer.copy(normalizedKey, 0, 0, Math.min(keyBuffer.length, length));
     return normalizedKey;
   }
-
 
   /**
    * 生成随机 AES 密钥

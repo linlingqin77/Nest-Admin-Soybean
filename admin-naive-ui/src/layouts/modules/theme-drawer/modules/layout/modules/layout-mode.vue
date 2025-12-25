@@ -5,7 +5,7 @@ import { $t } from '@/locales';
 import LayoutModeCard from '../../../components/layout-mode-card.vue';
 
 defineOptions({
-  name: 'LayoutMode'
+  name: 'LayoutMode',
 });
 
 const appStore = useAppStore();

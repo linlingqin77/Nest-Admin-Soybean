@@ -9,4 +9,4 @@ import { DictTypeRepository, DictDataRepository } from './dict.repository';
   providers: [DictService, DictTypeRepository, DictDataRepository],
   exports: [DictService],
 })
-export class DictModule { }
+export class DictModule {}

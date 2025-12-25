@@ -17,13 +17,13 @@ import { SystemConfigService } from '../system-config/system-config.service';
 @Injectable()
 export class ConfigService {
   private readonly logger = new Logger(ConfigService.name);
-  
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
     private readonly configRepo: ConfigRepository,
     private readonly systemConfigService: SystemConfigService,
-  ) { }
+  ) {}
   async create(createConfigDto: CreateConfigDto) {
     await this.configRepo.create(createConfigDto);
     return Result.ok();
@@ -89,13 +89,13 @@ export class ConfigService {
 
   /**
    * 获取系统配置值（不受租户隔离影响）
-   * 
+   *
    * 优先从 sys_system_config 表获取，回退到超级租户配置
    * 适用于登录前、验证码等场景
-   * 
+   *
    * @param configKey 配置键
    * @returns 配置值
-   * 
+   *
    * @example
    * ```typescript
    * const enabled = await this.configService.getSystemConfigValue('sys.account.captchaEnabled');
@@ -114,7 +114,7 @@ export class ConfigService {
 
   /**
    * 获取公共配置值（仅从租户表的超级租户获取）
-   * 
+   *
    * @deprecated 使用 getSystemConfigValue() 替代
    * @param configKey 配置键
    * @returns 配置值
@@ -129,7 +129,7 @@ export class ConfigService {
         AND del_flag = '0'
       LIMIT 1
     `;
-    
+
     return config.length > 0 ? config[0].config_value : null;
   }
 
@@ -169,7 +169,7 @@ export class ConfigService {
     BusinessException.throwIf(
       item !== undefined,
       `内置参数【${item?.configKey}】不能删除`,
-      ResponseCode.OPERATION_FAILED
+      ResponseCode.OPERATION_FAILED,
     );
     const data = await this.configRepo.softDeleteBatch(configIds);
     return Result.ok(data);
@@ -218,7 +218,7 @@ export class ConfigService {
    * @returns
    */
   @CacheEvict(CacheEnum.SYS_CONFIG_KEY, '*')
-  async clearConfigCache() { }
+  async clearConfigCache() {}
 
   /**
    * 加载系统配置缓存

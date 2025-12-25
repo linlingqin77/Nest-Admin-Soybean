@@ -6,7 +6,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'OssConfigOperateDrawer'
+  name: 'OssConfigOperateDrawer',
 });
 
 interface Props {
@@ -25,7 +25,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -34,7 +34,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: '新增OSS配置',
-    edit: '编辑OSS配置'
+    edit: '编辑OSS配置',
   };
   return titles[props.operateType];
 });
@@ -55,7 +55,7 @@ function createDefaultModel(): Model {
     isHttps: 'N',
     region: '',
     accessPolicy: '1',
-    remark: ''
+    remark: '',
   };
 }
 
@@ -71,7 +71,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   secretKey: createRequiredRule('secretKey不能为空'),
   bucketName: createRequiredRule('桶名称不能为空'),
   endpoint: createRequiredRule('访问站点不能为空'),
-  accessPolicy: createRequiredRule('桶权限类型不能为空')
+  accessPolicy: createRequiredRule('桶权限类型不能为空'),
 };
 
 function handleUpdateModelWhenEdit() {
@@ -105,7 +105,7 @@ async function handleSubmit() {
       isHttps,
       region,
       accessPolicy,
-      remark
+      remark,
     } = model;
     try {
       await fetchCreateOssConfig({
@@ -119,7 +119,7 @@ async function handleSubmit() {
         isHttps,
         region,
         accessPolicy,
-        remark
+        remark,
       });
     } catch {
       return;
@@ -139,7 +139,7 @@ async function handleSubmit() {
       isHttps,
       region,
       accessPolicy,
-      remark
+      remark,
     } = model;
     try {
       await fetchUpdateOssConfig({
@@ -154,7 +154,7 @@ async function handleSubmit() {
         isHttps,
         region,
         accessPolicy,
-        remark
+        remark,
       });
     } catch {
       return;
@@ -184,8 +184,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="访问站点" path="endpoint">
           <NInputGroup>
-            <NSelect v-model:value="model.isHttps" class="w-110px" :options="ossConfigIsHttpsOptions"
-              placeholder="请选择访问协议" />
+            <NSelect
+              v-model:value="model.isHttps"
+              class="w-110px"
+              :options="ossConfigIsHttpsOptions"
+              placeholder="请选择访问协议"
+            />
             <NInput v-model:value="model.endpoint" placeholder="请输入访问站点" />
           </NInputGroup>
         </NFormItem>
@@ -211,8 +215,12 @@ watch(visible, () => {
             <NFormItem label="桶权限类型" path="accessPolicy">
               <NRadioGroup v-model:value="model.accessPolicy">
                 <NSpace>
-                  <NRadio v-for="option in ossAccessPolicyOptions" :key="option.value" :value="option.value"
-                    :label="option.label" />
+                  <NRadio
+                    v-for="option in ossAccessPolicyOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :label="option.label"
+                  />
                 </NSpace>
               </NRadioGroup>
             </NFormItem>

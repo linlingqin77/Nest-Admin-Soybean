@@ -25,7 +25,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
   const {
     bool: mixSiderFixed,
     setBool: setMixSiderFixed,
-    toggle: toggleMixSiderFixed
+    toggle: toggleMixSiderFixed,
   } = useBoolean(localStg.get('mixSiderFixed') === 'Y');
 
   /** Is mobile layout */
@@ -41,7 +41,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
 
     const d = themeStore.page.animate ? duration : 40;
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(resolve, d);
     });
 
@@ -54,12 +54,12 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
   const localeOptions: App.I18n.LangOption[] = [
     {
       label: '中文',
-      key: 'zh-CN'
+      key: 'zh-CN',
     },
     {
       label: 'English',
-      key: 'en-US'
-    }
+      key: 'en-US',
+    },
   ];
 
   function changeLocale(lang: App.I18n.LangType) {
@@ -86,12 +86,12 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
     // watch isMobile, if is mobile, collapse sider
     watch(
       isMobile,
-      newValue => {
+      (newValue) => {
         if (newValue) {
           // backup theme setting before is mobile
           localStg.set('backupThemeSettingBeforeIsMobile', {
             layout: themeStore.layout.mode,
-            siderCollapse: siderCollapse.value
+            siderCollapse: siderCollapse.value,
           });
 
           themeStore.setThemeLayout('vertical');
@@ -110,7 +110,7 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
           }
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // watch locale
@@ -161,6 +161,6 @@ export const useAppStore = defineStore(SetupStoreId.App, () => {
     toggleSiderCollapse,
     mixSiderFixed,
     setMixSiderFixed,
-    toggleMixSiderFixed
+    toggleMixSiderFixed,
   };
 });

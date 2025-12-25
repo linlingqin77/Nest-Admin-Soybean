@@ -39,7 +39,9 @@ describe('MainService', () => {
 
     await service.login(loginDto as any, clientInfo as any);
 
-    expect(loginlogService.create).toHaveBeenCalledWith(expect.objectContaining({ status: '1', msg: '帐号或密码错误' }));
+    expect(loginlogService.create).toHaveBeenCalledWith(
+      expect.objectContaining({ status: '1', msg: '帐号或密码错误' }),
+    );
   });
 
   it('should log logout operation', async () => {

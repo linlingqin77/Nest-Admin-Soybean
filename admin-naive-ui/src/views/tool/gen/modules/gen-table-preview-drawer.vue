@@ -6,7 +6,7 @@ import { fetchGetGenPreview } from '@/service/api/tool';
 import MonacoEditor from '@/components/common/monaco-editor.vue';
 
 defineOptions({
-  name: 'GenTablePreviewDrawer'
+  name: 'GenTablePreviewDrawer',
 });
 
 interface Props {
@@ -23,7 +23,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const tab = ref('vm/java/domain.java.vm');
@@ -93,7 +93,7 @@ const genMap: Api.Tool.GenTablePreview = {
   'vm/soy/index.vue.vm': 'index.vue',
   'vm/soy/index-tree.vue.vm': 'index-tree.vue',
   'vm/soy/modules/search.vue.vm': 'search.vue',
-  'vm/soy/modules/operate-drawer.vue.vm': 'operate-drawer.vue'
+  'vm/soy/modules/operate-drawer.vue.vm': 'operate-drawer.vue',
 };
 
 function getGenLanguage(name: string) {
@@ -131,8 +131,13 @@ function getGenLanguage(name: string) {
               {{ genMap[gen] }}
             </NTab>
           </NTabs>
-          <MonacoEditor v-model:value="previewData[tab]" class="tab-pane" read-only
-            :language="getGenLanguage(genMap[tab])" height="calc(100vh - 162px)" />
+          <MonacoEditor
+            v-model:value="previewData[tab]"
+            class="tab-pane"
+            read-only
+            :language="getGenLanguage(genMap[tab])"
+            height="calc(100vh - 162px)"
+          />
           <div class="position-absolute right-42px top-2px">
             <NButton text :focusable="false" class="flex-center" @click="handleCopyCode">
               <template #icon>

@@ -1,7 +1,14 @@
 import { Controller, Get, Post, Body, Query, Request, Put, Res, HttpCode, Param, Delete } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DictService } from './dict.service';
-import { CreateDictTypeDto, UpdateDictTypeDto, ListDictType, CreateDictDataDto, UpdateDictDataDto, ListDictData } from './dto/index';
+import {
+  CreateDictTypeDto,
+  UpdateDictTypeDto,
+  ListDictType,
+  CreateDictDataDto,
+  UpdateDictDataDto,
+  ListDictData,
+} from './dto/index';
 import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
 import { Response } from 'express';
 import { Api } from 'src/common/decorators/api.decorator';
@@ -14,7 +21,7 @@ import { UserTool, UserToolType } from '../user/user.decorator';
 @Controller('system/dict')
 @ApiBearerAuth('Authorization')
 export class DictController {
-  constructor(private readonly dictService: DictService) { }
+  constructor(private readonly dictService: DictService) {}
 
   //字典类型
   @Api({

@@ -4,8 +4,8 @@ import { IsNumber, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTenantPackageDto extends PartialType(CreateTenantPackageDto) {
-    @ApiProperty({ required: true, description: '套餐ID' })
-    @IsNumber()
-    @IsNotEmpty()
-    packageId: number;
+  @ApiProperty({ required: true, description: '套餐ID' })
+  @IsNumber()
+  @IsNotEmpty()
+  packageId: number;
 }

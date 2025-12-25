@@ -23,7 +23,7 @@ export class TaskService implements OnModuleInit {
     private prisma: PrismaService,
     private noticeService: NoticeService,
     private versionService: VersionService,
-  ) { }
+  ) {}
 
   onModuleInit() {
     this.initializeTasks();
@@ -256,9 +256,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
           });
 
           alertCount++;
-          this.logger.warn(
-            `租户 ${tenantId}(${companyName}) 存储空间使用率 ${percentage.toFixed(2)}%，已发送预警通知`
-          );
+          this.logger.warn(`租户 ${tenantId}(${companyName}) 存储空间使用率 ${percentage.toFixed(2)}%，已发送预警通知`);
         }
       }
 
@@ -333,10 +331,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
         // 查询该文件的所有版本
         const versions = await this.prisma.sysUpload.findMany({
           where: {
-            OR: [
-              { uploadId: parentFileId },
-              { parentFileId: parentFileId },
-            ],
+            OR: [{ uploadId: parentFileId }, { parentFileId: parentFileId }],
             delFlag: '0',
           },
           orderBy: { version: 'desc' },
@@ -357,13 +352,9 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
               });
 
               totalCleaned++;
-              this.logger.log(
-                `已清理版本: ${version.uploadId}, 文件: ${version.fileName}, 版本号: ${version.version}`
-              );
+              this.logger.log(`已清理版本: ${version.uploadId}, 文件: ${version.fileName}, 版本号: ${version.version}`);
             } catch (error) {
-              this.logger.error(
-                `清理版本失败: ${version.uploadId}, 错误: ${error.message}`
-              );
+              this.logger.error(`清理版本失败: ${version.uploadId}, 错误: ${error.message}`);
             }
           }
         }

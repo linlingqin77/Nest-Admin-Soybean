@@ -15,7 +15,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: true
+  immediate: true,
 });
 
 const value = defineModel<CommonType.IdType | null>('value', { required: false });
@@ -36,8 +36,8 @@ async function getMenuList() {
         menuId: 0,
         menuName: '根目录',
         icon: 'material-symbols:home-outline-rounded',
-        children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
-      }
+        children: handleTree(data, { idField: 'menuId', filterFn: (item) => item.menuType !== 'F' }),
+      },
     ] as Api.System.MenuList;
   } catch {
     // error handled by request interceptor

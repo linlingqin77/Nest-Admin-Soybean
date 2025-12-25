@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 defineOptions({
-  name: 'JobLogDetailDrawer'
+  name: 'JobLogDetailDrawer',
 });
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 function closeDrawer() {

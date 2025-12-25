@@ -95,6 +95,6 @@ export class BaseOperLogDto {
   costTime?: number;
 }
 
-export class CreateOperLogDto extends OmitType(BaseOperLogDto, ['operId']) { }
+export class CreateOperLogDto extends OmitType(BaseOperLogDto, ['operId']) {}
 
-export class QueryOperLogDto extends IntersectionType(BaseOperLogDto, PageQueryDto) { }
+export class QueryOperLogDto extends IntersectionType(BaseOperLogDto, PageQueryDto) {}

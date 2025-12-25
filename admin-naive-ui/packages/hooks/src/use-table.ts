@@ -79,13 +79,13 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
   function reloadColumns() {
     allColumns.value = config.columns();
 
-    const checkMap = new Map(columnChecks.value.map(col => [col.key, col.checked]));
+    const checkMap = new Map(columnChecks.value.map((col) => [col.key, col.checked]));
 
     const defaultChecks = getColumnChecks(allColumns.value);
 
-    columnChecks.value = defaultChecks.map(col => ({
+    columnChecks.value = defaultChecks.map((col) => ({
       ...col,
-      checked: checkMap.get(col.key) ?? col.checked
+      checked: checkMap.get(col.key) ?? col.checked,
     }));
   }
 
@@ -148,6 +148,6 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
   };
 }

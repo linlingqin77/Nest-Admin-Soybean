@@ -9,7 +9,7 @@ import { handleTree } from '@/utils/common';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'DeptOperateDrawer'
+  name: 'DeptOperateDrawer',
 });
 
 interface Props {
@@ -28,7 +28,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -45,7 +45,7 @@ const expandedKeys = ref<CommonType.IdType[]>([]);
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: $t('page.system.dept.addDept'),
-    edit: $t('page.system.dept.editDept')
+    edit: $t('page.system.dept.editDept'),
   };
   return titles[props.operateType];
 });
@@ -63,7 +63,7 @@ function createDefaultModel(): Model {
     leader: null,
     phone: '',
     email: '',
-    status: '0'
+    status: '0',
   };
 }
 
@@ -75,7 +75,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   orderNum: createRequiredRule($t('page.system.dept.form.orderNum.invalid')),
   deptName: createRequiredRule($t('page.system.dept.form.deptName.invalid')),
   phone: patternRules.phone,
-  email: patternRules.email
+  email: patternRules.email,
 };
 
 function handleUpdateModelWhenEdit() {
@@ -107,7 +107,7 @@ async function handleSubmit() {
         leader,
         phone,
         email,
-        status
+        status,
       });
     } catch {
       return;
@@ -126,7 +126,7 @@ async function handleSubmit() {
         leader,
         phone,
         email,
-        status
+        status,
       });
     } catch {
       return;
@@ -171,9 +171,9 @@ async function getUserData() {
       placeholder.value = $t('page.system.dept.placeholder.deptUserIsEmptyLeaderPlaceHolder');
       disabled.value = true;
     }
-    userOptions.value = data.map(item => ({
+    userOptions.value = data.map((item) => ({
       label: `${item.userName} | ${item.nickName}`,
-      value: item.userId
+      value: item.userId,
     }));
   } catch (error: any) {
     window.$message?.error(error.message || $t('page.system.dept.error.getDeptUserDataFail'));
@@ -198,24 +198,39 @@ watch(visible, () => {
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem v-if="model.parentId !== 0" :label="$t('page.system.dept.parentId')" path="parentId">
-          <NTreeSelect v-model:value="model.parentId" v-model:expanded-keys="expandedKeys" :loading="deptLoading"
-            clearable :options="deptData" label-field="deptName" key-field="deptId"
-            :placeholder="$t('page.system.dept.form.parentId.required')" />
+          <NTreeSelect
+            v-model:value="model.parentId"
+            v-model:expanded-keys="expandedKeys"
+            :loading="deptLoading"
+            clearable
+            :options="deptData"
+            label-field="deptName"
+            key-field="deptId"
+            :placeholder="$t('page.system.dept.form.parentId.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.dept.deptName')" path="deptName">
           <NInput v-model:value="model.deptName" :placeholder="$t('page.system.dept.form.deptName.required')" />
         </NFormItem>
         <NFormItem :label="$t('page.system.dept.orderNum')" path="orderNum">
-          <NInputNumber v-model:value="model.orderNum" class="w-full"
-            :placeholder="$t('page.system.dept.form.orderNum.required')" />
+          <NInputNumber
+            v-model:value="model.orderNum"
+            class="w-full"
+            :placeholder="$t('page.system.dept.form.orderNum.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.dept.deptCategory')" path="deptCategory">
           <NInput v-model:value="model.deptCategory" :placeholder="$t('page.system.dept.form.deptCategory.required')" />
         </NFormItem>
 
         <NFormItem :label="$t('page.system.dept.leader')" path="leader">
-          <NSelect v-model:value="model.leader" :loading="userLoading" :disabled="disabled" :placeholder="placeholder"
-            :options="userOptions" />
+          <NSelect
+            v-model:value="model.leader"
+            :loading="userLoading"
+            :disabled="disabled"
+            :placeholder="placeholder"
+            :options="userOptions"
+          />
         </NFormItem>
 
         <NFormItem :label="$t('page.system.dept.phone')" path="phone">

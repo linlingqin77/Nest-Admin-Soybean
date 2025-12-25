@@ -7,18 +7,18 @@ export default defineConfig(
       'vue/multi-word-component-names': [
         'warn',
         {
-          ignores: ['index', 'App', 'Register', '[id]', '[url]']
-        }
+          ignores: ['index', 'App', 'Register', '[id]', '[url]'],
+        },
       ],
       'vue/component-name-in-template-casing': [
         'warn',
         'PascalCase',
         {
           registeredComponentsOnly: false,
-          ignores: ['/^icon-/']
-        }
+          ignores: ['/^icon-/'],
+        },
       ],
-      'unocss/order-attributify': 'off'
-    }
-  }
+      'unocss/order-attributify': 'off',
+    },
+  },
 );

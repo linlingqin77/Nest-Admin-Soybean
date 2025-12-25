@@ -7,8 +7,8 @@ export function fetchSocialAuthBinding(source: Api.System.SocialSource, tenantId
     method: 'get',
     params: {
       tenantId,
-      domain: window.location.host
-    }
+      domain: window.location.host,
+    },
   });
 }
 
@@ -16,7 +16,7 @@ export function fetchSocialAuthBinding(source: Api.System.SocialSource, tenantId
 export function fetchSocialAuthUnbinding(socialId: CommonType.IdType) {
   return request<string>({
     url: `/auth/unlock/${socialId}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -24,6 +24,6 @@ export function fetchSocialAuthUnbinding(socialId: CommonType.IdType) {
 export function fetchSocialList() {
   return request<Api.System.Social[]>({
     url: '/system/social/list',
-    method: 'get'
+    method: 'get',
   });
 }

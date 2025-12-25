@@ -45,6 +45,6 @@ export default function useSvgIconRender(SvgIcon: Component) {
   };
 
   return {
-    SvgIconVNode
+    SvgIconVNode,
   };
 }

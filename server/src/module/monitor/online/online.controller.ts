@@ -12,7 +12,7 @@ import { BusinessType } from 'src/common/constant/business.constant';
 @Controller('monitor/online')
 @ApiBearerAuth('Authorization')
 export class OnlineController {
-  constructor(private readonly onlineService: OnlineService) { }
+  constructor(private readonly onlineService: OnlineService) {}
 
   @Api({
     summary: '在线用户-列表',

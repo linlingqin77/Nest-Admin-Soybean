@@ -13,7 +13,7 @@ export class NoticeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly noticeRepo: NoticeRepository,
-  ) { }
+  ) {}
   async create(createNoticeDto: CreateNoticeDto) {
     await this.noticeRepo.create(createNoticeDto);
     return Result.ok();
@@ -46,7 +46,6 @@ export class NoticeService {
         lte: new Date(query.params.endTime),
       };
     }
-
 
     const { list, total } = await this.noticeRepo.findPageWithFilter(where, query.skip, query.take);
 

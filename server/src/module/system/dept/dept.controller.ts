@@ -14,7 +14,7 @@ import { UserTool, UserToolType } from '../user/user.decorator';
 @Controller('system/dept')
 @ApiBearerAuth('Authorization')
 export class DeptController {
-  constructor(private readonly deptService: DeptService) { }
+  constructor(private readonly deptService: DeptService) {}
 
   @Api({
     summary: '部门管理-创建',

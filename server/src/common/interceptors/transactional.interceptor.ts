@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, from } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -29,7 +23,7 @@ const ISOLATION_LEVEL_MAP: Record<IsolationLevel, Prisma.TransactionIsolationLev
 
 /**
  * 事务拦截器
- * 
+ *
  * @description 拦截带有 @Transactional 装饰器的方法，自动包装在事务中执行
  */
 @Injectable()
@@ -42,10 +36,7 @@ export class TransactionalInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const options = this.reflector.get<TransactionalOptions>(
-      TRANSACTIONAL_KEY,
-      context.getHandler(),
-    );
+    const options = this.reflector.get<TransactionalOptions>(TRANSACTIONAL_KEY, context.getHandler());
 
     // 如果没有事务装饰器，直接执行
     if (!options) {
@@ -62,7 +53,7 @@ export class TransactionalInterceptor implements NestInterceptor {
       case Propagation.NOT_SUPPORTED:
       case Propagation.NEVER:
         return next.handle();
-      
+
       case Propagation.SUPPORTS:
         // 如果当前没有事务上下文，直接执行
         return next.handle();
@@ -78,10 +69,7 @@ export class TransactionalInterceptor implements NestInterceptor {
   /**
    * 在事务中执行
    */
-  private executeInTransaction(
-    next: CallHandler,
-    options: TransactionalOptions,
-  ): Observable<any> {
+  private executeInTransaction(next: CallHandler, options: TransactionalOptions): Observable<any> {
     return from(
       this.prisma.$transaction(
         async (tx) => {

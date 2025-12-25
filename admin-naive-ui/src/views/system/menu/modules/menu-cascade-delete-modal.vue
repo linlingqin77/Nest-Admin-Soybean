@@ -7,7 +7,7 @@ import { $t } from '@/locales';
 import MenuTree from '@/components/custom/menu-tree.vue';
 
 defineOptions({
-  name: 'MenuCascadeDeleteModal'
+  name: 'MenuCascadeDeleteModal',
 });
 
 interface Emits {
@@ -17,7 +17,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const menuTreeRef = ref<InstanceType<typeof MenuTree> | null>(null);
@@ -35,14 +35,14 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    menuIds: []
+    menuIds: [],
   };
 }
 
 type RuleKey = Extract<keyof Model, 'menuIds'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  menuIds: createRequiredRule($t('page.system.menu.form.menuIds.invalid'))
+  menuIds: createRequiredRule($t('page.system.menu.form.menuIds.invalid')),
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -61,7 +61,7 @@ async function handleSubmit() {
     content: $t('page.system.menu.cascadeDeleteContent'),
     positiveText: $t('common.delete'),
     positiveButtonProps: {
-      type: 'error'
+      type: 'error',
     },
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -73,7 +73,7 @@ async function handleSubmit() {
       } catch {
         // error handled by request interceptor
       }
-    }
+    },
   });
 }
 
@@ -86,12 +86,27 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="$t('page.system.menu.cascadeDelete')" preset="card" :bordered="false"
-    display-directive="show" class="max-w-90% w-500px" @close="closeDrawer">
+  <NModal
+    v-model:show="visible"
+    :title="$t('page.system.menu.cascadeDelete')"
+    preset="card"
+    :bordered="false"
+    display-directive="show"
+    class="max-w-90% w-500px"
+    @close="closeDrawer"
+  >
     <NForm ref="formRef" :model="model" :rules="rules">
       <NFormItem :show-label="false" path="menuIds">
-        <MenuTree v-if="visible" ref="menuTreeRef" v-model:options="menuOptions" v-model:loading="menuLoading"
-          v-model:checked-keys="model.menuIds" :cascade="true" :show-header="false" :immediate="true" />
+        <MenuTree
+          v-if="visible"
+          ref="menuTreeRef"
+          v-model:options="menuOptions"
+          v-model:loading="menuLoading"
+          v-model:checked-keys="model.menuIds"
+          :cascade="true"
+          :show-header="false"
+          :immediate="true"
+        />
       </NFormItem>
     </NForm>
     <template #footer>

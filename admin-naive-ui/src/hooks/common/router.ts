@@ -22,7 +22,7 @@ export function useRouterPush(inSetup = true) {
     const { query, params } = options || {};
 
     const routeLocation: RouteLocationRaw = {
-      name: key
+      name: key,
     };
 
     if (Object.keys(query || {}).length) {
@@ -38,11 +38,11 @@ export function useRouterPush(inSetup = true) {
 
   function routerPushByKeyWithMetaQuery(key: RouteKey) {
     const allRoutes = router.getRoutes();
-    const meta = allRoutes.find(item => item.name === key)?.meta || null;
+    const meta = allRoutes.find((item) => item.name === key)?.meta || null;
 
     const query: Record<string, string> = {};
 
-    meta?.query?.forEach(item => {
+    meta?.query?.forEach((item) => {
       query[item.key] = item.value;
     });
 
@@ -64,14 +64,14 @@ export function useRouterPush(inSetup = true) {
 
     const options: App.Global.RouterPushOptions = {
       params: {
-        module
-      }
+        module,
+      },
     };
 
     const redirect = redirectUrl || route.value.fullPath;
 
     options.query = {
-      redirect
+      redirect,
     };
 
     return routerPushByKey('login', options);
@@ -111,6 +111,6 @@ export function useRouterPush(inSetup = true) {
     toLogin,
     toggleLoginModule,
     redirectFromLogin,
-    toHome
+    toHome,
   };
 }

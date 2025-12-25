@@ -2,7 +2,7 @@
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 defineOptions({
-  name: 'TableSiderLayout'
+  name: 'TableSiderLayout',
 });
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
   defaultExpanded: false,
-  siderTitle: undefined
+  siderTitle: undefined,
 });
 
 const time = new Date().getTime();

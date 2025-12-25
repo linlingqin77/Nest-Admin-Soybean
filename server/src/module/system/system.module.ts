@@ -31,4 +31,4 @@ import { FileManagerModule } from './file-manager/file-manager.module';
     FileManagerModule, // 文件管理
   ],
 })
-export class SystemModule { }
+export class SystemModule {}

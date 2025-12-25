@@ -5,7 +5,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'UserPasswordDrawer'
+  name: 'UserPasswordDrawer',
 });
 
 interface Props {
@@ -22,7 +22,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -38,14 +38,14 @@ function createDefaultModel(): Model {
     userName: '',
     nickName: '',
     deptName: '',
-    password: ''
+    password: '',
   };
 }
 
 type RuleKey = Extract<keyof Model, 'password'>;
 
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
-  password: [{ ...patternRules.pwd }]
+  password: [{ ...patternRules.pwd }],
 };
 
 function handleUpdateModelWhenEdit() {
@@ -95,8 +95,13 @@ watch(visible, () => {
           <NInput v-model:value="model.userName" disabled />
         </NFormItem>
         <NFormItem :label="$t('page.system.user.password')" path="password">
-          <NInput v-model:value="model.password" type="password" show-password-on="click"
-            :input-props="{ autocomplete: 'off' }" :placeholder="$t('page.system.user.form.password.required')" />
+          <NInput
+            v-model:value="model.password"
+            type="password"
+            show-password-on="click"
+            :input-props="{ autocomplete: 'off' }"
+            :placeholder="$t('page.system.user.form.password.required')"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

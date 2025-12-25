@@ -16,7 +16,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   showTooltip: true,
-  tooltipPlacement: 'bottom'
+  tooltipPlacement: 'bottom',
 });
 
 interface Emits {
@@ -32,7 +32,7 @@ function handleSwitch() {
 const icons: Record<UnionKey.ThemeScheme, string> = {
   light: 'material-symbols:sunny',
   dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
+  auto: 'material-symbols:hdr-auto',
 };
 
 const icon = computed(() => icons[props.themeSchema]);

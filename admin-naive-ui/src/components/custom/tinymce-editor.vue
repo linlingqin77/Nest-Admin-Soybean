@@ -6,7 +6,7 @@ import { useThemeStore } from '@/store/modules/theme';
 import { getServiceBaseURL } from '@/utils/service';
 
 defineOptions({
-  name: 'TinymceEditor'
+  name: 'TinymceEditor',
 });
 
 const value = defineModel<string | null>('value', { required: false, default: '' });
@@ -19,7 +19,7 @@ const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
 const headers: Record<string, string> = {
   Authorization: `Bearer ${getToken()}`,
-  clientid: import.meta.env.VITE_APP_CLIENT_ID!
+  clientid: import.meta.env.VITE_APP_CLIENT_ID!,
 };
 </script>
 

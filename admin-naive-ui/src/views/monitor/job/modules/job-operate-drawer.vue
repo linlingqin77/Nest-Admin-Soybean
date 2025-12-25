@@ -6,7 +6,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'JobOperateDrawer'
+  name: 'JobOperateDrawer',
 });
 
 interface Props {
@@ -26,7 +26,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { loading, startLoading, endLoading } = useLoading();
@@ -36,7 +36,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: '新增任务',
-    edit: '编辑任务'
+    edit: '编辑任务',
   };
   return titles[props.operateType];
 });
@@ -54,7 +54,7 @@ function createDefaultModel(): Model {
     cronExpression: '',
     misfirePolicy: '1',
     concurrent: '1',
-    status: '0'
+    status: '0',
   };
 }
 
@@ -63,7 +63,7 @@ type RuleKey = Extract<keyof Model, 'jobName' | 'invokeTarget' | 'cronExpression
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
   jobName: [createRequiredRule('请输入任务名称')],
   invokeTarget: [createRequiredRule('请输入调用目标')],
-  cronExpression: [createRequiredRule('请输入cron表达式')]
+  cronExpression: [createRequiredRule('请输入cron表达式')],
 };
 
 function handleUpdateModelWhenEdit() {
@@ -119,7 +119,7 @@ watch(visible, () => {
 
 // 暴露方法供父组件调用
 defineExpose({
-  handleCronChange
+  handleCronChange,
 });
 </script>
 

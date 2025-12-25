@@ -2,7 +2,7 @@
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TableRowCheckAlert'
+  name: 'TableRowCheckAlert',
 });
 
 const checkedRowKeys = defineModel<CommonType.IdType[]>('checkedRowKeys', { required: true });

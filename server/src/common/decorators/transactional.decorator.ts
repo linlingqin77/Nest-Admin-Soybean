@@ -53,9 +53,9 @@ export interface TransactionalOptions {
 
 /**
  * 事务装饰器
- * 
+ *
  * @description 声明式事务管理，标记方法需要在事务中执行
- * 
+ *
  * @example
  * ```typescript
  * @Transactional()
@@ -64,7 +64,7 @@ export interface TransactionalOptions {
  *   await this.roleRepo.bindRoles(user.id, data.roleIds);
  *   return user;
  * }
- * 
+ *
  * @Transactional({ isolationLevel: IsolationLevel.Serializable })
  * async transferMoney(from: number, to: number, amount: number) {
  *   // 需要串行化隔离级别的操作

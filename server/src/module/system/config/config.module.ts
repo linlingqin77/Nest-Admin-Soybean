@@ -8,12 +8,7 @@ import { SystemPrismaService } from 'src/common/prisma/system-prisma.service';
 @Global()
 @Module({
   controllers: [ConfigController],
-  providers: [
-    ConfigService,
-    ConfigRepository,
-    SystemConfigService,
-    SystemPrismaService,
-  ],
+  providers: [ConfigService, ConfigRepository, SystemConfigService, SystemPrismaService],
   exports: [ConfigService, SystemConfigService],
 })
-export class SysConfigModule { }
+export class SysConfigModule {}

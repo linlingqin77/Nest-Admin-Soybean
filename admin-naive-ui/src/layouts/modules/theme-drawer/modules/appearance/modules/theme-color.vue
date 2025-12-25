@@ -4,7 +4,7 @@ import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
 defineOptions({
-  name: 'ThemeColor'
+  name: 'ThemeColor',
 });
 
 const themeStore = useThemeStore();
@@ -29,7 +29,7 @@ const swatches: string[] = [
   '#eab308',
   '#84cc16',
   '#22c55e',
-  '#10b981'
+  '#10b981',
 ];
 </script>
 

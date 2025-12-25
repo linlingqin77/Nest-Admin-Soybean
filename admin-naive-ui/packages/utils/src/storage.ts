@@ -47,7 +47,7 @@ export function createStorage<T extends object>(type: StorageType, storagePrefix
     },
     clear() {
       stg.clear();
-    }
+    },
   };
   return storage;
 }
@@ -66,11 +66,11 @@ export function createLocalforage<T extends object>(driver: LocalforageDriver) {
   const driverMap: Record<LocalforageDriver, string> = {
     local: localforage.LOCALSTORAGE,
     indexedDB: localforage.INDEXEDDB,
-    webSQL: localforage.WEBSQL
+    webSQL: localforage.WEBSQL,
   };
 
   localforage.config({
-    driver: driverMap[driver]
+    driver: driverMap[driver],
   });
 
   return localforage as LocalForage<T>;

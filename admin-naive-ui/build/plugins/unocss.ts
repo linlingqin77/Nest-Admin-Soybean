@@ -18,15 +18,15 @@ export function setupUnocss(viteEnv: Env.ImportMeta) {
         prefix: `${VITE_ICON_PREFIX}-`,
         scale: 1,
         extraProperties: {
-          display: 'inline-block'
+          display: 'inline-block',
         },
         collections: {
-          [collectionName]: FileSystemIconLoader(localIconPath, svg =>
-            svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')
-          )
+          [collectionName]: FileSystemIconLoader(localIconPath, (svg) =>
+            svg.replace(/^<svg\s/, '<svg width="1em" height="1em" '),
+          ),
         },
-        warn: true
-      })
-    ]
+        warn: true,
+      }),
+    ],
   });
 }

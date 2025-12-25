@@ -6,7 +6,7 @@ export function fetchGetMenuList(params?: Api.System.MenuSearchParams, signal?: 
     url: '/system/menu/list',
     method: 'get',
     params,
-    signal
+    signal,
   });
 }
 
@@ -15,7 +15,7 @@ export function fetchCreateMenu(data: Api.System.MenuOperateParams) {
   return request<boolean>({
     url: '/system/menu',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -24,7 +24,7 @@ export function fetchUpdateMenu(data: Api.System.MenuOperateParams) {
   return request<boolean>({
     url: '/system/menu',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -32,7 +32,7 @@ export function fetchUpdateMenu(data: Api.System.MenuOperateParams) {
 export function fetchDeleteMenu(menuId: CommonType.IdType) {
   return request<boolean>({
     url: `/system/menu/${menuId}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -40,7 +40,7 @@ export function fetchDeleteMenu(menuId: CommonType.IdType) {
 export function fetchGetMenuTreeSelect() {
   return request<Api.System.MenuList>({
     url: 'system/menu/treeselect',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -48,7 +48,7 @@ export function fetchGetMenuTreeSelect() {
 export function fetchGetRoleMenuTreeSelect(roleId: CommonType.IdType) {
   return request<Api.System.RoleMenuTreeSelect>({
     url: `/system/menu/roleMenuTreeselect/${roleId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -56,7 +56,7 @@ export function fetchGetRoleMenuTreeSelect(roleId: CommonType.IdType) {
 export function fetchGetTenantPackageMenuTreeSelect(packageId: CommonType.IdType) {
   return request<Api.System.TenantPackageMenuTreeSelect>({
     url: `/system/menu/tenantPackageMenuTreeselect/${packageId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -64,6 +64,6 @@ export function fetchGetTenantPackageMenuTreeSelect(packageId: CommonType.IdType
 export function fetchCascadeDeleteMenu(menuIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/menu/cascade/${menuIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }

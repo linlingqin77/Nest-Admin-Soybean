@@ -10,11 +10,11 @@ import {
   fetchClearCacheName,
   fetchGetCacheKeys,
   fetchGetCacheNames,
-  fetchGetCacheValue
+  fetchGetCacheValue,
 } from '@/service/api/monitor/cache';
 
 defineOptions({
-  name: 'CacheList'
+  name: 'CacheList',
 });
 
 const { loading: namesLoading, startLoading: startNamesLoading, endLoading: endNamesLoading } = useLoading();
@@ -32,7 +32,7 @@ const currentCacheName = ref('');
 const cacheForm = ref({
   cacheName: '',
   cacheKey: '',
-  cacheValue: ''
+  cacheValue: '',
 });
 
 /** 获取缓存名称列表 */
@@ -62,7 +62,7 @@ async function getCacheKeys(cacheName: string) {
   startKeysLoading();
   try {
     const { data } = await fetchGetCacheKeys(cacheName);
-    cacheKeys.value = (data || []).map(key => ({ key }));
+    cacheKeys.value = (data || []).map((key) => ({ key }));
   } catch {
     // error handled by request interceptor
   } finally {
@@ -122,7 +122,7 @@ async function handleClearCacheAll() {
     cacheForm.value = {
       cacheName: '',
       cacheKey: '',
-      cacheValue: ''
+      cacheValue: '',
     };
     cacheKeys.value = [];
   } catch {
@@ -147,27 +147,27 @@ const nameColumns: DataTableColumns<Api.Monitor.CacheName> = [
     key: 'index',
     width: 60,
     align: 'center',
-    render: (_row, index) => index + 1
+    render: (_row, index) => index + 1,
   },
   {
     title: '缓存名称',
     key: 'cacheName',
     align: 'center',
     ellipsis: { tooltip: true },
-    render: row => nameFormatter(row.cacheName)
+    render: (row) => nameFormatter(row.cacheName),
   },
   {
     title: '备注',
     key: 'remark',
     align: 'center',
-    ellipsis: { tooltip: true }
+    ellipsis: { tooltip: true },
   },
   {
     title: '操作',
     key: 'actions',
     width: 60,
     align: 'center',
-    render: row =>
+    render: (row) =>
       h(
         NButton,
         {
@@ -176,11 +176,11 @@ const nameColumns: DataTableColumns<Api.Monitor.CacheName> = [
           onClick: (e: MouseEvent) => {
             e.stopPropagation();
             handleClearCacheName(row.cacheName);
-          }
+          },
         },
-        { default: () => '删除' }
-      )
-  }
+        { default: () => '删除' },
+      ),
+  },
 ];
 
 // 缓存键名列配置
@@ -190,21 +190,21 @@ const keyColumns: DataTableColumns<{ key: string }> = [
     key: 'index',
     width: 60,
     align: 'center',
-    render: (_row, index) => index + 1
+    render: (_row, index) => index + 1,
   },
   {
     title: '缓存键名',
     key: 'key',
     align: 'center',
     ellipsis: { tooltip: true },
-    render: row => keyFormatter(row.key)
+    render: (row) => keyFormatter(row.key),
   },
   {
     title: '操作',
     key: 'actions',
     width: 60,
     align: 'center',
-    render: row =>
+    render: (row) =>
       h(
         NButton,
         {
@@ -213,11 +213,11 @@ const keyColumns: DataTableColumns<{ key: string }> = [
           onClick: (e: MouseEvent) => {
             e.stopPropagation();
             handleClearCacheKey(row.key);
-          }
+          },
         },
-        { default: () => '删除' }
-      )
-  }
+        { default: () => '删除' },
+      ),
+  },
 ];
 
 // 处理缓存名称行点击
@@ -236,7 +236,7 @@ function handleNameRowProps(row: Api.Monitor.CacheName) {
     style: 'cursor: pointer;',
     onClick: () => {
       handleNameRowClick(row);
-    }
+    },
   };
 }
 
@@ -245,7 +245,7 @@ function handleKeyRowProps(row: { key: string }) {
     style: 'cursor: pointer;',
     onClick: () => {
       handleKeyRowClick(row);
-    }
+    },
   };
 }
 
@@ -267,9 +267,14 @@ getCacheNames();
             </NButton>
           </template>
           <NSpin :show="namesLoading">
-            <NDataTable :columns="nameColumns" :data="cacheNames" :max-height="500"
-              :row-key="(row: Api.Monitor.CacheName) => row.cacheName" :row-props="handleNameRowProps"
-              v-bind="tableProps" />
+            <NDataTable
+              :columns="nameColumns"
+              :data="cacheNames"
+              :max-height="500"
+              :row-key="(row: Api.Monitor.CacheName) => row.cacheName"
+              :row-props="handleNameRowProps"
+              v-bind="tableProps"
+            />
           </NSpin>
         </NCard>
       </NGi>
@@ -285,8 +290,14 @@ getCacheNames();
             </NButton>
           </template>
           <NSpin :show="keysLoading">
-            <NDataTable :columns="keyColumns" :data="cacheKeys" :max-height="500"
-              :row-key="(row: { key: string }) => row.key" :row-props="handleKeyRowProps" v-bind="tableProps" />
+            <NDataTable
+              :columns="keyColumns"
+              :data="cacheKeys"
+              :max-height="500"
+              :row-key="(row: { key: string }) => row.key"
+              :row-props="handleKeyRowProps"
+              v-bind="tableProps"
+            />
           </NSpin>
         </NCard>
       </NGi>

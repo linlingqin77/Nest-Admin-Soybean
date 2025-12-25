@@ -37,7 +37,7 @@ function handleTo() {
           class="mt-8px h-56px flex-y-center cursor-pointer justify-between rounded-4px bg-#e5e7eb px-14px dark:bg-dark"
           :style="{
             background: item.routePath === active ? theme.themeColor : '',
-            color: item.routePath === active ? '#fff' : ''
+            color: item.routePath === active ? '#fff' : '',
           }"
           @click="handleTo"
           @mouseenter="handleMouseEnter(item)"

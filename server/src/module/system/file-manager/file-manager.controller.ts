@@ -2,7 +2,16 @@ import { Controller, Get, Post, Put, Delete, Body, Query, Param, Res } from '@ne
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Response } from 'express';
 import { FileManagerService } from './file-manager.service';
-import { CreateFolderDto, UpdateFolderDto, ListFolderDto, ListFileDto, MoveFileDto, RenameFileDto, CreateShareDto, GetShareDto } from './dto';
+import {
+  CreateFolderDto,
+  UpdateFolderDto,
+  ListFolderDto,
+  ListFileDto,
+  MoveFileDto,
+  RenameFileDto,
+  CreateShareDto,
+  GetShareDto,
+} from './dto';
 import { User, NotRequireAuth } from 'src/module/system/user/user.decorator';
 import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
@@ -13,7 +22,7 @@ import { BusinessType } from 'src/common/constant/business.constant';
 @ApiBearerAuth('Authorization')
 @Controller('system/file-manager')
 export class FileManagerController {
-  constructor(private readonly fileManagerService: FileManagerService) { }
+  constructor(private readonly fileManagerService: FileManagerService) {}
 
   // ==================== 文件夹管理 ====================
 
@@ -174,7 +183,7 @@ export class FileManagerController {
   restoreVersion(
     @Body('fileId') fileId: string,
     @Body('targetVersionId') targetVersionId: string,
-    @User('userName') username: string
+    @User('userName') username: string,
   ) {
     return this.fileManagerService.restoreVersion(fileId, targetVersionId, username);
   }
@@ -191,11 +200,7 @@ export class FileManagerController {
   @Api({ summary: '下载文件（需要令牌）' })
   @NotRequireAuth()
   @Get('file/:uploadId/download')
-  async downloadFile(
-    @Param('uploadId') uploadId: string,
-    @Query('token') token: string,
-    @Res() res: Response
-  ) {
+  async downloadFile(@Param('uploadId') uploadId: string, @Query('token') token: string, @Res() res: Response) {
     return this.fileManagerService.downloadFile(uploadId, token, res);
   }
 

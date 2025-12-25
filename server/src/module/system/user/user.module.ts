@@ -20,14 +20,7 @@ import { UserExportService } from './services/user-export.service';
     }),
   ],
   controllers: [UserController],
-  providers: [
-    UserService,
-    UserRepository,
-    UserAuthService,
-    UserProfileService,
-    UserRoleService,
-    UserExportService,
-  ],
+  providers: [UserService, UserRepository, UserAuthService, UserProfileService, UserRoleService, UserExportService],
   exports: [UserService, UserAuthService, UserProfileService, UserRoleService],
 })
-export class UserModule { }
+export class UserModule {}

@@ -7,11 +7,11 @@ export const useDictStore = defineStore(SetupStoreId.Dict, () => {
   const dictData = ref<{ [key: string]: Api.System.DictData[] }>({});
 
   const getDict = (key: string) => {
-    return dictData.value[key]?.map(item => ({
+    return dictData.value[key]?.map((item) => ({
       ...item,
       dictLabel: item.dictLabel?.startsWith(`dict.${item.dictType}.`)
         ? $t(item.dictLabel as App.I18n.I18nKey)
-        : item.dictLabel
+        : item.dictLabel,
     }));
   };
 
@@ -35,7 +35,7 @@ export const useDictStore = defineStore(SetupStoreId.Dict, () => {
     getDict,
     setDict,
     removeDict,
-    cleanDict
+    cleanDict,
   };
 });
 

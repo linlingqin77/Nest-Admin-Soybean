@@ -16,13 +16,13 @@ function addJitter(baseTtl: number): number {
 
 /**
  * 缓存失效装饰器
- * 
+ *
  * @param CACHE_NAME - 缓存键前缀
  * @param CACHE_KEY - 缓存键模板，支持 {param} 占位符
  * @example
  * @CacheEvict(CacheEnum.SYS_USER_KEY, '{userId}')
  * async updateUser(userId: number) { }
- * 
+ *
  * @CacheEvict(CacheEnum.SYS_USER_KEY, '*')
  * async clearAllUserCache() { }
  */
@@ -60,7 +60,7 @@ export function CacheEvict(CACHE_NAME: string, CACHE_KEY: string) {
 
 /**
  * 批量缓存失效装饰器
- * 
+ *
  * @param configs - 多个缓存键配置
  * @example
  * @CacheEvictMultiple([
@@ -97,7 +97,7 @@ export function CacheEvictMultiple(configs: Array<{ name: string; key: string }>
 
 /**
  * 缓存装饰器（带防雪崩机制）
- * 
+ *
  * @param CACHE_NAME - 缓存键前缀
  * @param CACHE_KEY - 缓存键模板，支持 {param} 占位符
  * @param CACHE_EXPIRESIN - 过期时间（秒），默认3600秒
@@ -143,7 +143,7 @@ export function Cacheable(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN
 
 /**
  * 缓存更新装饰器 - 执行方法后更新缓存
- * 
+ *
  * @param CACHE_NAME - 缓存键前缀
  * @param CACHE_KEY - 缓存键模板
  * @param CACHE_EXPIRESIN - 过期时间（秒）

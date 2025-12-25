@@ -15,7 +15,7 @@ export function getColorPalette(color: AnyColor, recommended = false) {
 
   if (recommended) {
     const colorPalette = getRecommendedColorPalette(getHex(color));
-    colorPalette.palettes.forEach(palette => {
+    colorPalette.palettes.forEach((palette) => {
       colorMap.set(palette.number, palette.hex);
     });
   } else {

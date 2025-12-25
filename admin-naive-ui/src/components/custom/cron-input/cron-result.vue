@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import CronExpressionParser from 'cron-parser';
 
 defineOptions({
-  name: 'CronResult'
+  name: 'CronResult',
 });
 
 interface Props {
@@ -36,7 +36,7 @@ function calculateNextTimes() {
     }
 
     const interval = CronExpressionParser.parse(cronExp, {
-      currentDate: new Date()
+      currentDate: new Date(),
     });
 
     const times: string[] = [];
@@ -55,7 +55,7 @@ watch(
   () => {
     calculateNextTimes();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

@@ -5,7 +5,7 @@ import { useLoading } from '@sa/hooks';
 import { fetchGetPostSelect } from '@/service/api/system';
 
 defineOptions({
-  name: 'PostSelect'
+  name: 'PostSelect',
 });
 
 interface Props {
@@ -33,7 +33,7 @@ watch(
     }
     getPostOptions();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 async function getPostOptions() {
@@ -41,9 +41,9 @@ async function getPostOptions() {
   try {
     const { data } = await fetchGetPostSelect(props.deptId!);
     if (data) {
-      postOptions.value = data.map(item => ({
+      postOptions.value = data.map((item) => ({
         label: item.postName,
-        value: item.postId
+        value: item.postId,
       }));
     }
   } catch {

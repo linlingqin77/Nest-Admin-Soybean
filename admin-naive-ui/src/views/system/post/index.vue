@@ -15,7 +15,7 @@ import PostOperateDrawer from './modules/post-operate-drawer.vue';
 import PostSearch from './modules/post-search.vue';
 
 defineOptions({
-  name: 'PostList'
+  name: 'PostList',
 });
 
 useDict('sys_normal_disable');
@@ -34,7 +34,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetPostList,
   apiParams: {
@@ -45,43 +45,43 @@ const {
     postCode: null,
     postName: null,
     status: null,
-    belongDeptId: null
+    belongDeptId: null,
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'postCode',
       title: '岗位编码',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'postCategory',
       title: '类别编码',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'postName',
       title: '岗位名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'postSort',
       title: '显示顺序',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'status',
@@ -90,7 +90,7 @@ const {
       minWidth: 120,
       render(row) {
         return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
+      },
     },
     {
       key: 'createTime',
@@ -98,15 +98,15 @@ const {
       align: 'center',
       minWidth: 120,
       ellipsis: {
-        tooltip: true
-      }
+        tooltip: true,
+      },
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => {
+      render: (row) => {
         const divider = () => {
           if (!hasAuth('system:post:edit') || !hasAuth('system:post:remove')) {
             return null;
@@ -152,9 +152,9 @@ const {
             {deleteBtn()}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -242,10 +242,22 @@ function handleResetSearch() {
     <template #sider>
       <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dept-tree" :show="treeLoading">
-        <NTree v-model:expanded-keys="expandedKeys" v-model:selected-keys="selectedKeys" block-node show-line
-          :data="deptData as []" :show-irrelevant-nodes="false" :pattern="deptPattern" block-line
-          class="dept-tree-wrapper min-h-200px py-3" key-field="id" label-field="label" virtual-scroll
-          :selectable="selectable" @update:selected-keys="handleClickTree">
+        <NTree
+          v-model:expanded-keys="expandedKeys"
+          v-model:selected-keys="selectedKeys"
+          block-node
+          show-line
+          :data="deptData as []"
+          :show-irrelevant-nodes="false"
+          :pattern="deptPattern"
+          block-line
+          class="dept-tree-wrapper min-h-200px py-3"
+          key-field="id"
+          label-field="label"
+          virtual-scroll
+          :selectable="selectable"
+          @update:selected-keys="handleClickTree"
+        >
           <template #empty>
             <NEmpty description="暂无部门信息" class="h-full min-h-200px justify-center" />
           </template>
@@ -256,16 +268,39 @@ function handleResetSearch() {
       <PostSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
       <NCard title="岗位信息列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
-          <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-            :loading="loading" :show-add="hasAuth('system:post:add')" :show-delete="hasAuth('system:post:remove')"
-            :show-export="hasAuth('system:post:export')" @add="handleAdd" @delete="handleBatchDelete"
-            @export="handleExport" @refresh="getData" />
+          <TableHeaderOperation
+            v-model:columns="columnChecks"
+            :disabled-delete="checkedRowKeys.length === 0"
+            :loading="loading"
+            :show-add="hasAuth('system:post:add')"
+            :show-delete="hasAuth('system:post:remove')"
+            :show-export="hasAuth('system:post:export')"
+            @add="handleAdd"
+            @delete="handleBatchDelete"
+            @export="handleExport"
+            @refresh="getData"
+          />
         </template>
-        <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-          :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.postId"
-          :pagination="mobilePagination" class="sm:h-full" />
-        <PostOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-          :dept-data="deptData" @submitted="getData" />
+        <NDataTable
+          v-model:checked-row-keys="checkedRowKeys"
+          :columns="columns"
+          :data="data"
+          v-bind="tableProps"
+          :flex-height="!appStore.isMobile"
+          :scroll-x="962"
+          :loading="loading"
+          remote
+          :row-key="(row) => row.postId"
+          :pagination="mobilePagination"
+          class="sm:h-full"
+        />
+        <PostOperateDrawer
+          v-model:visible="drawerVisible"
+          :operate-type="operateType"
+          :row-data="editingData"
+          :dept-data="deptData"
+          @submitted="getData"
+        />
       </NCard>
     </div>
   </TableSiderLayout>

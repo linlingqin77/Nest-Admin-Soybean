@@ -6,7 +6,7 @@ import { StatusEnum } from 'src/common/enum';
 
 /**
  * 定时任务仓储层
- * 
+ *
  * @description 封装定时任务的数据访问逻辑
  */
 @Injectable()
@@ -89,7 +89,7 @@ export class JobRepository extends BaseRepository<SysJob, Prisma.SysJobDelegate>
    */
   async existsByJobName(jobName: string, excludeId?: number): Promise<boolean> {
     const where: Prisma.SysJobWhereInput = { jobName };
-    
+
     if (excludeId) {
       where.jobId = { not: excludeId };
     }

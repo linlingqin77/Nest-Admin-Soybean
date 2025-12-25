@@ -8,4 +8,4 @@ import { NoticeRepository } from './notice.repository';
   providers: [NoticeService, NoticeRepository],
   exports: [NoticeService],
 })
-export class NoticeModule { }
+export class NoticeModule {}

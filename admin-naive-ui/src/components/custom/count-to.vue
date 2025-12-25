@@ -3,7 +3,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { TransitionPresets, useTransition } from '@vueuse/core';
 
 defineOptions({
-  name: 'CountTo'
+  name: 'CountTo',
 });
 
 interface Props {
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ',',
   decimal: '.',
   useEasing: true,
-  transition: 'linear'
+  transition: 'linear',
 });
 
 const source = ref(props.startValue);
@@ -41,7 +41,7 @@ const transition = computed(() => (props.useEasing ? TransitionPresets[props.tra
 const outputValue = useTransition(source, {
   disabled: false,
   duration: props.duration,
-  transition: transition.value
+  transition: transition.value,
 });
 
 const value = computed(() => formatValue(outputValue.value));
@@ -77,7 +77,7 @@ watch(
       start();
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

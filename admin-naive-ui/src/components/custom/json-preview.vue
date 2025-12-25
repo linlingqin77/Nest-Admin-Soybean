@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge';
 hljs.registerLanguage('json', json);
 
 defineOptions({
-  name: 'JsonPreview'
+  name: 'JsonPreview',
 });
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   class: '',
   code: '',
-  showLineNumbers: false
+  showLineNumbers: false,
 });
 
 const DEFAULT_CLASS = 'max-h-500px';

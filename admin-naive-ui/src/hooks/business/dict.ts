@@ -24,7 +24,7 @@ export function useDict(dictType: string, immediate: boolean = true) {
       if (!dictData) {
         return;
       }
-      dictData.forEach(dict => {
+      dictData.forEach((dict) => {
         if (dict.dictLabel?.startsWith(`dict.${dictType}.`)) {
           dict.dictLabel = $t(dict.dictLabel as App.I18n.I18nKey);
         }
@@ -40,7 +40,7 @@ export function useDict(dictType: string, immediate: boolean = true) {
     if (!data.value.length) {
       await getData();
     }
-    data.value.forEach(dict => {
+    data.value.forEach((dict) => {
       record.value[dict.dictValue!] = dict.dictLabel!;
     });
   }
@@ -50,15 +50,15 @@ export function useDict(dictType: string, immediate: boolean = true) {
       await getData();
     }
 
-    options.value = data.value.map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
+    options.value = data.value.map((dict) => ({ label: dict.dictLabel!, value: dict.dictValue! }));
   }
 
   function transformDictData(dictValue: string[] | number[] | string | number) {
     if (!data.value.length || isNull(dictValue)) return undefined;
     if (Array.isArray(dictValue)) {
-      return data.value.filter(dict => dictValue.some(value => dict.dictValue === value.toString()));
+      return data.value.filter((dict) => dictValue.some((value) => dict.dictValue === value.toString()));
     }
-    return data.value.filter(dict => dict.dictValue === dictValue.toString());
+    return data.value.filter((dict) => dict.dictValue === dictValue.toString());
   }
 
   if (immediate) {
@@ -69,13 +69,13 @@ export function useDict(dictType: string, immediate: boolean = true) {
   } else {
     watch(
       () => dictList.value[dictType],
-      val => {
+      (val) => {
         if (val && val.length) {
           getRecord();
           getOptions();
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
   }
 
@@ -86,6 +86,6 @@ export function useDict(dictType: string, immediate: boolean = true) {
     getData,
     getRecord,
     getOptions,
-    transformDictData
+    transformDictData,
   };
 }

@@ -5,7 +5,7 @@ import { useThemeStore } from '@/store/modules/theme';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ConfigOperation'
+  name: 'ConfigOperation',
 });
 
 const themeStore = useThemeStore();
@@ -27,7 +27,7 @@ function getClipboardText() {
 
   const json = themeStore.settingsJson;
 
-  return json.replace(reg, match => match.replace(/"/g, ''));
+  return json.replace(reg, (match) => match.replace(/"/g, ''));
 }
 
 function handleReset() {

@@ -4,7 +4,7 @@ import { useDialog, useLoadingBar, useMessage, useNotification } from 'naive-ui'
 import useContentLoading from '@/hooks/common/loading';
 
 defineOptions({
-  name: 'AppProvider'
+  name: 'AppProvider',
 });
 
 const contentLoading = useContentLoading();
@@ -23,7 +23,7 @@ const ContextHolder = defineComponent({
     register();
 
     return () => createTextVNode();
-  }
+  },
 });
 </script>
 

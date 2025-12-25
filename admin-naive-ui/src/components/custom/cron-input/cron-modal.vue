@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import CronInput from './index.vue';
 
 defineOptions({
-  name: 'CronModal'
+  name: 'CronModal',
 });
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  expression: ''
+  expression: '',
 });
 
 interface Emits {
@@ -21,7 +21,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const cronRef = ref<InstanceType<typeof CronInput>>();
@@ -40,7 +40,7 @@ function handleCronChange(cron: string) {
   currentCron.value = cron;
 }
 
-watch(visible, val => {
+watch(visible, (val) => {
   if (val) {
     currentCron.value = props.expression || '* * * * * ?';
   }

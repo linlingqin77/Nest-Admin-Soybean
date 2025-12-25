@@ -6,7 +6,7 @@ import { transformColorWithOpacity } from '@sa/color';
 import type { RouteKey } from '@elegant-router/types';
 
 defineOptions({
-  name: 'FirstLevelMenu'
+  name: 'FirstLevelMenu',
 });
 
 interface Props {
@@ -65,7 +65,7 @@ function toggleSiderCollapse() {
       :class="{
         'text-primary selected-mix-menu': active,
         'text-white:65 hover:text-white': inverted,
-        '!text-white !bg-primary': active && inverted
+        '!text-white !bg-primary': active && inverted,
       }"
     >
       <component :is="icon" :class="[isMini ? 'text-icon-small' : 'text-icon-large']" />

@@ -8,7 +8,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'Register'
+  name: 'Register',
 });
 
 const { toggleLoginModule } = useRouterPush();
@@ -27,7 +27,7 @@ const model: Api.Auth.RegisterForm = reactive({
   code: '',
   password: '',
   confirmPassword: '',
-  userType: 'sys_user'
+  userType: 'sys_user',
 });
 
 type RuleKey = Extract<keyof Api.Auth.RegisterForm, 'username' | 'password' | 'confirmPassword' | 'code' | 'tenantId'>;
@@ -40,7 +40,7 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
     username: [...formRules.userName, { required: true }],
     password: [...formRules.pwd, { required: true }],
     confirmPassword: createConfirmPwdRule(model.password!),
-    code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : []
+    code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
   };
 });
 
@@ -56,7 +56,7 @@ async function handleSubmit() {
       uuid: model.uuid,
       grantType: 'password',
       userType: model.userType,
-      clientId: import.meta.env.VITE_APP_CLIENT_ID
+      clientId: import.meta.env.VITE_APP_CLIENT_ID,
     });
     window.$message?.success('注册成功');
     // 注册成功后跳转到登录页
@@ -75,10 +75,10 @@ async function handleFetchTenantList() {
       return;
     }
     tenantEnabled.value = data.tenantEnabled;
-    tenantOption.value = data.voList.map(tenant => {
+    tenantOption.value = data.voList.map((tenant) => {
       return {
         label: tenant.companyName,
-        value: tenant.tenantId
+        value: tenant.tenantId,
       };
     });
   } catch (error) {
@@ -114,8 +114,14 @@ handleFetchCaptchaCode();
   <div>
     <div class="mb-5px text-32px text-black font-600 sm:text-30px dark:text-white">注册新账户</div>
     <div class="pb-18px text-16px text-#858585">欢迎注册！请输入您的账户信息</div>
-    <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false"
-      @keyup.enter="() => !registerLoading && handleSubmit()">
+    <NForm
+      ref="formRef"
+      :model="model"
+      :rules="rules"
+      size="large"
+      :show-label="false"
+      @keyup.enter="() => !registerLoading && handleSubmit()"
+    >
       <NFormItem v-if="tenantEnabled" path="tenantId">
         <NSelect v-model:value="model.tenantId" :options="tenantOption" :enabled="tenantEnabled" />
       </NFormItem>
@@ -123,12 +129,20 @@ handleFetchCaptchaCode();
         <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
       </NFormItem>
       <NFormItem path="password">
-        <NInput v-model:value="model.password" type="password" show-password-on="click"
-          :placeholder="$t('page.login.common.passwordPlaceholder')" />
+        <NInput
+          v-model:value="model.password"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.passwordPlaceholder')"
+        />
       </NFormItem>
       <NFormItem path="confirmPassword">
-        <NInput v-model:value="model.confirmPassword" type="password" show-password-on="click"
-          :placeholder="$t('page.login.common.confirmPasswordPlaceholder')" />
+        <NInput
+          v-model:value="model.confirmPassword"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
+        />
       </NFormItem>
       <NFormItem v-if="captchaEnabled" path="code">
         <div class="w-full flex-y-center gap-16px">

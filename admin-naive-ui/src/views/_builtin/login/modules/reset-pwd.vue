@@ -5,7 +5,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ResetPwd'
+  name: 'ResetPwd',
 });
 
 const { toggleLoginModule } = useRouterPush();
@@ -22,7 +22,7 @@ const model: FormModel = reactive({
   phone: '',
   code: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 });
 
 type RuleRecord = Partial<Record<keyof FormModel, App.Global.FormRule[]>>;
@@ -33,7 +33,7 @@ const rules = computed<RuleRecord>(() => {
   return {
     phone: formRules.phone,
     password: formRules.pwd,
-    confirmPassword: createConfirmPwdRule(model.password)
+    confirmPassword: createConfirmPwdRule(model.password),
   };
 });
 

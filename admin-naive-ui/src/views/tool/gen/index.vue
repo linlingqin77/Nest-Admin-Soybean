@@ -8,7 +8,7 @@ import {
   fetchGenCode,
   fetchGetGenDataNames,
   fetchGetGenTableList,
-  fetchSynchGenDbList
+  fetchSynchGenDbList,
 } from '@/service/api/tool';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate, useTableProps } from '@/hooks/common/table';
@@ -38,7 +38,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetGenTableList,
   showTotal: true,
@@ -50,62 +50,62 @@ const {
     dataName: null,
     tableName: null,
     tableComment: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'dataName',
       title: '数据源',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'tableName',
       title: '表名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'tableComment',
       title: '表描述',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'className',
       title: '实体',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'createTime',
       title: '创建时间',
       align: 'center',
-      minWidth: 150
+      minWidth: 150,
     },
     {
       key: 'updateTime',
       title: '更新时间',
       align: 'center',
-      minWidth: 150
+      minWidth: 150,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 300,
-      render: row => {
+      render: (row) => {
         const previewBtn = () => {
           return (
             <ButtonIcon
@@ -184,9 +184,9 @@ const {
             ))}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const {
@@ -195,7 +195,7 @@ const {
   handleEdit,
   checkedRowKeys,
   onBatchDeleted,
-  onDeleted
+  onDeleted,
   // closeDrawer
 } = useTableOperate(data, getData);
 
@@ -238,7 +238,7 @@ function handleImport() {
 }
 
 function handlePreview(id: CommonType.IdType) {
-  const findItem = data.value.find(item => item.tableId === id) || null;
+  const findItem = data.value.find((item) => item.tableId === id) || null;
   editingData.value = jsonClone(findItem);
   openPreviewVisible();
 }
@@ -267,7 +267,7 @@ const dataNameOptions = ref<CommonType.Option[]>([]);
 async function getDataNames() {
   try {
     const { data: dataNames } = await fetchGetGenDataNames();
-    dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
+    dataNameOptions.value = dataNames.map((item) => ({ label: item, value: item }));
   } catch {
     // error handled by request interceptor
   }
@@ -278,16 +278,31 @@ getDataNames();
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-    <GenTableSearch v-model:model="searchParams" :options="dataNameOptions" @reset="resetSearchParams"
-      @search="getDataByPage" />
+    <GenTableSearch
+      v-model:model="searchParams"
+      :options="dataNameOptions"
+      @reset="resetSearchParams"
+      @search="getDataByPage"
+    />
     <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
     <NCard title="代码生成" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="false" @delete="handleBatchDelete" @refresh="getData">
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="false"
+          @delete="handleBatchDelete"
+          @refresh="getData"
+        >
           <template #prefix>
-            <NButton :disabled="checkedRowKeys.length === 0" size="small" ghost type="primary"
-              @click="() => handleGenCode()">
+            <NButton
+              :disabled="checkedRowKeys.length === 0"
+              size="small"
+              ghost
+              type="primary"
+              @click="() => handleGenCode()"
+            >
               <template #icon>
                 <icon-material-symbols:download-rounded class="text-icon" />
               </template>
@@ -302,13 +317,26 @@ getDataNames();
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="1200" :loading="loading" remote :row-key="row => row.tableId"
-        :pagination="mobilePagination" class="sm:h-full" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="1200"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.tableId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
       <GenTableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getData" />
       <GenTableOperateDrawer v-model:visible="drawerVisible" :row-data="editingData" @submitted="getData" />
-      <GenTablePreviewDrawer v-model:visible="previewVisible" :row-data="editingData"
-        @submitted="() => handleGenCode(editingData!)" />
+      <GenTablePreviewDrawer
+        v-model:visible="previewVisible"
+        :row-data="editingData"
+        @submitted="() => handleGenCode(editingData!)"
+      />
     </NCard>
   </div>
 </template>

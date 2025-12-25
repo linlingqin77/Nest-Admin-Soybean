@@ -15,6 +15,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "prepare": "simple-git-hooks",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -129,6 +130,7 @@
     "ora": "^5.4.1",
     "prettier": "^3.0.0",
     "prisma": "^5.17.0",
+    "simple-git-hooks": "^2.13.1",
     "source-map-support": "^0.5.21",
     "ssh2": "^1.17.0",
     "supertest": "^6.3.3",
@@ -160,5 +162,9 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "simple-git-hooks": {
+    "commit-msg": "commitlint --edit $1",
+    "pre-commit": "npm run lint && npm run format && git diff --exit-code"
   }
 }

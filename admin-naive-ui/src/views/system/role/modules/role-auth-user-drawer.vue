@@ -5,7 +5,7 @@ import {
   fetchGetRoleUserList,
   fetchGetUserList,
   fetchUpdateRoleAuthUser,
-  fetchUpdateRoleAuthUserCancel
+  fetchUpdateRoleAuthUserCancel,
 } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
@@ -15,7 +15,7 @@ import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 
 defineOptions({
-  name: 'RoleAuthUserDrawer'
+  name: 'RoleAuthUserDrawer',
 });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const appStore = useAppStore();
@@ -56,47 +56,47 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
     nickName: null,
     phonenumber: null,
     status: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'userName',
       title: '用户名称',
       align: 'center',
       minWidth: 120,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'nickName',
       title: '用户昵称',
       align: 'center',
       minWidth: 120,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'deptName',
       title: '部门',
       align: 'center',
       minWidth: 120,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'phonenumber',
       title: '手机号码',
       align: 'center',
       minWidth: 120,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'status',
@@ -105,15 +105,15 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
       minWidth: 80,
       render(row) {
         return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
+      },
     },
     {
       key: 'createTime',
       title: '创建时间',
       align: 'center',
-      minWidth: 120
-    }
-  ]
+      minWidth: 120,
+    },
+  ],
 });
 
 const { checkedRowKeys } = useTableOperate(data, getData);
@@ -124,9 +124,9 @@ async function handleUpdateModelWhenEdit() {
   checkedRowKeys.value = [];
   getDataByPage();
   const { data: roleUserList } = await fetchGetRoleUserList({
-    roleId: props.rowData?.roleId
+    roleId: props.rowData?.roleId,
   });
-  checkedUserIds.value = roleUserList?.rows.map(item => item.userId) || [];
+  checkedUserIds.value = roleUserList?.rows.map((item) => item.userId) || [];
   checkedRowKeys.value = checkedUserIds.value;
 }
 
@@ -141,7 +141,7 @@ async function handleSubmit() {
   }
 
   // 批量取消用户授权
-  const cancelUserIds = checkedUserIds.value.filter(item => !checkedRowKeys.value.includes(item));
+  const cancelUserIds = checkedUserIds.value.filter((item) => !checkedRowKeys.value.includes(item));
   if (cancelUserIds.length > 0) {
     try {
       await fetchUpdateRoleAuthUserCancel(props.rowData!.roleId, cancelUserIds);
@@ -151,7 +151,7 @@ async function handleSubmit() {
   }
 
   // 批量选择用户授权
-  const addUserIds = checkedRowKeys.value.filter(item => !checkedUserIds.value.includes(item));
+  const addUserIds = checkedRowKeys.value.filter((item) => !checkedUserIds.value.includes(item));
   if (addUserIds.length > 0) {
     try {
       await fetchUpdateRoleAuthUser(props.rowData!.roleId, addUserIds);
@@ -192,8 +192,15 @@ function reset() {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1300" class="max-w-90%"
-    content-class="h-full" wrapper-class="h-full">
+  <NDrawer
+    v-model:show="visible"
+    :title="title"
+    display-directive="show"
+    :width="1300"
+    class="max-w-90%"
+    content-class="h-full"
+    wrapper-class="h-full"
+  >
     <NDrawerContent :title="title" :native-scrollbar="false" closable body-class="h-full" body-content-class="h-full">
       <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
         <NForm :model="searchParams" label-placement="left" :label-width="80">
@@ -211,8 +218,14 @@ function reset() {
               <DeptTreeSelect v-model:value="searchParams.deptId" placeholder="请选择部门" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:10" label="创建时间" path="createTime" class="pr-24px">
-              <NDatePicker ref="datePickerRef" v-model:formatted-value="dateRangeCreateTime" type="datetimerange"
-                value-format="yyyy-MM-dd HH:mm:ss" clearable @update:formatted-value="onDateRangeCreateTimeUpdate" />
+              <NDatePicker
+                ref="datePickerRef"
+                v-model:formatted-value="dateRangeCreateTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
+              />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" class="pr-24px" :show-feedback="false">
               <NSpace class="w-full" justify="end">
@@ -234,9 +247,19 @@ function reset() {
         </NForm>
         <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
         <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
-          <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" size="small"
-            :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.userId"
-            :pagination="mobilePagination" class="h-full" />
+          <NDataTable
+            v-model:checked-row-keys="checkedRowKeys"
+            :columns="columns"
+            :data="data"
+            size="small"
+            :flex-height="!appStore.isMobile"
+            :scroll-x="962"
+            :loading="loading"
+            remote
+            :row-key="(row) => row.userId"
+            :pagination="mobilePagination"
+            class="h-full"
+          />
         </NCard>
       </div>
       <template #footer>

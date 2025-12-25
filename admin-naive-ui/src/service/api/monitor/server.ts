@@ -4,6 +4,6 @@ import { request } from '@/service/request';
 export function fetchGetServerInfo() {
   return request<Api.Monitor.ServerInfo>({
     url: '/monitor/server',
-    method: 'get'
+    method: 'get',
   });
 }

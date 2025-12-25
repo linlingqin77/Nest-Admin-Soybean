@@ -14,7 +14,7 @@ import { UserTool, UserToolType } from '../user/user.decorator';
 @Controller('system/notice')
 @ApiBearerAuth('Authorization')
 export class NoticeController {
-  constructor(private readonly noticeService: NoticeService) { }
+  constructor(private readonly noticeService: NoticeService) {}
 
   @Api({
     summary: '通知公告-创建',

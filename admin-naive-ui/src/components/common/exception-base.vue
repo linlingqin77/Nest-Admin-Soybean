@@ -25,7 +25,7 @@ const { routerPushByKey } = useRouterPush();
 const iconMap: Record<ExceptionType, string> = {
   '403': 'no-permission',
   '404': 'not-found',
-  '500': 'service-error'
+  '500': 'service-error',
 };
 
 const icon = computed(() => iconMap[props.type]);

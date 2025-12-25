@@ -2,7 +2,7 @@
 import { NTooltip } from 'naive-ui';
 
 defineOptions({
-  name: 'FormTip'
+  name: 'FormTip',
 });
 
 interface Props {

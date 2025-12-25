@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 defineOptions({
-  name: 'SwaggerPage'
+  name: 'SwaggerPage',
 });
 
 // 获取 Swagger UI 地址

@@ -9,7 +9,7 @@ import { $t } from '@/locales';
 import MenuTree from '@/components/custom/menu-tree.vue';
 
 defineOptions({
-  name: 'RoleOperateDrawer'
+  name: 'RoleOperateDrawer',
 });
 
 interface Props {
@@ -30,7 +30,7 @@ const emit = defineEmits<Emits>();
 const menuTreeRef = ref<InstanceType<typeof MenuTree> | null>(null);
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
@@ -45,7 +45,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: '新增角色',
-    edit: '编辑角色'
+    edit: '编辑角色',
   };
   return titles[props.operateType];
 });
@@ -62,7 +62,7 @@ function createDefaultModel(): Model {
     roleSort: 1,
     menuCheckStrictly: true,
     status: '0',
-    remark: ''
+    remark: '',
   };
 }
 
@@ -72,7 +72,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   roleId: createRequiredRule('角色ID不能为空'),
   roleName: createRequiredRule('角色名称不能为空'),
   roleKey: createRequiredRule('角色权限字符串不能为空'),
-  status: createRequiredRule('角色状态不能为空')
+  status: createRequiredRule('角色状态不能为空'),
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -121,7 +121,7 @@ async function handleSubmit() {
         menuCheckStrictly,
         status,
         remark,
-        menuIds
+        menuIds,
       });
     } else if (props.operateType === 'edit') {
       await fetchUpdateRole({
@@ -132,7 +132,7 @@ async function handleSubmit() {
         menuCheckStrictly,
         status,
         remark,
-        menuIds
+        menuIds,
       });
     }
 
@@ -177,9 +177,15 @@ watch(visible, () => {
           </NRadioGroup>
         </NFormItem>
         <NFormItem label="菜单权限" path="menuIds" class="pr-24px">
-          <MenuTree v-if="visible" ref="menuTreeRef" v-model:checked-keys="model.menuIds" v-model:options="menuOptions"
-            v-model:cascade="model.menuCheckStrictly" v-model:loading="menuLoading"
-            :immediate="operateType === 'add'" />
+          <MenuTree
+            v-if="visible"
+            ref="menuTreeRef"
+            v-model:checked-keys="model.menuIds"
+            v-model:options="menuOptions"
+            v-model:cascade="model.menuCheckStrictly"
+            v-model:loading="menuLoading"
+            :immediate="operateType === 'add'"
+          />
         </NFormItem>
         <NFormItem label="备注" path="remark">
           <NInput v-model:value="model.remark" :rows="3" type="textarea" placeholder="请输入备注" />

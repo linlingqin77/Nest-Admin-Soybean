@@ -15,13 +15,13 @@ export function exportExcel<T>({
   data,
   filename,
   dicts,
-  ignoreKeys = ['index', 'operate']
+  ignoreKeys = ['index', 'operate'],
 }: ExportExcelProps<T>) {
-  const exportColumns = columns.filter(col => isTableColumnHasKey(col) && !ignoreKeys?.includes(col.key));
+  const exportColumns = columns.filter((col) => isTableColumnHasKey(col) && !ignoreKeys?.includes(col.key));
 
-  const excelList = data.map(item => exportColumns.map(col => getTableValue(col, item, dicts)));
+  const excelList = data.map((item) => exportColumns.map((col) => getTableValue(col, item, dicts)));
 
-  const titleList = exportColumns.map(col => (isTableColumnHasTitle(col) && col.title) || null);
+  const titleList = exportColumns.map((col) => (isTableColumnHasTitle(col) && col.title) || null);
 
   excelList.unshift(titleList);
 
@@ -29,8 +29,8 @@ export function exportExcel<T>({
 
   const workSheet = utils.aoa_to_sheet(excelList);
 
-  workSheet['!cols'] = exportColumns.map(item => ({
-    width: Math.round(Number(item.width) / 10 || 20)
+  workSheet['!cols'] = exportColumns.map((item) => ({
+    width: Math.round(Number(item.width) / 10 || 20),
   }));
 
   utils.book_append_sheet(workBook, workSheet, filename);
@@ -41,7 +41,7 @@ export function exportExcel<T>({
 function getTableValue<T>(
   col: NaiveUI.TableColumn<NaiveUI.TableDataWithIndex<T>>,
   item: NaiveUI.TableDataWithIndex<T>,
-  dicts?: Record<keyof NaiveUI.TableDataWithIndex<T>, string>
+  dicts?: Record<keyof NaiveUI.TableDataWithIndex<T>, string>,
 ) {
   if (!isTableColumnHasKey(col)) {
     return null;

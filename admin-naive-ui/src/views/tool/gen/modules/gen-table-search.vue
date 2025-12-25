@@ -4,7 +4,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'GenTableSearch'
+  name: 'GenTableSearch',
 });
 
 interface Props {

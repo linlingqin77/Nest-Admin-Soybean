@@ -7,7 +7,7 @@ import type {
   CustomAxiosRequestConfig,
   MappedType,
   RequestOption,
-  ResponseType
+  ResponseType,
 } from '@sa/axios';
 import useLoading from './use-loading';
 
@@ -27,7 +27,7 @@ export type HookRequestInstanceResponseData<T = any, ResponseData = any> = {
 
 export interface HookRequestInstance<ResponseData = any> {
   <T = any, R extends ResponseType = 'json'>(
-    config: CustomAxiosRequestConfig
+    config: CustomAxiosRequestConfig,
   ): HookRequestInstanceResponseData<MappedType<R, T>, ResponseData>;
   cancelRequest: (requestId: string) => void;
   cancelAllRequest: () => void;
@@ -41,12 +41,12 @@ export interface HookRequestInstance<ResponseData = any> {
  */
 export default function createHookRequest<ResponseData = any>(
   axiosConfig?: CreateAxiosDefaults,
-  options?: Partial<RequestOption<ResponseData>>
+  options?: Partial<RequestOption<ResponseData>>,
 ) {
   const request = createFlatRequest<ResponseData>(axiosConfig, options);
 
   const hookRequest: HookRequestInstance<ResponseData> = function hookRequest<T = any, R extends ResponseType = 'json'>(
-    config: CustomAxiosRequestConfig
+    config: CustomAxiosRequestConfig,
   ) {
     const { loading, startLoading, endLoading } = useLoading();
 
@@ -55,7 +55,7 @@ export default function createHookRequest<ResponseData = any>(
 
     startLoading();
 
-    request(config).then(res => {
+    request(config).then((res) => {
       if (res.data) {
         data.value = res.data;
       } else {
@@ -68,7 +68,7 @@ export default function createHookRequest<ResponseData = any>(
     return {
       loading,
       data,
-      error
+      error,
     };
   } as HookRequestInstance<ResponseData>;
 

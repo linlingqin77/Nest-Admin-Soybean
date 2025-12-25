@@ -10,8 +10,11 @@
     <template #sider>
       <div class="file-manager-sider h-full flex-col">
         <div class="sidebar-content flex-1 min-h-0">
-          <sidebar-menu ref="sidebarMenuRef" @primary-menu-change="handlePrimaryMenuChange"
-            @secondary-menu-change="handleSecondaryMenuChange" />
+          <sidebar-menu
+            ref="sidebarMenuRef"
+            @primary-menu-change="handlePrimaryMenuChange"
+            @secondary-menu-change="handleSecondaryMenuChange"
+          />
         </div>
         <!-- 存储空间 -->
         <div class="sidebar-footer">
@@ -24,8 +27,13 @@
       <!-- 面包屑导航 -->
       <n-card v-if="breadcrumbs.length > 1" :bordered="false" size="small" class="card-wrapper">
         <n-breadcrumb>
-          <n-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.id" @click="navigateToBreadcrumb(index)"
-            :clickable="index < breadcrumbs.length - 1" class="cursor-pointer">
+          <n-breadcrumb-item
+            v-for="(item, index) in breadcrumbs"
+            :key="item.id"
+            @click="navigateToBreadcrumb(index)"
+            :clickable="index < breadcrumbs.length - 1"
+            class="cursor-pointer"
+          >
             {{ item.name }}
           </n-breadcrumb-item>
         </n-breadcrumb>
@@ -45,9 +53,7 @@
                   <!-- <n-tag v-if="!isMobile" :bordered="false" type="info" size="small" round>
                     已选 {{ selectedItems.length }} 项
                   </n-tag> -->
-                  <n-button :size="themeStore.componentSize" @click="selectedItems = []" secondary>
-                    取消
-                  </n-button>
+                  <n-button :size="themeStore.componentSize" @click="selectedItems = []" secondary> 取消 </n-button>
                   <n-button v-if="!isMobile" :size="themeStore.componentSize" @click="handleBatchMove" secondary>
                     移动
                   </n-button>
@@ -117,17 +123,27 @@
               </n-button-group>
 
               <!-- 搜索框 -->
-              <n-input v-if="!isMobile || showSearch" v-model:value="searchKeyword" placeholder="搜索文件"
-                :style="{ width: isMobile ? '200px' : `${SEARCH_WIDTH}px` }" clearable
-                @blur="isMobile && !searchKeyword ? showSearch = false : null">
+              <n-input
+                v-if="!isMobile || showSearch"
+                v-model:value="searchKeyword"
+                placeholder="搜索文件"
+                :style="{ width: isMobile ? '200px' : `${SEARCH_WIDTH}px` }"
+                clearable
+                @blur="isMobile && !searchKeyword ? (showSearch = false) : null"
+              >
                 <template #prefix>
                   <icon-carbon-search />
                 </template>
               </n-input>
 
               <!-- 移动端搜索按钮 -->
-              <n-button v-if="isMobile && !showSearch" :size="themeStore.componentSize" @click="showSearch = true"
-                circle quaternary>
+              <n-button
+                v-if="isMobile && !showSearch"
+                :size="themeStore.componentSize"
+                @click="showSearch = true"
+                circle
+                quaternary
+              >
                 <template #icon>
                   <icon-carbon-search class="text-18px" />
                 </template>
@@ -150,35 +166,71 @@
           </div>
 
           <!-- 列表视图 -->
-          <file-list v-else-if="viewMode === 'list'" :file-list="fileList" :loading="loading"
-            v-model:checked-keys="selectedItems" @itemClick="handleItemClick" @itemDblClick="handleDoubleClick"
-            @contextMenu="handleContextMenu" class="file-list-wrapper" />
+          <file-list
+            v-else-if="viewMode === 'list'"
+            :file-list="fileList"
+            :loading="loading"
+            v-model:checked-keys="selectedItems"
+            @itemClick="handleItemClick"
+            @itemDblClick="handleDoubleClick"
+            @contextMenu="handleContextMenu"
+            class="file-list-wrapper"
+          />
 
           <!-- 网格视图 -->
-          <file-grid v-else :file-list="fileList" :loading="loading" v-model:checked-keys="selectedItems"
-            @itemClick="handleItemClick" @itemDblClick="handleDoubleClick" @contextMenu="handleContextMenu"
-            @fileDrop="handleFileDrop" class="file-grid-wrapper" />
+          <file-grid
+            v-else
+            :file-list="fileList"
+            :loading="loading"
+            v-model:checked-keys="selectedItems"
+            @itemClick="handleItemClick"
+            @itemDblClick="handleDoubleClick"
+            @contextMenu="handleContextMenu"
+            @fileDrop="handleFileDrop"
+            class="file-grid-wrapper"
+          />
 
           <!-- 分页 -->
           <div v-if="fileList.length > 0" :class="isMobile ? 'flex justify-center mt-4' : 'flex justify-end mt-4'">
-            <n-pagination v-model:page="pagination.page" v-model:page-size="pagination.pageSize"
-              :item-count="pagination.itemCount" :page-sizes="[20, 50, 100]" :show-size-picker="!isMobile"
-              :size="paginationSize" @update:page="loadFileList" @update:page-size="loadFileList" />
+            <n-pagination
+              v-model:page="pagination.page"
+              v-model:page-size="pagination.pageSize"
+              :item-count="pagination.itemCount"
+              :page-sizes="[20, 50, 100]"
+              :show-size-picker="!isMobile"
+              :size="paginationSize"
+              @update:page="loadFileList"
+              @update:page-size="loadFileList"
+            />
           </div>
         </n-card>
       </template>
     </div>
 
     <!-- 右键菜单 -->
-    <n-dropdown :show="contextMenuShow" :options="contextMenuOptions" :x="contextMenuX" :y="contextMenuY"
-      placement="bottom-start" @clickoutside="contextMenuShow = false" @select="handleContextMenuSelect" />
+    <n-dropdown
+      :show="contextMenuShow"
+      :options="contextMenuOptions"
+      :x="contextMenuX"
+      :y="contextMenuY"
+      placement="bottom-start"
+      @clickoutside="contextMenuShow = false"
+      @select="handleContextMenuSelect"
+    />
 
     <!-- 全局拖拽上传遮罩 -->
     <drag-upload-overlay @upload="handleGlobalUpload" />
 
     <!-- 上传进度面板 -->
-    <upload-panel v-if="showUploadPanel" :tasks="uploadTasks" @close="showUploadPanel = false"
-      @pause="handleUploadPause" @resume="handleUploadResume" @cancel="handleUploadCancel" @retry="handleUploadRetry" />
+    <upload-panel
+      v-if="showUploadPanel"
+      :tasks="uploadTasks"
+      @close="showUploadPanel = false"
+      @pause="handleUploadPause"
+      @resume="handleUploadResume"
+      @cancel="handleUploadCancel"
+      @retry="handleUploadRetry"
+    />
 
     <!-- 模态框 -->
     <folder-modal ref="folderModalRef" @success="refreshList" />
@@ -209,7 +261,7 @@ import {
   NButtonGroup,
   NTooltip,
   NTag,
-  NDivider
+  NDivider,
 } from 'naive-ui';
 import type { DropdownOption } from 'naive-ui';
 import {
@@ -220,7 +272,7 @@ import {
   fetchBatchDeleteFiles,
   fetchRenameFile,
   fetchUploadFile,
-  fetchMoveFiles
+  fetchMoveFiles,
 } from '@/service/api';
 import FolderModal from './modules/folder-modal.vue';
 import FilePreviewModal from './modules/file-preview-modal.vue';
@@ -238,16 +290,11 @@ import UploadPanel from '@/components/upload-panel/index.vue';
 import type { UploadTask } from '@/components/upload-panel/index.vue';
 import { useFileDrag, useDropTarget } from './hooks/use-file-drag';
 import type { DragItem } from './hooks/use-file-drag';
-import {
-  FILE_TYPE_CATEGORIES,
-  getFileTypeCategory,
-  getFileIcon,
-  SEARCH_WIDTH
-} from './constants';
+import { FILE_TYPE_CATEGORIES, getFileTypeCategory, getFileIcon, SEARCH_WIDTH } from './constants';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'SystemFileManager'
+  name: 'SystemFileManager',
 });
 
 const message = useMessage();
@@ -309,7 +356,7 @@ const selectedItems = ref<(string | number)[]>([]);
 const pagination = reactive({
   page: 1,
   pageSize: 20,
-  itemCount: 0
+  itemCount: 0,
 });
 
 // 右键菜单
@@ -352,7 +399,7 @@ const selectedDragItems = computed<DragItem[]>(() => {
       id: item.id,
       name: item.name,
       type: item.type,
-      thumbnail: item.thumbnail
+      thumbnail: item.thumbnail,
     }));
 });
 
@@ -381,7 +428,7 @@ async function loadFileList() {
     // 构建查询参数
     const queryParams: any = {
       pageNum: pagination.page,
-      pageSize: pagination.pageSize
+      pageSize: pagination.pageSize,
     };
 
     // 如果不是类型筛选，传递当前文件夹ID（包括根目录folderId=0）
@@ -411,7 +458,7 @@ async function loadFileList() {
       type: 'folder' as const,
       id: f.folderId,
       name: f.folderName,
-      createTime: f.createTime
+      createTime: f.createTime,
     }));
 
     console.log('📁 [loadFileList] 文件夹项:', folderItems);
@@ -425,7 +472,7 @@ async function loadFileList() {
       thumbnail: f.thumbnail,
       ext: f.ext,
       storageType: f.storageType,
-      url: f.url
+      url: f.url,
     }));
 
     console.log('📄 [loadFileList] 文件项（过滤前）:', JSON.stringify(fileItems, null, 2));
@@ -538,7 +585,7 @@ function handleItemClick(item: FileItem) {
     previewModalRef.value?.openModal({
       fileName: item.name,
       url: item.url,
-      ext: item.ext // 传递扩展名
+      ext: item.ext, // 传递扩展名
     });
   }
 }
@@ -553,7 +600,7 @@ function handleDoubleClick(item: FileItem) {
     previewModalRef.value?.openModal({
       fileName: item.name,
       url: item.url,
-      ext: item.ext // 传递扩展名
+      ext: item.ext, // 传递扩展名
     });
   }
 }
@@ -583,7 +630,7 @@ const contextMenuOptions = computed<DropdownOption[]>(() => {
       { label: '重命名', key: 'rename' },
       { label: '移动', key: 'move' },
       { label: '分享', key: 'share' },
-      { label: '删除', key: 'delete' }
+      { label: '删除', key: 'delete' },
     );
   }
 
@@ -605,7 +652,7 @@ function handleContextMenuSelect(key: string) {
       previewModalRef.value?.openModal({
         fileName: item.name,
         url: item.url,
-        ext: item.ext // 传递扩展名
+        ext: item.ext, // 传递扩展名
       });
       break;
     case 'download':
@@ -644,7 +691,7 @@ function handleRename(item: FileItem) {
           inputValue.value = v;
         },
         placeholder: '请输入新名称',
-        autofocus: true
+        autofocus: true,
       }),
     positiveText: '确定',
     negativeText: '取消',
@@ -662,7 +709,7 @@ function handleRename(item: FileItem) {
         try {
           await fetchRenameFile({
             uploadId: item.id as string,
-            newFileName: newName
+            newFileName: newName,
           });
           message.success($t('common.renameSuccess'));
           loadFileList();
@@ -671,7 +718,7 @@ function handleRename(item: FileItem) {
           return false;
         }
       }
-    }
+    },
   });
 }
 
@@ -695,7 +742,7 @@ function handleDelete(item: FileItem) {
       } catch {
         // 错误消息已在请求工具中显示
       }
-    }
+    },
   });
 }
 
@@ -743,7 +790,7 @@ function handleBatchDelete() {
       selectedItems.value = [];
       await loadFolderTree();
       await loadFileList();
-    }
+    },
   });
 }
 
@@ -800,7 +847,10 @@ function handleDrop(e: DragEvent) {
 async function handleUploadFiles(files: File[]) {
   if (files.length === 0) return;
 
-  console.log('handleUploadFiles called with files:', files.map(f => ({ name: f.name, type: f.type, size: f.size })));
+  console.log(
+    'handleUploadFiles called with files:',
+    files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
+  );
 
   const uploadPromises = files.map(async (file) => {
     try {
@@ -962,7 +1012,7 @@ function formatOriginalFileName(newFileName: string): string {
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit'
+        second: '2-digit',
       })
       .replace(/\//g, '-');
 
@@ -977,7 +1027,7 @@ function formatOriginalFileName(newFileName: string): string {
 // 表格列定义
 const columns: DataTableColumns<FileItem> = [
   {
-    type: 'selection'
+    type: 'selection',
   },
   {
     title: '文件名',
@@ -989,30 +1039,30 @@ const columns: DataTableColumns<FileItem> = [
         {
           class: 'flex items-center gap-2 cursor-pointer hover:text-primary',
           onClick: () => handleDoubleClick(row),
-          onContextmenu: (e: MouseEvent) => handleContextMenu(e, row)
+          onContextmenu: (e: MouseEvent) => handleContextMenu(e, row),
         },
         [
           h('icon-' + (row.type === 'folder' ? 'material-symbols:folder' : 'material-symbols:draft-outline'), {
             class: 'text-24px',
-            style: { color: row.type === 'folder' ? '#ffc107' : '#666' }
+            style: { color: row.type === 'folder' ? '#ffc107' : '#666' },
           }),
-          h(NEllipsis, { style: { maxWidth: '300px' } }, { default: () => row.name })
-        ]
+          h(NEllipsis, { style: { maxWidth: '300px' } }, { default: () => row.name }),
+        ],
       );
-    }
+    },
   },
   {
     title: '大小',
     key: 'size',
     width: 120,
-    render: (row) => (row.type === 'file' && row.size ? formatFileSize(row.size) : '-')
+    render: (row) => (row.type === 'file' && row.size ? formatFileSize(row.size) : '-'),
   },
   {
     title: '修改时间',
     key: 'createTime',
     width: 180,
-    render: (row) => formatDate(row.createTime || '')
-  }
+    render: (row) => formatDate(row.createTime || ''),
+  },
 ];
 
 // 新建文件夹
@@ -1034,7 +1084,7 @@ async function handleFileDrop(fileId: string | number, targetFolderId: string | 
   try {
     const { data: result } = await fetchMoveFiles({
       uploadIds: [String(fileId)],
-      targetFolderId: Number(targetFolderId)
+      targetFolderId: Number(targetFolderId),
     });
 
     console.log('Move result:', result);
@@ -1076,7 +1126,7 @@ async function handleFolderDrop(targetFolderId: number, e: DragEvent) {
   try {
     await fetchMoveFiles({
       uploadIds: [fileId],
-      targetFolderId
+      targetFolderId,
     });
     message.success($t('common.moveSuccess'));
     loadFileList();

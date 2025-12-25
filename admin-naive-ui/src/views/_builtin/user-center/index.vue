@@ -9,7 +9,7 @@ import OnlineTable from './modules/online-table.vue';
 import SocialCard from './modules/social-card.vue';
 import UserAvatar from './modules/user-avatar.vue';
 defineOptions({
-  name: 'UserCenter'
+  name: 'UserCenter',
 });
 
 const authStore = useAuthStore();
@@ -20,12 +20,12 @@ const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLo
 const {
   formRef: profileFormRef,
   validate: profileValidate,
-  restoreValidation: profileRestoreValidation
+  restoreValidation: profileRestoreValidation,
 } = useNaiveForm();
 const {
   formRef: passwordFormRef,
   validate: passwordValidate,
-  restoreValidation: passwordRestoreValidation
+  restoreValidation: passwordRestoreValidation,
 } = useNaiveForm();
 const { createRequiredRule, patternRules } = useFormRules();
 
@@ -40,7 +40,7 @@ function createDefaultProfileModel(): ProfileModel {
     nickName: userInfo.user?.nickName || '',
     email: userInfo.user?.email || '',
     phonenumber: userInfo.user?.phonenumber || '',
-    sex: userInfo.user?.sex || '0'
+    sex: userInfo.user?.sex || '0',
   };
 }
 
@@ -48,7 +48,7 @@ function createDefaultPasswordModel(): PasswordModel {
   return {
     oldPassword: '',
     confirmPassword: '',
-    newPassword: ''
+    newPassword: '',
   };
 }
 
@@ -59,13 +59,13 @@ const profileRules: Record<ProfileRuleKey, App.Global.FormRule> = {
   nickName: createRequiredRule('昵称不能为空'),
   email: { ...patternRules.email, required: true },
   phonenumber: { ...patternRules.phone, required: true },
-  sex: createRequiredRule('性别不能为空')
+  sex: createRequiredRule('性别不能为空'),
 };
 
 const passwordRules: Record<PasswordRuleKey, App.Global.FormRule> = {
   oldPassword: createRequiredRule('旧密码不能为空'),
   confirmPassword: createRequiredRule('确认密码不能为空'),
-  newPassword: createRequiredRule('新密码不能为空')
+  newPassword: createRequiredRule('新密码不能为空'),
 };
 
 async function updateProfile() {
@@ -148,8 +148,14 @@ async function updatePassword() {
     <NCard title="基本资料" class="shadow-sm">
       <NTabs type="line" animated class="h-full" s>
         <NTabPane name="userInfo" tab="基本资料">
-          <NForm ref="profileFormRef" :model="profileModel" :rules="profileRules" label-placement="left"
-            label-width="100px" class="mt-16px max-w-520px">
+          <NForm
+            ref="profileFormRef"
+            :model="profileModel"
+            :rules="profileRules"
+            label-placement="left"
+            label-width="100px"
+            class="mt-16px max-w-520px"
+          >
             <NFormItem label="昵称" path="nickName">
               <NInput v-model:value="profileModel.nickName" placeholder="请输入昵称" />
             </NFormItem>
@@ -176,19 +182,37 @@ async function updatePassword() {
           </NForm>
         </NTabPane>
         <NTabPane name="updatePwd" tab="修改密码">
-          <NForm ref="passwordFormRef" :model="passwordModel" :rules="passwordRules" label-placement="left"
-            label-width="100px" class="mt-16px max-w-520px">
+          <NForm
+            ref="passwordFormRef"
+            :model="passwordModel"
+            :rules="passwordRules"
+            label-placement="left"
+            label-width="100px"
+            class="mt-16px max-w-520px"
+          >
             <NFormItem label="旧密码" path="oldPassword">
-              <NInput v-model:value="passwordModel.oldPassword" type="password" placeholder="请输入旧密码"
-                show-password-on="click" />
+              <NInput
+                v-model:value="passwordModel.oldPassword"
+                type="password"
+                placeholder="请输入旧密码"
+                show-password-on="click"
+              />
             </NFormItem>
             <NFormItem label="新密码" path="newPassword">
-              <NInput v-model:value="passwordModel.newPassword" type="password" placeholder="请输入新密码"
-                show-password-on="click" />
+              <NInput
+                v-model:value="passwordModel.newPassword"
+                type="password"
+                placeholder="请输入新密码"
+                show-password-on="click"
+              />
             </NFormItem>
             <NFormItem label="确认密码" path="confirmPassword">
-              <NInput v-model:value="passwordModel.confirmPassword" type="password" placeholder="请再次输入新密码"
-                show-password-on="click" />
+              <NInput
+                v-model:value="passwordModel.confirmPassword"
+                type="password"
+                placeholder="请再次输入新密码"
+                show-password-on="click"
+              />
             </NFormItem>
             <NFormItem class="flex items-center justify-end">
               <NButton class="ml-20px w-120px" type="primary" :loading="btnLoading" @click="updatePassword">

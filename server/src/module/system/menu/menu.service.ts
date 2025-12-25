@@ -17,7 +17,7 @@ export class MenuService {
     private readonly userService: UserService,
     private readonly prisma: PrismaService,
     private readonly menuRepo: MenuRepository,
-  ) { }
+  ) {}
 
   async create(createMenuDto: CreateMenuDto) {
     const res = await this.menuRepo.create({

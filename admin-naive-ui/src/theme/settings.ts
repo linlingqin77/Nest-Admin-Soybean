@@ -10,38 +10,38 @@ export const themeSettings: App.Theme.ThemeSetting = {
     info: '#0E42D2',
     success: '#009A29',
     warning: '#D25F00',
-    error: '#CB2634'
+    error: '#CB2634',
   },
   isInfoFollowPrimary: true,
   resetCacheStrategy: 'close',
   layout: {
     mode: 'vertical',
     scrollMode: 'content',
-    reverseHorizontalMix: false
+    reverseHorizontalMix: false,
   },
   page: {
     animate: true,
-    animateMode: 'fade-slide'
+    animateMode: 'fade-slide',
   },
   header: {
     height: 56,
     breadcrumb: {
       visible: true,
-      showIcon: true
+      showIcon: true,
     },
     multilingual: {
-      visible: true
+      visible: true,
     },
     globalSearch: {
-      visible: true
-    }
+      visible: true,
+    },
   },
   tab: {
     visible: true,
     cache: true,
     height: 44,
     mode: 'chrome',
-    closeTabByMiddleClick: false
+    closeTabByMiddleClick: false,
   },
   fixedHeaderAndTab: true,
   sider: {
@@ -50,20 +50,20 @@ export const themeSettings: App.Theme.ThemeSetting = {
     collapsedWidth: 64,
     mixWidth: 90,
     mixCollapsedWidth: 64,
-    mixChildMenuWidth: 200
+    mixChildMenuWidth: 200,
   },
   footer: {
     visible: true,
     fixed: false,
     height: 48,
-    right: true
+    right: true,
   },
   watermark: {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
     text: 'Nest-Admin-Soybean',
     enableUserName: false,
     enableTime: false,
-    timeFormat: 'YYYY-MM-DD HH:mm'
+    timeFormat: 'YYYY-MM-DD HH:mm',
   },
   componentSize: 'medium',
   table: {
@@ -72,7 +72,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     singleColumn: false,
     singleLine: true,
     size: 'small',
-    striped: false
+    striped: false,
   },
   tokens: {
     light: {
@@ -80,22 +80,22 @@ export const themeSettings: App.Theme.ThemeSetting = {
         container: 'rgb(255, 255, 255)',
         layout: 'rgb(247, 250, 252)',
         inverted: 'rgb(0, 20, 40)',
-        'base-text': 'rgb(31, 31, 31)'
+        'base-text': 'rgb(31, 31, 31)',
       },
       boxShadow: {
         header: '0 1px 2px rgb(0, 21, 41, 0.08)',
         sider: '2px 0 8px 0 rgb(29, 35, 41, 0.05)',
-        tab: '0 1px 2px rgb(0, 21, 41, 0.08)'
-      }
+        tab: '0 1px 2px rgb(0, 21, 41, 0.08)',
+      },
     },
     dark: {
       colors: {
         container: 'rgb(28, 28, 28)',
         layout: 'rgb(18, 18, 18)',
-        'base-text': 'rgb(224, 224, 224)'
-      }
-    }
-  }
+        'base-text': 'rgb(224, 224, 224)',
+      },
+    },
+  },
 };
 
 /**

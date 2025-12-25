@@ -5,7 +5,7 @@ import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'RoleSearch'
+  name: 'RoleSearch',
 });
 
 interface Emits {

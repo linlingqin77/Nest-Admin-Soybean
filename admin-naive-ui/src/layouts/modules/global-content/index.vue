@@ -7,7 +7,7 @@ import { useRouteStore } from '@/store/modules/route';
 import { useTabStore } from '@/store/modules/tab';
 
 defineOptions({
-  name: 'GlobalContent'
+  name: 'GlobalContent',
 });
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  showPadding: true
+  showPadding: true,
 });
 
 const appStore = useAppStore();

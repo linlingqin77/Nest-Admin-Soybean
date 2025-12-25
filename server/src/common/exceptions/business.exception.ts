@@ -3,17 +3,17 @@ import { ResponseCode, getResponseMessage } from '../response/response.interface
 
 /**
  * 业务异常基类
- * 
+ *
  * @description 用于统一处理业务逻辑异常，返回给前端友好的错误信息
  * 业务异常统一返回 HTTP 200 状态码，通过 code 字段区分具体错误
- * 
+ *
  * @example
  * // 使用预定义错误码
  * throw new BusinessException(ResponseCode.USER_NOT_FOUND);
- * 
+ *
  * // 自定义错误消息
  * throw new BusinessException(ResponseCode.PARAM_INVALID, '用户名不能为空');
- * 
+ *
  * // 携带额外数据
  * throw new BusinessException(ResponseCode.DATA_IN_USE, '该角色下存在用户', { userCount: 5 });
  */
@@ -24,11 +24,7 @@ export class BusinessException extends HttpException {
   /** 额外数据 */
   public readonly errorData?: any;
 
-  constructor(
-    code: ResponseCode | number,
-    message?: string,
-    data?: any,
-  ) {
+  constructor(code: ResponseCode | number, message?: string, data?: any) {
     const msg = message ?? getResponseMessage(code as ResponseCode) ?? '业务处理失败';
 
     super(
@@ -54,12 +50,7 @@ export class BusinessException extends HttpException {
   /**
    * 条件抛出异常
    */
-  static throwIf(
-    condition: boolean,
-    message?: string,
-    code?: ResponseCode | number,
-    data?: any,
-  ): void {
+  static throwIf(condition: boolean, message?: string, code?: ResponseCode | number, data?: any): void {
     if (condition) {
       throw new BusinessException(code ?? ResponseCode.BUSINESS_ERROR, message, data);
     }
@@ -81,11 +72,7 @@ export class BusinessException extends HttpException {
   /**
    * 空数组检查并抛出异常
    */
-  static throwIfEmpty<T>(
-    value: T[],
-    message?: string,
-    code?: ResponseCode | number,
-  ): asserts value is T[] {
+  static throwIfEmpty<T>(value: T[], message?: string, code?: ResponseCode | number): asserts value is T[] {
     if (!value || value.length === 0) {
       throw new BusinessException(code ?? ResponseCode.DATA_NOT_FOUND, message);
     }
@@ -97,10 +84,7 @@ export class BusinessException extends HttpException {
  * 用于处理认证相关的错误，返回 HTTP 401 状态码
  */
 export class AuthenticationException extends HttpException {
-  constructor(
-    code: ResponseCode | number = ResponseCode.UNAUTHORIZED,
-    message?: string,
-  ) {
+  constructor(code: ResponseCode | number = ResponseCode.UNAUTHORIZED, message?: string) {
     const msg = message ?? getResponseMessage(code as ResponseCode) ?? '认证失败';
 
     super(
@@ -123,10 +107,7 @@ export class AuthenticationException extends HttpException {
  * 用于处理权限不足的错误，返回 HTTP 403 状态码
  */
 export class AuthorizationException extends HttpException {
-  constructor(
-    code: ResponseCode | number = ResponseCode.FORBIDDEN,
-    message?: string,
-  ) {
+  constructor(code: ResponseCode | number = ResponseCode.FORBIDDEN, message?: string) {
     const msg = message ?? getResponseMessage(code as ResponseCode) ?? '权限不足';
 
     super(
@@ -148,10 +129,7 @@ export class AuthorizationException extends HttpException {
  * 参数验证异常
  */
 export class ValidationException extends HttpException {
-  constructor(
-    errors: string | string[],
-    code: ResponseCode | number = ResponseCode.PARAM_INVALID,
-  ) {
+  constructor(errors: string | string[], code: ResponseCode | number = ResponseCode.PARAM_INVALID) {
     const message = Array.isArray(errors) ? errors[0] : errors;
     const data = Array.isArray(errors) && errors.length > 1 ? { errors } : null;
 
@@ -170,10 +148,7 @@ export class ValidationException extends HttpException {
  * 资源未找到异常
  */
 export class NotFoundException extends HttpException {
-  constructor(
-    resource: string = '资源',
-    code: ResponseCode | number = ResponseCode.DATA_NOT_FOUND,
-  ) {
+  constructor(resource: string = '资源', code: ResponseCode | number = ResponseCode.DATA_NOT_FOUND) {
     super(
       {
         code,

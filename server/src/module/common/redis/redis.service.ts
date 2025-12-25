@@ -4,7 +4,7 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService {
-  constructor(@InjectRedis() private readonly client: Redis) { }
+  constructor(@InjectRedis() private readonly client: Redis) {}
 
   getClient(): Redis {
     return this.client;
@@ -34,7 +34,11 @@ export class RedisService {
    * @returns
    */
   async skipFind(data: { key: string; pageSize: number; pageNum: number }) {
-    const rawInfo = await this.client.lrange(data.key, (data.pageNum - 1) * data.pageSize, data.pageNum * data.pageSize);
+    const rawInfo = await this.client.lrange(
+      data.key,
+      (data.pageNum - 1) * data.pageSize,
+      data.pageNum * data.pageSize,
+    );
     return rawInfo;
   }
   /**
@@ -76,7 +80,11 @@ export class RedisService {
    * @param ttl 可选，过期时间，单位 毫秒
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async set(key: string, val: string | number | Buffer | Record<string, any> | any[], ttl?: number): Promise<'OK' | null> {
+  async set(
+    key: string,
+    val: string | number | Buffer | Record<string, any> | any[],
+    ttl?: number,
+  ): Promise<'OK' | null> {
     const data = typeof val === 'object' && !(val instanceof Buffer) ? JSON.stringify(val) : String(val);
     if (!ttl) return await this.client.set(key, data);
     return await this.client.set(key, data, 'PX', ttl);

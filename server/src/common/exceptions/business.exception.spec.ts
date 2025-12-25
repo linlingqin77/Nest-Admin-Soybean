@@ -22,10 +22,7 @@ describe('BusinessException', () => {
     });
 
     it('should create exception with custom message', () => {
-      const exception = new BusinessException(
-        ResponseCode.PARAM_INVALID,
-        '邮箱格式不正确',
-      );
+      const exception = new BusinessException(ResponseCode.PARAM_INVALID, '邮箱格式不正确');
 
       const response = exception.getResponse() as any;
       expect(response.msg).toBe('邮箱格式不正确');
@@ -33,11 +30,7 @@ describe('BusinessException', () => {
 
     it('should create exception with data', () => {
       const data = { field: 'email', value: 'invalid' };
-      const exception = new BusinessException(
-        ResponseCode.PARAM_INVALID,
-        '参数错误',
-        data,
-      );
+      const exception = new BusinessException(ResponseCode.PARAM_INVALID, '参数错误', data);
 
       expect(exception.errorData).toEqual(data);
       const response = exception.getResponse() as any;
@@ -119,10 +112,7 @@ describe('AuthenticationException', () => {
   });
 
   it('should use custom code and message', () => {
-    const exception = new AuthenticationException(
-      ResponseCode.TOKEN_EXPIRED,
-      '登录已过期',
-    );
+    const exception = new AuthenticationException(ResponseCode.TOKEN_EXPIRED, '登录已过期');
 
     const response = exception.getResponse() as any;
     expect(response.code).toBe(ResponseCode.TOKEN_EXPIRED);

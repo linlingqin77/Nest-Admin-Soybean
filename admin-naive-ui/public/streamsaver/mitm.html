@@ -20,7 +20,7 @@
       if (sw) {
         sw.postMessage('ping');
       } else {
-        fetch(ping).then(res => res.text(!res.ok && clearInterval(interval)));
+        fetch(ping).then((res) => res.text(!res.ok && clearInterval(interval)));
       }
     }, 10000);
   };
@@ -31,7 +31,7 @@
   // but since we need to wait for the Service Worker registration, we store the
   // message for later
   let messages = [];
-  window.onmessage = evt => messages.push(evt);
+  window.onmessage = (evt) => messages.push(evt);
 
   let sw = null;
   let scope = '';
@@ -39,17 +39,17 @@
   function registerWorker() {
     return navigator.serviceWorker
       .getRegistration('./')
-      .then(swReg => {
+      .then((swReg) => {
         return swReg || navigator.serviceWorker.register('sw.js', { scope: './' });
       })
-      .then(swReg => {
+      .then((swReg) => {
         const swRegTmp = swReg.installing || swReg.waiting;
 
         scope = swReg.scope;
 
         return (
           (sw = swReg.active) ||
-          new Promise(resolve => {
+          new Promise((resolve) => {
             swRegTmp.addEventListener(
               'statechange',
               (fn = () => {
@@ -58,7 +58,7 @@
                   sw = swReg.active;
                   resolve();
                 }
-              })
+              }),
             );
           })
         );
@@ -97,7 +97,7 @@
     /** @since v2.0.0 */
     if (!data.headers) {
       console.warn(
-        "[StreamSaver] pass `data.headers` that you would like to pass along to the service worker\nit should be a 2D array or a key/val object that fetch's Headers api accepts"
+        "[StreamSaver] pass `data.headers` that you would like to pass along to the service worker\nit should be a 2D array or a key/val object that fetch's Headers api accepts",
       );
     } else {
       // test if it's correct
@@ -108,7 +108,7 @@
     /** @since v2.0.0 */
     if (typeof data.filename === 'string') {
       console.warn(
-        "[StreamSaver] You shouldn't send `data.filename` anymore. It should be included in the Content-Disposition header option"
+        "[StreamSaver] You shouldn't send `data.filename` anymore. It should be included in the Content-Disposition header option",
       );
       // Do what File constructor do with fileNames
       data.filename = data.filename.replace(/\//g, ':');
@@ -117,7 +117,7 @@
     /** @since v2.0.0 */
     if (data.size) {
       console.warn(
-        "[StreamSaver] You shouldn't send `data.size` anymore. It should be included in the content-length header option"
+        "[StreamSaver] You shouldn't send `data.size` anymore. It should be included in the content-length header option",
       );
     }
 

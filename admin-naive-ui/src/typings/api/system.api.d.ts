@@ -542,7 +542,7 @@ declare namespace Api {
     /** tenant search params */
     type TenantSearchParams = CommonType.RecordNullable<
       Pick<Api.System.Tenant, 'tenantId' | 'contactUserName' | 'contactPhone' | 'companyName'> &
-      Api.Common.CommonSearchParams
+        Api.Common.CommonSearchParams
     >;
 
     /** tenant operate params */
@@ -596,7 +596,7 @@ declare namespace Api {
     /** tenant package search params */
     type TenantPackageSearchParams = CommonType.RecordNullable<
       Pick<Api.System.TenantPackage, 'packageName' | 'menuIds' | 'menuCheckStrictly' | 'status'> &
-      Api.Common.CommonSearchParams
+        Api.Common.CommonSearchParams
     >;
 
     /** tenant package operate params */

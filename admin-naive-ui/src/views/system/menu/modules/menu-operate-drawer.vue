@@ -10,7 +10,7 @@ import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({
-  name: 'MenuOperateDrawer'
+  name: 'MenuOperateDrawer',
 });
 
 interface Props {
@@ -35,7 +35,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const defaultIcon = import.meta.env.VITE_MENU_ICON;
@@ -48,7 +48,7 @@ const queryList = ref<{ key: string; value: string }[]>([]);
 const drawerTitle = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: $t('page.system.menu.addMenu'),
-    edit: $t('page.system.menu.editMenu')
+    edit: $t('page.system.menu.editMenu'),
   };
   return titles[props.operateType];
 });
@@ -72,7 +72,7 @@ function createDefaultModel(): Model {
     status: '0',
     perms: '',
     icon: defaultIcon,
-    remark: ''
+    remark: '',
   };
 }
 
@@ -82,7 +82,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   menuName: createRequiredRule($t('page.system.menu.form.menuName.invalid')),
   orderNum: createNumberRequiredRule($t('page.system.menu.form.orderNum.invalid')),
   path: createRequiredRule($t('page.system.menu.form.path.invalid')),
-  component: createRequiredRule($t('page.system.menu.form.component.invalid'))
+  component: createRequiredRule($t('page.system.menu.form.component.invalid')),
 };
 
 // 是否为目录类型
@@ -108,14 +108,14 @@ const isLocalIcon = computed(() => iconType.value === '2');
 
 // 本地图标
 const localIcons = getLocalMenuIcons();
-const localIconOptions = localIcons.map<SelectOption>(item => ({
+const localIconOptions = localIcons.map<SelectOption>((item) => ({
   label: () => (
     <div class="flex-y-center gap-16px">
       <SvgIcon localIcon={`menu-${item}`} class="text-icon" />
       <span>{item}</span>
     </div>
   ),
-  value: `local-icon-${item}`
+  value: `local-icon-${item}`,
 }));
 
 function handleInitModel() {
@@ -132,7 +132,7 @@ function handleInitModel() {
 
     if (model.isFrame === '1') {
       const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
-      queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
+      queryList.value = Object.keys(queryObj).map((item) => ({ key: item, value: queryObj[item] }));
       return;
     }
 
@@ -140,7 +140,7 @@ function handleInitModel() {
       if (model.isFrame === '2') {
         model.queryParam = JSON.parse(model.queryParam || '{}')?.url || '';
       }
-    } catch { }
+    } catch {}
   }
 }
 
@@ -203,7 +203,7 @@ async function handleSubmit() {
     perms,
     remark,
     component,
-    queryParam
+    queryParam,
   } = model;
 
   const payload = {
@@ -220,7 +220,7 @@ async function handleSubmit() {
     perms,
     icon: icon || defaultIcon,
     component: processComponent(component),
-    remark
+    remark,
   };
 
   try {
@@ -240,11 +240,11 @@ async function handleSubmit() {
 
 watch(
   () => model.menuType,
-  newType => {
+  (newType) => {
     if (newType === 'M') {
       model.isFrame = '1';
     }
-  }
+  },
 );
 
 watch(visible, () => {
@@ -257,7 +257,7 @@ watch(visible, () => {
 function onCreate() {
   return {
     key: '',
-    value: ''
+    value: '',
   };
 }
 </script>
@@ -268,13 +268,21 @@ function onCreate() {
       <NForm ref="formRef" :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
           <NFormItemGi :span="24" :label="$t('page.system.menu.parentId')" path="pid">
-            <MenuTreeSelect v-model:value="model.parentId" :immediate="false" :options="treeData as []"
-              :placeholder="$t('page.system.menu.form.parentId.required')" />
+            <MenuTreeSelect
+              v-model:value="model.parentId"
+              :immediate="false"
+              :options="treeData as []"
+              :placeholder="$t('page.system.menu.form.parentId.required')"
+            />
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="24" :label="$t('page.system.menu.menuType')" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
-              <NRadioButton v-for="item in menuTypeOptions.filter(item => item.value !== 'F')" :key="item.value"
-                :value="item.value" :label="item.label" />
+              <NRadioButton
+                v-for="item in menuTypeOptions.filter((item) => item.value !== 'F')"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+              />
             </NRadioGroup>
           </NFormItemGi>
           <NFormItemGi span="24" :label="$t('page.system.menu.menuName')" path="menuName">
@@ -293,12 +301,19 @@ function onCreate() {
               </div>
             </template>
             <template v-if="isLocalIcon">
-              <NSelect v-model:value="model.icon" :placeholder="$t('page.system.menu.placeholder.localIconPlaceholder')"
-                filterable :options="localIconOptions" />
+              <NSelect
+                v-model:value="model.icon"
+                :placeholder="$t('page.system.menu.placeholder.localIconPlaceholder')"
+                filterable
+                :options="localIconOptions"
+              />
             </template>
             <template v-else>
-              <NInput v-model:value="model.icon"
-                :placeholder="$t('page.system.menu.placeholder.iconifyIconPlaceholder')" class="flex-1">
+              <NInput
+                v-model:value="model.icon"
+                :placeholder="$t('page.system.menu.placeholder.iconifyIconPlaceholder')"
+                class="flex-1"
+              >
                 <template #suffix>
                   <SvgIcon v-if="model.icon" :icon="model.icon" class="text-icon" />
                 </template>
@@ -314,8 +329,13 @@ function onCreate() {
             </template>
             <NRadioGroup v-model:value="model.isFrame">
               <NSpace>
-                <NRadio v-for="option in menuIsFrameOptions" :key="option.value" :value="option.value"
-                  :label="option.label" :disabled="option.value === '2' && isCatalog" />
+                <NRadio
+                  v-for="option in menuIsFrameOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :label="option.label"
+                  :disabled="option.value === '2' && isCatalog"
+                />
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>
@@ -357,31 +377,53 @@ function onCreate() {
               <NInputGroupLabel>/index.vue</NInputGroupLabel>
             </NInputGroup>
           </NFormItemGi>
-          <NFormItemGi v-if="isMenu && !isExternalType" span="24" :show-feedback="!queryList.length"
-            :label="isInternalType ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')">
-            <NDynamicInput v-if="isInternalType" v-model:value="queryList" item-style="margin-bottom: 0"
-              :on-create="onCreate">
+          <NFormItemGi
+            v-if="isMenu && !isExternalType"
+            span="24"
+            :show-feedback="!queryList.length"
+            :label="isInternalType ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
+          >
+            <NDynamicInput
+              v-if="isInternalType"
+              v-model:value="queryList"
+              item-style="margin-bottom: 0"
+              :on-create="onCreate"
+            >
               <template #default="{ index }">
                 <div class="w-full flex">
-                  <NFormItem class="w-full" ignore-path-change :show-label="false" :path="`query[${index}].key`" :rule="{
-                    ...createRequiredRule($t('page.system.menu.placeholder.queryKey')),
-                    validator: value => isNotNull(value)
-                  }">
+                  <NFormItem
+                    class="w-full"
+                    ignore-path-change
+                    :show-label="false"
+                    :path="`query[${index}].key`"
+                    :rule="{
+                      ...createRequiredRule($t('page.system.menu.placeholder.queryKey')),
+                      validator: (value) => isNotNull(value),
+                    }"
+                  >
                     <NInput v-model:value="queryList[index].key" placeholder="Key" @keydown.enter.prevent />
                   </NFormItem>
                   <div class="mx-8px h-34px lh-34px">=</div>
-                  <NFormItem class="w-full" ignore-path-change :show-label="false" :path="`query[${index}].value`"
+                  <NFormItem
+                    class="w-full"
+                    ignore-path-change
+                    :show-label="false"
+                    :path="`query[${index}].value`"
                     :rule="{
                       ...createRequiredRule($t('page.system.menu.placeholder.queryValue')),
-                      validator: value => isNotNull(value)
-                    }">
+                      validator: (value) => isNotNull(value),
+                    }"
+                  >
                     <NInput v-model:value="queryList[index].value" placeholder="Value" @keydown.enter.prevent />
                   </NFormItem>
                 </div>
               </template>
             </NDynamicInput>
-            <NInput v-else v-model:value="model.queryParam"
-              :placeholder="$t('page.system.menu.placeholder.queryIframe')" />
+            <NInput
+              v-else
+              v-model:value="model.queryParam"
+              :placeholder="$t('page.system.menu.placeholder.queryIframe')"
+            />
           </NFormItemGi>
           <NFormItemGi v-if="!isCatalog" :span="24" path="perms">
             <template #label>

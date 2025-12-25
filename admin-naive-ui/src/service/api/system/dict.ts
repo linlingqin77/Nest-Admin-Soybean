@@ -4,7 +4,7 @@ import { request } from '@/service/request';
 export function fetchGetDictDataByType(dictType: string) {
   return request<Api.System.DictData[]>({
     url: `/system/dict/data/type/${dictType}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -12,7 +12,7 @@ export function fetchGetDictDataByType(dictType: string) {
 export function fetchGetDictTypeOption() {
   return request<Api.System.DictType[]>({
     url: '/system/dict/type/optionselect',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchGetDictTypeList(params?: Api.System.DictTypeSearchParams) {
   return request<Api.System.DictTypeList>({
     url: '/system/dict/type/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -30,7 +30,7 @@ export function fetchCreateDictType(data: Api.System.DictTypeOperateParams) {
   return request<boolean>({
     url: '/system/dict/type',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -39,7 +39,7 @@ export function fetchUpdateDictType(data: Api.System.DictTypeOperateParams) {
   return request<boolean>({
     url: '/system/dict/type',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -47,13 +47,13 @@ export function fetchUpdateDictType(data: Api.System.DictTypeOperateParams) {
 export function fetchBatchDeleteDictType(dictIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/dict/type/${dictIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 /** 刷新缓存 */
 export function fetchRefreshCache() {
   return request<boolean>({
     url: `/system/dict/type/refreshCache`,
-    method: 'delete'
+    method: 'delete',
   });
 }

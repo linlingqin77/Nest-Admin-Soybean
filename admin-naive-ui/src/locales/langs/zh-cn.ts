@@ -4,7 +4,7 @@ const local: App.I18n.Schema = {
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
-    updateCancel: '稍后再说'
+    updateCancel: '稍后再说',
   },
   common: {
     action: '操作',
@@ -67,13 +67,13 @@ const local: App.I18n.Schema = {
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
-      no: '否'
+      no: '否',
     },
     second: '秒',
     selected: '已选择',
     anyRecords: '条记录',
     clear: '清空',
-    noSelectRecord: '未选中任何记录'
+    noSelectRecord: '未选中任何记录',
   },
   request: {
     logout: '请求失败后登出用户',
@@ -81,7 +81,7 @@ const local: App.I18n.Schema = {
     logoutWithModal: '请求失败后弹出模态框再登出用户',
     logoutWithModalMsg: '用户状态失效，请重新登录',
     refreshToken: '请求的token已过期，刷新token',
-    tokenExpired: 'token已过期'
+    tokenExpired: 'token已过期',
   },
   theme: {
     themeDrawerTitle: '主题配置',
@@ -90,14 +90,14 @@ const local: App.I18n.Schema = {
       layout: '布局',
       general: '通用',
       component: '组件',
-      preset: '预设'
+      preset: '预设',
     },
     appearance: {
       themeSchema: {
         title: '主题模式',
         light: '亮色模式',
         dark: '暗黑模式',
-        auto: '跟随系统'
+        auto: '跟随系统',
       },
       grayscale: '灰色模式',
       colourWeakness: '色弱模式',
@@ -108,10 +108,10 @@ const local: App.I18n.Schema = {
         success: '成功色',
         warning: '警告色',
         error: '错误色',
-        followPrimary: '跟随主色'
+        followPrimary: '跟随主色',
       },
       themeRadius: {
-        title: '主题圆角'
+        title: '主题圆角',
       },
       recommendColor: '应用推荐算法的颜色',
       recommendColorDesc: '推荐颜色的算法参照',
@@ -121,21 +121,21 @@ const local: App.I18n.Schema = {
         applySuccess: '预设应用成功',
         default: {
           name: '默认预设',
-          desc: 'Soybean 默认主题预设'
+          desc: 'Soybean 默认主题预设',
         },
         dark: {
           name: '暗色预设',
-          desc: '适用于夜间使用的暗色主题预设'
+          desc: '适用于夜间使用的暗色主题预设',
         },
         compact: {
           name: '紧凑型',
-          desc: '适用于小屏幕的紧凑布局预设'
+          desc: '适用于小屏幕的紧凑布局预设',
         },
         azir: {
           name: 'Azir的预设',
-          desc: '是 Azir 比较喜欢的莫兰迪色系冷淡风'
-        }
-      }
+          desc: '是 Azir 比较喜欢的莫兰迪色系冷淡风',
+        },
+      },
     },
     layout: {
       layoutMode: {
@@ -152,7 +152,7 @@ const local: App.I18n.Schema = {
           '左侧混合布局，一级菜单在顶部，二级菜单在左侧深色区域，三级菜单在左侧浅色区域。',
         horizontal_detail: '顶部菜单布局，菜单在顶部，内容在下方。',
         'top-hybrid-sidebar-first_detail': '顶部混合布局，一级菜单在左侧，二级菜单在顶部。',
-        'top-hybrid-header-first_detail': '顶部混合布局，一级菜单在顶部，二级菜单在左侧。'
+        'top-hybrid-header-first_detail': '顶部混合布局，一级菜单在顶部，二级菜单在左侧。',
       },
       tab: {
         title: '标签栏设置',
@@ -164,18 +164,18 @@ const local: App.I18n.Schema = {
           title: '标签栏风格',
           slider: '滑块风格',
           chrome: '谷歌风格',
-          button: '按钮风格'
+          button: '按钮风格',
         },
         closeByMiddleClick: '鼠标中键关闭标签页',
-        closeByMiddleClickTip: '启用后可以使用鼠标中键点击标签页进行关闭'
+        closeByMiddleClickTip: '启用后可以使用鼠标中键点击标签页进行关闭',
       },
       header: {
         title: '头部设置',
         height: '头部高度',
         breadcrumb: {
           visible: '显示面包屑',
-          showIcon: '显示面包屑图标'
-        }
+          showIcon: '显示面包屑图标',
+        },
       },
       sider: {
         title: '侧边栏设置',
@@ -184,14 +184,14 @@ const local: App.I18n.Schema = {
         collapsedWidth: '侧边栏折叠宽度',
         mixWidth: '混合布局侧边栏宽度',
         mixCollapsedWidth: '混合布局侧边栏折叠宽度',
-        mixChildMenuWidth: '混合布局子菜单宽度'
+        mixChildMenuWidth: '混合布局子菜单宽度',
       },
       footer: {
         title: '底部设置',
         visible: '显示底部',
         fixed: '固定底部',
         height: '底部高度',
-        right: '底部居右'
+        right: '底部居右',
       },
       content: {
         title: '内容区域设置',
@@ -199,7 +199,7 @@ const local: App.I18n.Schema = {
           title: '滚动模式',
           tip: '主题滚动仅 main 部分滚动，外层滚动可携带头部底部一起滚动',
           wrapper: '外层滚动',
-          content: '主体滚动'
+          content: '主体滚动',
         },
         page: {
           animate: '页面切换动画',
@@ -211,11 +211,11 @@ const local: App.I18n.Schema = {
             'fade-scale': '缩放消退',
             'zoom-fade': '渐变',
             'zoom-out': '闪现',
-            none: '无'
-          }
+            none: '无',
+          },
         },
-        fixedHeaderAndTab: '固定头部和标签栏'
-      }
+        fixedHeaderAndTab: '固定头部和标签栏',
+      },
     },
     general: {
       title: '通用设置',
@@ -225,16 +225,16 @@ const local: App.I18n.Schema = {
         text: '自定义水印文本',
         enableUserName: '启用用户名水印',
         enableTime: '启用时间水印',
-        timeFormat: '时间格式'
+        timeFormat: '时间格式',
       },
       multilingual: {
         title: '多语言设置',
-        visible: '显示多语言按钮'
+        visible: '显示多语言按钮',
       },
       globalSearch: {
         title: '全局搜索设置',
-        visible: '显示全局搜索按钮'
-      }
+        visible: '显示全局搜索按钮',
+      },
     },
     componentPropsTitle: '组件配置',
     component: {
@@ -243,8 +243,8 @@ const local: App.I18n.Schema = {
         tiny: '极小',
         small: '小',
         medium: '中',
-        large: '大'
-      }
+        large: '大',
+      },
     },
     tablePropsTitle: '表格配置',
     table: {
@@ -252,20 +252,20 @@ const local: App.I18n.Schema = {
         title: '表格大小',
         small: '小',
         medium: '中',
-        large: '大'
+        large: '大',
       },
       bordered: '边框',
       bottomBordered: '底部边框',
       singleColumn: '设定行的分割线',
       singleLine: '设定列的分割线',
-      striped: '斑马线条纹'
+      striped: '斑马线条纹',
     },
     configOperation: {
       copyConfig: '复制配置',
       copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
       resetConfig: '重置配置',
-      resetSuccessMsg: '重置成功'
-    }
+      resetSuccessMsg: '重置成功',
+    },
   },
   route: {
     login: '登录',
@@ -312,39 +312,39 @@ const local: App.I18n.Schema = {
     exception: '异常页',
     exception_403: '403',
     exception_404: '404',
-    exception_500: '500'
+    exception_500: '500',
   },
   menu: {
     system_tenant: '租户管理',
     system_log: '日志管理',
     'monitor_snail-job': '任务调度中心',
-    monitor_admin: 'Admin 监控'
+    monitor_admin: 'Admin 监控',
   },
   dict: {
     sys_user_sex: {
       male: '男',
       female: '女',
-      unknown: '未知'
+      unknown: '未知',
     },
     sys_show_hide: {
       show: '显示',
-      hide: '隐藏'
+      hide: '隐藏',
     },
     sys_normal_disable: {
       normal: '正常',
-      disable: '停用'
+      disable: '停用',
     },
     sys_yes_no: {
       yes: '是',
-      no: '否'
+      no: '否',
     },
     sys_notice_type: {
       notice: '通知',
-      announcement: '公告'
+      announcement: '公告',
     },
     sys_notice_status: {
       normal: '正常',
-      close: '关闭'
+      close: '关闭',
     },
     sys_oper_type: {
       insert: '新增',
@@ -356,24 +356,24 @@ const local: App.I18n.Schema = {
       force: '强退',
       gencode: '生成代码',
       clean: '清空数据',
-      other: '其他'
+      other: '其他',
     },
     sys_common_status: {
       success: '成功',
-      fail: '失败'
+      fail: '失败',
     },
     sys_grant_type: {
       password: '密码认证',
       sms: '短信认证',
       email: '邮件认证',
       miniapp: '小程序认证',
-      social: '三方登录认证'
+      social: '三方登录认证',
     },
     sys_device_type: {
       pc: 'PC',
       android: '安卓',
       ios: 'iOS',
-      miniapp: '小程序'
+      miniapp: '小程序',
     },
     wf_business_status: {
       revoked: '已撤销',
@@ -382,11 +382,11 @@ const local: App.I18n.Schema = {
       completed: '已完成',
       cancelled: '已作废',
       returned: '已退回',
-      terminated: '已终止'
+      terminated: '已终止',
     },
     wf_form_type: {
       custom_form: '自定义表单',
-      dynamic_form: '动态表单'
+      dynamic_form: '动态表单',
     },
     wf_task_status: {
       revoke: '撤销',
@@ -400,8 +400,8 @@ const local: App.I18n.Schema = {
       copy: '抄送',
       add_sign: '加签',
       minus_sign: '减签',
-      timeout: '超时'
-    }
+      timeout: '超时',
+    },
   },
   page: {
     login: {
@@ -420,7 +420,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来，{userName} ！',
       },
       pwdLogin: {
         title: '密码登录',
@@ -431,27 +431,27 @@ const local: App.I18n.Schema = {
         otherLoginMode: '其他登录方式',
         superAdmin: '超级管理员',
         admin: '管理员',
-        user: '普通用户'
+        user: '普通用户',
       },
       codeLogin: {
         title: '验证码登录',
         getCode: '获取验证码',
         reGetCode: '{time}秒后重新获取',
         sendCodeSuccess: '验证码发送成功',
-        imageCodePlaceholder: '请输入图片验证码'
+        imageCodePlaceholder: '请输入图片验证码',
       },
       register: {
         title: '注册账号',
         agreement: '我已经仔细阅读并接受',
         protocol: '《用户协议》',
-        policy: '《隐私权政策》'
+        policy: '《隐私权政策》',
       },
       resetPwd: {
-        title: '重置密码'
+        title: '重置密码',
       },
       bindWeChat: {
-        title: '绑定微信'
-      }
+        title: '绑定微信',
+      },
     },
     home: {
       branchDesc:
@@ -478,9 +478,9 @@ const local: App.I18n.Schema = {
         desc2: 'Yanbowe 向 soybean-admin 提交了一个bug，多标签栏不会自适应。',
         desc3: 'Soybean 准备为 soybean-admin 的发布做充分的准备工作!',
         desc4: 'Soybean 正在忙于为soybean-admin写项目说明文档！',
-        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！'
+        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！',
       },
-      creativity: '创意'
+      creativity: '创意',
     },
     common: {
       id: 'ID',
@@ -492,9 +492,9 @@ const local: App.I18n.Schema = {
       form: {
         remark: {
           required: '请输入备注',
-          invalid: '备注不能为空'
-        }
-      }
+          invalid: '备注不能为空',
+        },
+      },
     },
     system: {
       client: {
@@ -510,41 +510,41 @@ const local: App.I18n.Schema = {
         form: {
           clientId: {
             required: '请输入客户端 ID',
-            invalid: '客户端 ID 不能为空'
+            invalid: '客户端 ID 不能为空',
           },
           clientKey: {
             required: '请输入客户端 Key',
-            invalid: '客户端 Key 不能为空'
+            invalid: '客户端 Key 不能为空',
           },
           clientSecret: {
             required: '请输入客户端秘钥',
-            invalid: '客户端秘钥不能为空'
+            invalid: '客户端秘钥不能为空',
           },
           grantTypeList: {
             required: '请选择授权类型',
-            invalid: '授权类型不能为空'
+            invalid: '授权类型不能为空',
           },
           deviceType: {
             required: '请选择设备类型',
-            invalid: '设备类型不能为空'
+            invalid: '设备类型不能为空',
           },
           activeTimeout: {
             required: '请输入 Token 活跃超时时间',
             invalid: 'Token 活跃超时时间不能为空',
-            tooltip: '指定时间无操作则过期(单位：秒), 默认30分钟(1800秒)'
+            tooltip: '指定时间无操作则过期(单位：秒), 默认30分钟(1800秒)',
           },
           timeout: {
             required: '请输入 Token 固定超时',
             invalid: 'Token 固定超时不能为空',
-            tooltip: '指定时间必定过期(单位：秒)，默认七天(604800秒)'
+            tooltip: '指定时间必定过期(单位：秒)，默认七天(604800秒)',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
-          }
+            invalid: '状态不能为空',
+          },
         },
         addClient: '新增客户端',
-        editClient: '编辑客户端'
+        editClient: '编辑客户端',
       },
       config: {
         title: '参数配置列表',
@@ -559,31 +559,31 @@ const local: App.I18n.Schema = {
         form: {
           configId: {
             required: '请输入参数主键',
-            invalid: '参数主键不能为空'
+            invalid: '参数主键不能为空',
           },
           configName: {
             required: '请输入参数名称',
-            invalid: '参数名称不能为空'
+            invalid: '参数名称不能为空',
           },
           configKey: {
             required: '请输入参数键名',
-            invalid: '参数键名不能为空'
+            invalid: '参数键名不能为空',
           },
           configValue: {
             required: '请输入参数键值',
-            invalid: '参数键值不能为空'
+            invalid: '参数键值不能为空',
           },
           configType: {
             required: '请选择是否内置',
-            invalid: '是否内置不能为空'
+            invalid: '是否内置不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
-          }
+            invalid: '备注不能为空',
+          },
         },
         addConfig: '新增参数配置',
-        editConfig: '编辑参数配置'
+        editConfig: '编辑参数配置',
       },
       dept: {
         empty: '暂无部门信息',
@@ -603,56 +603,56 @@ const local: App.I18n.Schema = {
         form: {
           parentId: {
             required: '请选择上级部门',
-            invalid: '上级部门不能为空'
+            invalid: '上级部门不能为空',
           },
           deptName: {
             required: '请输入部门名称',
-            invalid: '部门名称不能为空'
+            invalid: '部门名称不能为空',
           },
           orderNum: {
             required: '请输入排序',
-            invalid: '排序不能为空'
+            invalid: '排序不能为空',
           },
           deptCategory: {
             required: '请输入类别编码',
-            invalid: '类别编码不能为空'
+            invalid: '类别编码不能为空',
           },
           leader: {
             required: '请输入负责人',
-            invalid: '负责人不能为空'
+            invalid: '负责人不能为空',
           },
           phone: {
             required: '请输入联系电话',
-            invalid: '联系电话不能为空'
+            invalid: '联系电话不能为空',
           },
           email: {
             required: '请输入邮箱',
-            invalid: '邮箱不能为空'
+            invalid: '邮箱不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           sort: {
             required: '请输入排序',
-            invalid: '排序不能为空'
+            invalid: '排序不能为空',
           },
           deptId: {
             required: '请输入部门id',
-            invalid: '部门id不能为空'
-          }
+            invalid: '部门id不能为空',
+          },
         },
         error: {
           getDeptDataFail: '获取部门用户数据失败',
-          getDeptUserDataFail: '获取部门用户数据失败'
+          getDeptUserDataFail: '获取部门用户数据失败',
         },
         placeholder: {
           defaultLeaderPlaceHolder: '请选择负责人',
           addDataLeaderPlaceHolder: '仅在更新时可选择部门负责人',
-          deptUserIsEmptyLeaderPlaceHolder: '该部门没有负责人'
+          deptUserIsEmptyLeaderPlaceHolder: '该部门没有负责人',
         },
         addDept: '新增部门',
-        editDept: '编辑部门'
+        editDept: '编辑部门',
       },
       dict: {
         title: '字典列表',
@@ -675,57 +675,57 @@ const local: App.I18n.Schema = {
           cssClass: 'CSS样式',
           status: '状态',
           remark: '备注',
-          createTime: '创建时间'
+          createTime: '创建时间',
         },
         form: {
           dictId: {
             required: '请输入字典主键',
-            invalid: '字典主键不能为空'
+            invalid: '字典主键不能为空',
           },
           dictCode: {
             required: '请输入字典编码',
-            invalid: '字典编码不能为空'
+            invalid: '字典编码不能为空',
           },
           dictName: {
             required: '请输入字典名称',
-            invalid: '字典名称不能为空'
+            invalid: '字典名称不能为空',
           },
           dictType: {
             required: '请输入字典类型',
-            invalid: '字典类型不能为空'
+            invalid: '字典类型不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
+            invalid: '备注不能为空',
           },
           dictLabel: {
             required: '请输入字典标签',
-            invalid: '字典标签不能为空'
+            invalid: '字典标签不能为空',
           },
           dictValue: {
             required: '请输入字典键值',
-            invalid: '字典键值不能为空'
+            invalid: '字典键值不能为空',
           },
           dictSort: {
             required: '请输入字典排序',
-            invalid: '字典排序不能为空'
+            invalid: '字典排序不能为空',
           },
           isDefault: {
             required: '请选择是否默认',
-            invalid: '是否默认不能为空'
+            invalid: '是否默认不能为空',
           },
           listClass: {
             required: '请选择回显样式',
-            invalid: '回显样式不能为空'
+            invalid: '回显样式不能为空',
           },
           cssClass: {
             required: '请输入样式属性（其他样式扩展）',
-            invalid: 'CSS样式不能为空'
-          }
+            invalid: 'CSS样式不能为空',
+          },
         },
         addDict: '新增字典',
         editDict: '编辑字典',
@@ -735,7 +735,7 @@ const local: App.I18n.Schema = {
         editDictType: '编辑字典类型',
         exportDictType: '导出字典类型',
         refreshDictType: '刷新列表',
-        dictTypeIsEmpty: '暂无字典类型'
+        dictTypeIsEmpty: '暂无字典类型',
       },
       menu: {
         title: '菜单列表',
@@ -775,71 +775,71 @@ const local: App.I18n.Schema = {
         form: {
           parentId: {
             required: '请选择上级菜单',
-            invalid: '上级菜单不能为空'
+            invalid: '上级菜单不能为空',
           },
           menuType: {
             required: '请选择菜单类型',
-            invalid: '菜单类型不能为空'
+            invalid: '菜单类型不能为空',
           },
           menuIds: {
             required: '请选择菜单',
-            invalid: '菜单不能为空'
+            invalid: '菜单不能为空',
           },
           icon: {
             required: '请选择菜单图标',
-            invalid: '菜单图标不能为空'
+            invalid: '菜单图标不能为空',
           },
           menuName: {
             required: '请输入菜单名称',
-            invalid: '菜单名称不能为空'
+            invalid: '菜单名称不能为空',
           },
           orderNum: {
             required: '请输入排序',
-            invalid: '排序不能为空'
+            invalid: '排序不能为空',
           },
           perms: {
             required: '请输入权限字符',
-            invalid: '权限字符不能为空'
+            invalid: '权限字符不能为空',
           },
           isFrame: {
             required: '请选择是否外链',
-            invalid: '是否外链不能为空'
+            invalid: '是否外链不能为空',
           },
           path: {
             required: '请输入路由地址',
-            invalid: '路由地址不能为空'
+            invalid: '路由地址不能为空',
           },
           component: {
             required: '请输入组件路径',
-            invalid: '组件路径不能为空'
+            invalid: '组件路径不能为空',
           },
           query: {
             required: '请输入路由参数',
-            invalid: '路由参数不能为空'
+            invalid: '路由参数不能为空',
           },
           isCache: {
             required: '请选择是否缓存',
-            invalid: '是否缓存不能为空'
+            invalid: '是否缓存不能为空',
           },
           visible: {
             required: '请选择显示状态',
-            invalid: '显示状态不能为空'
+            invalid: '显示状态不能为空',
           },
           status: {
             required: '请选择菜单状态',
-            invalid: '菜单状态不能为空'
+            invalid: '菜单状态不能为空',
           },
           permission: {
             required: '请输入权限标识',
-            invalid: '权限标识不能为空'
-          }
+            invalid: '权限标识不能为空',
+          },
         },
         placeholder: {
           iconifyIconPlaceholder: '请输入图标',
           localIconPlaceholder: '请选择本地图标',
           queryKey: '请输入 Key',
           queryValue: '请输入 Value',
-          queryIframe: '请输入 iframe 地址'
+          queryIframe: '请输入 iframe 地址',
         },
         directory: '目录',
         menu: '菜单',
@@ -847,7 +847,7 @@ const local: App.I18n.Schema = {
         addMenu: '新增菜单',
         addChildMenu: '新增子菜单',
         editMenu: '编辑菜单',
-        cascadeDelete: '级联删除菜单'
+        cascadeDelete: '级联删除菜单',
       },
       notice: {
         title: '通知公告列表',
@@ -859,23 +859,23 @@ const local: App.I18n.Schema = {
         form: {
           noticeTitle: {
             required: '请输入公告标题',
-            invalid: '公告标题不能为空'
+            invalid: '公告标题不能为空',
           },
           noticeType: {
             required: '请选择公告类型',
-            invalid: '公告类型不能为空'
+            invalid: '公告类型不能为空',
           },
           noticeContent: {
             required: '请输入公告内容',
-            invalid: '公告内容不能为空'
+            invalid: '公告内容不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
-          }
+            invalid: '状态不能为空',
+          },
         },
         addNotice: '新增公告',
-        editNotice: '编辑公告'
+        editNotice: '编辑公告',
       },
       oss: {
         title: '文件列表',
@@ -888,14 +888,14 @@ const local: App.I18n.Schema = {
         form: {
           file: {
             required: '请选择文件',
-            invalid: '文件不能为空'
-          }
+            invalid: '文件不能为空',
+          },
         },
         upload: '上传文件',
         preview: '预览',
         download: '下载',
         copy: '复制链接',
-        copySuccess: '复制成功'
+        copySuccess: '复制成功',
       },
       ossConfig: {
         title: 'OSS配置列表',
@@ -914,51 +914,51 @@ const local: App.I18n.Schema = {
         form: {
           configKey: {
             required: '请输入配置键',
-            invalid: '配置键不能为空'
+            invalid: '配置键不能为空',
           },
           accessKey: {
             required: '请输入accessKey',
-            invalid: 'accessKey不能为空'
+            invalid: 'accessKey不能为空',
           },
           secretKey: {
             required: '请输入secretKey',
-            invalid: 'secretKey不能为空'
+            invalid: 'secretKey不能为空',
           },
           bucketName: {
             required: '请输入桶名称',
-            invalid: '桶名称不能为空'
+            invalid: '桶名称不能为空',
           },
           prefix: {
             required: '请输入前缀',
-            invalid: '前缀不能为空'
+            invalid: '前缀不能为空',
           },
           endpoint: {
             required: '请输入域名',
-            invalid: '域名不能为空'
+            invalid: '域名不能为空',
           },
           domain: {
             required: '请输入自定义域名',
-            invalid: '自定义域名不能为空'
+            invalid: '自定义域名不能为空',
           },
           isHttps: {
             required: '请选择是否https',
-            invalid: '是否https不能为空'
+            invalid: '是否https不能为空',
           },
           region: {
             required: '请输入地域',
-            invalid: '地域不能为空'
+            invalid: '地域不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
-          }
+            invalid: '备注不能为空',
+          },
         },
         addOssConfig: '新增OSS配置',
-        editOssConfig: '编辑OSS配置'
+        editOssConfig: '编辑OSS配置',
       },
       post: {
         title: '岗位列表',
@@ -971,27 +971,27 @@ const local: App.I18n.Schema = {
         form: {
           postCode: {
             required: '请输入岗位编码',
-            invalid: '岗位编码不能为空'
+            invalid: '岗位编码不能为空',
           },
           postName: {
             required: '请输入岗位名称',
-            invalid: '岗位名称不能为空'
+            invalid: '岗位名称不能为空',
           },
           postSort: {
             required: '请输入岗位排序',
-            invalid: '岗位排序不能为空'
+            invalid: '岗位排序不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
-          }
+            invalid: '备注不能为空',
+          },
         },
         addPost: '新增岗位',
-        editPost: '编辑岗位'
+        editPost: '编辑岗位',
       },
       role: {
         title: '角色列表',
@@ -1006,32 +1006,32 @@ const local: App.I18n.Schema = {
         form: {
           roleName: {
             required: '请输入角色名称',
-            invalid: '角色名称不能为空'
+            invalid: '角色名称不能为空',
           },
           roleKey: {
             required: '请输入权限字符',
-            invalid: '权限字符不能为空'
+            invalid: '权限字符不能为空',
           },
           roleSort: {
             required: '请输入角色排序',
-            invalid: '角色排序不能为空'
+            invalid: '角色排序不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
+            invalid: '备注不能为空',
           },
           menuIds: {
             required: '请选择菜单权限',
-            invalid: '菜单权限不能为空'
+            invalid: '菜单权限不能为空',
           },
           deptIds: {
             required: '请选择部门权限',
-            invalid: '部门权限不能为空'
-          }
+            invalid: '部门权限不能为空',
+          },
         },
         addRole: '新增角色',
         editRole: '编辑角色',
@@ -1039,7 +1039,7 @@ const local: App.I18n.Schema = {
         authorizedUsers: '分配用户',
         selectMenuPermission: '选择菜单权限',
         selectDataScope: '选择数据权限',
-        selectDeptPermission: '选择部门权限'
+        selectDeptPermission: '选择部门权限',
       },
       tenant: {
         title: '租户列表',
@@ -1060,55 +1060,55 @@ const local: App.I18n.Schema = {
         form: {
           tenantName: {
             required: '请输入租户名称',
-            invalid: '租户名称不能为空'
+            invalid: '租户名称不能为空',
           },
           contactUserName: {
             required: '请输入联系人',
-            invalid: '联系人不能为空'
+            invalid: '联系人不能为空',
           },
           contactPhone: {
             required: '请输入联系电话',
-            invalid: '联系电话不能为空'
+            invalid: '联系电话不能为空',
           },
           companyName: {
             required: '请输入公司名称',
-            invalid: '公司名称不能为空'
+            invalid: '公司名称不能为空',
           },
           licenseNumber: {
             required: '请输入营业执照编号',
-            invalid: '营业执照编号不能为空'
+            invalid: '营业执照编号不能为空',
           },
           address: {
             required: '请输入地址',
-            invalid: '地址不能为空'
+            invalid: '地址不能为空',
           },
           intro: {
             required: '请输入企业简介',
-            invalid: '企业简介不能为空'
+            invalid: '企业简介不能为空',
           },
           domain: {
             required: '请输入域名',
-            invalid: '域名不能为空'
+            invalid: '域名不能为空',
           },
           packageId: {
             required: '请选择租户套餐',
-            invalid: '租户套餐不能为空'
+            invalid: '租户套餐不能为空',
           },
           expireTime: {
             required: '请选择过期时间',
-            invalid: '过期时间不能为空'
+            invalid: '过期时间不能为空',
           },
           accountCount: {
             required: '请输入账号数量',
-            invalid: '账号数量不能为空'
+            invalid: '账号数量不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
-          }
+            invalid: '状态不能为空',
+          },
         },
         addTenant: '新增租户',
-        editTenant: '编辑租户'
+        editTenant: '编辑租户',
       },
       tenantPackage: {
         title: '租户套餐列表',
@@ -1120,24 +1120,24 @@ const local: App.I18n.Schema = {
         form: {
           packageName: {
             required: '请输入套餐名称',
-            invalid: '套餐名称不能为空'
+            invalid: '套餐名称不能为空',
           },
           menuIds: {
             required: '请选择菜单权限',
-            invalid: '菜单权限不能为空'
+            invalid: '菜单权限不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
-          }
+            invalid: '备注不能为空',
+          },
         },
         addTenantPackage: '新增租户套餐',
         editTenantPackage: '编辑租户套餐',
-        statusChangeSuccess: '状态修改成功'
+        statusChangeSuccess: '状态修改成功',
       },
       user: {
         title: '用户列表',
@@ -1158,52 +1158,52 @@ const local: App.I18n.Schema = {
         form: {
           userName: {
             required: '请输入用户名称',
-            invalid: '用户名称不能为空'
+            invalid: '用户名称不能为空',
           },
           nickName: {
             required: '请输入用户昵称',
-            invalid: '用户昵称不能为空'
+            invalid: '用户昵称不能为空',
           },
           deptId: {
             required: '请选择部门',
-            invalid: '部门不能为空'
+            invalid: '部门不能为空',
           },
           phonenumber: {
             required: '请输入手机号码',
-            invalid: '手机号码不能为空'
+            invalid: '手机号码不能为空',
           },
           status: {
             required: '请选择状态',
-            invalid: '状态不能为空'
+            invalid: '状态不能为空',
           },
           password: {
             required: '请输入密码',
-            invalid: '密码不能为空'
+            invalid: '密码不能为空',
           },
           confirmPassword: {
             required: '请输入确认密码',
-            invalid: '确认密码不能为空'
+            invalid: '确认密码不能为空',
           },
           sex: {
             required: '请选择性别',
-            invalid: '性别不能为空'
+            invalid: '性别不能为空',
           },
           roleIds: {
             required: '请选择角色',
-            invalid: '角色不能为空'
+            invalid: '角色不能为空',
           },
           postIds: {
             required: '请选择岗位',
-            invalid: '岗位不能为空'
+            invalid: '岗位不能为空',
           },
           email: {
             required: '请输入邮箱',
-            invalid: '邮箱不能为空'
+            invalid: '邮箱不能为空',
           },
           remark: {
             required: '请输入备注',
-            invalid: '备注不能为空'
-          }
+            invalid: '备注不能为空',
+          },
         },
         addUser: '新增用户',
         editUser: '编辑用户',
@@ -1211,7 +1211,7 @@ const local: App.I18n.Schema = {
         importUsers: '导入用户',
         exportTemplate: '导出模板',
         importSuccess: '导入成功',
-        statusChangeSuccess: '状态修改成功'
+        statusChangeSuccess: '状态修改成功',
       },
       fileManager: {
         title: '文件管理',
@@ -1250,43 +1250,43 @@ const local: App.I18n.Schema = {
         selectFilesToRestore: '请选择要恢复的文件',
         permanentDelete: '彻底删除',
         permanentDeleteConfirm: '确定要彻底删除选中的 {count} 个文件吗？此操作不可恢复！',
-        selectFilesToDelete: '请选择要删除的文件'
-      }
-    }
+        selectFilesToDelete: '请选择要删除的文件',
+      },
+    },
   },
   form: {
     required: '不能为空',
     userName: {
       required: '请输入用户名',
-      invalid: '用户名格式不正确'
+      invalid: '用户名格式不正确',
     },
     phone: {
       required: '请输入手机号',
-      invalid: '手机号格式不正确'
+      invalid: '手机号格式不正确',
     },
     pwd: {
       required: '请输入密码',
-      invalid: '密码格式不正确，6-18位字符，包含字母、数字、下划线'
+      invalid: '密码格式不正确，6-18位字符，包含字母、数字、下划线',
     },
     confirmPwd: {
       required: '请输入确认密码',
-      invalid: '两次输入密码不一致'
+      invalid: '两次输入密码不一致',
     },
     code: {
       required: '请输入验证码',
-      invalid: '验证码格式不正确'
+      invalid: '验证码格式不正确',
     },
     email: {
       required: '请输入邮箱',
-      invalid: '邮箱格式不正确'
-    }
+      invalid: '邮箱格式不正确',
+    },
   },
   dropdown: {
     closeCurrent: '关闭',
     closeOther: '关闭其它',
     closeLeft: '关闭左侧',
     closeRight: '关闭右侧',
-    closeAll: '关闭所有'
+    closeAll: '关闭所有',
   },
   icon: {
     themeConfig: '主题配置',
@@ -1298,11 +1298,11 @@ const local: App.I18n.Schema = {
     collapse: '折叠菜单',
     expand: '展开菜单',
     pin: '固定',
-    unpin: '取消固定'
+    unpin: '取消固定',
   },
   datatable: {
-    itemCount: '共 {total} 条'
-  }
+    itemCount: '共 {total} 条',
+  },
 };
 
 export default local;

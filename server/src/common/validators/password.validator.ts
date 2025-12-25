@@ -46,7 +46,8 @@ export class PasswordValidator {
     if (cfg.requireUppercase && !/[A-Z]/.test(password)) errors.push('密码必须包含大写字母');
     if (cfg.requireLowercase && !/[a-z]/.test(password)) errors.push('密码必须包含小写字母');
     if (cfg.requireNumber && !/\d/.test(password)) errors.push('密码必须包含数字');
-    if (cfg.requireSpecial && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/\?]/.test(password)) errors.push('密码必须包含特殊字符');
+    if (cfg.requireSpecial && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/\?]/.test(password))
+      errors.push('密码必须包含特殊字符');
 
     for (const p of cfg.forbiddenPatterns) {
       if (p.test(password)) {

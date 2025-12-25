@@ -5,7 +5,7 @@ export function fetchGetJobLogList(params?: Api.Monitor.JobLogSearchParams) {
   return request<Api.Monitor.JobLogList>({
     url: '/monitor/jobLog/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -13,7 +13,7 @@ export function fetchGetJobLogList(params?: Api.Monitor.JobLogSearchParams) {
 export function fetchGetJobLogDetail(jobLogId: CommonType.IdType) {
   return request<Api.Monitor.JobLog>({
     url: `/monitor/jobLog/${jobLogId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchGetJobLogDetail(jobLogId: CommonType.IdType) {
 export function fetchDeleteJobLog(jobLogId: CommonType.IdType | CommonType.IdType[]) {
   return request<boolean>({
     url: `/monitor/jobLog/${Array.isArray(jobLogId) ? jobLogId.join(',') : jobLogId}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -29,6 +29,6 @@ export function fetchDeleteJobLog(jobLogId: CommonType.IdType | CommonType.IdTyp
 export function fetchCleanJobLog() {
   return request<boolean>({
     url: '/monitor/jobLog/clean',
-    method: 'delete'
+    method: 'delete',
   });
 }

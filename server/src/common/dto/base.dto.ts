@@ -1,14 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsInt,
-  IsString,
-  IsEnum,
-  Min,
-  Max,
-  IsDateString,
-  ValidateNested,
-} from 'class-validator';
+import { IsOptional, IsInt, IsString, IsEnum, Min, Max, IsDateString, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 /**
@@ -36,9 +27,9 @@ export class DateRangeDto {
 
 /**
  * 基础分页 DTO
- * 
+ *
  * @description 提供标准的分页参数，所有需要分页的接口都应继承此类
- * 
+ *
  * @example
  * ```typescript
  * export class ListUserDto extends PageQueryDto {
@@ -111,7 +102,7 @@ export class PageQueryDto {
     if (!this.params?.beginTime && !this.params?.endTime) {
       return undefined;
     }
-    
+
     const condition: any = {};
     if (this.params.beginTime) {
       condition.gte = new Date(this.params.beginTime);
@@ -119,7 +110,7 @@ export class PageQueryDto {
     if (this.params.endTime) {
       condition.lte = new Date(this.params.endTime + ' 23:59:59');
     }
-    
+
     return { [fieldName]: condition };
   }
 }

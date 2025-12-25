@@ -53,10 +53,12 @@ import { PrismaModule } from './prisma/prisma.module';
     // 加解密模块
     CryptoModule,
     // API 限流模块
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     // Bull 队列模块 (用于异步任务处理)
     BullModule.forRootAsync({
       inject: [AppConfigService],

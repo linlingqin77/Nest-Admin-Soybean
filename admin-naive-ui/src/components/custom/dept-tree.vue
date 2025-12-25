@@ -12,7 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: true
+  immediate: true,
 });
 
 const { bool: expandAll } = useBoolean();
@@ -61,7 +61,7 @@ watch([expandAll, options], ([newVal]) => {
 
 function getAllDeptIds(depts: any[]) {
   const deptIds: CommonType.IdType[] = [];
-  depts.forEach(item => {
+  depts.forEach((item) => {
     if (item.id) {
       deptIds.push(item.id);
     }
@@ -84,7 +84,7 @@ function handleSubmit() {
   const deptIds = [...value.value];
   const indeterminateData = deptTreeRef.value?.getIndeterminateData();
   if (cascade.value) {
-    const parentIds: string[] = indeterminateData?.keys.filter(item => !deptIds?.includes(String(item))) as string[];
+    const parentIds: string[] = indeterminateData?.keys.filter((item) => !deptIds?.includes(String(item))) as string[];
     deptIds?.push(...parentIds);
   }
   return deptIds;
@@ -92,7 +92,7 @@ function handleSubmit() {
 
 defineExpose({
   submit: handleSubmit,
-  refresh: getDeptList
+  refresh: getDeptList,
 });
 </script>
 

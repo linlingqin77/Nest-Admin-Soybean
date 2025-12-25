@@ -1,4 +1,16 @@
-import { IsString, IsJSON, IsEnum, IsPhoneNumber, IsArray, Min, Length, IsOptional, IsBoolean, IsNumber, IsNumberString } from 'class-validator';
+import {
+  IsString,
+  IsJSON,
+  IsEnum,
+  IsPhoneNumber,
+  IsArray,
+  Min,
+  Length,
+  IsOptional,
+  IsBoolean,
+  IsNumber,
+  IsNumberString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PageQueryDto } from 'src/common/dto/index';
 import { genTableCloumnUpdate } from './create-genTableCloumn-dto';

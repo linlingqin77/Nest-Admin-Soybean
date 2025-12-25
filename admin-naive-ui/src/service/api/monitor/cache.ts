@@ -6,7 +6,7 @@ import { request } from '@/service/request';
 export function fetchGetMonitorCacheInfo() {
   return request<Api.Monitor.CacheInfo>({
     url: '/monitor/cache',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -16,7 +16,7 @@ export function fetchGetMonitorCacheInfo() {
 export function fetchGetCacheNames() {
   return request<Api.Monitor.CacheName[]>({
     url: '/monitor/cache/getNames',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -24,7 +24,7 @@ export function fetchGetCacheNames() {
 export function fetchGetCacheKeys(cacheName: string) {
   return request<string[]>({
     url: `/monitor/cache/getKeys/${cacheName}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -32,7 +32,7 @@ export function fetchGetCacheKeys(cacheName: string) {
 export function fetchGetCacheValue(cacheName: string, cacheKey: string) {
   return request<Api.Monitor.CacheContent>({
     url: `/monitor/cache/getValue/${cacheName}/${cacheKey}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -40,7 +40,7 @@ export function fetchGetCacheValue(cacheName: string, cacheKey: string) {
 export function fetchClearCacheName(cacheName: string) {
   return request<void>({
     url: `/monitor/cache/clearCacheName/${cacheName}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -48,7 +48,7 @@ export function fetchClearCacheName(cacheName: string) {
 export function fetchClearCacheKey(cacheKey: string) {
   return request<void>({
     url: `/monitor/cache/clearCacheKey/${cacheKey}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -56,6 +56,6 @@ export function fetchClearCacheKey(cacheKey: string) {
 export function fetchClearCacheAll() {
   return request<void>({
     url: '/monitor/cache/clearCacheAll',
-    method: 'delete'
+    method: 'delete',
   });
 }

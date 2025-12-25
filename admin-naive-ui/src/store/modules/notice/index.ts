@@ -11,7 +11,7 @@ interface NoticeItem {
 
 export const useNoticeStore = defineStore(SetupStoreId.Notice, () => {
   const state = reactive({
-    notices: [] as NoticeItem[]
+    notices: [] as NoticeItem[],
   });
 
   const addNotice = (notice: NoticeItem) => {
@@ -43,7 +43,7 @@ export const useNoticeStore = defineStore(SetupStoreId.Notice, () => {
     removeNotice,
     readNotice,
     readAll,
-    clearNotice
+    clearNotice,
   };
 });
 

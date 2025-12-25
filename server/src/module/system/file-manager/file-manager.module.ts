@@ -20,4 +20,4 @@ import { VersionService } from '../../upload/services/version.service';
   providers: [FileManagerService, FileAccessService, VersionService],
   exports: [FileManagerService, FileAccessService],
 })
-export class FileManagerModule { }
+export class FileManagerModule {}

@@ -8,7 +8,7 @@ import { useAuthStore } from './store/modules/auth';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
 
 defineOptions({
-  name: 'App'
+  name: 'App',
 });
 
 const appStore = useAppStore();
@@ -43,14 +43,19 @@ const watermarkProps = computed<WatermarkProps>(() => {
     xOffset: 12,
     yOffset: 60,
     rotate: -18,
-    zIndex: 9999
+    zIndex: 9999,
   };
 });
 </script>
 
 <template>
-  <NConfigProvider :theme="naiveDarkTheme" :theme-overrides="themeStore.naiveTheme" :locale="naiveLocale"
-    :date-locale="naiveDateLocale" class="h-full">
+  <NConfigProvider
+    :theme="naiveDarkTheme"
+    :theme-overrides="themeStore.naiveTheme"
+    :locale="naiveLocale"
+    :date-locale="naiveDateLocale"
+    class="h-full"
+  >
     <AppProvider>
       <RouterView class="bg-layout" />
       <NWatermark v-if="themeStore.watermark.visible" v-bind="watermarkProps" />

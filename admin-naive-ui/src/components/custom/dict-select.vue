@@ -14,7 +14,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   immediate: false,
-  multiple: false
+  multiple: false,
 });
 
 const value = defineModel<string | string[] | null>('value', { required: false });

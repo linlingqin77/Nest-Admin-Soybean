@@ -18,7 +18,12 @@ export class RoleVo {
   @ApiProperty({ description: '显示顺序' })
   roleSort: number;
 
-  @ApiProperty({ description: '数据范围', enum: DataScopeEnum, enumName: 'DataScopeEnum', enumSchema: DataScopeEnumSchema })
+  @ApiProperty({
+    description: '数据范围',
+    enum: DataScopeEnum,
+    enumName: 'DataScopeEnum',
+    enumSchema: DataScopeEnumSchema,
+  })
   dataScope: string;
 
   @ApiProperty({ description: '菜单树选择项是否关联显示' })

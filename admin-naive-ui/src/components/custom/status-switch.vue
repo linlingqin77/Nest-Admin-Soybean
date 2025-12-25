@@ -3,7 +3,7 @@ import { useBoolean } from '@sa/hooks';
 import { enableStatusRecord } from '@/constants/business';
 
 defineOptions({
-  name: 'StatusSwitch'
+  name: 'StatusSwitch',
 });
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
-  info: ''
+  info: '',
 });
 
 const value = defineModel<Api.Common.EnableStatus>('value', { default: '0' });
@@ -36,12 +36,12 @@ const handleUpdateValue = (val: Api.Common.EnableStatus) => {
     negativeText: '取消',
     onPositiveClick: () => {
       startLoading();
-      emit('submitted', val, flag => {
+      emit('submitted', val, (flag) => {
         if (flag) value.value = val;
         endLoading();
       });
     },
-    onNegativeClick: () => {}
+    onNegativeClick: () => {},
   });
 };
 </script>

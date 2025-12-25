@@ -9,7 +9,7 @@ import defaultAvatar from '@/assets/imgs/soybean.jpg';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'UserAvatar'
+  name: 'UserAvatar',
 });
 
 const authStore = useAuthStore();
@@ -48,17 +48,17 @@ const options = computed(() => {
     {
       label: $t('common.userCenter'),
       key: 'user-center',
-      icon: SvgIconVNode({ icon: 'ph:user-circle', fontSize: 18 })
+      icon: SvgIconVNode({ icon: 'ph:user-circle', fontSize: 18 }),
     },
     {
       type: 'divider',
-      key: 'divider'
+      key: 'divider',
     },
     {
       label: $t('common.logout'),
       key: 'logout',
-      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 })
-    }
+      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 }),
+    },
   ];
   return opts;
 });
@@ -71,7 +71,7 @@ function logout() {
     negativeText: $t('common.cancel'),
     onPositiveClick: () => {
       authStore.logout();
-    }
+    },
   });
 }
 

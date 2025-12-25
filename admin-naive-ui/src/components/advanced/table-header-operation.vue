@@ -2,7 +2,7 @@
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TableHeaderOperation'
+  name: 'TableHeaderOperation',
 });
 
 interface Props {
@@ -19,7 +19,7 @@ withDefaults(defineProps<Props>(), {
   itemAlign: undefined,
   showAdd: true,
   showDelete: true,
-  showExport: false
+  showExport: false,
 });
 
 interface Emits {
@@ -32,7 +32,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const columns = defineModel<NaiveUI.TableColumnCheck[]>('columns', {
-  default: () => []
+  default: () => [],
 });
 
 function add() {

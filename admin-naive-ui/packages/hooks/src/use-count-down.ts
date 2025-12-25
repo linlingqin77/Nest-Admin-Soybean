@@ -35,7 +35,7 @@ export default function useCountDown(initialSeconds: number) {
         pause();
       }
     },
-    { immediate: false } // The timer does not start automatically.
+    { immediate: false }, // The timer does not start automatically.
   );
 
   /**
@@ -63,6 +63,6 @@ export default function useCountDown(initialSeconds: number) {
     count,
     isCounting,
     start,
-    stop
+    stop,
   };
 }

@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
   icon: 'mdi-help-circle',
   localIcon: '',
   desc: '',
-  placement: 'top'
+  placement: 'top',
 });
 
 const slots = useSlots();

@@ -9,14 +9,19 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ClsService } from 'nestjs-cls';
-import { BusinessException, AuthenticationException, AuthorizationException, ValidationException } from '../exceptions/business.exception';
+import {
+  BusinessException,
+  AuthenticationException,
+  AuthorizationException,
+  ValidationException,
+} from '../exceptions/business.exception';
 import { ResponseCode } from '../response/response.interface';
 
 /**
  * 全局异常过滤器
- * 
+ *
  * @description 统一处理所有异常，返回标准化的响应格式
- * 
+ *
  * 异常处理优先级：
  * 1. BusinessException - 业务异常，返回 HTTP 200
  * 2. AuthenticationException - 认证异常，返回 HTTP 401
@@ -94,9 +99,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       const resp = exception.getResponse();
       if (typeof resp === 'object' && resp !== null) {
         const body = resp as any;
-        message = Array.isArray(body.message)
-          ? body.message[0]
-          : body.message ?? body.msg ?? message;
+        message = Array.isArray(body.message) ? body.message[0] : (body.message ?? body.msg ?? message);
         data = body.data ?? null;
         // 如果响应中有 code，使用它
         if (body.code !== undefined) {
@@ -108,10 +111,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     }
     // 6. 未知异常处理
     else if (exception instanceof Error) {
-      message = process.env.NODE_ENV === 'development' 
-        ? exception.message 
-        : '服务器内部错误';
-      
+      message = process.env.NODE_ENV === 'development' ? exception.message : '服务器内部错误';
+
       // 记录完整错误信息
       this.logger.error(
         {

@@ -18,7 +18,7 @@ export function useAuth() {
     // 将单个权限转换为数组统一处理
     const codeList = Array.isArray(codes) ? codes : [codes];
 
-    return codeList.some(code => permissions.includes(code));
+    return codeList.some((code) => permissions.includes(code));
   }
 
   function hasRole(roleCodes: string | string[]) {
@@ -36,11 +36,11 @@ export function useAuth() {
     // 将单个角色转换为数组统一处理
     const codeList = Array.isArray(roleCodes) ? roleCodes : [roleCodes];
 
-    return codeList.some(code => roles.includes(code));
+    return codeList.some((code) => roles.includes(code));
   }
 
   return {
     hasAuth,
-    hasRole
+    hasRole,
   };
 }

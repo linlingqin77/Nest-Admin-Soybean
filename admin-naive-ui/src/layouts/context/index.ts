@@ -53,19 +53,19 @@ function useMixMenu() {
   const allMenus = computed<App.Global.Menu[]>(() => routeStore.menus);
 
   const firstLevelMenus = computed<App.Global.Menu[]>(() =>
-    routeStore.menus.map(menu => {
+    routeStore.menus.map((menu) => {
       const { children: _, ...rest } = menu;
 
       return rest;
-    })
+    }),
   );
 
   const secondLevelMenus = computed<App.Global.Menu[]>(
-    () => routeStore.menus.find(menu => menu.key === activeFirstLevelMenuKey.value)?.children || []
+    () => routeStore.menus.find((menu) => menu.key === activeFirstLevelMenuKey.value)?.children || [],
   );
 
   const childLevelMenus = computed<App.Global.Menu[]>(
-    () => secondLevelMenus.value.find(menu => menu.key === activeSecondLevelMenuKey.value)?.children || []
+    () => secondLevelMenus.value.find((menu) => menu.key === activeSecondLevelMenuKey.value)?.children || [],
   );
 
   const isActiveFirstLevelMenuHasChildren = computed(() => {
@@ -73,7 +73,7 @@ function useMixMenu() {
       return false;
     }
 
-    const findItem = allMenus.value.find(item => item.key === activeFirstLevelMenuKey.value);
+    const findItem = allMenus.value.find((item) => item.key === activeFirstLevelMenuKey.value);
 
     return Boolean(findItem?.children?.length);
   });
@@ -83,7 +83,7 @@ function useMixMenu() {
       return false;
     }
 
-    const findItem = secondLevelMenus.value.find(item => item.key === activeSecondLevelMenuKey.value);
+    const findItem = secondLevelMenus.value.find((item) => item.key === activeSecondLevelMenuKey.value);
 
     return Boolean(findItem?.children?.length);
   });
@@ -124,7 +124,7 @@ function useMixMenu() {
       getActiveFirstLevelMenuKey();
       getActiveSecondLevelMenuKey();
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   return {
@@ -141,7 +141,7 @@ function useMixMenu() {
     getActiveFirstLevelMenuKey,
     getActiveSecondLevelMenuKey,
     handleSelectFirstLevelMenu,
-    handleSelectSecondLevelMenu
+    handleSelectSecondLevelMenu,
   };
 }
 
@@ -158,6 +158,6 @@ export function useMenu() {
   });
 
   return {
-    selectedKey
+    selectedKey,
   };
 }

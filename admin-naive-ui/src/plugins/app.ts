@@ -44,9 +44,9 @@ export function setupAppVersionNotification() {
               onClick() {
                 n?.destroy();
                 isShow = false;
-              }
+              },
             },
-            () => $t('system.updateCancel')
+            () => $t('system.updateCancel'),
           ),
           h(
             NButton,
@@ -54,15 +54,15 @@ export function setupAppVersionNotification() {
               type: 'primary',
               onClick() {
                 location.reload();
-              }
+              },
             },
-            () => $t('system.updateConfirm')
-          )
+            () => $t('system.updateConfirm'),
+          ),
         ]);
       },
       onClose() {
         isShow = false;
-      }
+      },
     });
   };
 

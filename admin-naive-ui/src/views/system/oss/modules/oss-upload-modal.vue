@@ -5,7 +5,7 @@ import FileUpload from '@/components/custom/file-upload.vue';
 import { AcceptType } from '@/enum/business';
 
 defineOptions({
-  name: 'OssUploadModal'
+  name: 'OssUploadModal',
 });
 
 interface Props {
@@ -21,7 +21,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const accept = computed(() => (props.uploadType === 'file' ? AcceptType.File : AcceptType.Image));

@@ -9,7 +9,7 @@ import type {
   PictorialBarSeriesOption,
   PieSeriesOption,
   RadarSeriesOption,
-  ScatterSeriesOption
+  ScatterSeriesOption,
 } from 'echarts/charts';
 import {
   DatasetComponent,
@@ -18,7 +18,7 @@ import {
   TitleComponent,
   ToolboxComponent,
   TooltipComponent,
-  TransformComponent
+  TransformComponent,
 } from 'echarts/components';
 import type {
   DatasetComponentOption,
@@ -26,7 +26,7 @@ import type {
   LegendComponentOption,
   TitleComponentOption,
   ToolboxComponentOption,
-  TooltipComponentOption
+  TooltipComponentOption,
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -65,7 +65,7 @@ echarts.use([
   GaugeChart,
   LabelLayout,
   UniversalTransition,
-  CanvasRenderer
+  CanvasRenderer,
 ]);
 
 interface ChartHooks {
@@ -94,7 +94,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
   const chartOptions: T = optionsFactory();
 
   const {
-    onRender = instance => {
+    onRender = (instance) => {
       const textColor = darkMode.value ? 'rgb(224, 224, 224)' : 'rgb(31, 31, 31)';
       const maskColor = darkMode.value ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)';
 
@@ -102,13 +102,13 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
         color: themeStore.themeColor,
         textColor,
         fontSize: 14,
-        maskColor
+        maskColor,
       });
     },
-    onUpdated = instance => {
+    onUpdated = (instance) => {
       instance.hideLoading();
     },
-    onDestroy
+    onDestroy,
   } = hooks;
 
   /**
@@ -236,6 +236,6 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
   return {
     domRef,
     updateOptions,
-    setOptions
+    setOptions,
   };
 }

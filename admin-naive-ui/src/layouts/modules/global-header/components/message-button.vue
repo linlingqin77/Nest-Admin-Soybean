@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia';
 import { useNoticeStore } from '@/store/modules/notice';
 
 defineOptions({
-  name: 'MessgaeButton'
+  name: 'MessgaeButton',
 });
 
 const show = ref(false);
@@ -12,7 +12,7 @@ const noticeStore = useNoticeStore();
 const { state } = storeToRefs(noticeStore);
 
 const noticeNum = computed(() => {
-  return state.value.notices.filter(notice => !notice.read).length || 0;
+  return state.value.notices.filter((notice) => !notice.read).length || 0;
 });
 
 const toGitee = () => {
@@ -36,8 +36,13 @@ const toGitee = () => {
         {{ $t('page.home.message') }}
       </NTooltip>
     </template>
-    <NCard size="small" :bordered="false" class="w-345px" header-class="p-0"
-      :segmented="{ content: true, footer: 'soft' }">
+    <NCard
+      size="small"
+      :bordered="false"
+      class="w-345px"
+      header-class="p-0"
+      :segmented="{ content: true, footer: 'soft' }"
+    >
       <template #header>
         <span>通知公告</span>
       </template>
@@ -119,7 +124,6 @@ const toGitee = () => {
 }
 
 @keyframes bell-ring {
-
   0%,
   100% {
     transform-origin: top;

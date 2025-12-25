@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 /**
  * 操作日志仓储层
- * 
+ *
  * @description 封装操作日志的数据访问逻辑
  */
 @Injectable()

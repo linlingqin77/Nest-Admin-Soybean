@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { StatusEnum, StatusEnumSchema, SexEnum, SexEnumSchema, DataScopeEnum, DataScopeEnumSchema } from 'src/common/enum';
+import {
+  StatusEnum,
+  StatusEnumSchema,
+  SexEnum,
+  SexEnumSchema,
+  DataScopeEnum,
+  DataScopeEnumSchema,
+} from 'src/common/enum';
 
 /**
  * 岗位信息
@@ -31,7 +38,12 @@ export class RoleVo {
   @ApiProperty({ description: '显示顺序' })
   roleSort: number;
 
-  @ApiProperty({ description: '数据范围', enum: DataScopeEnum, enumName: 'DataScopeEnum', enumSchema: DataScopeEnumSchema })
+  @ApiProperty({
+    description: '数据范围',
+    enum: DataScopeEnum,
+    enumName: 'DataScopeEnum',
+    enumSchema: DataScopeEnumSchema,
+  })
   dataScope: string;
 
   @ApiProperty({ description: '角色状态', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })

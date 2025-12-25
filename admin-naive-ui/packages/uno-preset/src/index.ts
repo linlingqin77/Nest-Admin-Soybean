@@ -20,7 +20,7 @@ export function presetSoybeanAdmin(): Preset<Theme> {
         'i-flex-col': 'flex-col inline-flex',
         'i-flex-col-center': 'flex-col i-flex-center',
         'i-flex-col-stretch': 'i-flex-col items-stretch',
-        'flex-1-hidden': 'flex-1 overflow-hidden'
+        'flex-1-hidden': 'flex-1 overflow-hidden',
       },
       {
         'absolute-lt': 'absolute left-0 top-0',
@@ -40,13 +40,13 @@ export function presetSoybeanAdmin(): Preset<Theme> {
         'fixed-tr': 'fixed-rt',
         'fixed-bl': 'fixed-lb',
         'fixed-br': 'fixed-rb',
-        'fixed-center': 'fixed-lt flex-center size-full'
+        'fixed-center': 'fixed-lt flex-center size-full',
       },
       {
         'nowrap-hidden': 'overflow-hidden whitespace-nowrap',
-        'ellipsis-text': 'nowrap-hidden text-ellipsis'
-      }
-    ]
+        'ellipsis-text': 'nowrap-hidden text-ellipsis',
+      },
+    ],
   };
 
   return preset;

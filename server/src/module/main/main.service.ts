@@ -15,7 +15,7 @@ export class MainService {
     private readonly loginlogService: LoginlogService,
     private readonly axiosService: AxiosService,
     private readonly menuService: MenuService,
-  ) { }
+  ) {}
 
   /**
    * 登陆
@@ -30,8 +30,9 @@ export class MainService {
     };
 
     // 异步获取登录位置，不阻塞登录流程
-    this.axiosService.getIpAddress(clientInfo.ipaddr)
-      .then(loginLocation => {
+    this.axiosService
+      .getIpAddress(clientInfo.ipaddr)
+      .then((loginLocation) => {
         loginLog.loginLocation = loginLocation;
       })
       .catch(() => {
@@ -56,8 +57,9 @@ export class MainService {
     };
 
     // 异步获取登录位置，不阻塞退出流程
-    this.axiosService.getIpAddress(clientInfo.ipaddr)
-      .then(loginLocation => {
+    this.axiosService
+      .getIpAddress(clientInfo.ipaddr)
+      .then((loginLocation) => {
         loginLog.loginLocation = loginLocation;
       })
       .catch(() => {
@@ -79,7 +81,7 @@ export class MainService {
   /**
    * 登陆记录
    */
-  loginRecord() { }
+  loginRecord() {}
 
   /**
    * 获取路由菜单

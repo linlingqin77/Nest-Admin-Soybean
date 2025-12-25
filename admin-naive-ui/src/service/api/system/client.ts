@@ -5,7 +5,7 @@ export function fetchGetClientList(params?: Api.System.ClientSearchParams) {
   return request<Api.System.ClientList>({
     url: '/system/client/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreateClient(data: Api.System.ClientOperateParams) {
   return request<boolean>({
     url: '/system/client',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdateClient(data: Api.System.ClientOperateParams) {
   return request<boolean>({
     url: '/system/client',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -31,7 +31,7 @@ export function fetchUpdateClient(data: Api.System.ClientOperateParams) {
 export function fetchBatchDeleteClient(ids: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/client/${ids.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -40,6 +40,6 @@ export function fetchUpdateClientStatus(data: Api.System.ClientOperateParams) {
   return request<boolean>({
     url: '/system/client/changeStatus',
     method: 'put',
-    data
+    data,
   });
 }

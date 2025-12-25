@@ -97,9 +97,9 @@ const { domRef: commandChartRef, updateOptions: updateCommandChart } = useEchart
     borderColor: '#e6e6e6',
     borderWidth: 1,
     textStyle: {
-      color: '#666'
+      color: '#666',
     },
-    extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);'
+    extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);',
   },
   legend: {
     type: 'scroll',
@@ -108,8 +108,8 @@ const { domRef: commandChartRef, updateOptions: updateCommandChart } = useEchart
     top: 20,
     bottom: 20,
     textStyle: {
-      color: '#666'
-    }
+      color: '#666',
+    },
   },
   series: [
     {
@@ -124,32 +124,32 @@ const { domRef: commandChartRef, updateOptions: updateCommandChart } = useEchart
       itemStyle: {
         borderRadius: 10,
         borderColor: '#fff',
-        borderWidth: 2
+        borderWidth: 2,
       },
       label: {
         formatter: '{b}: {d}%',
-        color: '#666'
+        color: '#666',
       },
       emphasis: {
         label: {
           show: true,
           fontSize: '14',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
         },
         itemStyle: {
           shadowBlur: 10,
           shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }
-  ]
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+        },
+      },
+    },
+  ],
 }));
 
 const { domRef: memoryGaugeRef, setOptions } = useEcharts(
   () => ({
     tooltip: {
-      formatter: '内存使用情况'
+      formatter: '内存使用情况',
     },
     series: [
       {
@@ -161,13 +161,13 @@ const { domRef: memoryGaugeRef, setOptions } = useEcharts(
           formatter: '{value}%',
           fontSize: 16,
           fontWeight: 'bold',
-          offsetCenter: [0, '70%']
+          offsetCenter: [0, '70%'],
         },
         data: [
           {
             value: 0,
-            name: '内存使用率'
-          }
+            name: '内存使用率',
+          },
         ],
         axisLine: {
           lineStyle: {
@@ -175,53 +175,53 @@ const { domRef: memoryGaugeRef, setOptions } = useEcharts(
             color: [
               [0.3, '#58d9f9'],
               [0.7, '#26deca'],
-              [1, '#ff8c6a']
-            ]
-          }
+              [1, '#ff8c6a'],
+            ],
+          },
         },
         pointer: {
           itemStyle: {
-            color: 'auto'
-          }
+            color: 'auto',
+          },
         },
         axisTick: {
           distance: -12,
           length: 4,
           lineStyle: {
             color: '#999',
-            width: 1
-          }
+            width: 1,
+          },
         },
         splitLine: {
           distance: -18,
           length: 12,
           lineStyle: {
             color: '#999',
-            width: 1
-          }
+            width: 1,
+          },
         },
         axisLabel: {
           color: '#666',
           distance: 25,
-          fontSize: 12
+          fontSize: 12,
         },
         title: {
           offsetCenter: [0, '90%'],
-          fontSize: 14
+          fontSize: 14,
         },
-        animationDuration: 1000
-      }
-    ]
+        animationDuration: 1000,
+      },
+    ],
   }),
   {
     // 自定义渲染和更新钩子
-    onRender: chart => {
+    onRender: (chart) => {
       chart.hideLoading();
     },
-    onUpdated: chart => {
+    onUpdated: (chart) => {
       chart.hideLoading();
-    }
-  }
+    },
+  },
 );
 
 // 颜色配置
@@ -237,7 +237,7 @@ const colorPalette = [
   '#9e86ff',
   '#f8d3a5',
   '#4a5bcc',
-  '#22bd7c'
+  '#22bd7c',
 ];
 
 // 更新图表数据
@@ -249,7 +249,7 @@ function updateCharts() {
 
   try {
     // 更新命令统计图表
-    updateCommandChart(opts => {
+    updateCommandChart((opts) => {
       try {
         const commandStats = cacheInfo.value?.commandStats || [];
         if (!commandStats.length) {
@@ -258,7 +258,7 @@ function updateCharts() {
 
         // 解析命令统计数据 - 适配新的数据格式 {name, value}
         const data = commandStats
-          .map(item => {
+          .map((item) => {
             try {
               if (!item || typeof item !== 'object') {
                 return { name: '未知命令', value: 0 };
@@ -291,7 +291,7 @@ function updateCharts() {
               return { name: '未知命令', value: 0 };
             }
           })
-          .filter(item => item.name !== '未知命令' || item.value > 0);
+          .filter((item) => item.name !== '未知命令' || item.value > 0);
 
         if (!data.length) {
           return opts;
@@ -321,7 +321,7 @@ function updateCharts() {
             color(param: { dataIndex: number }) {
               const index = param.dataIndex % colorPalette.length;
               return colorPalette[index >= 0 ? index : 0];
-            }
+            },
           };
 
           opts.series[0].itemStyle = newItemStyle;
@@ -341,7 +341,7 @@ function updateCharts() {
                 `<div>执行次数: <span style="font-weight:bold;float:right;">${value.toLocaleString()}</span></div>` +
                 `<div>占比: <span style="font-weight:bold;float:right;">${percent.toFixed(2)}%</span></div>`
               );
-            } as any
+            } as any,
           };
         }
 
@@ -407,7 +407,7 @@ function updateMemoryChart() {
         formatter:
           maxMem.bytes > 0
             ? `内存使用: ${usedMemoryHuman}<br/>最大内存: ${maxMemoryHuman}<br/>使用率: ${usagePercent}%`
-            : `内存使用: ${usedMemoryHuman}<br/>最大内存: 未设置限制`
+            : `内存使用: ${usedMemoryHuman}<br/>最大内存: 未设置限制`,
       },
       series: [
         {
@@ -419,13 +419,13 @@ function updateMemoryChart() {
             formatter: maxMem.bytes > 0 ? '{value}%' : usedMemoryHuman,
             fontSize: 16,
             fontWeight: 'bold' as const,
-            offsetCenter: [0, '70%']
+            offsetCenter: [0, '70%'],
           },
           data: [
             {
               value: usagePercent,
-              name: maxMem.bytes > 0 ? '内存使用率' : '内存使用量'
-            }
+              name: maxMem.bytes > 0 ? '内存使用率' : '内存使用量',
+            },
           ],
           axisLine: {
             lineStyle: {
@@ -433,43 +433,43 @@ function updateMemoryChart() {
               color: [
                 [0.3, '#58d9f9'],
                 [0.7, '#26deca'],
-                [1, '#ff8c6a']
-              ]
-            }
+                [1, '#ff8c6a'],
+              ],
+            },
           },
           pointer: {
             itemStyle: {
-              color: 'auto'
-            }
+              color: 'auto',
+            },
           },
           axisTick: {
             distance: -12,
             length: 4,
             lineStyle: {
               color: '#999',
-              width: 1
-            }
+              width: 1,
+            },
           },
           splitLine: {
             distance: -18,
             length: 12,
             lineStyle: {
               color: '#999',
-              width: 1
-            }
+              width: 1,
+            },
           },
           axisLabel: {
             color: '#666',
             distance: 25,
-            fontSize: 12
+            fontSize: 12,
           },
           title: {
             offsetCenter: [0, '90%'],
-            fontSize: 14
+            fontSize: 14,
           },
-          animationDuration: 1000
-        }
-      ]
+          animationDuration: 1000,
+        },
+      ],
     };
 
     // 直接设置图表选项
@@ -517,7 +517,7 @@ function forceUpdateCharts() {
 
     if (commandChartRef.value) {
       // 更新命令统计图表
-      updateCommandChart(opts => {
+      updateCommandChart((opts) => {
         // ... existing code ...
         return opts;
       });

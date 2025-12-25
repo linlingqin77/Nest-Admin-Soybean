@@ -5,14 +5,14 @@ export function fetchGetDeptList(params?: Api.System.DeptSearchParams) {
   return request<Api.System.Dept[]>({
     url: '/system/dept/list',
     method: 'get',
-    params
+    params,
   });
 }
 /** 获取排除部门列表 */
 export function fetchGetExcludeDeptList(deptId?: CommonType.IdType) {
   return request<Api.System.Dept[]>({
     url: `/system/dept/list/exclude/${deptId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchCreateDept(data: Api.System.DeptOperateParams) {
   return request<boolean>({
     url: '/system/dept',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -30,7 +30,7 @@ export function fetchUpdateDept(data: Api.System.DeptOperateParams) {
   return request<boolean>({
     url: '/system/dept',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -38,7 +38,7 @@ export function fetchUpdateDept(data: Api.System.DeptOperateParams) {
 export function fetchBatchDeleteDept(deptIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/dept/${deptIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -46,6 +46,6 @@ export function fetchBatchDeleteDept(deptIds: CommonType.IdType[]) {
 export function fetchGetDeptSelect() {
   return request<Api.System.Dept[]>({
     url: '/system/dept/optionselect',
-    method: 'get'
+    method: 'get',
   });
 }

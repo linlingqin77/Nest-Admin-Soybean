@@ -5,7 +5,7 @@ export function fetchGetTenantList(params?: Api.System.TenantSearchParams) {
   return request<Api.System.TenantList>({
     url: '/system/tenant/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -16,9 +16,9 @@ export function fetchCreateTenant(data: Api.System.TenantOperateParams) {
     method: 'post',
     headers: {
       isEncrypt: true,
-      repeatSubmit: false
+      repeatSubmit: false,
     },
-    data
+    data,
   });
 }
 
@@ -27,7 +27,7 @@ export function fetchUpdateTenant(data: Api.System.TenantOperateParams) {
   return request<boolean>({
     url: '/system/tenant',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -35,7 +35,7 @@ export function fetchUpdateTenant(data: Api.System.TenantOperateParams) {
 export function fetchBatchDeleteTenant(ids: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/tenant/${ids.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -43,7 +43,7 @@ export function fetchBatchDeleteTenant(ids: CommonType.IdType[]) {
 export function fetchSyncTenantDict() {
   return request<boolean>({
     url: '/system/tenant/syncTenantDict',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -52,7 +52,7 @@ export function fetchSyncTenantPackage(params: Api.System.TenantPackageSyncParam
   return request<boolean>({
     url: '/system/tenant/syncTenantPackage',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -60,7 +60,7 @@ export function fetchSyncTenantPackage(params: Api.System.TenantPackageSyncParam
 export function fetchSyncTenantConfig() {
   return request<boolean>({
     url: '/system/tenant/syncTenantConfig',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -68,7 +68,7 @@ export function fetchSyncTenantConfig() {
 export function fetchChangeTenant(tenantId: CommonType.IdType) {
   return request<boolean>({
     url: `/system/tenant/dynamic/${tenantId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -76,6 +76,6 @@ export function fetchChangeTenant(tenantId: CommonType.IdType) {
 export function fetchClearTenant() {
   return request<boolean>({
     url: '/system/tenant/dynamic/clear',
-    method: 'get'
+    method: 'get',
   });
 }

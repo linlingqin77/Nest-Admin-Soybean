@@ -7,7 +7,7 @@ import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
 defineOptions({
-  name: 'ContentSettings'
+  name: 'ContentSettings',
 });
 
 const themeStore = useThemeStore();

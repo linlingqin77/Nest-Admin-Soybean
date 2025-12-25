@@ -33,7 +33,7 @@ export interface RequestOption<ResponseData = any> {
    */
   onBackendFail: (
     response: AxiosResponse<ResponseData>,
-    instance: AxiosInstance
+    instance: AxiosInstance,
   ) => Promise<AxiosResponse | null> | Promise<void>;
   /**
    * transform backend response when the responseType is json
@@ -110,6 +110,6 @@ export type FlatResponseData<T = any, ResponseData = any> =
 
 export interface FlatRequestInstance<S = Record<string, unknown>, ResponseData = any> extends RequestInstanceCommon<S> {
   <T = any, R extends ResponseType = 'json'>(
-    config: CustomAxiosRequestConfig<R>
+    config: CustomAxiosRequestConfig<R>,
   ): Promise<FlatResponseData<MappedType<R, T>, ResponseData>>;
 }

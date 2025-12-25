@@ -5,7 +5,7 @@ export function fetchGetOperLogList(params?: Api.Monitor.OperLogSearchParams) {
   return request<Api.Monitor.OperLogList>({
     url: '/monitor/operlog/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -13,7 +13,7 @@ export function fetchGetOperLogList(params?: Api.Monitor.OperLogSearchParams) {
 export function fetchBatchDeleteOperLog(operIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/monitor/operlog/${operIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -21,6 +21,6 @@ export function fetchBatchDeleteOperLog(operIds: CommonType.IdType[]) {
 export function fetchCleanOperLog() {
   return request<boolean>({
     url: '/monitor/operlog/clean',
-    method: 'delete'
+    method: 'delete',
   });
 }

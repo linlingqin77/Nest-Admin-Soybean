@@ -6,7 +6,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'NoticeOperateDrawer'
+  name: 'NoticeOperateDrawer',
 });
 
 interface Props {
@@ -25,7 +25,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const umoEditorRef = ref<InstanceType<typeof UmoEditor>>();
@@ -35,7 +35,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: '新增通知公告',
-    edit: '编辑通知公告'
+    edit: '编辑通知公告',
   };
   return titles[props.operateType];
 });
@@ -49,7 +49,7 @@ function createDefaultModel(): Model {
     noticeTitle: '',
     noticeType: '1',
     noticeContent: '',
-    status: '0'
+    status: '0',
   };
 }
 
@@ -60,7 +60,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   noticeTitle: createRequiredRule('公告标题不能为空'),
   noticeType: createRequiredRule('公告类型不能为空'),
   noticeContent: createRequiredRule('公告内容不能为空'),
-  status: createRequiredRule('公告状态不能为空')
+  status: createRequiredRule('公告状态不能为空'),
 };
 
 function handleUpdateModelWhenEdit() {
@@ -109,8 +109,14 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :trap-focus="false" :title="title" display-directive="show" :width="1000"
-    class="max-w-90%">
+  <NDrawer
+    v-model:show="visible"
+    :trap-focus="false"
+    :title="title"
+    display-directive="show"
+    :width="1000"
+    class="max-w-90%"
+  >
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <div class="grid grid-cols-1 gap-16px md:grid-cols-4">

@@ -7,7 +7,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TenantOperateDrawer'
+  name: 'TenantOperateDrawer',
 });
 
 interface Props {
@@ -26,7 +26,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -35,7 +35,7 @@ const { loading: packageLoading, startLoading: startPackageLoading, endLoading: 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: '新增租户',
-    edit: '编辑租户'
+    edit: '编辑租户',
   };
   return titles[props.operateType];
 });
@@ -60,7 +60,7 @@ function createDefaultModel(): Model {
     accountCount: null,
     status: '0',
     username: '',
-    password: ''
+    password: '',
   };
 }
 
@@ -82,8 +82,8 @@ const rules: Record<RuleKey, App.Global.FormRule | App.Global.FormRule[]> = {
       min: 2,
       max: 20,
       message: '账号长度必须介于2-20之间',
-      trigger: ['blur', 'change']
-    }
+      trigger: ['blur', 'change'],
+    },
   ],
   password: [
     createRequiredRule('管理员密码不能为空'),
@@ -91,9 +91,9 @@ const rules: Record<RuleKey, App.Global.FormRule | App.Global.FormRule[]> = {
       min: 5,
       max: 20,
       message: '密码长度必须介于5-20之间',
-      trigger: ['blur', 'change']
-    }
-  ]
+      trigger: ['blur', 'change'],
+    },
+  ],
 };
 /** the enabled package options */
 const packageOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
@@ -104,9 +104,9 @@ async function getPackageOptions() {
     if (!data) {
       return;
     }
-    packageOptions.value = data.map(item => ({
+    packageOptions.value = data.map((item) => ({
       label: item.packageName,
-      value: item.packageId
+      value: item.packageId,
     }));
   } catch {
     // error handled by request interceptor
@@ -149,7 +149,7 @@ async function handleSubmit() {
         accountCount,
         status,
         username,
-        password
+        password,
       } = model;
       await fetchCreateTenant({
         contactUserName,
@@ -165,7 +165,7 @@ async function handleSubmit() {
         packageId,
         expireTime,
         accountCount,
-        status
+        status,
       });
     } else if (props.operateType === 'edit') {
       const {
@@ -182,7 +182,7 @@ async function handleSubmit() {
         packageId,
         expireTime,
         accountCount,
-        status
+        status,
       } = model;
       await fetchUpdateTenant({
         id,
@@ -198,7 +198,7 @@ async function handleSubmit() {
         packageId,
         expireTime,
         accountCount,
-        status
+        status,
       });
     }
 
@@ -239,17 +239,33 @@ watch(visible, () => {
             <NInput v-model:value="model.username" placeholder="请输入管理员账号" />
           </NFormItem>
           <NFormItem label="管理员密码" path="password">
-            <NInput v-model:value="model.password" type="password" show-password-on="click" placeholder="请输入管理员密码" />
+            <NInput
+              v-model:value="model.password"
+              type="password"
+              show-password-on="click"
+              placeholder="请输入管理员密码"
+            />
           </NFormItem>
         </div>
         <NDivider>租户设置</NDivider>
         <NFormItem label="租户套餐" path="packageId">
-          <NSelect v-model:value="model.packageId" clearable :disabled="props.operateType === 'edit'"
-            placeholder="请选择租户套餐" :options="packageOptions" :loading="packageLoading" />
+          <NSelect
+            v-model:value="model.packageId"
+            clearable
+            :disabled="props.operateType === 'edit'"
+            placeholder="请选择租户套餐"
+            :options="packageOptions"
+            :loading="packageLoading"
+          />
         </NFormItem>
         <NFormItem label="过期时间" path="expireTime">
-          <NDatePicker v-model:formatted-value="model.expireTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
-            clearable class="w-full" />
+          <NDatePicker
+            v-model:formatted-value="model.expireTime"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            clearable
+            class="w-full"
+          />
         </NFormItem>
         <NFormItem path="accountCount">
           <template #label>
@@ -263,7 +279,9 @@ watch(visible, () => {
         <NFormItem path="domain">
           <template #label>
             <div class="flex-center">
-              <FormTip content="可填写域名/端口 填写域名如: www.test.com 或者 www.test.com:8080 填写ip:端口如: 127.0.0.1:8080" />
+              <FormTip
+                content="可填写域名/端口 填写域名如: www.test.com 或者 www.test.com:8080 填写ip:端口如: 127.0.0.1:8080"
+              />
               <span>绑定域名</span>
             </div>
           </template>

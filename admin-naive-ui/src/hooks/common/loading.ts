@@ -20,6 +20,6 @@ export default function useContentLoading() {
     loading: loading.loading,
     description,
     startLoading,
-    endLoading
+    endLoading,
   };
 }

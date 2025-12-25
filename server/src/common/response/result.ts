@@ -3,17 +3,17 @@ import { ResponseCode, ResponseMessage, IResponse, IPaginatedData, getResponseMe
 
 /**
  * 统一响应结果类
- * 
+ *
  * @description 企业级标准响应封装，支持泛型类型安全
  * @example
  * // 成功响应
  * return Result.ok(data);
  * return Result.ok(data, '创建成功');
- * 
+ *
  * // 失败响应
  * return Result.fail(ResponseCode.USER_NOT_FOUND);
  * return Result.fail(ResponseCode.PARAM_INVALID, '用户名不能为空');
- * 
+ *
  * // 分页响应
  * return Result.page(rows, total, pageNum, pageSize);
  */
@@ -46,11 +46,7 @@ export class Result<T = any> implements IResponse<T> {
    * @param msg 响应消息（可选）
    */
   static ok<T = any>(data?: T, msg?: string): Result<T> {
-    return new Result<T>(
-      ResponseCode.SUCCESS,
-      msg ?? getResponseMessage(ResponseCode.SUCCESS),
-      data ?? null,
-    );
+    return new Result<T>(ResponseCode.SUCCESS, msg ?? getResponseMessage(ResponseCode.SUCCESS), data ?? null);
   }
 
   /**
@@ -59,16 +55,8 @@ export class Result<T = any> implements IResponse<T> {
    * @param msg 错误消息（可选，不传则使用默认消息）
    * @param data 额外数据（可选）
    */
-  static fail<T = any>(
-    code: ResponseCode | number = ResponseCode.BUSINESS_ERROR,
-    msg?: string,
-    data?: T,
-  ): Result<T> {
-    return new Result<T>(
-      code,
-      msg ?? (ResponseMessage[code as ResponseCode] || '操作失败'),
-      data ?? null,
-    );
+  static fail<T = any>(code: ResponseCode | number = ResponseCode.BUSINESS_ERROR, msg?: string, data?: T): Result<T> {
+    return new Result<T>(code, msg ?? (ResponseMessage[code as ResponseCode] || '操作失败'), data ?? null);
   }
 
   /**
@@ -78,12 +66,7 @@ export class Result<T = any> implements IResponse<T> {
    * @param pageNum 当前页码（可选）
    * @param pageSize 每页条数（可选）
    */
-  static page<T>(
-    rows: T[],
-    total: number,
-    pageNum?: number,
-    pageSize?: number,
-  ): Result<IPaginatedData<T>> {
+  static page<T>(rows: T[], total: number, pageNum?: number, pageSize?: number): Result<IPaginatedData<T>> {
     const pages = pageSize ? Math.ceil(total / pageSize) : undefined;
     return Result.ok<IPaginatedData<T>>({
       rows,

@@ -14,7 +14,7 @@ import FirstLevelMenu from '../components/first-level-menu.vue';
 import GlobalLogo from '../../global-logo/index.vue';
 
 defineOptions({
-  name: 'VerticalHybridHeaderFirst'
+  name: 'VerticalHybridHeaderFirst',
 });
 
 const route = useRoute();
@@ -33,7 +33,7 @@ const {
   isActiveSecondLevelMenuHasChildren,
   handleSelectSecondLevelMenu,
   getActiveSecondLevelMenuKey,
-  childLevelMenus
+  childLevelMenus,
 } = useMixMenuContext('VerticalHybridHeaderFirst');
 const { selectedKey } = useMenu();
 
@@ -83,7 +83,7 @@ watch(
   () => {
     updateExpandedKeys();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

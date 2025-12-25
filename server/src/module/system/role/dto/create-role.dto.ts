@@ -31,7 +31,13 @@ export class CreateRoleDto {
   @IsNumber()
   roleSort?: number;
 
-  @ApiProperty({ required: false, description: '角色状态（0正常 1停用）', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
+  @ApiProperty({
+    required: false,
+    description: '角色状态（0正常 1停用）',
+    enum: StatusEnum,
+    enumName: 'StatusEnum',
+    enumSchema: StatusEnumSchema,
+  })
   @IsOptional()
   @IsString()
   @IsEnum(StatusEnum)

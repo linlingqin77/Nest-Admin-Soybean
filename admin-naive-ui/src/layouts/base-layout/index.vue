@@ -15,7 +15,7 @@ import ThemeDrawer from '../modules/theme-drawer/index.vue';
 import { setupMixMenuContext } from '../context';
 
 defineOptions({
-  name: 'BaseLayout'
+  name: 'BaseLayout',
 });
 
 const appStore = useAppStore();
@@ -37,33 +37,33 @@ const headerProps = computed(() => {
     vertical: {
       showLogo: false,
       showMenu: false,
-      showMenuToggler: true
+      showMenuToggler: true,
     },
     'vertical-mix': {
       showLogo: false,
       showMenu: false,
-      showMenuToggler: false
+      showMenuToggler: false,
     },
     'vertical-hybrid-header-first': {
       showLogo: !isActiveFirstLevelMenuHasChildren.value,
       showMenu: true,
-      showMenuToggler: false
+      showMenuToggler: false,
     },
     horizontal: {
       showLogo: true,
       showMenu: true,
-      showMenuToggler: false
+      showMenuToggler: false,
     },
     'top-hybrid-sidebar-first': {
       showLogo: true,
       showMenu: true,
-      showMenuToggler: false
+      showMenuToggler: false,
     },
     'top-hybrid-header-first': {
       showLogo: true,
       showMenu: true,
-      showMenuToggler: isActiveFirstLevelMenuHasChildren.value
-    }
+      showMenuToggler: isActiveFirstLevelMenuHasChildren.value,
+    },
   };
 
   return headerPropsConfig[mode];
@@ -89,7 +89,7 @@ function getSiderAndCollapsedWidth(isCollapsed: boolean) {
     collapsedWidth,
     width: themeWidth,
     mixCollapsedWidth,
-    mixWidth: themeMixWidth
+    mixWidth: themeMixWidth,
   } = themeStore.sider;
 
   const width = isCollapsed ? collapsedWidth : themeWidth;

@@ -5,14 +5,14 @@ export function fetchGetUserList(params?: Api.System.UserSearchParams) {
   return request<Api.System.UserList>({
     url: '/system/user/list',
     method: 'get',
-    params
+    params,
   });
 }
 /** 获取部门用户信息列表 */
 export function fetchGetDeptUserList(deptId: CommonType.IdType) {
   return request<Api.System.User[]>({
     url: `/system/user/list/dept/${deptId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchCreateUser(data: Api.System.UserOperateParams) {
   return request<boolean>({
     url: '/system/user',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -30,7 +30,7 @@ export function fetchUpdateUser(data: Api.System.UserOperateParams) {
   return request<boolean>({
     url: '/system/user',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -38,7 +38,7 @@ export function fetchUpdateUser(data: Api.System.UserOperateParams) {
 export function fetchGetUserSelect() {
   return request<Api.System.User[]>({
     url: '/system/user/optionselect',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -47,7 +47,7 @@ export function fetchUpdateUserStatus(data: Api.System.UserOperateParams) {
   return request<boolean>({
     url: '/system/user/changeStatus',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -55,7 +55,7 @@ export function fetchUpdateUserStatus(data: Api.System.UserOperateParams) {
 export function fetchBatchDeleteUser(userIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/user/${userIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -63,7 +63,7 @@ export function fetchBatchDeleteUser(userIds: CommonType.IdType[]) {
 export function fetchGetUserInfo(userId?: CommonType.IdType) {
   return request<Api.System.UserInfo>({
     url: `/system/user/${userId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -71,7 +71,7 @@ export function fetchGetUserInfo(userId?: CommonType.IdType) {
 export function fetchGetDeptTree() {
   return request<Api.Common.CommonTreeRecord>({
     url: '/system/user/deptTree',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -82,9 +82,9 @@ export function fetchResetUserPassword(userId: CommonType.IdType, password: stri
     method: 'put',
     headers: {
       isEncrypt: true,
-      repeatSubmit: false
+      repeatSubmit: false,
     },
-    data: { userId, password }
+    data: { userId, password },
   });
 }
 
@@ -92,7 +92,7 @@ export function fetchResetUserPassword(userId: CommonType.IdType, password: stri
 export function fetchGetAuthRole(userId: CommonType.IdType) {
   return request<Api.System.AuthRole>({
     url: `/system/user/authRole/${userId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -101,7 +101,7 @@ export function fetchAuthUserRole(userId: CommonType.IdType, roleIds: CommonType
   return request<boolean>({
     url: '/system/user/authRole',
     method: 'put',
-    data: { userId, roleIds }
+    data: { userId, roleIds },
   });
 }
 
@@ -110,7 +110,7 @@ export function fetchUpdateUserProfile(data: Api.System.UserProfileOperateParams
   return request<boolean>({
     url: '/system/user/profile',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -120,9 +120,9 @@ export function fetchUpdateUserPassword(data: Api.System.UserPasswordOperatePara
     url: '/system/user/profile/updatePwd',
     method: 'put',
     headers: {
-      isEncrypt: true
+      isEncrypt: true,
     },
-    data
+    data,
   });
 }
 
@@ -131,6 +131,6 @@ export function fetchUpdateUserAvatar(formData: FormData) {
   return request<boolean>({
     url: '/system/user/profile/avatar',
     method: 'post',
-    data: formData
+    data: formData,
   });
 }

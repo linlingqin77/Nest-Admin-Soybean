@@ -8,7 +8,7 @@ import type FileUpload from '@/components/custom/file-upload.vue';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'UserImportModal'
+  name: 'UserImportModal',
 });
 
 interface Emits {
@@ -21,7 +21,7 @@ const { baseURL } = getServiceBaseURL(import.meta.env);
 
 const headers: Record<string, string> = {
   Authorization: `Bearer ${getToken()}`,
-  clientid: import.meta.env.VITE_APP_CLIENT_ID!
+  clientid: import.meta.env.VITE_APP_CLIENT_ID!,
 };
 
 const emit = defineEmits<Emits>();
@@ -31,11 +31,11 @@ const message = ref<string>('');
 const success = ref<boolean>(false);
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const data = ref<Record<string, any>>({
-  updateSupport: false
+  updateSupport: false,
 });
 
 const fileList = ref<UploadFileInfo[]>([]);
@@ -48,7 +48,7 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
-  fileList.value.forEach(item => {
+  fileList.value.forEach((item) => {
     item.status = 'pending';
   });
   uploadRef.value?.submit();
@@ -85,7 +85,7 @@ function handleDownloadTemplate() {
   download(
     '/system/user/importTemplate',
     {},
-    `${$t('page.system.user.title')}_${$t('common.importTemplate')}_${new Date().getTime()}.xlsx`
+    `${$t('page.system.user.title')}_${$t('common.importTemplate')}_${new Date().getTime()}.xlsx`,
   );
 }
 

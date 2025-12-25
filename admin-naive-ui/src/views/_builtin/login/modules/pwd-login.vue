@@ -10,7 +10,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
 defineOptions({
-  name: 'PwdLogin'
+  name: 'PwdLogin',
 });
 
 const authStore = useAuthStore();
@@ -54,7 +54,7 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
     username: [...formRules.userName, { required: true }],
     password: [createRequiredRule($t('form.pwd.required'))],
     code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
-    tenantId: tenantEnabled.value ? formRules.tenantId : []
+    tenantId: tenantEnabled.value ? formRules.tenantId : [],
   };
 
   return loginRules;
@@ -68,10 +68,10 @@ async function handleFetchTenantList() {
     }
     tenantEnabled.value = data.tenantEnabled;
     if (data.tenantEnabled) {
-      tenantOption.value = data.voList.map(tenant => {
+      tenantOption.value = data.voList.map((tenant) => {
         return {
           label: tenant.companyName,
-          value: tenant.tenantId
+          value: tenant.tenantId,
         };
       });
     }
@@ -160,38 +160,47 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
   <div>
     <div class="mb-5px text-32px text-black font-600 dark:text-white">登录到您的账户</div>
     <div class="pb-18px text-16px text-#858585">欢迎回来！请输入您的账户信息</div>
-    
+
     <!-- 演示账户提示卡片 -->
-    <div 
-      v-if="model.username !== 'demo'"
-      class="demo-account-card mb-16px" 
-      @click="handleDemoLogin"
-    >
+    <div v-if="model.username !== 'demo'" class="demo-account-card mb-16px" @click="handleDemoLogin">
       <div class="flex items-center">
         <div class="demo-icon">
           <icon-carbon:user-avatar class="text-24px" />
         </div>
         <div class="flex-1 ml-12px">
           <div class="text-16px font-600 mb-2px">演示账户快速体验</div>
-          <div class="text-12px opacity-70">
-            账号: demo / 密码: demo123 (仅查看权限)
-          </div>
+          <div class="text-12px opacity-70">账号: demo / 密码: demo123 (仅查看权限)</div>
         </div>
         <icon-carbon:arrow-right class="text-20px opacity-60" />
       </div>
     </div>
-    
-    <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false"
-      @keyup.enter="() => !authStore.loginLoading && handleSubmit()">
+
+    <NForm
+      ref="formRef"
+      :model="model"
+      :rules="rules"
+      size="large"
+      :show-label="false"
+      @keyup.enter="() => !authStore.loginLoading && handleSubmit()"
+    >
       <NFormItem v-if="tenantEnabled" path="tenantId">
-        <NSelect v-model:value="model.tenantId" placeholder="请选择租户" :options="tenantOption" :loading="tenantLoading" />
+        <NSelect
+          v-model:value="model.tenantId"
+          placeholder="请选择租户"
+          :options="tenantOption"
+          :loading="tenantLoading"
+        />
       </NFormItem>
       <NFormItem path="username">
         <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
       </NFormItem>
       <NFormItem path="password">
-        <NInput v-model:value="model.password" type="password" show-password-on="click"
-          :placeholder="$t('page.login.common.passwordPlaceholder')" />
+        <NInput
+          v-model:value="model.password"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.passwordPlaceholder')"
+        />
       </NFormItem>
       <NFormItem v-if="captchaEnabled" path="code">
         <div class="w-full flex-y-center gap-16px">

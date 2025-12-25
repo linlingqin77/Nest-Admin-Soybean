@@ -7,7 +7,7 @@ import { useMenu, useMixMenuContext } from '@/layouts/context';
 import FirstLevelMenu from '../components/first-level-menu.vue';
 
 defineOptions({
-  name: 'TopHybridSidebarFirst'
+  name: 'TopHybridSidebarFirst',
 });
 
 const appStore = useAppStore();

@@ -84,7 +84,10 @@ export function FormatDate(date: Date, format = 'YYYY-MM-DD HH:mm:ss') {
  * @param dateFields 需要格式化的字段名数组，默认为常用时间字段
  * @returns 格式化后的对象
  */
-export function FormatDateFields<T>(obj: T, dateFields: string[] = ['createTime', 'updateTime', 'loginDate', 'loginTime', 'operTime', 'expireTime']): T {
+export function FormatDateFields<T>(
+  obj: T,
+  dateFields: string[] = ['createTime', 'updateTime', 'loginDate', 'loginTime', 'operTime', 'expireTime'],
+): T {
   if (!obj) return obj;
 
   if (Array.isArray(obj)) {

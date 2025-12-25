@@ -3,7 +3,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TenantSearch'
+  name: 'TenantSearch',
 });
 
 interface Emits {

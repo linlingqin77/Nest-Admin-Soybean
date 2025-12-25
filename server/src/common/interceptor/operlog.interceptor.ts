@@ -10,7 +10,7 @@ import { OperlogService } from 'src/module/monitor/operlog/operlog.service';
 export class OperlogInterceptor implements NestInterceptor {
   private readonly reflector = new Reflector();
 
-  constructor(readonly logService: OperlogService) { }
+  constructor(readonly logService: OperlogService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const { summary } = this.reflector.getAllAndOverride(`swagger/apiOperation`, [context.getHandler()]);
@@ -28,15 +28,33 @@ export class OperlogInterceptor implements NestInterceptor {
           // 对于导出等特殊操作,可能没有标准的Result格式
           if (!resultData || typeof resultData !== 'object' || !('code' in resultData)) {
             // 文件下载等操作,记录为成功
-            this.logService.logAction({ costTime, resultData: { code: 200 }, handlerName, title: summary, businessType: logConfig?.businessType });
+            this.logService.logAction({
+              costTime,
+              resultData: { code: 200 },
+              handlerName,
+              title: summary,
+              businessType: logConfig?.businessType,
+            });
             return resultData;
           }
 
           if (resultData.code === 200) {
-            this.logService.logAction({ costTime, resultData, handlerName, title: summary, businessType: logConfig?.businessType });
+            this.logService.logAction({
+              costTime,
+              resultData,
+              handlerName,
+              title: summary,
+              businessType: logConfig?.businessType,
+            });
           } else {
             //业务错误
-            this.logService.logAction({ costTime, errorMsg: resultData.msg, handlerName, title: summary, businessType: logConfig?.businessType });
+            this.logService.logAction({
+              costTime,
+              errorMsg: resultData.msg,
+              handlerName,
+              title: summary,
+              businessType: logConfig?.businessType,
+            });
           }
           return resultData;
         }),
@@ -44,7 +62,13 @@ export class OperlogInterceptor implements NestInterceptor {
       .pipe(
         catchError((err) => {
           const costTime = Date.now() - now;
-          this.logService.logAction({ costTime, errorMsg: err.response, handlerName, title: summary, businessType: logConfig?.businessType });
+          this.logService.logAction({
+            costTime,
+            errorMsg: err.response,
+            handlerName,
+            title: summary,
+            businessType: logConfig?.businessType,
+          });
           return throwError(() => err);
         }),
       );

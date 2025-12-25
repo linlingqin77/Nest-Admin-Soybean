@@ -5,7 +5,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'OssConfigSearch'
+  name: 'OssConfigSearch',
 });
 
 interface Emits {
@@ -21,12 +21,12 @@ const model = defineModel<Api.System.OssConfigSearchParams>('model', { required:
 const isDefaltOptions = ref<SelectOption[]>([
   {
     label: '是',
-    value: '0'
+    value: '0',
   },
   {
     label: '否',
-    value: '1'
-  }
+    value: '1',
+  },
 ]);
 async function reset() {
   await restoreValidation();

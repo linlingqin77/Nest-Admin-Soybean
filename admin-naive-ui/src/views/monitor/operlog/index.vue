@@ -13,7 +13,7 @@ import OperLogViewDrawer from './modules/oper-log-view-drawer.vue';
 import OperLogSearch from './modules/oper-log-search.vue';
 
 defineOptions({
-  name: 'OperLogList'
+  name: 'OperLogList',
 });
 
 useDict('sys_common_status');
@@ -34,7 +34,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetOperLogList,
   apiParams: {
@@ -47,25 +47,25 @@ const {
     operName: null,
     operIp: null,
     status: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'title',
       title: '系统模块',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'businessType',
@@ -74,25 +74,25 @@ const {
       minWidth: 120,
       render(row) {
         return <DictTag size="small" value={row.businessType} dictCode="sys_oper_type" />;
-      }
+      },
     },
     {
       key: 'operName',
       title: '操作人员',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operIp',
       title: '操作IP',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operLocation',
       title: '操作地点',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'status',
@@ -101,13 +101,13 @@ const {
       minWidth: 120,
       render(row) {
         return <DictTag size="small" value={row.status} dictCode="sys_common_status" />;
-      }
+      },
     },
     {
       key: 'operTime',
       title: '操作时间',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'costTime',
@@ -116,14 +116,14 @@ const {
       minWidth: 120,
       render(row) {
         return `${row.costTime} ms`;
-      }
+      },
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => {
+      render: (row) => {
         const viewBtn = () => {
           return (
             <ButtonIcon
@@ -136,9 +136,9 @@ const {
           );
         };
         return <div class="flex-center gap-8px">{viewBtn()}</div>;
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(data, getData);
@@ -174,7 +174,7 @@ async function handleCleanOperLog() {
       } catch {
         // error handled by request interceptor
       }
-    }
+    },
   });
 }
 </script>
@@ -184,13 +184,25 @@ async function handleCleanOperLog() {
     <OperLogSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="操作日志列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="false" :show-delete="hasAuth('monitor:operlog:remove')"
-          :show-export="hasAuth('monitor:operlog:export')" @delete="handleBatchDelete" @export="handleExport"
-          @refresh="getData">
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="false"
+          :show-delete="hasAuth('monitor:operlog:remove')"
+          :show-export="hasAuth('monitor:operlog:export')"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
           <template #prefix>
-            <NButton v-if="hasAuth('monitor:operlog:remove')" type="error" ghost size="small"
-              @click="handleCleanOperLog">
+            <NButton
+              v-if="hasAuth('monitor:operlog:remove')"
+              type="error"
+              ghost
+              size="small"
+              @click="handleCleanOperLog"
+            >
               <template #icon>
                 <icon-material-symbols:warning-outline-rounded />
               </template>
@@ -199,9 +211,19 @@ async function handleCleanOperLog() {
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" size="small"
-        :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" remote :row-key="row => row.operId"
-        :pagination="mobilePagination" class="sm:h-full" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        size="small"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.operId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
       <OperLogViewDrawer v-model:visible="drawerVisible" :row-data="editingData" />
     </NCard>
   </div>

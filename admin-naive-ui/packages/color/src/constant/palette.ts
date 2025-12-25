@@ -14,8 +14,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#334155', number: 700 },
       { hex: '#1e293b', number: 800 },
       { hex: '#0f172a', number: 900 },
-      { hex: '#020617', number: 950 }
-    ]
+      { hex: '#020617', number: 950 },
+    ],
   },
   {
     name: 'Gray',
@@ -30,8 +30,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#374151', number: 700 },
       { hex: '#1f2937', number: 800 },
       { hex: '#111827', number: 900 },
-      { hex: '#030712', number: 950 }
-    ]
+      { hex: '#030712', number: 950 },
+    ],
   },
   {
     name: 'Zinc',
@@ -46,8 +46,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#3f3f46', number: 700 },
       { hex: '#27272a', number: 800 },
       { hex: '#18181b', number: 900 },
-      { hex: '#09090b', number: 950 }
-    ]
+      { hex: '#09090b', number: 950 },
+    ],
   },
   {
     name: 'Neutral',
@@ -62,8 +62,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#404040', number: 700 },
       { hex: '#262626', number: 800 },
       { hex: '#171717', number: 900 },
-      { hex: '#0a0a0a', number: 950 }
-    ]
+      { hex: '#0a0a0a', number: 950 },
+    ],
   },
   {
     name: 'Stone',
@@ -78,8 +78,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#44403c', number: 700 },
       { hex: '#292524', number: 800 },
       { hex: '#1c1917', number: 900 },
-      { hex: '#0c0a09', number: 950 }
-    ]
+      { hex: '#0c0a09', number: 950 },
+    ],
   },
   {
     name: 'Red',
@@ -94,8 +94,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#b91c1c', number: 700 },
       { hex: '#991b1b', number: 800 },
       { hex: '#7f1d1d', number: 900 },
-      { hex: '#450a0a', number: 950 }
-    ]
+      { hex: '#450a0a', number: 950 },
+    ],
   },
   {
     name: 'Orange',
@@ -110,8 +110,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#c2410c', number: 700 },
       { hex: '#9a3412', number: 800 },
       { hex: '#7c2d12', number: 900 },
-      { hex: '#431407', number: 950 }
-    ]
+      { hex: '#431407', number: 950 },
+    ],
   },
   {
     name: 'Amber',
@@ -126,8 +126,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#b45309', number: 700 },
       { hex: '#92400e', number: 800 },
       { hex: '#78350f', number: 900 },
-      { hex: '#451a03', number: 950 }
-    ]
+      { hex: '#451a03', number: 950 },
+    ],
   },
   {
     name: 'Yellow',
@@ -142,8 +142,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#a16207', number: 700 },
       { hex: '#854d0e', number: 800 },
       { hex: '#713f12', number: 900 },
-      { hex: '#422006', number: 950 }
-    ]
+      { hex: '#422006', number: 950 },
+    ],
   },
   {
     name: 'Lime',
@@ -158,8 +158,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#4d7c0f', number: 700 },
       { hex: '#3f6212', number: 800 },
       { hex: '#365314', number: 900 },
-      { hex: '#1a2e05', number: 950 }
-    ]
+      { hex: '#1a2e05', number: 950 },
+    ],
   },
   {
     name: 'Green',
@@ -174,8 +174,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#15803d', number: 700 },
       { hex: '#166534', number: 800 },
       { hex: '#14532d', number: 900 },
-      { hex: '#052e16', number: 950 }
-    ]
+      { hex: '#052e16', number: 950 },
+    ],
   },
   {
     name: 'Emerald',
@@ -190,8 +190,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#047857', number: 700 },
       { hex: '#065f46', number: 800 },
       { hex: '#064e3b', number: 900 },
-      { hex: '#022c22', number: 950 }
-    ]
+      { hex: '#022c22', number: 950 },
+    ],
   },
   {
     name: 'Teal',
@@ -206,8 +206,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#0f766e', number: 700 },
       { hex: '#115e59', number: 800 },
       { hex: '#134e4a', number: 900 },
-      { hex: '#042f2e', number: 950 }
-    ]
+      { hex: '#042f2e', number: 950 },
+    ],
   },
   {
     name: 'Cyan',
@@ -222,8 +222,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#0e7490', number: 700 },
       { hex: '#155e75', number: 800 },
       { hex: '#164e63', number: 900 },
-      { hex: '#083344', number: 950 }
-    ]
+      { hex: '#083344', number: 950 },
+    ],
   },
   {
     name: 'Sky',
@@ -238,8 +238,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#0369a1', number: 700 },
       { hex: '#075985', number: 800 },
       { hex: '#0c4a6e', number: 900 },
-      { hex: '#082f49', number: 950 }
-    ]
+      { hex: '#082f49', number: 950 },
+    ],
   },
   {
     name: 'Blue',
@@ -254,8 +254,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#1d4ed8', number: 700 },
       { hex: '#1e40af', number: 800 },
       { hex: '#1e3a8a', number: 900 },
-      { hex: '#172554', number: 950 }
-    ]
+      { hex: '#172554', number: 950 },
+    ],
   },
   {
     name: 'Indigo',
@@ -270,8 +270,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#4338ca', number: 700 },
       { hex: '#3730a3', number: 800 },
       { hex: '#312e81', number: 900 },
-      { hex: '#1e1b4b', number: 950 }
-    ]
+      { hex: '#1e1b4b', number: 950 },
+    ],
   },
   {
     name: 'Violet',
@@ -286,8 +286,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#6d28d9', number: 700 },
       { hex: '#5b21b6', number: 800 },
       { hex: '#4c1d95', number: 900 },
-      { hex: '#2e1065', number: 950 }
-    ]
+      { hex: '#2e1065', number: 950 },
+    ],
   },
   {
     name: 'Purple',
@@ -302,8 +302,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#7e22ce', number: 700 },
       { hex: '#6b21a8', number: 800 },
       { hex: '#581c87', number: 900 },
-      { hex: '#3b0764', number: 950 }
-    ]
+      { hex: '#3b0764', number: 950 },
+    ],
   },
   {
     name: 'Fuchsia',
@@ -318,8 +318,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#a21caf', number: 700 },
       { hex: '#86198f', number: 800 },
       { hex: '#701a75', number: 900 },
-      { hex: '#4a044e', number: 950 }
-    ]
+      { hex: '#4a044e', number: 950 },
+    ],
   },
   {
     name: 'Pink',
@@ -334,8 +334,8 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#be185d', number: 700 },
       { hex: '#9d174d', number: 800 },
       { hex: '#831843', number: 900 },
-      { hex: '#500724', number: 950 }
-    ]
+      { hex: '#500724', number: 950 },
+    ],
   },
   {
     name: 'Rose',
@@ -350,7 +350,7 @@ export const colorPalettes: ColorPaletteFamily[] = [
       { hex: '#be123c', number: 700 },
       { hex: '#9f1239', number: 800 },
       { hex: '#881337', number: 900 },
-      { hex: '#4c0519', number: 950 }
-    ]
-  }
+      { hex: '#4c0519', number: 950 },
+    ],
+  },
 ];

@@ -35,7 +35,7 @@ export class PaginationHelper {
     prisma: PrismaClient,
     model: string,
     findManyArgs: Prisma.Args<any, 'findMany'>,
-    countArgs?: Prisma.Args<any, 'count'>
+    countArgs?: Prisma.Args<any, 'count'>,
   ): Promise<PaginatedResult<T>> {
     const [rows, total] = await prisma.$transaction([
       prisma[model].findMany(findManyArgs),

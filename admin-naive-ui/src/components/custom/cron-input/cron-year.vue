@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 defineOptions({
-  name: 'CronYear'
+  name: 'CronYear',
 });
 
 interface Props {
@@ -28,7 +28,7 @@ const specifyList = ref<number[]>([]);
 // 生成最近 20 年的选项
 const yearOptions = Array.from({ length: 20 }, (_, i) => ({
   label: String(currentYear + i),
-  value: currentYear + i
+  value: currentYear + i,
 }));
 
 const cronValue = computed(() => {
@@ -78,16 +78,16 @@ function parseValue(val: string) {
   }
 }
 
-watch(cronValue, val => {
+watch(cronValue, (val) => {
   emit('change', val);
 });
 
 watch(
   () => props.value,
-  val => {
+  (val) => {
     parseValue(val);
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

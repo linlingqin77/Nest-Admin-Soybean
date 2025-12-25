@@ -13,7 +13,16 @@ import { CacheEnum, DelFlagEnum, StatusEnum, DataScopeEnum } from 'src/common/en
 import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { LOGIN_TOKEN_EXPIRESIN, SYS_USER_TYPE } from 'src/common/constant/index';
 import { Result, ResponseCode } from 'src/common/response';
-import { CreateUserDto, UpdateUserDto, ListUserDto, ChangeUserStatusDto, ResetPwdDto, AllocatedListDto, UpdateProfileDto, UpdatePwdDto } from './dto/index';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  ListUserDto,
+  ChangeUserStatusDto,
+  ResetPwdDto,
+  AllocatedListDto,
+  UpdateProfileDto,
+  UpdatePwdDto,
+} from './dto/index';
 import { RegisterDto, LoginDto } from '../../main/dto/index';
 import { AuthUserCancelDto, AuthUserCancelAllDto, AuthUserSelectAllDto } from '../role/dto/index';
 
@@ -55,7 +64,7 @@ export class UserService {
     @Inject(forwardRef(() => UserRoleService))
     private readonly userRoleService: UserRoleService,
     private readonly userExportService: UserExportService,
-  ) { }
+  ) {}
 
   // ==================== 私有辅助方法 ====================
 
@@ -63,7 +72,13 @@ export class UserService {
     if (!users.length) {
       return users;
     }
-    const deptIds = Array.from(new Set(users.map((item) => item.deptId).filter((deptId): deptId is number => typeof deptId === 'number' && !Number.isNaN(deptId))));
+    const deptIds = Array.from(
+      new Set(
+        users
+          .map((item) => item.deptId)
+          .filter((deptId): deptId is number => typeof deptId === 'number' && !Number.isNaN(deptId)),
+      ),
+    );
     if (!deptIds.length) {
       return users;
     }
@@ -174,7 +189,11 @@ export class UserService {
     if (createUserDto.password) {
       createUserDto.password = bcrypt.hashSync(createUserDto.password, salt);
     }
-    const { postIds = [], roleIds = [], ...userPayload } = createUserDto as CreateUserDto & { postIds?: number[]; roleIds?: number[] };
+    const {
+      postIds = [],
+      roleIds = [],
+      ...userPayload
+    } = createUserDto as CreateUserDto & { postIds?: number[]; roleIds?: number[] };
 
     const user = await this.userRepo.create({
       ...userPayload,
@@ -214,7 +233,10 @@ export class UserService {
     const andConditions: Prisma.SysUserWhereInput[] = await this.buildDataScopeConditions(user);
 
     if (query.deptId) {
-      const deptIds = await this.deptService.findDeptIdsByDataScope(+query.deptId, DataScopeEnum.DATA_SCOPE_DEPT_AND_CHILD);
+      const deptIds = await this.deptService.findDeptIdsByDataScope(
+        +query.deptId,
+        DataScopeEnum.DATA_SCOPE_DEPT_AND_CHILD,
+      );
       andConditions.push({
         deptId: {
           in: deptIds.map((item) => +item),
@@ -255,7 +277,7 @@ export class UserService {
         take,
         orderBy: { createTime: 'desc' },
       },
-      { where }
+      { where },
     );
 
     const listWithDept = await this.attachDeptInfo(list);
@@ -276,7 +298,10 @@ export class UserService {
   }
 
   async findPostAndRoleAll() {
-    const [posts, roles] = await Promise.all([this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }), this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } })]);
+    const [posts, roles] = await Promise.all([
+      this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }),
+      this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
+    ]);
 
     return Result.ok({
       posts,
@@ -293,7 +318,9 @@ export class UserService {
     }
 
     const [dept, postList, allPosts, roleIds, allRoles] = await Promise.all([
-      data?.deptId ? this.prisma.sysDept.findFirst({ where: { deptId: data.deptId, delFlag: DelFlagEnum.NORMAL } }) : Promise.resolve(null),
+      data?.deptId
+        ? this.prisma.sysDept.findFirst({ where: { deptId: data.deptId, delFlag: DelFlagEnum.NORMAL } })
+        : Promise.resolve(null),
       this.prisma.sysUserPost.findMany({ where: { userId }, select: { postId: true } }),
       this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }),
       this.getRoleIds([userId]),
@@ -327,7 +354,11 @@ export class UserService {
       delete updateUserDto.status;
     }
 
-    const { postIds = [], roleIds = [], ...rest } = updateUserDto as UpdateUserDto & { postIds?: number[]; roleIds?: number[] };
+    const {
+      postIds = [],
+      roleIds = [],
+      ...rest
+    } = updateUserDto as UpdateUserDto & { postIds?: number[]; roleIds?: number[] };
 
     // 更新岗位关联
     if (postIds.length > 0) {

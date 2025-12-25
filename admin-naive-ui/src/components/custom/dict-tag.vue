@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   immediate: false,
   dictData: undefined,
   dictCode: '',
-  value: () => []
+  value: () => [],
 });
 
 const attrs = useAttrs() as TagProps;

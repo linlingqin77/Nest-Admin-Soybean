@@ -2,7 +2,15 @@ import { Controller, Get, Post, Body, Put, Param, Query, Delete, Res } from '@ne
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { Response } from 'express';
-import { CreateRoleDto, UpdateRoleDto, ListRoleDto, ChangeRoleStatusDto, AuthUserCancelDto, AuthUserCancelAllDto, AuthUserSelectAllDto } from './dto/index';
+import {
+  CreateRoleDto,
+  UpdateRoleDto,
+  ListRoleDto,
+  ChangeRoleStatusDto,
+  AuthUserCancelDto,
+  AuthUserCancelAllDto,
+  AuthUserSelectAllDto,
+} from './dto/index';
 import { AllocatedListDto } from '../user/dto/index';
 import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
@@ -20,7 +28,7 @@ export class RoleController {
   constructor(
     private readonly roleService: RoleService,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   @Api({
     summary: '角色管理-创建',

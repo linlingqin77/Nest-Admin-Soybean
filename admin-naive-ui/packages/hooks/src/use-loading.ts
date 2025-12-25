@@ -11,6 +11,6 @@ export default function useLoading(initValue = false) {
   return {
     loading,
     startLoading,
-    endLoading
+    endLoading,
   };
 }

@@ -6,10 +6,10 @@ export function setupElegantRouter() {
   return ElegantVueRouter({
     layouts: {
       base: 'src/layouts/base-layout/index.vue',
-      blank: 'src/layouts/blank-layout/index.vue'
+      blank: 'src/layouts/blank-layout/index.vue',
     },
     customRoutes: {
-      names: ['exception_403', 'exception_404', 'exception_500']
+      names: ['exception_403', 'exception_404', 'exception_500'],
     },
     routePathTransformer(routeName, routePath) {
       const key = routeName as RouteKey;
@@ -31,7 +31,7 @@ export function setupElegantRouter() {
 
       const meta: Partial<RouteMeta> = {
         title: key,
-        i18nKey: `route.${key}` as App.I18n.I18nKey
+        i18nKey: `route.${key}` as App.I18n.I18nKey,
       };
 
       if (constantRoutes.includes(key)) {
@@ -39,6 +39,6 @@ export function setupElegantRouter() {
       }
 
       return meta;
-    }
+    },
   });
 }

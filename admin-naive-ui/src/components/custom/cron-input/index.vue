@@ -10,7 +10,7 @@ import CronYear from './cron-year.vue';
 import CronResult from './cron-result.vue';
 
 defineOptions({
-  name: 'CronInput'
+  name: 'CronInput',
 });
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  expression: ''
+  expression: '',
 });
 
 interface Emits {
@@ -34,7 +34,7 @@ const cronValue = ref({
   day: '*',
   month: '*',
   week: '?',
-  year: ''
+  year: '',
 });
 
 const cronExpression = computed(() => {
@@ -51,7 +51,7 @@ const tabs = [
   { name: 'day', tab: '日' },
   { name: 'month', tab: '月' },
   { name: 'week', tab: '周' },
-  { name: 'year', tab: '年' }
+  { name: 'year', tab: '年' },
 ];
 
 function updateCronValue(type: string, value: string) {
@@ -74,7 +74,7 @@ function parseExpression(exp: string) {
       day: parts[3] || '*',
       month: parts[4] || '*',
       week: parts[5] || '?',
-      year: parts[6] || ''
+      year: parts[6] || '',
     };
   }
 }
@@ -87,22 +87,22 @@ function resetCron() {
     day: '*',
     month: '*',
     week: '?',
-    year: ''
+    year: '',
   };
   emit('change', cronExpression.value);
 }
 
 watch(
   () => props.expression,
-  val => {
+  (val) => {
     parseExpression(val);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 defineExpose({
   getCronExpression: () => cronExpression.value,
-  resetCron
+  resetCron,
 });
 </script>
 

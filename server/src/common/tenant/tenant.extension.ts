@@ -77,7 +77,21 @@ export const tenantExtension = Prisma.defineExtension((client) => {
 /**
  * 需要租户隔离的模型列表
  */
-const TENANT_MODELS = ['SysConfig', 'SysDept', 'SysDictData', 'SysDictType', 'SysJob', 'SysLogininfor', 'SysMenu', 'SysNotice', 'SysOperLog', 'SysPost', 'SysRole', 'SysUpload', 'SysUser'];
+const TENANT_MODELS = [
+  'SysConfig',
+  'SysDept',
+  'SysDictData',
+  'SysDictType',
+  'SysJob',
+  'SysLogininfor',
+  'SysMenu',
+  'SysNotice',
+  'SysOperLog',
+  'SysPost',
+  'SysRole',
+  'SysUpload',
+  'SysUser',
+];
 
 /**
  * 检查模型是否需要租户过滤
@@ -146,7 +160,6 @@ function addTenantFilterForDelete(model: string, args: any): any {
 
   return args;
 }
-
 
 /**
  * 添加租户过滤条件

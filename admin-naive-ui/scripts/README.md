@@ -5,9 +5,11 @@
 ## 📁 文件说明
 
 ### deploy.cjs
+
 前端自动化部署脚本，用于将构建后的前端项目部署到服务器。
 
 **功能：**
+
 - 打包前端项目
 - 压缩构建产物
 - 上传到远程服务器
@@ -15,6 +17,7 @@
 - 解压并替换文件
 
 **使用方法：**
+
 ```bash
 # 部署到开发环境
 pnpm run deploy:dev
@@ -27,20 +30,24 @@ pnpm run deploy:prod
 ```
 
 ### deploy.config.cjs
+
 部署配置文件，包含不同环境的服务器配置信息（SSH、路径等）。
 
 **配置项：**
+
 - 服务器 SSH 连接信息
 - 远程服务器路径
 - 构建产物路径
 - 备份设置
 
 ### deploy.config.example.cjs
+
 部署配置示例文件，复制此文件并重命名为 `deploy.config.cjs`，然后填入实际的服务器配置。
 
 ## 🚀 快速开始
 
 1. 复制配置示例文件：
+
 ```bash
 cp scripts/deploy.config.example.cjs scripts/deploy.config.cjs
 ```
@@ -48,6 +55,7 @@ cp scripts/deploy.config.example.cjs scripts/deploy.config.cjs
 2. 编辑 `deploy.config.cjs`，填入服务器配置
 
 3. 执行部署命令：
+
 ```bash
 pnpm run deploy:prod
 ```

@@ -88,8 +88,8 @@ export function sendSocketHeart() {
       // if (socketHeart <= 30) {
       websocket.send(
         JSON.stringify({
-          type: 'ping'
-        })
+          type: 'ping',
+        }),
       );
       socketHeart += 1;
     } else {
@@ -131,13 +131,13 @@ export function websocketonmessage() {
     useNoticeStore().addNotice({
       message: e.data,
       read: false,
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString(),
     });
     window.$notification?.create({
       title: '消息',
       content: e.data,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     });
     return e.data;
   };

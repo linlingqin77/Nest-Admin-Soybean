@@ -6,17 +6,21 @@ import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
 defineOptions({
-    name: 'ComponentSize'
+  name: 'ComponentSize',
 });
 
 const themeStore = useThemeStore();
 </script>
 
 <template>
-    <SettingItem :label="$t('theme.component.size.title')">
-        <NSelect v-model:value="themeStore.componentSize" :options="translateOptions(themeComponentSizeOptions)"
-            size="small" class="w-120px" />
-    </SettingItem>
+  <SettingItem :label="$t('theme.component.size.title')">
+    <NSelect
+      v-model:value="themeStore.componentSize"
+      :options="translateOptions(themeComponentSizeOptions)"
+      size="small"
+      class="w-120px"
+    />
+  </SettingItem>
 </template>
 
 <style scoped></style>

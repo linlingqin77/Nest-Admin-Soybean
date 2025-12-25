@@ -18,7 +18,7 @@ export class PostService {
     @Inject(forwardRef(() => DeptService))
     private readonly deptService: DeptService,
     private readonly postRepo: PostRepository,
-  ) { }
+  ) {}
   async create(createPostDto: CreatePostDto) {
     await this.postRepo.create({
       deptId: createPostDto.deptId,

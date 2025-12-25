@@ -3,7 +3,7 @@ import { useAppStore } from '@/store/modules/app';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ThemeButton'
+  name: 'ThemeButton',
 });
 
 const appStore = useAppStore();

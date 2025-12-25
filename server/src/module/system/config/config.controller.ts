@@ -14,7 +14,7 @@ import { UserTool, UserToolType } from '../user/user.decorator';
 @Controller('system/config')
 @ApiBearerAuth('Authorization')
 export class ConfigController {
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   @Api({
     summary: '参数设置-创建',

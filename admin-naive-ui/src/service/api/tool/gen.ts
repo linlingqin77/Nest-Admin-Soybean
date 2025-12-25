@@ -5,7 +5,7 @@ export function fetchGetGenTableList(params?: Api.Tool.GenTableSearchParams) {
   return request<Api.Tool.GenTableList>({
     url: '/tool/gen/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -19,7 +19,7 @@ export function fetchImportGenTable(tables: string[], dataName: string) {
   return request<boolean>({
     url: '/tool/gen/importTable',
     method: 'post',
-    params: { tables: tables.join(','), dataName }
+    params: { tables: tables.join(','), dataName },
   });
 }
 
@@ -28,7 +28,7 @@ export function fetchUpdateGenTable(data: Api.Tool.GenTable) {
   return request<boolean>({
     url: '/tool/gen',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -36,7 +36,7 @@ export function fetchUpdateGenTable(data: Api.Tool.GenTable) {
 export function fetchGetGenTableInfo(tableId: CommonType.IdType) {
   return request<Api.Tool.GenTableInfo>({
     url: `/tool/gen/${tableId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -45,7 +45,7 @@ export function fetchBatchDeleteGenTable(tableIds: CommonType.IdType[]) {
   const ids = tableIds.join(',');
   return request<boolean>({
     url: `/tool/gen/${ids}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -53,7 +53,7 @@ export function fetchBatchDeleteGenTable(tableIds: CommonType.IdType[]) {
 export function fetchGetGenDataNames() {
   return request<string[]>({
     url: '/tool/gen/getDataNames',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -62,7 +62,7 @@ export function fetchGetGenDbList(params?: Api.Tool.GenTableDbSearchParams) {
   return request<Api.Tool.GenTableDbList>({
     url: '/tool/gen/db/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -70,7 +70,7 @@ export function fetchGetGenDbList(params?: Api.Tool.GenTableDbSearchParams) {
 export function fetchSynchGenDbList(tableId: CommonType.IdType) {
   return request<Api.Tool.GenTableDbList>({
     url: `/tool/gen/synchDb/${tableId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -78,7 +78,7 @@ export function fetchSynchGenDbList(tableId: CommonType.IdType) {
 export function fetchGetGenPreview(tableId: CommonType.IdType) {
   return request<Api.Tool.GenTablePreview>({
     url: `/tool/gen/preview/${tableId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -86,7 +86,7 @@ export function fetchGetGenPreview(tableId: CommonType.IdType) {
 export function fetchGenCode(tableId: CommonType.IdType) {
   return request<Api.Tool.GenTableDbList>({
     url: `/tool/gen/genCode/${tableId}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -96,6 +96,6 @@ export function fetchBatchGenCode(tableIds: CommonType.IdType[]) {
   return request<Api.Tool.GenTableDbList>({
     url: '/tool/gen/genCode/',
     method: 'get',
-    params: { tableIdStr }
+    params: { tableIdStr },
   });
 }

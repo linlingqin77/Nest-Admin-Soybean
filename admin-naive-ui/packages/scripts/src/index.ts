@@ -43,13 +43,13 @@ export async function setupCli() {
     .version(lightGreen(version))
     .option(
       '-e, --execute [command]',
-      "Execute additional command after bumping and before git commit. Defaults to 'npx soy changelog'"
+      "Execute additional command after bumping and before git commit. Defaults to 'npx soy changelog'",
     )
     .option('-p, --push', 'Indicates whether to push the git commit and tag')
     .option('-t, --total', 'Generate changelog by total tags')
     .option(
       '-c, --cleanupDir <dir>',
-      'The glob pattern of dirs to cleanup, If not set, it will use the default value, Multiple values use "," to separate them'
+      'The glob pattern of dirs to cleanup, If not set, it will use the default value, Multiple values use "," to separate them',
     )
     .option('-l, --lang <lang>', 'display lang of cli', { default: 'en-us', type: [String] })
     .help();
@@ -59,44 +59,44 @@ export async function setupCli() {
       desc: 'delete dirs: node_modules, dist, etc.',
       action: async () => {
         await cleanup(cliOptions.cleanupDirs);
-      }
+      },
     },
     'update-pkg': {
       desc: 'update package.json dependencies versions',
       action: async () => {
         await updatePkg(cliOptions.ncuCommandArgs);
-      }
+      },
     },
     'git-commit': {
       desc: 'git commit, generate commit message which match Conventional Commits standard',
-      action: async args => {
+      action: async (args) => {
         await gitCommit(args?.lang);
-      }
+      },
     },
     'git-commit-verify': {
       desc: 'verify git commit message, make sure it match Conventional Commits standard',
-      action: async args => {
+      action: async (args) => {
         await gitCommitVerify(args?.lang, cliOptions.gitCommitVerifyIgnores);
-      }
+      },
     },
     changelog: {
       desc: 'generate changelog',
-      action: async args => {
+      action: async (args) => {
         await genChangelog(cliOptions.changelogOptions, args?.total);
-      }
+      },
     },
     release: {
       desc: 'release: update version, generate changelog, commit code',
-      action: async args => {
+      action: async (args) => {
         await release(args?.execute, args?.push);
-      }
+      },
     },
     'gen-route': {
       desc: 'generate route',
       action: async () => {
         await generateRoute();
-      }
-    }
+      },
+    },
   };
 
   for (const [command, { desc, action }] of Object.entries(commands)) {

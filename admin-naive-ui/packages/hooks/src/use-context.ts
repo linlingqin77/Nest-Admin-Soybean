@@ -71,7 +71,7 @@ export default function useContext<T extends (...args: any[]) => any>(contextNam
     /** Setup store in the parent component */
     setupStore,
     /** Use store in the child component */
-    useStore
+    useStore,
   };
 }
 
@@ -91,6 +91,6 @@ function createContext<T>(contextName: string) {
 
   return {
     useProvide,
-    useInject
+    useInject,
   };
 }

@@ -5,7 +5,7 @@ import { useLoading } from '@sa/hooks';
 import { fetchGetRoleSelect } from '@/service/api/system';
 
 defineOptions({
-  name: 'RoleSelect'
+  name: 'RoleSelect',
 });
 
 interface Props {
@@ -27,9 +27,9 @@ async function getRoleOptions() {
   startRoleLoading();
   try {
     const { data } = await fetchGetRoleSelect();
-    roleOptions.value = data.map(item => ({
+    roleOptions.value = data.map((item) => ({
       label: item.roleName,
-      value: item.roleId
+      value: item.roleId,
     }));
   } catch {
     // error handled by request interceptor

@@ -4,7 +4,7 @@ import { themeLayoutModeRecord } from '@/constants/app';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'LayoutModeCard'
+  name: 'LayoutModeCard',
 });
 
 interface Props {
@@ -36,33 +36,33 @@ const layoutConfig: LayoutConfig = {
   vertical: {
     placement: 'bottom',
     menuClass: 'w-1/3 h-full',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   'vertical-mix': {
     placement: 'bottom',
     menuClass: 'w-1/4 h-full',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   'vertical-hybrid-header-first': {
     placement: 'bottom',
     menuClass: 'w-1/4 h-full',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   horizontal: {
     placement: 'bottom',
     menuClass: 'w-full h-1/4',
-    mainClass: 'w-full h-3/4'
+    mainClass: 'w-full h-3/4',
   },
   'top-hybrid-sidebar-first': {
     placement: 'bottom',
     menuClass: 'w-full h-1/4',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   'top-hybrid-header-first': {
     placement: 'bottom',
     menuClass: 'w-full h-1/4',
-    mainClass: 'w-2/3 h-3/4'
-  }
+    mainClass: 'w-2/3 h-3/4',
+  },
 };
 
 function handleChangeMode(mode: UnionKey.ThemeLayoutMode) {

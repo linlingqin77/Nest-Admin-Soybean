@@ -20,7 +20,7 @@ export function createViteProxy(env: Env.ImportMeta, enable: boolean) {
 
   const proxy: Record<string, ProxyOptions> = createProxyItem({ baseURL, ws, proxyPattern }, isEnableProxyLog);
 
-  other.forEach(item => {
+  other.forEach((item) => {
     Object.assign(proxy, createProxyItem(item, isEnableProxyLog));
   });
 
@@ -48,7 +48,7 @@ function createProxyItem(item: App.Service.ServiceConfigItem, enableLog: boolean
         if (!enableLog) return;
         consola.log(bgRed(`Error: ${req.method} `), green(`${options.target}${req.url}`));
       });
-    }
+    },
     // 不再移除 proxyPattern 前缀，保留 /api 让后端接收
     // rewrite: path => path.replace(new RegExp(`^${item.proxyPattern}`), '')
   };

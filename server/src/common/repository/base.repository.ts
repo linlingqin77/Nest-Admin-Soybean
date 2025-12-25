@@ -49,9 +49,9 @@ export type PrismaDelegate = {
 
 /**
  * 基础仓储抽象类
- * 
+ *
  * @description 提供通用的 CRUD 操作封装，减少 Service 层的样板代码
- * 
+ *
  * @example
  * ```typescript
  * @Injectable()
@@ -97,7 +97,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
    */
   async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<T[]> {
     const { where, include, select, orderBy, order } = options || {};
-    
+
     return this.delegate.findMany({
       where,
       include,
@@ -242,10 +242,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
    * 批量软删除
    */
   async softDeleteMany(ids: (number | string)[]): Promise<{ count: number }> {
-    return this.updateMany(
-      { [this.getPrimaryKeyName()]: { in: ids } },
-      { delFlag: '1' },
-    );
+    return this.updateMany({ [this.getPrimaryKeyName()]: { in: ids } }, { delFlag: '1' });
   }
 
   /**
@@ -266,7 +263,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
 
 /**
  * 带软删除的仓储基类
- * 
+ *
  * @description 自动在查询条件中添加 delFlag = '0' 过滤
  */
 export abstract class SoftDeleteRepository<T, D extends PrismaDelegate = PrismaDelegate> extends BaseRepository<T, D> {

@@ -10,7 +10,7 @@ const defaultOptions: CliOption = {
     '**/yarn.lock',
     '**/pnpm-lock.yaml',
     '**/node_modules',
-    '!node_modules/**'
+    '!node_modules/**',
   ],
   ncuCommandArgs: ['--deep', '-u'],
   changelogOptions: {},
@@ -22,8 +22,8 @@ const defaultOptions: CliOption = {
     /^(Merged (.*?)(in|into) (.*)|Merged PR (.*): (.*))/,
     /^Merge remote-tracking branch(\s*)(.*)/,
     /^Automatic merge(.*)/,
-    /^Auto-merged (.*?) into (.*)/
-  ]
+    /^Auto-merged (.*?) into (.*)/,
+  ],
 };
 
 export async function loadCliOptions(overrides?: Partial<CliOption>, cwd = process.cwd()) {
@@ -32,7 +32,7 @@ export async function loadCliOptions(overrides?: Partial<CliOption>, cwd = proce
     defaults: defaultOptions,
     overrides,
     cwd,
-    packageJson: true
+    packageJson: true,
   });
 
   return config as CliOption;

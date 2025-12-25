@@ -16,49 +16,49 @@ import { ClientConfig } from './client.config';
  * 完整的应用配置接口
  */
 export class Configuration {
-    @ValidateNested()
-    @Type(() => AppConfig)
-    app: AppConfig;
+  @ValidateNested()
+  @Type(() => AppConfig)
+  app: AppConfig;
 
-    @ValidateNested()
-    @Type(() => DatabaseConfig)
-    db: DatabaseConfig;
+  @ValidateNested()
+  @Type(() => DatabaseConfig)
+  db: DatabaseConfig;
 
-    @ValidateNested()
-    @Type(() => RedisConfig)
-    redis: RedisConfig;
+  @ValidateNested()
+  @Type(() => RedisConfig)
+  redis: RedisConfig;
 
-    @ValidateNested()
-    @Type(() => JwtConfig)
-    jwt: JwtConfig;
+  @ValidateNested()
+  @Type(() => JwtConfig)
+  jwt: JwtConfig;
 
-    @ValidateNested()
-    @Type(() => TenantConfig)
-    tenant: TenantConfig;
+  @ValidateNested()
+  @Type(() => TenantConfig)
+  tenant: TenantConfig;
 
-    @ValidateNested()
-    @Type(() => CryptoConfig)
-    crypto: CryptoConfig;
+  @ValidateNested()
+  @Type(() => CryptoConfig)
+  crypto: CryptoConfig;
 
-    @ValidateNested()
-    @Type(() => CosConfig)
-    cos: CosConfig;
+  @ValidateNested()
+  @Type(() => CosConfig)
+  cos: CosConfig;
 
-    @ValidateNested()
-    @Type(() => PermissionConfig)
-    perm: PermissionConfig;
+  @ValidateNested()
+  @Type(() => PermissionConfig)
+  perm: PermissionConfig;
 
-    @ValidateNested()
-    @Type(() => GeneratorConfig)
-    gen: GeneratorConfig;
+  @ValidateNested()
+  @Type(() => GeneratorConfig)
+  gen: GeneratorConfig;
 
-    @ValidateNested()
-    @Type(() => UserConfig)
-    user: UserConfig;
+  @ValidateNested()
+  @Type(() => UserConfig)
+  user: UserConfig;
 
-    @ValidateNested()
-    @Type(() => ClientConfig)
-    client: ClientConfig;
+  @ValidateNested()
+  @Type(() => ClientConfig)
+  client: ClientConfig;
 }
 
 // 导出所有配置类型

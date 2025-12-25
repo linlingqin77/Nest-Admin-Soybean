@@ -16,7 +16,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  clearable: false
+  clearable: false,
 });
 
 const appStore = useAppStore();
@@ -75,10 +75,10 @@ async function handleFetchTenantList() {
     }
     enabled.value = data.tenantEnabled;
     if (data.tenantEnabled) {
-      tenantOption.value = data.voList.map(tenant => {
+      tenantOption.value = data.voList.map((tenant) => {
         return {
           label: tenant.companyName,
-          value: tenant.tenantId
+          value: tenant.tenantId,
         };
       });
     }
@@ -97,6 +97,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NSelect v-if="showTenantSelect" v-model:value="tenantId" :clearable="clearable" placeholder="请选择租户"
-    :options="tenantOption" :loading="loading" @update:value="handleChangeTenant" @clear="handleClearTenant" />
+  <NSelect
+    v-if="showTenantSelect"
+    v-model:value="tenantId"
+    :clearable="clearable"
+    placeholder="请选择租户"
+    :options="tenantOption"
+    :loading="loading"
+    @update:value="handleChangeTenant"
+    @clear="handleClearTenant"
+  />
 </template>

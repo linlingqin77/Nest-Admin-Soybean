@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 
 defineOptions({
   name: 'ButtonIcon',
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 interface Props {
@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipPlacement: 'bottom',
   popconfirmContent: '',
   zIndex: 98,
-  quaternary: true
+  quaternary: true,
 });
 
 interface Emits {

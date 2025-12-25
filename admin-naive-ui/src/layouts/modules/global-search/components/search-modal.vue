@@ -26,7 +26,7 @@ const handleSearch = useDebounceFn(search, 300);
 const visible = defineModel<boolean>('show', { required: true });
 
 function search() {
-  resultOptions.value = routeStore.searchMenus.filter(menu => {
+  resultOptions.value = routeStore.searchMenus.filter((menu) => {
     const trimKeyword = keyword.value.toLocaleLowerCase().trim();
     const title = (menu.i18nKey ? $t(menu.i18nKey) : menu.label).toLocaleLowerCase();
     return trimKeyword && title.includes(trimKeyword);
@@ -70,7 +70,7 @@ function handleDown() {
 }
 
 function getActivePathIndex() {
-  return resultOptions.value.findIndex(item => item.routePath === activePath.value);
+  return resultOptions.value.findIndex((item) => item.routePath === activePath.value);
 }
 
 /** key enter */

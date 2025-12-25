@@ -6,7 +6,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'UserOperateDrawer'
+  name: 'UserOperateDrawer',
 });
 
 interface Props {
@@ -29,7 +29,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { loading, startLoading, endLoading } = useLoading();
@@ -40,7 +40,7 @@ const { createRequiredRule, patternRules } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: $t('page.system.user.addUser'),
-    edit: $t('page.system.user.editUser')
+    edit: $t('page.system.user.editUser'),
   };
   return titles[props.operateType];
 });
@@ -63,7 +63,7 @@ function createDefaultModel(): Model {
     status: '0',
     roleIds: [],
     postIds: [],
-    remark: ''
+    remark: '',
   };
 }
 
@@ -75,7 +75,7 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
   password: [{ ...patternRules.pwd, required: props.operateType === 'add' }],
   phonenumber: [patternRules.phone],
   status: [createRequiredRule($t('page.system.user.form.status.required'))],
-  roleIds: [{ ...createRequiredRule('请选择角色'), type: 'array' }]
+  roleIds: [{ ...createRequiredRule('请选择角色'), type: 'array' }],
 };
 
 async function getUserInfo(id: CommonType.IdType = '') {
@@ -87,9 +87,9 @@ async function getUserInfo(id: CommonType.IdType = '') {
     }
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
-    roleOptions.value = data.roles.map(role => ({
+    roleOptions.value = data.roles.map((role) => ({
       label: role.roleName,
-      value: role.roleId
+      value: role.roleId,
     }));
   } catch (error) {
     // error handled by request interceptor
@@ -139,7 +139,7 @@ async function handleSubmit() {
         status,
         roleIds,
         postIds,
-        remark
+        remark,
       });
     } else if (props.operateType === 'edit') {
       await fetchUpdateUser({
@@ -153,7 +153,7 @@ async function handleSubmit() {
         status,
         roleIds,
         postIds,
-        remark
+        remark,
       });
     }
 
@@ -182,9 +182,16 @@ watch(visible, () => {
             <NInput v-model:value="model.nickName" :placeholder="$t('page.system.user.form.nickName.required')" />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.deptName')" path="deptId">
-            <NTreeSelect v-model:value="model.deptId" :loading="deptLoading" clearable :options="deptData as []"
-              label-field="label" key-field="id" :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
-              :placeholder="$t('page.system.user.form.deptId.required')" />
+            <NTreeSelect
+              v-model:value="model.deptId"
+              :loading="deptLoading"
+              clearable
+              :options="deptData as []"
+              label-field="label"
+              key-field="id"
+              :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
+              :placeholder="$t('page.system.user.form.deptId.required')"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.phonenumber')" path="phonenumber">
             <NInput v-model:value="model.phonenumber" :placeholder="$t('page.system.user.form.phonenumber.required')" />
@@ -196,19 +203,33 @@ watch(visible, () => {
             <NInput v-model:value="model.userName" :placeholder="$t('page.system.user.form.userName.required')" />
           </NFormItem>
           <NFormItem v-if="operateType === 'add'" :label="$t('page.system.user.password')" path="password">
-            <NInput v-model:value="model.password" type="password" show-password-on="click"
-              :input-props="{ autocomplete: 'off' }" :placeholder="$t('page.system.user.form.password.required')" />
+            <NInput
+              v-model:value="model.password"
+              type="password"
+              show-password-on="click"
+              :input-props="{ autocomplete: 'off' }"
+              :placeholder="$t('page.system.user.form.password.required')"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.sex')" path="sex">
-            <DictRadio v-model:value="model.sex" dict-code="sys_user_sex"
-              :placeholder="$t('page.system.user.form.sex.required')" />
+            <DictRadio
+              v-model:value="model.sex"
+              dict-code="sys_user_sex"
+              :placeholder="$t('page.system.user.form.sex.required')"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.postIds')" path="postIds">
             <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.roleIds')" path="roleIds">
-            <NSelect v-model:value="model.roleIds" :loading="loading" :options="roleOptions" multiple clearable
-              placeholder="请选择角色" />
+            <NSelect
+              v-model:value="model.roleIds"
+              :loading="loading"
+              :options="roleOptions"
+              multiple
+              clearable
+              placeholder="请选择角色"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.status')" path="status">
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />

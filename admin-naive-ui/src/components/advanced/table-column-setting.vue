@@ -3,11 +3,11 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TableColumnSetting'
+  name: 'TableColumnSetting',
 });
 
 const columns = defineModel<NaiveUI.TableColumnCheck[]>('columns', {
-  required: true
+  required: true,
 });
 </script>
 

@@ -33,12 +33,12 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
   } = useHookTable<A, GetTableData<A>, TableColumn<NaiveUI.TableDataWithIndex<GetTableData<A>>>>({
     apiFn,
     apiParams,
     columns: config.columns,
-    transformer: res => {
+    transformer: (res) => {
       const { rows: records = [], total = 0 } = res.data || {};
 
       const current = searchParams.pageNum as number;
@@ -50,7 +50,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       const recordsWithIndex = records.map((item, index) => {
         return {
           ...item,
-          index: (current - 1) * pageSize + index + 1
+          index: (current - 1) * pageSize + index + 1,
         };
       });
 
@@ -58,30 +58,30 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
         data: recordsWithIndex,
         pageNum: current,
         pageSize,
-        total
+        total,
       };
     },
-    getColumnChecks: cols => {
+    getColumnChecks: (cols) => {
       const checks: NaiveUI.TableColumnCheck[] = [];
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
           checks.push({
             key: column.key as string,
             title: column.title!,
-            checked: true
+            checked: true,
           });
         } else if (column.type === 'selection') {
           checks.push({
             key: SELECTION_KEY,
             title: $t('common.check'),
-            checked: true
+            checked: true,
           });
         } else if (column.type === 'expand') {
           checks.push({
             key: EXPAND_KEY,
             title: $t('common.expandColumn'),
-            checked: true
+            checked: true,
           });
         }
       });
@@ -91,7 +91,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getColumns: (cols, checks) => {
       const columnMap = new Map<string, TableColumn<GetTableData<A>>>();
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
           columnMap.set(column.key as string, column);
         } else if (column.type === 'selection') {
@@ -102,21 +102,21 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       });
 
       const filteredColumns = checks
-        .filter(item => item.checked)
-        .map(check => columnMap.get(check.key) as TableColumn<GetTableData<A>>);
+        .filter((item) => item.checked)
+        .map((check) => columnMap.get(check.key) as TableColumn<GetTableData<A>>);
 
       return filteredColumns;
     },
-    onFetched: async transformed => {
+    onFetched: async (transformed) => {
       const { total } = transformed;
 
       updatePagination({
         page: searchParams.pageNum,
         pageSize: searchParams.pageSize,
-        itemCount: total
+        itemCount: total,
       });
     },
-    immediate
+    immediate,
   });
 
   const pagination: PaginationProps = reactive({
@@ -130,7 +130,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
 
       updateSearchParams({
         pageNum: page,
-        pageSize: pagination.pageSize!
+        pageSize: pagination.pageSize!,
       });
 
       getData();
@@ -141,16 +141,16 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
 
       updateSearchParams({
         pageNum: pagination.page,
-        pageSize
+        pageSize,
       });
 
       getData();
     },
     ...(showTotal
       ? {
-        prefix: page => $t('datatable.itemCount', { total: page.itemCount })
-      }
-      : {})
+          prefix: (page) => $t('datatable.itemCount', { total: page.itemCount }),
+        }
+      : {}),
   });
 
   // this is for mobile, if the system does not support mobile, you can use `pagination` directly
@@ -158,7 +158,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     const p: PaginationProps = {
       ...pagination,
       pageSlot: isMobile.value ? 3 : 9,
-      prefix: !isMobile.value && showTotal ? pagination.prefix : undefined
+      prefix: !isMobile.value && showTotal ? pagination.prefix : undefined,
     };
 
     return p;
@@ -175,12 +175,12 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
    */
   async function getDataByPage(pageNum: number = 1) {
     updatePagination({
-      page: pageNum
+      page: pageNum,
     });
 
     updateSearchParams({
       pageNum,
-      pageSize: pagination.pageSize!
+      pageSize: pagination.pageSize!,
     });
 
     await getData();
@@ -191,7 +191,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       () => appStore.locale,
       () => {
         reloadColumns();
-      }
+      },
     );
   });
 
@@ -221,7 +221,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     searchParams,
     updateSearchParams,
     resetSearchParams,
-    scrollX
+    scrollX,
   };
 }
 
@@ -240,7 +240,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
 
   function handleEdit(field: keyof T, id: CommonType.IdType) {
     operateType.value = 'edit';
-    const findItem = data.value.find(item => item[field] === id) || null;
+    const findItem = data.value.find((item) => item[field] === id) || null;
     editingData.value = jsonClone(findItem);
 
     openDrawer();
@@ -275,7 +275,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
     handleEdit,
     checkedRowKeys,
     onBatchDeleted,
-    onDeleted
+    onDeleted,
   };
 }
 
@@ -285,7 +285,7 @@ function isTableColumnHasKey<T>(column: TableColumn<T>): column is NaiveUI.Table
 
 /**
  * Use table props from theme store
- * 
+ *
  * @description This hook provides reactive table properties from theme configuration
  * @returns Table properties object that can be spread onto NDataTable component
  */
@@ -298,6 +298,6 @@ export function useTableProps() {
     bottomBordered: themeStore.table.bottomBordered,
     singleColumn: themeStore.table.singleColumn,
     singleLine: themeStore.table.singleLine,
-    striped: themeStore.table.striped
+    striped: themeStore.table.striped,
   }));
 }

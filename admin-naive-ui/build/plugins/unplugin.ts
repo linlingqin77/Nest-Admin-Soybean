@@ -20,13 +20,13 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
     Icons({
       compiler: 'vue3',
       customCollections: {
-        [collectionName]: FileSystemIconLoader(localIconPath, svg =>
-          svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')
-        )
+        [collectionName]: FileSystemIconLoader(localIconPath, (svg) =>
+          svg.replace(/^<svg\s/, '<svg width="1em" height="1em" '),
+        ),
       },
       scale: 1,
       defaultClass: 'inline-block',
-      autoInstall: true
+      autoInstall: true,
     }),
     Components({
       dts: 'src/typings/components.d.ts',
@@ -36,16 +36,25 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
         IconsResolver({
           customCollections: [collectionName],
           componentPrefix: VITE_ICON_PREFIX,
-          enabledCollections: ['carbon', 'mdi', 'material-symbols', 'gridicons', 'ant-design', 'line-md', 'ph', 'majesticons']
-        })
-      ]
+          enabledCollections: [
+            'carbon',
+            'mdi',
+            'material-symbols',
+            'gridicons',
+            'ant-design',
+            'line-md',
+            'ph',
+            'majesticons',
+          ],
+        }),
+      ],
     }),
     createSvgIconsPlugin({
       iconDirs: [localIconPath],
       symbolId: `${VITE_ICON_LOCAL_PREFIX}-[dir]-[name]`,
       inject: 'body-last',
-      customDomId: '__SVG_ICON_LOCAL__'
-    })
+      customDomId: '__SVG_ICON_LOCAL__',
+    }),
   ];
 
   return plugins;

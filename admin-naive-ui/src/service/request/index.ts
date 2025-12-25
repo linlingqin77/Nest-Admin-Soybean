@@ -17,8 +17,8 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
   {
     baseURL,
     'axios-retry': {
-      retries: 0
-    }
+      retries: 0,
+    },
   },
   {
     async onRequest(config) {
@@ -63,7 +63,7 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
         handleLogout();
         window.removeEventListener('beforeunload', handleLogout);
 
-        flatRequest.state.errMsgStack = flatRequest.state.errMsgStack.filter(msg => msg !== response.data.msg);
+        flatRequest.state.errMsgStack = flatRequest.state.errMsgStack.filter((msg) => msg !== response.data.msg);
       }
 
       const isLogin = Boolean(localStg.get('token'));
@@ -71,9 +71,9 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
       // when the backend response code is in `logoutCodes`, it means the user will be logged out and redirected to login page
       const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       const modalLogoutCodes = import.meta.env.VITE_SERVICE_MODAL_LOGOUT_CODES?.split(',') || [];
-      
+
       // 合并处理登出代码：如果在登出代码列表中，直接登出并跳转
-      const allLogoutCodes = [...logoutCodes, ...modalLogoutCodes].filter(code => code);
+      const allLogoutCodes = [...logoutCodes, ...modalLogoutCodes].filter((code) => code);
       if (allLogoutCodes.includes(responseCode)) {
         // 如果已经在登录页，直接清理即可
         if (window.location.pathname?.startsWith('/login')) {
@@ -89,10 +89,10 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
 
         // 取消所有待处理的请求
         flatRequest.cancelAllRequest();
-        
+
         // 直接登出并跳转到登录页
         logoutAndCleanup();
-        
+
         return null;
       }
 
@@ -148,17 +148,17 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
       // 处理登出代码
       const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       const modalLogoutCodes = import.meta.env.VITE_SERVICE_MODAL_LOGOUT_CODES?.split(',') || [];
-      const allLogoutCodes = [...logoutCodes, ...modalLogoutCodes].filter(code => code);
-      
+      const allLogoutCodes = [...logoutCodes, ...modalLogoutCodes].filter((code) => code);
+
       if (allLogoutCodes.includes(backendErrorCode)) {
         // HTTP 401 状态码，需要执行登出
         const authStore = useAuthStore();
-        
+
         // 如果已经在登录页，不需要处理
         if (!window.location.pathname?.startsWith('/login')) {
           // 取消所有待处理的请求
           flatRequest.cancelAllRequest();
-          
+
           // 执行登出并跳转
           authStore.resetStore();
         }
@@ -172,8 +172,8 @@ const flatRequest = createFlatRequest<App.Service.Response, RequestInstanceState
       }
 
       showErrorMsg(flatRequest.state, message);
-    }
-  }
+    },
+  },
 );
 
 function handleRepeatSubmit(config: InternalAxiosRequestConfig) {
@@ -184,7 +184,7 @@ function handleRepeatSubmit(config: InternalAxiosRequestConfig) {
     const requestObj = {
       url: config.url!,
       data: typeof config.data === 'object' ? JSON.stringify(config.data) : config.data,
-      time: new Date().getTime()
+      time: new Date().getTime(),
     };
     const sessionObj = sessionStg.get('sessionObj');
     if (!sessionObj) {
@@ -227,7 +227,7 @@ function handleEncrypt(config: InternalAxiosRequestConfig) {
       // 请求体改为统一格式
       config.data = {
         encryptedKey,
-        encryptedData
+        encryptedData,
       };
     }
   }
@@ -253,9 +253,7 @@ function handleEncrypt(config: InternalAxiosRequestConfig) {
  * }
  * ```
  */
-async function wrappedRequest<T, R extends ResponseType = 'json'>(
-  config: Parameters<typeof flatRequest<T, R>>[0]
-) {
+async function wrappedRequest<T, R extends ResponseType = 'json'>(config: Parameters<typeof flatRequest<T, R>>[0]) {
   const result = await flatRequest<T, R>(config);
   if (result.error) {
     // 错误消息已在 onError 中显示，直接抛出异常
@@ -270,6 +268,6 @@ export const request: FlatRequestInstance<App.Service.Response, RequestInstanceS
   {
     cancelRequest: flatRequest.cancelRequest,
     cancelAllRequest: flatRequest.cancelAllRequest,
-    state: flatRequest.state
-  }
+    state: flatRequest.state,
+  },
 );

@@ -5,7 +5,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'ClientOperateDrawer'
+  name: 'ClientOperateDrawer',
 });
 
 interface Props {
@@ -24,7 +24,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -33,7 +33,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: $t('page.system.client.addClient'),
-    edit: $t('page.system.client.editClient')
+    edit: $t('page.system.client.editClient'),
   };
   return titles[props.operateType];
 });
@@ -50,7 +50,7 @@ function createDefaultModel(): Model {
     deviceType: undefined,
     activeTimeout: 1800,
     timeout: 604800,
-    status: '0'
+    status: '0',
   };
 }
 
@@ -66,7 +66,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   grantTypeList: createRequiredRule($t('page.system.client.form.grantTypeList.required')),
   deviceType: createRequiredRule($t('page.system.client.form.deviceType.required')),
   activeTimeout: createRequiredRule($t('page.system.client.form.activeTimeout.required')),
-  timeout: createRequiredRule($t('page.system.client.form.timeout.required'))
+  timeout: createRequiredRule($t('page.system.client.form.timeout.required')),
 };
 
 function handleUpdateModelWhenEdit() {
@@ -99,7 +99,7 @@ async function handleSubmit() {
         deviceType,
         activeTimeout,
         timeout,
-        status
+        status,
       });
     }
 
@@ -113,7 +113,7 @@ async function handleSubmit() {
         deviceType,
         activeTimeout,
         timeout,
-        status
+        status,
       });
     }
 
@@ -138,24 +138,40 @@ watch(visible, () => {
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem v-if="operateType === 'edit'" :label="$t('page.system.client.clientId')" path="clientId">
-          <NInput v-model:value="model.clientId" disabled
-            :placeholder="$t('page.system.client.form.clientId.required')" />
+          <NInput
+            v-model:value="model.clientId"
+            disabled
+            :placeholder="$t('page.system.client.form.clientId.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.client.clientKey')" path="clientKey">
-          <NInput v-model:value="model.clientKey" :disabled="operateType === 'edit'"
-            :placeholder="$t('page.system.client.form.clientKey.required')" />
+          <NInput
+            v-model:value="model.clientKey"
+            :disabled="operateType === 'edit'"
+            :placeholder="$t('page.system.client.form.clientKey.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.client.clientSecret')" path="clientSecret">
-          <NInput v-model:value="model.clientSecret" :disabled="operateType === 'edit'"
-            :placeholder="$t('page.system.client.form.clientSecret.required')" />
+          <NInput
+            v-model:value="model.clientSecret"
+            :disabled="operateType === 'edit'"
+            :placeholder="$t('page.system.client.form.clientSecret.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.client.grantTypeList')" path="grantTypeList">
-          <DictSelect v-model:value="model.grantTypeList"
-            :placeholder="$t('page.system.client.form.grantTypeList.required')" dict-code="sys_grant_type" multiple />
+          <DictSelect
+            v-model:value="model.grantTypeList"
+            :placeholder="$t('page.system.client.form.grantTypeList.required')"
+            dict-code="sys_grant_type"
+            multiple
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.client.deviceType')" path="deviceType">
-          <DictSelect v-model:value="model.deviceType" :placeholder="$t('page.system.client.form.deviceType.required')"
-            dict-code="sys_device_type" />
+          <DictSelect
+            v-model:value="model.deviceType"
+            :placeholder="$t('page.system.client.form.deviceType.required')"
+            dict-code="sys_device_type"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.client.activeTimeout')" path="activeTimeout">
           <template #label>
@@ -164,8 +180,10 @@ watch(visible, () => {
               <span class="pl-3px">{{ $t('page.system.client.activeTimeout') }}</span>
             </div>
           </template>
-          <NInputNumber v-model:value="model.activeTimeout"
-            :placeholder="$t('page.system.client.form.activeTimeout.required')">
+          <NInputNumber
+            v-model:value="model.activeTimeout"
+            :placeholder="$t('page.system.client.form.activeTimeout.required')"
+          >
             <template #suffix>
               <span class="text-sm">{{ $t('common.second') }}</span>
             </template>
@@ -185,8 +203,12 @@ watch(visible, () => {
           </NInputNumber>
         </NFormItem>
         <NFormItem :label="$t('page.system.client.status')" path="status">
-          <DictRadio v-model:value="model.status" :placeholder="$t('page.system.client.form.status.required')"
-            :disabled="model.id == 1" dict-code="sys_normal_disable" />
+          <DictRadio
+            v-model:value="model.status"
+            :placeholder="$t('page.system.client.form.status.required')"
+            :disabled="model.id == 1"
+            dict-code="sys_normal_disable"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

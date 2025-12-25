@@ -33,7 +33,19 @@ export class GenConstants {
   public static readonly COLUMNTYPE_TIME: string[] = ['datetime', 'time', 'date', 'timestamp'];
 
   /** 数据库数字类型 */
-  public static readonly COLUMNTYPE_NUMBER: string[] = ['tinyint', 'smallint', 'mediumint', 'int', 'number', 'integer', 'bit', 'bigint', 'float', 'double', 'decimal'];
+  public static readonly COLUMNTYPE_NUMBER: string[] = [
+    'tinyint',
+    'smallint',
+    'mediumint',
+    'int',
+    'number',
+    'integer',
+    'bit',
+    'bigint',
+    'float',
+    'double',
+    'decimal',
+  ];
 
   /** 页面不需要插入字段 */
   public static readonly COLUMNNAME_NOT_INSERT: string[] = ['id', 'create_by', 'create_time', 'del_flag'];
@@ -42,10 +54,25 @@ export class GenConstants {
   public static readonly COLUMNNAME_NOT_EDIT: string[] = ['id', 'create_by', 'create_time', 'del_flag'];
 
   /** 页面不需要显示的列表字段 */
-  public static readonly COLUMNNAME_NOT_LIST: string[] = ['id', 'create_by', 'create_time', 'del_flag', 'update_by', 'update_time'];
+  public static readonly COLUMNNAME_NOT_LIST: string[] = [
+    'id',
+    'create_by',
+    'create_time',
+    'del_flag',
+    'update_by',
+    'update_time',
+  ];
 
   /** 页面不需要查询字段 */
-  public static readonly COLUMNNAME_NOT_QUERY: string[] = ['id', 'create_by', 'create_time', 'del_flag', 'update_by', 'update_time', 'remark'];
+  public static readonly COLUMNNAME_NOT_QUERY: string[] = [
+    'id',
+    'create_by',
+    'create_time',
+    'del_flag',
+    'update_by',
+    'update_time',
+    'remark',
+  ];
 
   /** Entity基类字段 */
   public static readonly BASE_ENTITY: string[] = ['createBy', 'createTime', 'updateBy', 'updateTime', 'remark'];

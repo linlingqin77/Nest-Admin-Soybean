@@ -10,12 +10,9 @@ import { BackupService } from 'src/module/backup/backup.service';
 import { NoticeModule } from 'src/module/system/notice/notice.module';
 
 @Module({
-  imports: [
-    NestScheduleModule.forRoot(),
-    NoticeModule,
-  ],
+  imports: [NestScheduleModule.forRoot(), NoticeModule],
   controllers: [JobController, JobLogController],
   providers: [JobService, TaskService, JobLogService, JobRepository, BackupService],
   exports: [JobService, TaskService],
 })
-export class JobModule { }
+export class JobModule {}

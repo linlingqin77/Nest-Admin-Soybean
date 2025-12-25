@@ -4,7 +4,7 @@ import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
 defineOptions({
-  name: 'ThemeRadius'
+  name: 'ThemeRadius',
 });
 
 const themeStore = useThemeStore();

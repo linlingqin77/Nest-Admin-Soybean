@@ -15,4 +15,3 @@ export const encrypt = (txt: string) => {
   encryptor.setPublicKey(publicKey!); // 设置公钥
   return encryptor.encrypt(txt); // 对数据进行加密
 };
-

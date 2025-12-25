@@ -28,9 +28,9 @@ const props = withDefaults(defineProps<Props>(), {
   config: () => ({
     selectOnLineNumbers: true,
     minimap: {
-      enabled: false
-    }
-  })
+      enabled: false,
+    },
+  }),
 });
 
 const value = defineModel<any>('value', { required: true, default: '' });
@@ -74,8 +74,8 @@ function insertText(text: string) {
   monacoEditor?.executeEdits('', [
     {
       range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column),
-      text
-    }
+      text,
+    },
   ]);
   // 设置新的光标位置
   monacoEditor?.setPosition({ ...position, column: position.column + text.length });
@@ -91,7 +91,7 @@ onMounted(() => {
     readOnly: props.readOnly,
     lineNumbers: props.lineNumbers,
     theme: props.theme,
-    automaticLayout: false
+    automaticLayout: false,
   });
 
   // 自动切换主题
@@ -102,8 +102,8 @@ onMounted(() => {
         nextTick(() => handleToggleTheme());
       },
       {
-        immediate: true
-      }
+        immediate: true,
+      },
     );
   }
 
@@ -138,21 +138,21 @@ onMounted(() => {
 
 watch(
   () => value.value,
-  val => {
+  (val) => {
     monacoEditor?.setValue(val || '');
-  }
+  },
 );
 
 watch(
   () => props.language,
-  val => {
+  (val) => {
     monaco.editor.setModelLanguage(monacoEditor?.getModel() as monaco.editor.ITextModel, val);
-  }
+  },
 );
 
 defineExpose({
   setValue,
-  insertText
+  insertText,
 });
 </script>
 

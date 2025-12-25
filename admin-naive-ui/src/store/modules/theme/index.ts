@@ -12,7 +12,7 @@ import {
   getNaiveTheme,
   initThemeSettings,
   toggleAuxiliaryColorModes,
-  toggleCssDarkMode
+  toggleCssDarkMode,
 } from './shared';
 
 /** Theme store */
@@ -50,7 +50,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     const colors: App.Theme.ThemeColor = {
       primary: themeColor,
       ...otherColor,
-      info: isInfoFollowPrimary ? themeColor : otherColor.info
+      info: isInfoFollowPrimary ? themeColor : otherColor.info,
     };
     return colors;
   });
@@ -123,7 +123,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
   function toggleThemeScheme() {
     const themeSchemes: UnionKey.ThemeScheme[] = ['light', 'dark', 'auto'];
 
-    const index = themeSchemes.findIndex(item => item === settings.value.themeScheme);
+    const index = themeSchemes.findIndex((item) => item === settings.value.themeScheme);
 
     const nextIndex = index === themeSchemes.length - 1 ? 0 : index + 1;
 
@@ -168,7 +168,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     const { themeTokens, darkThemeTokens } = createThemeToken(
       themeColors.value,
       settings.value.tokens,
-      settings.value.recommendColor
+      settings.value.recommendColor,
     );
     addThemeVarsToGlobal(themeTokens, darkThemeTokens);
   }
@@ -239,29 +239,29 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     // watch dark mode
     watch(
       darkMode,
-      val => {
+      (val) => {
         toggleCssDarkMode(val);
         localStg.set('darkMode', val);
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     watch(
       [grayscaleMode, colourWeaknessMode],
-      val => {
+      (val) => {
         toggleAuxiliaryColorModes(val[0], val[1]);
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // themeColors change, update css vars and storage theme color
     watch(
       themeColors,
-      val => {
+      (val) => {
         setupThemeVarsToGlobal();
         localStg.set('themeColor', val.primary);
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     // watch watermark settings to control timer
@@ -270,7 +270,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
       () => {
         updateWatermarkTimer();
       },
-      { immediate: true }
+      { immediate: true },
     );
   });
 
@@ -295,6 +295,6 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     setThemeLayout,
     setWatermarkEnableUserName,
     setWatermarkEnableTime,
-    setNaiveThemeOverrides
+    setNaiveThemeOverrides,
   };
 });

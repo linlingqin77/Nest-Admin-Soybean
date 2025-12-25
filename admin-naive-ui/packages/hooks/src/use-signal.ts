@@ -5,7 +5,7 @@ import type {
   Ref,
   ShallowRef,
   WritableComputedOptions,
-  WritableComputedRef
+  WritableComputedRef,
 } from 'vue';
 
 type Updater<T> = (value: T) => T;
@@ -109,7 +109,7 @@ export function useComputed<T>(getter: ComputedGetter<T>, debugOptions?: Debugge
 export function useComputed<T>(options: WritableComputedOptions<T>, debugOptions?: DebuggerOptions): Signal<T>;
 export function useComputed<T>(
   getterOrOptions: ComputedGetter<T> | WritableComputedOptions<T>,
-  debugOptions?: DebuggerOptions
+  debugOptions?: DebuggerOptions,
 ) {
   const isGetter = typeof getterOrOptions === 'function';
 

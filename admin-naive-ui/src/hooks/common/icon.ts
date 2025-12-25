@@ -5,6 +5,6 @@ export function useSvgIcon() {
   const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
   return {
-    SvgIconVNode
+    SvgIconVNode,
   };
 }

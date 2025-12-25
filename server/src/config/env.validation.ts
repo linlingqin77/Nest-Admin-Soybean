@@ -14,11 +14,11 @@ import {
 
 /**
  * 环境变量验证类
- * 
+ *
  * @description
  * 这个类定义了必需的环境变量及其验证规则
  * 在应用启动时自动验证，确保环境配置正确
- * 
+ *
  * 验证规则：
  * - 必需字段使用 @IsNotEmpty() 或不加 @IsOptional()
  * - 可选字段使用 @IsOptional()
@@ -282,11 +282,11 @@ class EnvironmentVariables {
 
 /**
  * 环境变量验证函数
- * 
+ *
  * @description
  * 在应用启动时由 ConfigModule 调用
  * 验证失败会抛出异常并阻止应用启动
- * 
+ *
  * @param config 原始环境变量对象
  * @returns 验证后的环境变量对象
  * @throws Error 如果验证失败

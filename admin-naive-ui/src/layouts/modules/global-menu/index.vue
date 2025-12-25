@@ -11,7 +11,7 @@ import TopHybridSidebarFirst from './modules/top-hybrid-sidebar-first.vue';
 import TopHybridHeaderFirst from './modules/top-hybrid-header-first.vue';
 
 defineOptions({
-  name: 'GlobalMenu'
+  name: 'GlobalMenu',
 });
 
 const appStore = useAppStore();
@@ -24,7 +24,7 @@ const activeMenu = computed(() => {
     'vertical-hybrid-header-first': VerticalHybridHeaderFirst,
     horizontal: HorizontalMenu,
     'top-hybrid-sidebar-first': TopHybridSidebarFirst,
-    'top-hybrid-header-first': TopHybridHeaderFirst
+    'top-hybrid-header-first': TopHybridHeaderFirst,
   };
 
   return menuMap[themeStore.layout.mode];

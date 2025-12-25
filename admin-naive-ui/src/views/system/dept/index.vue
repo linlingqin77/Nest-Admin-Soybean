@@ -15,7 +15,7 @@ import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
 import DeptSearch from './modules/dept-search.vue';
 
 defineOptions({
-  name: 'DeptList'
+  name: 'DeptList',
 });
 
 useDict('sys_normal_disable');
@@ -36,12 +36,12 @@ const {
   expandedRowKeys,
   isCollapse,
   expandAll,
-  collapseAll
+  collapseAll,
 } = useTreeTable({
   apiFn: fetchGetDeptList,
   apiParams: {
     deptName: null,
-    status: null
+    status: null,
   },
   idField: 'deptId',
   columns: () => [
@@ -49,19 +49,19 @@ const {
       key: 'deptName',
       title: $t('page.system.dept.deptName'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'deptCategory',
       title: $t('page.system.dept.deptCategory'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'orderNum',
       title: $t('page.system.dept.sort'),
       align: 'center',
-      minWidth: 60
+      minWidth: 60,
     },
     {
       key: 'status',
@@ -70,20 +70,20 @@ const {
       minWidth: 120,
       render(row) {
         return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
+      },
     },
     {
       key: 'createTime',
       title: $t('page.system.dept.createTime'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 150,
-      render: row => {
+      render: (row) => {
         const addBtn = () => {
           return (
             <ButtonIcon
@@ -136,14 +136,14 @@ const {
             ))}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTreeTableOperate(
   data,
-  getData
+  getData,
 );
 
 async function handleDelete(deptId: CommonType.IdType) {
@@ -176,8 +176,14 @@ async function handleAddOperate() {
     <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
     <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :loading="loading" :show-add="hasAuth('system:dept:add')"
-          :show-delete="false" @add="handleAddOperate" @refresh="getData">
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :loading="loading"
+          :show-add="hasAuth('system:dept:add')"
+          :show-delete="false"
+          @add="handleAddOperate"
+          @refresh="getData"
+        >
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
@@ -194,11 +200,24 @@ async function handleAddOperate() {
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable v-model:expanded-row-keys="expandedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :indent="32" :flex-height="!appStore.isMobile" :scroll-x="962" :loading="loading" :row-key="row => row.deptId"
-        class="sm:h-full" />
-      <DeptOperateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData"
-        @submitted="getData" />
+      <NDataTable
+        v-model:expanded-row-keys="expandedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :indent="32"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        :row-key="(row) => row.deptId"
+        class="sm:h-full"
+      />
+      <DeptOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getData"
+      />
     </NCard>
   </div>
 </template>

@@ -5,7 +5,7 @@ export function fetchGetOssConfigList(params?: Api.System.OssConfigSearchParams)
   return request<Api.System.OssConfigList>({
     url: '/resource/oss/config/list',
     method: 'get',
-    params
+    params,
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchCreateOssConfig(data: Api.System.OssConfigOperateParams) {
   return request<boolean>({
     url: '/resource/oss/config',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -23,7 +23,7 @@ export function fetchUpdateOssConfig(data: Api.System.OssConfigOperateParams) {
   return request<boolean>({
     url: '/resource/oss/config',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -31,7 +31,7 @@ export function fetchUpdateOssConfig(data: Api.System.OssConfigOperateParams) {
 export function fetchBatchDeleteOssConfig(ossConfigIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/resource/oss/config/${ossConfigIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -40,6 +40,6 @@ export function fetchUpdateOssConfigStatus(data: Api.System.OssConfigOperatePara
   return request<boolean>({
     url: '/resource/oss/config/changeStatus',
     method: 'put',
-    data
+    data,
   });
 }

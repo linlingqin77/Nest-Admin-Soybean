@@ -6,7 +6,7 @@ import { useTableProps } from '@/hooks/common/table';
 import { fetchGetServerInfo } from '@/service/api/monitor/server';
 
 defineOptions({
-  name: 'ServerMonitor'
+  name: 'ServerMonitor',
 });
 
 const { loading, startLoading, endLoading } = useLoading();
@@ -45,10 +45,10 @@ const diskColumns = [
         percentage: row.usage,
         status,
         indicatorPlacement: 'inside',
-        style: { width: '100px' }
+        style: { width: '100px' },
       });
-    }
-  }
+    },
+  },
 ];
 
 function getProgressStatus(value: number) {
@@ -78,18 +78,31 @@ onMounted(() => {
                 {{ serverInfo?.cpu?.cpuNum ?? '-' }}
               </NDescriptionsItem>
               <NDescriptionsItem label="用户使用率">
-                <NProgress type="line" :percentage="serverInfo?.cpu?.used ?? 0"
-                  :status="getProgressStatus(serverInfo?.cpu?.used ?? 0)" indicator-placement="inside"
-                  style="width: 200px" />
+                <NProgress
+                  type="line"
+                  :percentage="serverInfo?.cpu?.used ?? 0"
+                  :status="getProgressStatus(serverInfo?.cpu?.used ?? 0)"
+                  indicator-placement="inside"
+                  style="width: 200px"
+                />
               </NDescriptionsItem>
               <NDescriptionsItem label="系统使用率">
-                <NProgress type="line" :percentage="serverInfo?.cpu?.sys ?? 0"
-                  :status="getProgressStatus(serverInfo?.cpu?.sys ?? 0)" indicator-placement="inside"
-                  style="width: 200px" />
+                <NProgress
+                  type="line"
+                  :percentage="serverInfo?.cpu?.sys ?? 0"
+                  :status="getProgressStatus(serverInfo?.cpu?.sys ?? 0)"
+                  indicator-placement="inside"
+                  style="width: 200px"
+                />
               </NDescriptionsItem>
               <NDescriptionsItem label="当前空闲率">
-                <NProgress type="line" :percentage="serverInfo?.cpu?.free ?? 0" status="success"
-                  indicator-placement="inside" style="width: 200px" />
+                <NProgress
+                  type="line"
+                  :percentage="serverInfo?.cpu?.free ?? 0"
+                  status="success"
+                  indicator-placement="inside"
+                  style="width: 200px"
+                />
               </NDescriptionsItem>
             </NDescriptions>
           </NCard>
@@ -106,9 +119,13 @@ onMounted(() => {
               <NDescriptionsItem label="已用内存">{{ serverInfo?.mem?.used ?? '-' }} GB</NDescriptionsItem>
               <NDescriptionsItem label="剩余内存">{{ serverInfo?.mem?.free ?? '-' }} GB</NDescriptionsItem>
               <NDescriptionsItem label="使用率">
-                <NProgress type="line" :percentage="serverInfo?.mem?.usage ?? 0"
-                  :status="getProgressStatus(serverInfo?.mem?.usage ?? 0)" indicator-placement="inside"
-                  style="width: 200px" />
+                <NProgress
+                  type="line"
+                  :percentage="serverInfo?.mem?.usage ?? 0"
+                  :status="getProgressStatus(serverInfo?.mem?.usage ?? 0)"
+                  indicator-placement="inside"
+                  style="width: 200px"
+                />
               </NDescriptionsItem>
             </NDescriptions>
           </NCard>
@@ -165,8 +182,12 @@ onMounted(() => {
         <template #header-extra>
           <icon-mdi-harddisk class="text-20px text-primary" />
         </template>
-        <NDataTable :columns="diskColumns" :data="serverInfo?.sysFiles ?? []" v-bind="tableProps"
-          :single-line="false" />
+        <NDataTable
+          :columns="diskColumns"
+          :data="serverInfo?.sysFiles ?? []"
+          v-bind="tableProps"
+          :single-line="false"
+        />
       </NCard>
     </div>
   </NSpin>

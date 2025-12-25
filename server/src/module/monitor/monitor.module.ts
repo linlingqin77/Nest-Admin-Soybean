@@ -21,4 +21,4 @@ import { MetricsModule } from './metrics/metrics.module';
   ],
   exports: [JobModule],
 })
-export class MonitorModule { }
+export class MonitorModule {}

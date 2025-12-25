@@ -8,7 +8,7 @@ import MenuTree from '@/components/custom/menu-tree.vue';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TenantPackageOperateDrawer'
+  name: 'TenantPackageOperateDrawer',
 });
 
 interface Props {
@@ -33,7 +33,7 @@ const menuOptions = ref<Api.System.MenuList>([]);
 const { loading: menuLoading, startLoading: startMenuLoading, endLoading: stopMenuLoading } = useLoading();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -42,7 +42,7 @@ const { createRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
     add: $t('page.system.tenantPackage.addTenantPackage'),
-    edit: $t('page.system.tenantPackage.editTenantPackage')
+    edit: $t('page.system.tenantPackage.editTenantPackage'),
   };
   return titles[props.operateType];
 });
@@ -56,7 +56,7 @@ function createDefaultModel(): Model {
     packageName: '',
     menuIds: [],
     remark: '',
-    menuCheckStrictly: true
+    menuCheckStrictly: true,
   };
 }
 
@@ -64,7 +64,7 @@ type RuleKey = Extract<keyof Model, 'packageId' | 'packageName'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   packageId: createRequiredRule($t('page.system.tenantPackage.form.packageName.invalid')),
-  packageName: createRequiredRule($t('page.system.tenantPackage.form.packageName.required'))
+  packageName: createRequiredRule($t('page.system.tenantPackage.form.packageName.required')),
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -123,7 +123,7 @@ async function handleSubmit() {
         packageName,
         menuIds,
         remark,
-        menuCheckStrictly
+        menuCheckStrictly,
       });
     }
 
@@ -148,16 +148,28 @@ watch(visible, () => {
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem :label="$t('page.system.tenantPackage.packageName')" path="packageName">
-          <NInput v-model:value="model.packageName"
-            :placeholder="$t('page.system.tenantPackage.form.packageName.required')" />
+          <NInput
+            v-model:value="model.packageName"
+            :placeholder="$t('page.system.tenantPackage.form.packageName.required')"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.tenantPackage.menuIds')" path="menuIds">
-          <MenuTree v-if="visible" ref="menuTreeRef" v-model:checked-keys="model.menuIds" v-model:options="menuOptions"
-            v-model:cascade="model.menuCheckStrictly" v-model:loading="menuLoading" :immediate="false" />
+          <MenuTree
+            v-if="visible"
+            ref="menuTreeRef"
+            v-model:checked-keys="model.menuIds"
+            v-model:options="menuOptions"
+            v-model:cascade="model.menuCheckStrictly"
+            v-model:loading="menuLoading"
+            :immediate="false"
+          />
         </NFormItem>
         <NFormItem :label="$t('page.system.tenantPackage.remark')" path="remark">
-          <NInput v-model:value="model.remark" :placeholder="$t('page.system.tenantPackage.form.remark.required')"
-            type="textarea" />
+          <NInput
+            v-model:value="model.remark"
+            :placeholder="$t('page.system.tenantPackage.form.remark.required')"
+            type="textarea"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

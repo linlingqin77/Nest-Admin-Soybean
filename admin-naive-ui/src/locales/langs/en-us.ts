@@ -4,7 +4,7 @@ const local: App.I18n.Schema = {
     updateTitle: 'System Version Update Notification',
     updateContent: 'A new version of the system has been detected. Do you want to refresh the page immediately?',
     updateConfirm: 'Refresh immediately',
-    updateCancel: 'Later'
+    updateCancel: 'Later',
   },
   common: {
     action: 'Action',
@@ -65,13 +65,13 @@ const local: App.I18n.Schema = {
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',
-      no: 'No'
+      no: 'No',
     },
     second: 'Second',
     selected: 'selected',
     anyRecords: 'records',
     clear: 'Clear',
-    noSelectRecord: 'No Records Selected'
+    noSelectRecord: 'No Records Selected',
   },
   request: {
     logout: 'Logout user after request failed',
@@ -79,7 +79,7 @@ const local: App.I18n.Schema = {
     logoutWithModal: 'Pop up modal after request failed and then log out user',
     logoutWithModalMsg: 'User status is invalid, please log in again',
     refreshToken: 'The requested token has expired, refresh the token',
-    tokenExpired: 'The requested token has expired'
+    tokenExpired: 'The requested token has expired',
   },
   theme: {
     themeDrawerTitle: 'Theme Configuration',
@@ -88,14 +88,14 @@ const local: App.I18n.Schema = {
       layout: 'Layout',
       general: 'General',
       component: 'Component',
-      preset: 'Preset'
+      preset: 'Preset',
     },
     appearance: {
       themeSchema: {
         title: 'Theme Schema',
         light: 'Light',
         dark: 'Dark',
-        auto: 'Follow System'
+        auto: 'Follow System',
       },
       grayscale: 'Grayscale',
       colourWeakness: 'Colour Weakness',
@@ -106,10 +106,10 @@ const local: App.I18n.Schema = {
         success: 'Success',
         warning: 'Warning',
         error: 'Error',
-        followPrimary: 'Follow Primary'
+        followPrimary: 'Follow Primary',
       },
       themeRadius: {
-        title: 'Theme Radius'
+        title: 'Theme Radius',
       },
       recommendColor: 'Apply Recommended Color Algorithm',
       recommendColorDesc: 'The recommended color algorithm refers to',
@@ -119,21 +119,21 @@ const local: App.I18n.Schema = {
         applySuccess: 'Preset applied successfully',
         default: {
           name: 'Default Preset',
-          desc: 'Soybean default theme preset'
+          desc: 'Soybean default theme preset',
         },
         dark: {
           name: 'Dark Preset',
-          desc: 'Dark theme preset for night use'
+          desc: 'Dark theme preset for night use',
         },
         compact: {
           name: 'Compact',
-          desc: 'Compact layout preset for small screens'
+          desc: 'Compact layout preset for small screens',
         },
         azir: {
           name: 'Azir Preset',
-          desc: 'Azir favorite Morandi color scheme'
-        }
-      }
+          desc: 'Azir favorite Morandi color scheme',
+        },
+      },
     },
     layout: {
       layoutMode: {
@@ -153,7 +153,7 @@ const local: App.I18n.Schema = {
         'top-hybrid-sidebar-first_detail':
           'Top hybrid layout, first level menu on the left, second level menu at the top.',
         'top-hybrid-header-first_detail':
-          'Top hybrid layout, first level menu at the top, second level menu on the left.'
+          'Top hybrid layout, first level menu at the top, second level menu on the left.',
       },
       tab: {
         title: 'Tab Settings',
@@ -165,18 +165,18 @@ const local: App.I18n.Schema = {
           title: 'Tab Mode',
           slider: 'Slider',
           chrome: 'Chrome',
-          button: 'Button'
+          button: 'Button',
         },
         closeByMiddleClick: 'Close Tab by Middle Click',
-        closeByMiddleClickTip: 'Enable closing tabs by clicking with the middle mouse button'
+        closeByMiddleClickTip: 'Enable closing tabs by clicking with the middle mouse button',
       },
       header: {
         title: 'Header Settings',
         height: 'Header Height',
         breadcrumb: {
           visible: 'Breadcrumb Visible',
-          showIcon: 'Breadcrumb Icon Visible'
-        }
+          showIcon: 'Breadcrumb Icon Visible',
+        },
       },
       sider: {
         title: 'Sider Settings',
@@ -185,14 +185,14 @@ const local: App.I18n.Schema = {
         collapsedWidth: 'Sider Collapsed Width',
         mixWidth: 'Mix Sider Width',
         mixCollapsedWidth: 'Mix Sider Collapse Width',
-        mixChildMenuWidth: 'Mix Child Menu Width'
+        mixChildMenuWidth: 'Mix Child Menu Width',
       },
       footer: {
         title: 'Footer Settings',
         visible: 'Footer Visible',
         fixed: 'Fixed Footer',
         height: 'Footer Height',
-        right: 'Right Footer'
+        right: 'Right Footer',
       },
       content: {
         title: 'Content Area Settings',
@@ -200,7 +200,7 @@ const local: App.I18n.Schema = {
           title: 'Scroll Mode',
           tip: 'Theme scrolling only scrolls the main part, outer scrolling can carry header and footer together',
           wrapper: 'Wrapper',
-          content: 'Content'
+          content: 'Content',
         },
         page: {
           animate: 'Page Animate',
@@ -212,11 +212,11 @@ const local: App.I18n.Schema = {
             'fade-scale': 'Fade Scale',
             'zoom-fade': 'Zoom Fade',
             'zoom-out': 'Zoom Out',
-            none: 'None'
-          }
+            none: 'None',
+          },
         },
-        fixedHeaderAndTab: 'Fixed Header And Tab'
-      }
+        fixedHeaderAndTab: 'Fixed Header And Tab',
+      },
     },
     general: {
       title: 'General Settings',
@@ -226,16 +226,16 @@ const local: App.I18n.Schema = {
         text: 'Custom Watermark Text',
         enableUserName: 'Enable User Name Watermark',
         enableTime: 'Enable Time Watermark',
-        timeFormat: 'Time Format'
+        timeFormat: 'Time Format',
       },
       multilingual: {
         title: 'Multilingual Settings',
-        visible: 'Display Multilingual Button'
+        visible: 'Display Multilingual Button',
       },
       globalSearch: {
         title: 'Global Search Settings',
-        visible: 'Display Global Search Button'
-      }
+        visible: 'Display Global Search Button',
+      },
     },
     componentPropsTitle: 'Component Props',
     component: {
@@ -244,8 +244,8 @@ const local: App.I18n.Schema = {
         tiny: 'Tiny',
         small: 'Small',
         medium: 'Medium',
-        large: 'Large'
-      }
+        large: 'Large',
+      },
     },
     tablePropsTitle: 'Table Props',
     table: {
@@ -253,20 +253,20 @@ const local: App.I18n.Schema = {
         title: 'Table Size',
         small: 'Small',
         medium: 'Medium',
-        large: 'Large'
+        large: 'Large',
       },
       bordered: 'Bordered',
       bottomBordered: 'Bottom Bordered',
       singleColumn: 'Single Column',
       singleLine: 'Single Line',
-      striped: 'Striped'
+      striped: 'Striped',
     },
     configOperation: {
       copyConfig: 'Copy Config',
       copySuccessMsg: 'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
       resetConfig: 'Reset Config',
-      resetSuccessMsg: 'Reset Success'
-    }
+      resetSuccessMsg: 'Reset Success',
+    },
   },
   route: {
     login: 'Login',
@@ -313,39 +313,39 @@ const local: App.I18n.Schema = {
     exception: 'Exception',
     exception_403: '403',
     exception_404: '404',
-    exception_500: '500'
+    exception_500: '500',
   },
   menu: {
     system_tenant: 'Tenant Management',
     system_log: 'Log Management',
     'monitor_snail-job': 'Job Management',
-    monitor_admin: 'Admin Monitor'
+    monitor_admin: 'Admin Monitor',
   },
   dict: {
     sys_user_sex: {
       male: 'Male',
       female: 'Female',
-      unknown: 'Unknown'
+      unknown: 'Unknown',
     },
     sys_show_hide: {
       show: 'Show',
-      hide: 'Hide'
+      hide: 'Hide',
     },
     sys_normal_disable: {
       normal: 'Normal',
-      disable: 'Disable'
+      disable: 'Disable',
     },
     sys_yes_no: {
       yes: 'Yes',
-      no: 'No'
+      no: 'No',
     },
     sys_notice_type: {
       notice: 'Notice',
-      announcement: 'Announcement'
+      announcement: 'Announcement',
     },
     sys_notice_status: {
       normal: 'Normal',
-      close: 'Close'
+      close: 'Close',
     },
     sys_oper_type: {
       insert: 'Insert',
@@ -357,24 +357,24 @@ const local: App.I18n.Schema = {
       force: 'Force',
       gencode: 'Generate Code',
       clean: 'Clean Data',
-      other: 'Other'
+      other: 'Other',
     },
     sys_common_status: {
       success: 'Success',
-      fail: 'Fail'
+      fail: 'Fail',
     },
     sys_grant_type: {
       password: 'Password Auth',
       sms: 'SMS Auth',
       email: 'Email Auth',
       miniapp: 'Mini App Auth',
-      social: 'Social Auth'
+      social: 'Social Auth',
     },
     sys_device_type: {
       pc: 'PC',
       android: 'Android',
       ios: 'iOS',
-      miniapp: 'Mini App'
+      miniapp: 'Mini App',
     },
     wf_business_status: {
       revoked: 'Revoked',
@@ -383,11 +383,11 @@ const local: App.I18n.Schema = {
       completed: 'Completed',
       cancelled: 'Cancelled',
       returned: 'Returned',
-      terminated: 'Terminated'
+      terminated: 'Terminated',
     },
     wf_form_type: {
       custom_form: 'Custom Form',
-      dynamic_form: 'Dynamic Form'
+      dynamic_form: 'Dynamic Form',
     },
     wf_task_status: {
       revoke: 'Revoke',
@@ -401,8 +401,8 @@ const local: App.I18n.Schema = {
       copy: 'Copy',
       add_sign: 'Add Sign',
       minus_sign: 'Minus Sign',
-      timeout: 'Timeout'
-    }
+      timeout: 'Timeout',
+    },
   },
   page: {
     login: {
@@ -421,7 +421,7 @@ const local: App.I18n.Schema = {
         back: 'Back',
         validateSuccess: 'Verification passed',
         loginSuccess: 'Login successfully',
-        welcomeBack: 'Welcome back, {userName} !'
+        welcomeBack: 'Welcome back, {userName} !',
       },
       pwdLogin: {
         title: 'Password Login',
@@ -432,27 +432,27 @@ const local: App.I18n.Schema = {
         otherLoginMode: 'Other Login Mode',
         superAdmin: 'Super Admin',
         admin: 'Admin',
-        user: 'User'
+        user: 'User',
       },
       codeLogin: {
         title: 'Verification Code Login',
         getCode: 'Get verification code',
         reGetCode: 'Reacquire after {time}s',
         sendCodeSuccess: 'Verification code sent successfully',
-        imageCodePlaceholder: 'Please enter image verification code'
+        imageCodePlaceholder: 'Please enter image verification code',
       },
       register: {
         title: 'Register',
         agreement: 'I have read and agree to',
         protocol: '《User Agreement》',
-        policy: '《Privacy Policy》'
+        policy: '《Privacy Policy》',
       },
       resetPwd: {
-        title: 'Reset Password'
+        title: 'Reset Password',
       },
       bindWeChat: {
-        title: 'Bind WeChat'
-      }
+        title: 'Bind WeChat',
+      },
     },
     home: {
       branchDesc:
@@ -479,9 +479,9 @@ const local: App.I18n.Schema = {
         desc2: 'Yanbowe submitted a bug to soybean-admin, the multi-tab bar will not adapt.',
         desc3: 'Soybean is ready to do sufficient preparation for the release of soybean-admin!',
         desc4: 'Soybean is busy writing project documentation for soybean-admin!',
-        desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!'
+        desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!',
       },
-      creativity: 'Creativity'
+      creativity: 'Creativity',
     },
     common: {
       id: 'ID',
@@ -493,9 +493,9 @@ const local: App.I18n.Schema = {
       form: {
         remark: {
           required: 'Please enter remark',
-          invalid: 'Remark cannot be empty'
-        }
-      }
+          invalid: 'Remark cannot be empty',
+        },
+      },
     },
     system: {
       client: {
@@ -511,41 +511,41 @@ const local: App.I18n.Schema = {
         form: {
           clientId: {
             required: 'Please enter Client ID',
-            invalid: 'Client ID cannot be empty'
+            invalid: 'Client ID cannot be empty',
           },
           clientKey: {
             required: 'Please enter Client Key',
-            invalid: 'Client Key cannot be empty'
+            invalid: 'Client Key cannot be empty',
           },
           clientSecret: {
             required: 'Please enter Client Secret',
-            invalid: 'Client Secret cannot be empty'
+            invalid: 'Client Secret cannot be empty',
           },
           grantTypeList: {
             required: 'Please select Grant Type',
-            invalid: 'Grant Type cannot be empty'
+            invalid: 'Grant Type cannot be empty',
           },
           deviceType: {
             required: 'Please select Device Type',
-            invalid: 'Device Type cannot be empty'
+            invalid: 'Device Type cannot be empty',
           },
           activeTimeout: {
             required: 'Please enter Active Timeout',
             invalid: 'Active Timeout cannot be empty',
-            tooltip: 'Specify time without operation will expire (unit: second), default 30 minutes (1800 seconds)'
+            tooltip: 'Specify time without operation will expire (unit: second), default 30 minutes (1800 seconds)',
           },
           timeout: {
             required: 'Please enter Timeout',
             invalid: 'Timeout cannot be empty',
-            tooltip: 'Specify time will expire (unit: second), default 7 days (604800 seconds)'
+            tooltip: 'Specify time will expire (unit: second), default 7 days (604800 seconds)',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
-          }
+            invalid: 'Status cannot be empty',
+          },
         },
         addClient: 'Add Client',
-        editClient: 'Edit Client'
+        editClient: 'Edit Client',
       },
       config: {
         title: 'Config List',
@@ -560,31 +560,31 @@ const local: App.I18n.Schema = {
         form: {
           configId: {
             required: 'Please enter Config ID',
-            invalid: 'Config ID cannot be empty'
+            invalid: 'Config ID cannot be empty',
           },
           configName: {
             required: 'Please enter Config Name',
-            invalid: 'Config Name cannot be empty'
+            invalid: 'Config Name cannot be empty',
           },
           configKey: {
             required: 'Please enter Config Key',
-            invalid: 'Config Key cannot be empty'
+            invalid: 'Config Key cannot be empty',
           },
           configValue: {
             required: 'Please enter Config Value',
-            invalid: 'Config Value cannot be empty'
+            invalid: 'Config Value cannot be empty',
           },
           configType: {
             required: 'Please select Built-in status',
-            invalid: 'Built-in status cannot be empty'
+            invalid: 'Built-in status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
-          }
+            invalid: 'Remark cannot be empty',
+          },
         },
         addConfig: 'Add Config',
-        editConfig: 'Edit Config'
+        editConfig: 'Edit Config',
       },
       dept: {
         empty: 'No department information',
@@ -604,56 +604,56 @@ const local: App.I18n.Schema = {
         form: {
           parentId: {
             required: 'Please select Parent Department',
-            invalid: 'Parent Department cannot be empty'
+            invalid: 'Parent Department cannot be empty',
           },
           deptName: {
             required: 'Please enter Department Name',
-            invalid: 'Department Name cannot be empty'
+            invalid: 'Department Name cannot be empty',
           },
           orderNum: {
             required: 'Please enter Order Num',
-            invalid: 'Order num cannot be empty'
+            invalid: 'Order num cannot be empty',
           },
           deptCategory: {
             required: 'Please enter Department Category',
-            invalid: 'Department category cannot be empty'
+            invalid: 'Department category cannot be empty',
           },
           leader: {
             required: 'Please enter Leader',
-            invalid: 'Leader cannot be empty'
+            invalid: 'Leader cannot be empty',
           },
           phone: {
             required: 'Please enter Phone',
-            invalid: 'Phone cannot be empty'
+            invalid: 'Phone cannot be empty',
           },
           email: {
             required: 'Please enter Email',
-            invalid: 'Email cannot be empty'
+            invalid: 'Email cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           sort: {
             required: 'Please enter Sort',
-            invalid: 'Sort cannot be empty'
+            invalid: 'Sort cannot be empty',
           },
           deptId: {
             required: 'Please enter deptId',
-            invalid: 'Dept Id cannot be empty'
-          }
+            invalid: 'Dept Id cannot be empty',
+          },
         },
         error: {
           getDeptDataFail: 'Get dept data fail',
-          getDeptUserDataFail: 'Get dept user data fail'
+          getDeptUserDataFail: 'Get dept user data fail',
         },
         placeholder: {
           defaultLeaderPlaceHolder: 'Please select leader',
           addDataLeaderPlaceHolder: 'Department leader can be selected only when updating',
-          deptUserIsEmptyLeaderPlaceHolder: 'Current dept has no leader'
+          deptUserIsEmptyLeaderPlaceHolder: 'Current dept has no leader',
         },
         addDept: 'Add Department',
-        editDept: 'Edit Department'
+        editDept: 'Edit Department',
       },
       dict: {
         title: 'Dictionary List',
@@ -676,57 +676,57 @@ const local: App.I18n.Schema = {
           cssClass: 'CSS Class',
           status: 'Status',
           remark: 'Remark',
-          createTime: 'Create Time'
+          createTime: 'Create Time',
         },
         form: {
           dictId: {
             required: 'Please enter Dictionary Id',
-            invalid: 'Dictionary Id cannot be empty'
+            invalid: 'Dictionary Id cannot be empty',
           },
           dictCode: {
             required: 'Please enter Dictionary Code',
-            invalid: 'Dictionary Code cannot be empty'
+            invalid: 'Dictionary Code cannot be empty',
           },
           dictName: {
             required: 'Please enter Dictionary Name',
-            invalid: 'Dictionary Name cannot be empty'
+            invalid: 'Dictionary Name cannot be empty',
           },
           dictType: {
             required: 'Please enter Dictionary Type',
-            invalid: 'Dictionary Type cannot be empty'
+            invalid: 'Dictionary Type cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
+            invalid: 'Remark cannot be empty',
           },
           dictLabel: {
             required: 'Please enter Dictionary Label',
-            invalid: 'Dictionary Label cannot be empty'
+            invalid: 'Dictionary Label cannot be empty',
           },
           dictValue: {
             required: 'Please enter Dictionary Value',
-            invalid: 'Dictionary Value cannot be empty'
+            invalid: 'Dictionary Value cannot be empty',
           },
           dictSort: {
             required: 'Please enter Sort',
-            invalid: 'Sort cannot be empty'
+            invalid: 'Sort cannot be empty',
           },
           isDefault: {
             required: 'Please select Default',
-            invalid: 'Default cannot be empty'
+            invalid: 'Default cannot be empty',
           },
           listClass: {
             required: 'Please select Display Style',
-            invalid: 'Display Style cannot be empty'
+            invalid: 'Display Style cannot be empty',
           },
           cssClass: {
             required: 'Please enter CSS Class',
-            invalid: 'CSS Class cannot be empty'
-          }
+            invalid: 'CSS Class cannot be empty',
+          },
         },
         addDict: 'Add Dictionary',
         editDict: 'Edit Dictionary',
@@ -736,7 +736,7 @@ const local: App.I18n.Schema = {
         editDictType: 'Edit Dictionary Type',
         exportDictType: 'Export Dictionary Type',
         refreshDictType: 'Refresh Dictionary Type',
-        dictTypeIsEmpty: 'Dictionary type is empty'
+        dictTypeIsEmpty: 'Dictionary type is empty',
       },
       menu: {
         title: 'Menu List',
@@ -778,71 +778,71 @@ const local: App.I18n.Schema = {
         form: {
           parentId: {
             required: 'Please select Parent Menu',
-            invalid: 'Parent Menu cannot be empty'
+            invalid: 'Parent Menu cannot be empty',
           },
           menuType: {
             required: 'Please select Menu Type',
-            invalid: 'Menu Type cannot be empty'
+            invalid: 'Menu Type cannot be empty',
           },
           icon: {
             required: 'Please select Menu Icon',
-            invalid: 'Menu Icon cannot be empty'
+            invalid: 'Menu Icon cannot be empty',
           },
           menuIds: {
             required: 'Please select Menu',
-            invalid: 'Menu cannot be empty'
+            invalid: 'Menu cannot be empty',
           },
           menuName: {
             required: 'Please enter Menu Name',
-            invalid: 'Menu Name cannot be empty'
+            invalid: 'Menu Name cannot be empty',
           },
           perms: {
             required: 'Please enter permission code',
-            invalid: 'Permission code cannot be empty'
+            invalid: 'Permission code cannot be empty',
           },
           orderNum: {
             required: 'Please enter order num',
-            invalid: 'Order num cannot be empty'
+            invalid: 'Order num cannot be empty',
           },
           isFrame: {
             required: 'Please select External Link',
-            invalid: 'External Link cannot be empty'
+            invalid: 'External Link cannot be empty',
           },
           path: {
             required: 'Please enter Route Path',
-            invalid: 'Route Path cannot be empty'
+            invalid: 'Route Path cannot be empty',
           },
           component: {
             required: 'Please enter Component Path',
-            invalid: 'Component Path cannot be empty'
+            invalid: 'Component Path cannot be empty',
           },
           query: {
             required: 'Please enter Route Parameters',
-            invalid: 'Route Parameters cannot be empty'
+            invalid: 'Route Parameters cannot be empty',
           },
           isCache: {
             required: 'Please select Cache',
-            invalid: 'Cache cannot be empty'
+            invalid: 'Cache cannot be empty',
           },
           visible: {
             required: 'Please select Visible',
-            invalid: 'Visible cannot be empty'
+            invalid: 'Visible cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           permission: {
             required: 'Please enter Permission',
-            invalid: 'Permission cannot be empty'
-          }
+            invalid: 'Permission cannot be empty',
+          },
         },
         placeholder: {
           iconifyIconPlaceholder: 'Please enter an icon',
           localIconPlaceholder: 'Please select the local icon',
           queryKey: 'Please enter a key',
           queryValue: 'Please enter a value',
-          queryIframe: 'Please enter a iframe address'
+          queryIframe: 'Please enter a iframe address',
         },
         directory: 'Directory',
         menu: 'Menu',
@@ -850,7 +850,7 @@ const local: App.I18n.Schema = {
         addMenu: 'Add Menu',
         addChildMenu: 'Add Child Menu',
         editMenu: 'Edit Menu',
-        cascadeDelete: 'Cascade Delete Menu'
+        cascadeDelete: 'Cascade Delete Menu',
       },
       notice: {
         title: 'Notice List',
@@ -862,23 +862,23 @@ const local: App.I18n.Schema = {
         form: {
           noticeTitle: {
             required: 'Please enter Notice Title',
-            invalid: 'Notice Title cannot be empty'
+            invalid: 'Notice Title cannot be empty',
           },
           noticeType: {
             required: 'Please select Notice Type',
-            invalid: 'Notice Type cannot be empty'
+            invalid: 'Notice Type cannot be empty',
           },
           noticeContent: {
             required: 'Please enter Notice Content',
-            invalid: 'Notice Content cannot be empty'
+            invalid: 'Notice Content cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
-          }
+            invalid: 'Status cannot be empty',
+          },
         },
         addNotice: 'Add Notice',
-        editNotice: 'Edit Notice'
+        editNotice: 'Edit Notice',
       },
       oss: {
         title: 'File List',
@@ -891,14 +891,14 @@ const local: App.I18n.Schema = {
         form: {
           file: {
             required: 'Please select a file',
-            invalid: 'File cannot be empty'
-          }
+            invalid: 'File cannot be empty',
+          },
         },
         upload: 'Upload File',
         preview: 'Preview',
         download: 'Download',
         copy: 'Copy Link',
-        copySuccess: 'Copy Success'
+        copySuccess: 'Copy Success',
       },
       ossConfig: {
         title: 'OSS Config List',
@@ -917,51 +917,51 @@ const local: App.I18n.Schema = {
         form: {
           configKey: {
             required: 'Please enter Config Key',
-            invalid: 'Config Key cannot be empty'
+            invalid: 'Config Key cannot be empty',
           },
           accessKey: {
             required: 'Please enter Access Key',
-            invalid: 'Access Key cannot be empty'
+            invalid: 'Access Key cannot be empty',
           },
           secretKey: {
             required: 'Please enter Secret Key',
-            invalid: 'Secret Key cannot be empty'
+            invalid: 'Secret Key cannot be empty',
           },
           bucketName: {
             required: 'Please enter Bucket Name',
-            invalid: 'Bucket Name cannot be empty'
+            invalid: 'Bucket Name cannot be empty',
           },
           prefix: {
             required: 'Please enter Prefix',
-            invalid: 'Prefix cannot be empty'
+            invalid: 'Prefix cannot be empty',
           },
           endpoint: {
             required: 'Please enter Endpoint',
-            invalid: 'Endpoint cannot be empty'
+            invalid: 'Endpoint cannot be empty',
           },
           domain: {
             required: 'Please enter Custom Domain',
-            invalid: 'Custom Domain cannot be empty'
+            invalid: 'Custom Domain cannot be empty',
           },
           isHttps: {
             required: 'Please select HTTPS',
-            invalid: 'HTTPS cannot be empty'
+            invalid: 'HTTPS cannot be empty',
           },
           region: {
             required: 'Please enter Region',
-            invalid: 'Region cannot be empty'
+            invalid: 'Region cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
-          }
+            invalid: 'Remark cannot be empty',
+          },
         },
         addOssConfig: 'Add OSS Config',
-        editOssConfig: 'Edit OSS Config'
+        editOssConfig: 'Edit OSS Config',
       },
       post: {
         title: 'Post List',
@@ -974,27 +974,27 @@ const local: App.I18n.Schema = {
         form: {
           postCode: {
             required: 'Please enter Post Code',
-            invalid: 'Post Code cannot be empty'
+            invalid: 'Post Code cannot be empty',
           },
           postName: {
             required: 'Please enter Post Name',
-            invalid: 'Post Name cannot be empty'
+            invalid: 'Post Name cannot be empty',
           },
           postSort: {
             required: 'Please enter Post Sort',
-            invalid: 'Post Sort cannot be empty'
+            invalid: 'Post Sort cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
-          }
+            invalid: 'Remark cannot be empty',
+          },
         },
         addPost: 'Add Post',
-        editPost: 'Edit Post'
+        editPost: 'Edit Post',
       },
       role: {
         title: 'Role List',
@@ -1009,32 +1009,32 @@ const local: App.I18n.Schema = {
         form: {
           roleName: {
             required: 'Please enter Role Name',
-            invalid: 'Role Name cannot be empty'
+            invalid: 'Role Name cannot be empty',
           },
           roleKey: {
             required: 'Please enter Role Key',
-            invalid: 'Role Key cannot be empty'
+            invalid: 'Role Key cannot be empty',
           },
           roleSort: {
             required: 'Please enter Role Sort',
-            invalid: 'Role Sort cannot be empty'
+            invalid: 'Role Sort cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
+            invalid: 'Remark cannot be empty',
           },
           menuIds: {
             required: 'Please select Menu Permission',
-            invalid: 'Menu Permission cannot be empty'
+            invalid: 'Menu Permission cannot be empty',
           },
           deptIds: {
             required: 'Please select Dept Permission',
-            invalid: 'Dept Permission cannot be empty'
-          }
+            invalid: 'Dept Permission cannot be empty',
+          },
         },
         addRole: 'Add Role',
         editRole: 'Edit Role',
@@ -1042,7 +1042,7 @@ const local: App.I18n.Schema = {
         authorizedUsers: 'Assign Users',
         selectMenuPermission: 'Select Menu Permission',
         selectDataScope: 'Select Data Scope',
-        selectDeptPermission: 'Select Dept Permission'
+        selectDeptPermission: 'Select Dept Permission',
       },
       tenant: {
         title: 'Tenant List',
@@ -1063,55 +1063,55 @@ const local: App.I18n.Schema = {
         form: {
           tenantName: {
             required: 'Please enter Tenant Name',
-            invalid: 'Tenant Name cannot be empty'
+            invalid: 'Tenant Name cannot be empty',
           },
           contactUserName: {
             required: 'Please enter Contact Person',
-            invalid: 'Contact Person cannot be empty'
+            invalid: 'Contact Person cannot be empty',
           },
           contactPhone: {
             required: 'Please enter Contact Phone',
-            invalid: 'Contact Phone cannot be empty'
+            invalid: 'Contact Phone cannot be empty',
           },
           companyName: {
             required: 'Please enter Company Name',
-            invalid: 'Company Name cannot be empty'
+            invalid: 'Company Name cannot be empty',
           },
           licenseNumber: {
             required: 'Please enter License Number',
-            invalid: 'License Number cannot be empty'
+            invalid: 'License Number cannot be empty',
           },
           address: {
             required: 'Please enter Address',
-            invalid: 'Address cannot be empty'
+            invalid: 'Address cannot be empty',
           },
           intro: {
             required: 'Please enter Introduction',
-            invalid: 'Introduction cannot be empty'
+            invalid: 'Introduction cannot be empty',
           },
           domain: {
             required: 'Please enter Domain',
-            invalid: 'Domain cannot be empty'
+            invalid: 'Domain cannot be empty',
           },
           packageId: {
             required: 'Please select Tenant Package',
-            invalid: 'Tenant Package cannot be empty'
+            invalid: 'Tenant Package cannot be empty',
           },
           expireTime: {
             required: 'Please select Expiration Time',
-            invalid: 'Expiration Time cannot be empty'
+            invalid: 'Expiration Time cannot be empty',
           },
           accountCount: {
             required: 'Please enter Account Count',
-            invalid: 'Account Count cannot be empty'
+            invalid: 'Account Count cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
-          }
+            invalid: 'Status cannot be empty',
+          },
         },
         addTenant: 'Add Tenant',
-        editTenant: 'Edit Tenant'
+        editTenant: 'Edit Tenant',
       },
       tenantPackage: {
         title: 'Tenant Package List',
@@ -1123,24 +1123,24 @@ const local: App.I18n.Schema = {
         form: {
           packageName: {
             required: 'Please enter Package Name',
-            invalid: 'Package Name cannot be empty'
+            invalid: 'Package Name cannot be empty',
           },
           menuIds: {
             required: 'Please select Menu Permission',
-            invalid: 'Menu Permission cannot be empty'
+            invalid: 'Menu Permission cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
-          }
+            invalid: 'Remark cannot be empty',
+          },
         },
         addTenantPackage: 'Add Tenant Package',
         editTenantPackage: 'Edit Tenant Package',
-        statusChangeSuccess: 'Status modified successfully'
+        statusChangeSuccess: 'Status modified successfully',
       },
       user: {
         title: 'User List',
@@ -1161,52 +1161,52 @@ const local: App.I18n.Schema = {
         form: {
           userName: {
             required: 'Please enter Username',
-            invalid: 'Username cannot be empty'
+            invalid: 'Username cannot be empty',
           },
           nickName: {
             required: 'Please enter Nickname',
-            invalid: 'Nickname cannot be empty'
+            invalid: 'Nickname cannot be empty',
           },
           deptId: {
             required: 'Please select Department',
-            invalid: 'Department cannot be empty'
+            invalid: 'Department cannot be empty',
           },
           phonenumber: {
             required: 'Please enter Phone Number',
-            invalid: 'Phone Number cannot be empty'
+            invalid: 'Phone Number cannot be empty',
           },
           status: {
             required: 'Please select Status',
-            invalid: 'Status cannot be empty'
+            invalid: 'Status cannot be empty',
           },
           password: {
             required: 'Please enter Password',
-            invalid: 'Password cannot be empty'
+            invalid: 'Password cannot be empty',
           },
           confirmPassword: {
             required: 'Please enter Confirm Password',
-            invalid: 'Confirm Password cannot be empty'
+            invalid: 'Confirm Password cannot be empty',
           },
           sex: {
             required: 'Please select Gender',
-            invalid: 'Gender cannot be empty'
+            invalid: 'Gender cannot be empty',
           },
           roleIds: {
             required: 'Please select Roles',
-            invalid: 'Roles cannot be empty'
+            invalid: 'Roles cannot be empty',
           },
           postIds: {
             required: 'Please select Posts',
-            invalid: 'Posts cannot be empty'
+            invalid: 'Posts cannot be empty',
           },
           email: {
             required: 'Please enter Email',
-            invalid: 'Email cannot be empty'
+            invalid: 'Email cannot be empty',
           },
           remark: {
             required: 'Please enter Remark',
-            invalid: 'Remark cannot be empty'
-          }
+            invalid: 'Remark cannot be empty',
+          },
         },
         addUser: 'Add User',
         editUser: 'Edit User',
@@ -1214,43 +1214,43 @@ const local: App.I18n.Schema = {
         importUsers: 'Import Users',
         exportTemplate: 'Export Template',
         importSuccess: 'Import successful',
-        statusChangeSuccess: 'Status modified successfully'
-      }
-    }
+        statusChangeSuccess: 'Status modified successfully',
+      },
+    },
   },
   form: {
     required: 'Cannot be empty',
     userName: {
       required: 'Please enter user name',
-      invalid: 'User name format is incorrect'
+      invalid: 'User name format is incorrect',
     },
     phone: {
       required: 'Please enter phone number',
-      invalid: 'Phone number format is incorrect'
+      invalid: 'Phone number format is incorrect',
     },
     pwd: {
       required: 'Please enter password',
-      invalid: '6-18 characters, including letters, numbers, and underscores'
+      invalid: '6-18 characters, including letters, numbers, and underscores',
     },
     confirmPwd: {
       required: 'Please enter password again',
-      invalid: 'The two passwords are inconsistent'
+      invalid: 'The two passwords are inconsistent',
     },
     code: {
       required: 'Please enter verification code',
-      invalid: 'Verification code format is incorrect'
+      invalid: 'Verification code format is incorrect',
     },
     email: {
       required: 'Please enter email',
-      invalid: 'Email format is incorrect'
-    }
+      invalid: 'Email format is incorrect',
+    },
   },
   dropdown: {
     closeCurrent: 'Close Current',
     closeOther: 'Close Other',
     closeLeft: 'Close Left',
     closeRight: 'Close Right',
-    closeAll: 'Close All'
+    closeAll: 'Close All',
   },
   icon: {
     themeConfig: 'Theme Configuration',
@@ -1262,11 +1262,11 @@ const local: App.I18n.Schema = {
     collapse: 'Collapse Menu',
     expand: 'Expand Menu',
     pin: 'Pin',
-    unpin: 'Unpin'
+    unpin: 'Unpin',
   },
   datatable: {
-    itemCount: 'Total {total} items'
-  }
+    itemCount: 'Total {total} items',
+  },
 };
 
 export default local;

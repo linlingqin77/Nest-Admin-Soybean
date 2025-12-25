@@ -10,7 +10,7 @@ import { $t } from '@/locales';
  * @param roles Roles
  */
 export function filterAuthRoutesByRoles(routes: ElegantConstRoute[], roles: string[]) {
-  return routes.flatMap(route => filterAuthRouteByRoles(route, roles));
+  return routes.flatMap((route) => filterAuthRouteByRoles(route, roles));
 }
 
 /**
@@ -26,12 +26,12 @@ function filterAuthRouteByRoles(route: ElegantConstRoute, roles: string[]): Eleg
   const isEmptyRoles = !routeRoles.length;
 
   // if the user's role is included in the route's "roles", then it is allowed to access
-  const hasPermission = routeRoles.some(role => roles.includes(role));
+  const hasPermission = routeRoles.some((role) => roles.includes(role));
 
   const filterRoute = { ...route };
 
   if (filterRoute.children?.length) {
-    filterRoute.children = filterRoute.children.flatMap(item => filterAuthRouteByRoles(item, roles));
+    filterRoute.children = filterRoute.children.flatMap((item) => filterAuthRouteByRoles(item, roles));
   }
 
   // Exclude the route if it has no children after filtering
@@ -76,11 +76,11 @@ export function sortRoutesByOrder(routes: ElegantConstRoute[]) {
 export function getGlobalMenusByAuthRoutes(routes: ElegantConstRoute[]) {
   const menus: App.Global.Menu[] = [];
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     if (!route.meta?.hideInMenu) {
       const menu = getGlobalMenuByBaseRoute(route);
 
-      if (route.children?.some(child => !child.meta?.hideInMenu)) {
+      if (route.children?.some((child) => !child.meta?.hideInMenu)) {
         menu.children = getGlobalMenusByAuthRoutes(route.children);
       }
 
@@ -99,14 +99,14 @@ export function getGlobalMenusByAuthRoutes(routes: ElegantConstRoute[]) {
 export function updateLocaleOfGlobalMenus(menus: App.Global.Menu[]) {
   const result: App.Global.Menu[] = [];
 
-  menus.forEach(menu => {
+  menus.forEach((menu) => {
     const { i18nKey, label, children } = menu;
 
     const newLabel = i18nKey ? $t(i18nKey) : label;
 
     const newMenu: App.Global.Menu = {
       ...menu,
-      label: newLabel
+      label: newLabel,
     };
 
     if (children?.length) {
@@ -138,7 +138,7 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
     i18nKey,
     routeKey: name as RouteKey,
     routePath: path as RouteMap[RouteKey],
-    icon: SvgIconVNode({ icon, localIcon, fontSize: iconFontSize || 20 })
+    icon: SvgIconVNode({ icon, localIcon, fontSize: iconFontSize || 20 }),
   };
 
   return menu;
@@ -152,9 +152,9 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
 export function getCacheRouteNames(routes: RouteRecordRaw[]) {
   const cacheNames: LastLevelRouteKey[] = [];
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     // only get last two level route, which has component
-    route.children?.forEach(child => {
+    route.children?.forEach((child) => {
       if (child.component && child.meta?.keepAlive) {
         cacheNames.push(child.name as LastLevelRouteKey);
       }
@@ -171,7 +171,7 @@ export function getCacheRouteNames(routes: RouteRecordRaw[]) {
  * @param routes
  */
 export function isRouteExistByRouteName(routeName: RouteKey, routes: ElegantConstRoute[]) {
-  return routes.some(route => recursiveGetIsRouteExistByRouteName(route, routeName));
+  return routes.some((route) => recursiveGetIsRouteExistByRouteName(route, routeName));
 }
 
 /**
@@ -188,7 +188,7 @@ function recursiveGetIsRouteExistByRouteName(route: ElegantConstRoute, routeName
   }
 
   if (route.children && route.children.length) {
-    isExist = route.children.some(item => recursiveGetIsRouteExistByRouteName(item, routeName));
+    isExist = route.children.some((item) => recursiveGetIsRouteExistByRouteName(item, routeName));
   }
 
   return isExist;
@@ -203,7 +203,7 @@ function recursiveGetIsRouteExistByRouteName(route: ElegantConstRoute, routeName
 export function getSelectedMenuKeyPathByKey(selectedKey: string, menus: App.Global.Menu[]) {
   const keyPath: string[] = [];
 
-  menus.some(menu => {
+  menus.some((menu) => {
     const path = findMenuPath(selectedKey, menu);
 
     const find = Boolean(path?.length);
@@ -263,7 +263,7 @@ function transformMenuToBreadcrumb(menu: App.Global.Menu) {
   const { children, ...rest } = menu;
 
   const breadcrumb: App.Global.Breadcrumb = {
-    ...rest
+    ...rest,
   };
 
   if (children?.length) {
@@ -281,7 +281,7 @@ function transformMenuToBreadcrumb(menu: App.Global.Menu) {
  */
 export function getBreadcrumbsByRoute(
   route: RouteLocationNormalizedLoaded,
-  menus: App.Global.Menu[]
+  menus: App.Global.Menu[],
 ): App.Global.Breadcrumb[] {
   const key = route.name as string;
   const activeKey = route.meta?.activeMenu;

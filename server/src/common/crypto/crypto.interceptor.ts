@@ -22,7 +22,7 @@ export class DecryptInterceptor implements NestInterceptor {
   constructor(
     private cryptoService: CryptoService,
     private reflector: Reflector,
-  ) { }
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     if (!this.cryptoService.isEnabled()) {
@@ -30,7 +30,10 @@ export class DecryptInterceptor implements NestInterceptor {
     }
 
     // 检查是否跳过解密
-    const skipDecrypt = this.reflector.getAllAndOverride<boolean>(SKIP_DECRYPT_KEY, [context.getHandler(), context.getClass()]);
+    const skipDecrypt = this.reflector.getAllAndOverride<boolean>(SKIP_DECRYPT_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     if (skipDecrypt) {
       return next.handle();
@@ -64,4 +67,3 @@ export class DecryptInterceptor implements NestInterceptor {
     return next.handle();
   }
 }
-

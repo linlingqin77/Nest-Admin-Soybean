@@ -16,7 +16,7 @@ export function createStaticRoutes() {
 
   const authRoutes: ElegantRoute[] = [];
 
-  [...customRoutes, ...generatedRoutes].forEach(item => {
+  [...customRoutes, ...generatedRoutes].forEach((item) => {
     if (item.meta?.constant) {
       constantRoutes.push(item);
     } else {
@@ -26,7 +26,7 @@ export function createStaticRoutes() {
 
   return {
     constantRoutes,
-    authRoutes
+    authRoutes,
   };
 }
 
@@ -39,8 +39,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: 'home',
       i18nKey: 'route.home',
       icon: 'mdi:monitor-dashboard',
-      order: -1
-    }
+      order: -1,
+    },
   },
   {
     name: '403',
@@ -50,8 +50,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: '403',
       i18nKey: 'route.403',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: '404',
@@ -61,8 +61,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: '404',
       i18nKey: 'route.404',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: '500',
@@ -72,8 +72,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: '500',
       i18nKey: 'route.500',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: 'login',
@@ -84,8 +84,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: 'login',
       i18nKey: 'route.login',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: 'iframe-page',
@@ -98,8 +98,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       constant: true,
       hideInMenu: true,
       keepAlive: true,
-      icon: 'material-symbols:iframe-outline'
-    }
+      icon: 'material-symbols:iframe-outline',
+    },
   },
   {
     name: 'social-callback',
@@ -110,8 +110,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       i18nKey: 'route.social-callback',
       constant: true,
       hideInMenu: true,
-      icon: 'simple-icons:authy'
-    }
+      icon: 'simple-icons:authy',
+    },
   },
   {
     name: 'user-center',
@@ -121,9 +121,9 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: 'user-center',
       i18nKey: 'route.user-center',
       icon: 'material-symbols:account-circle-full',
-      hideInMenu: true
-    }
-  }
+      hideInMenu: true,
+    },
+  },
 ];
 
 /** create routes when the auth route mode is static */
@@ -132,7 +132,7 @@ export function createDynamicRoutes() {
 
   const authRoutes: ElegantConstRoute[] = [];
 
-  [...customRoutes, ...dynamicConstantRoutes].forEach(item => {
+  [...customRoutes, ...dynamicConstantRoutes].forEach((item) => {
     if (item.meta?.constant) {
       constantRoutes.push(item);
     } else {
@@ -142,7 +142,7 @@ export function createDynamicRoutes() {
 
   return {
     constantRoutes,
-    authRoutes
+    authRoutes,
   };
 }
 

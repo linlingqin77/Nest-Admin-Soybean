@@ -20,17 +20,17 @@ export function createServiceConfig(env: Env.ImportMeta) {
 
   const httpConfig: App.Service.SimpleServiceConfig = {
     baseURL: VITE_SERVICE_BASE_URL,
-    other
+    other,
   };
 
   const otherHttpKeys = Object.keys(httpConfig.other) as App.Service.OtherBaseURLKey[];
 
-  const otherConfig: App.Service.OtherServiceConfigItem[] = otherHttpKeys.map(key => {
+  const otherConfig: App.Service.OtherServiceConfigItem[] = otherHttpKeys.map((key) => {
     return {
       key,
       ws: false,
       baseURL: httpConfig.other[key],
-      proxyPattern: createProxyPattern(key)
+      proxyPattern: createProxyPattern(key),
     };
   });
 
@@ -38,7 +38,7 @@ export function createServiceConfig(env: Env.ImportMeta) {
     baseURL: httpConfig.baseURL,
     ws: VITE_APP_WEBSOCKET === 'Y',
     proxyPattern: VITE_APP_BASE_API,
-    other: otherConfig
+    other: otherConfig,
   };
 
   return config;
@@ -55,13 +55,13 @@ export function getServiceBaseURL(env: Env.ImportMeta, isProxy: boolean = env.DE
 
   const otherBaseURL = {} as Record<App.Service.OtherBaseURLKey, string>;
 
-  other.forEach(item => {
+  other.forEach((item) => {
     otherBaseURL[item.key] = isProxy ? item.proxyPattern : item.baseURL;
   });
 
   return {
     baseURL: isProxy ? proxyPattern : (baseURL || '') + proxyPattern,
-    otherBaseURL
+    otherBaseURL,
   };
 }
 

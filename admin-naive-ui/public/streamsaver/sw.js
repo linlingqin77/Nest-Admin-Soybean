@@ -5,7 +5,7 @@ self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
@@ -13,7 +13,7 @@ const map = new Map();
 
 // This should be called once per download
 // Each event has a dataChannel that the data will be piped through
-self.onmessage = event => {
+self.onmessage = (event) => {
   // We send a heartbeat every x second to keep the
   // service worker alive if a transferable stream is not sent
   if (event.data === 'ping') {
@@ -35,7 +35,7 @@ self.onmessage = event => {
   if (event.data.readableStream) {
     metadata[0] = event.data.readableStream;
   } else if (event.data.transferringReadable) {
-    port.onmessage = evt => {
+    port.onmessage = (evt) => {
       port.onmessage = null;
       metadata[0] = evt.data.readableStream;
     };
@@ -68,11 +68,11 @@ function createStream(port) {
     cancel(reason) {
       console.log('user aborted', reason);
       port.postMessage({ abort: true });
-    }
+    },
   });
 }
 
-self.onfetch = event => {
+self.onfetch = (event) => {
   const url = event.request.url;
 
   // this only works for Firefox
@@ -99,7 +99,7 @@ self.onfetch = event => {
     'X-Content-Security-Policy': "default-src 'none'",
     'X-WebKit-CSP': "default-src 'none'",
     'X-XSS-Protection': '1; mode=block',
-    'Cross-Origin-Embedder-Policy': 'require-corp'
+    'Cross-Origin-Embedder-Policy': 'require-corp',
   });
 
   const headers = new Headers(data.headers || {});

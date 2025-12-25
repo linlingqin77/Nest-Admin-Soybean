@@ -100,9 +100,7 @@ export class JobService {
 
     // 如果更新了cron表达式或状态，需要重新调度
     const hasJobConfigChanged =
-      nextCron !== job.cronExpression ||
-      nextStatus !== job.status ||
-      nextInvokeTarget !== job.invokeTarget;
+      nextCron !== job.cronExpression || nextStatus !== job.status || nextInvokeTarget !== job.invokeTarget;
 
     if (hasJobConfigChanged) {
       const cronJob = this.getCronJob(job.jobName);

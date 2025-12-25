@@ -8,7 +8,7 @@ import { $t } from '@/locales';
 import DeptTree from '@/components/custom/dept-tree.vue';
 
 defineOptions({
-  name: 'RoleDataScopeDrawer'
+  name: 'RoleDataScopeDrawer',
 });
 
 interface Props {
@@ -27,7 +27,7 @@ const emit = defineEmits<Emits>();
 const deptTreeRef = ref<InstanceType<typeof DeptTree> | null>(null);
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const deptOptions = ref<Api.System.Dept[]>([]);
@@ -52,14 +52,14 @@ function createDefaultModel(): Model {
     deptIds: [],
     menuIds: [],
     deptCheckStrictly: true,
-    dataScope: '1'
+    dataScope: '1',
   };
 }
 
 type RuleKey = Extract<keyof Model, 'dataScope'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  dataScope: createRequiredRule('数据权限范围不能为空')
+  dataScope: createRequiredRule('数据权限范围不能为空'),
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -101,7 +101,7 @@ async function handleSubmit() {
       roleSort,
       dataScope,
       deptIds: dataScope === '2' ? deptIds : [],
-      menuIds
+      menuIds,
     });
     window.$message?.success($t('common.updateSuccess'));
     closeDrawer();
@@ -139,8 +139,15 @@ watch(visible, () => {
           <NSelect v-model:value="model.dataScope" :options="dataScopeOptions" />
         </NFormItem>
         <NFormItem v-if="model.dataScope === '2'" label="数据权限" path="deptIds" class="pr-24px">
-          <DeptTree v-if="visible" ref="deptTreeRef" v-model:value="model.deptIds" v-model:options="deptOptions"
-            v-model:loading="deptLoading" v-model:cascade="model.deptCheckStrictly" :immediate="false" />
+          <DeptTree
+            v-if="visible"
+            ref="deptTreeRef"
+            v-model:value="model.deptIds"
+            v-model:options="deptOptions"
+            v-model:loading="deptLoading"
+            v-model:cascade="model.deptCheckStrictly"
+            :immediate="false"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

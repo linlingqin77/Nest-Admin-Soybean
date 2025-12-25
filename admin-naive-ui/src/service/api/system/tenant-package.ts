@@ -5,14 +5,14 @@ export function fetchGetTenantPackageList(params?: Api.System.TenantPackageSearc
   return request<Api.System.TenantPackageList>({
     url: '/system/tenant/package/list',
     method: 'get',
-    params
+    params,
   });
 }
 /** 获取租户下拉列表 */
 export function fetchGetTenantPackageSelectList() {
   return request<Api.System.TenantPackageSelectList[]>({
     url: '/system/tenant/package/selectList',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -21,7 +21,7 @@ export function fetchCreateTenantPackage(data: Api.System.TenantPackageOperatePa
   return request<boolean>({
     url: '/system/tenant/package',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -30,7 +30,7 @@ export function fetchUpdateTenantPackage(data: Api.System.TenantPackageOperatePa
   return request<boolean>({
     url: '/system/tenant/package',
     method: 'put',
-    data
+    data,
   });
 }
 
@@ -38,7 +38,7 @@ export function fetchUpdateTenantPackage(data: Api.System.TenantPackageOperatePa
 export function fetchBatchDeleteTenantPackage(packageIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/tenant/package/${packageIds.join(',')}`,
-    method: 'delete'
+    method: 'delete',
   });
 }
 
@@ -47,6 +47,6 @@ export function fetchUpdateTenantPackageStatus(data: Api.System.TenantPackageOpe
   return request<boolean>({
     url: `/system/tenant/package/changeStatus`,
     method: 'put',
-    data
+    data,
   });
 }

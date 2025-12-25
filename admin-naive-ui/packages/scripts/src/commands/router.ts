@@ -18,14 +18,14 @@ export async function generateRoute() {
       name: 'routeName',
       type: 'text',
       message: 'please enter route name',
-      initial: 'demo-route_child'
+      initial: 'demo-route_child',
     },
     {
       name: 'addRouteParams',
       type: 'confirm',
       message: 'add route params?',
-      initial: false
-    }
+      initial: false,
+    },
   ]);
 
   if (result.addRouteParams) {
@@ -33,7 +33,7 @@ export async function generateRoute() {
       name: 'routeParams',
       type: 'text',
       message: 'please enter route params',
-      initial: 'id'
+      initial: 'id',
     });
 
     Object.assign(result, answers);

@@ -6,11 +6,11 @@ import type { RequestOption } from './type';
 
 export function createDefaultOptions<ResponseData = any>(options?: Partial<RequestOption<ResponseData>>) {
   const opts: RequestOption<ResponseData> = {
-    onRequest: async config => config,
-    isBackendSuccess: _response => true,
+    onRequest: async (config) => config,
+    isBackendSuccess: (_response) => true,
     onBackendFail: async () => {},
-    transformBackendResponse: async response => response.data,
-    onError: async () => {}
+    transformBackendResponse: async (response) => response.data,
+    onError: async () => {},
   };
 
   Object.assign(opts, options);
@@ -20,7 +20,7 @@ export function createDefaultOptions<ResponseData = any>(options?: Partial<Reque
 
 export function createRetryOptions(config?: Partial<CreateAxiosDefaults>) {
   const retryConfig: IAxiosRetryConfig = {
-    retries: 0
+    retries: 0,
   };
 
   Object.assign(retryConfig, config);
@@ -34,12 +34,12 @@ export function createAxiosConfig(config?: Partial<CreateAxiosDefaults>) {
   const axiosConfig: CreateAxiosDefaults = {
     timeout: TEN_SECONDS,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     validateStatus: isHttpSuccess,
-    paramsSerializer: params => {
+    paramsSerializer: (params) => {
       return stringify(params);
-    }
+    },
   };
 
   Object.assign(axiosConfig, config);

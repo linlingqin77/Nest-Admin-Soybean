@@ -7,8 +7,8 @@ export function setupCopyPlugin(): PluginOption {
     targets: [
       {
         src: 'packages/tinymce/dist/*',
-        dest: 'assets'
-      }
-    ]
+        dest: 'assets',
+      },
+    ],
   });
 }

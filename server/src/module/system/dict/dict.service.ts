@@ -6,7 +6,14 @@ import { CacheEnum, DelFlagEnum } from 'src/common/enum/index';
 import { Cacheable } from 'src/common/decorators/redis.decorator';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
-import { CreateDictTypeDto, UpdateDictTypeDto, ListDictType, CreateDictDataDto, UpdateDictDataDto, ListDictData } from './dto/index';
+import {
+  CreateDictTypeDto,
+  UpdateDictTypeDto,
+  ListDictType,
+  CreateDictDataDto,
+  UpdateDictDataDto,
+  ListDictData,
+} from './dto/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DictTypeRepository, DictDataRepository } from './dict.repository';
@@ -18,7 +25,7 @@ export class DictService {
     private readonly redisService: RedisService,
     private readonly dictTypeRepo: DictTypeRepository,
     private readonly dictDataRepo: DictDataRepository,
-  ) { }
+  ) {}
   async createType(CreateDictTypeDto: CreateDictTypeDto) {
     await this.dictTypeRepo.create(CreateDictTypeDto);
     return Result.ok();
@@ -244,6 +251,10 @@ export class DictService {
       {} as Record<string, typeof dictData>,
     );
 
-    await Promise.all(Object.entries(grouped).map(([dictType, items]) => this.redisService.set(`${CacheEnum.SYS_DICT_KEY}${dictType}`, items)));
+    await Promise.all(
+      Object.entries(grouped).map(([dictType, items]) =>
+        this.redisService.set(`${CacheEnum.SYS_DICT_KEY}${dictType}`, items),
+      ),
+    );
   }
 }

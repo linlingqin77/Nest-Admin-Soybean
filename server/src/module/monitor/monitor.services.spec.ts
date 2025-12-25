@@ -30,7 +30,9 @@ jest.mock('cron', () => ({
 }));
 
 jest.mock('node-disk-info', () => ({
-  getDiskInfoSync: jest.fn().mockReturnValue([{ _mounted: '/', _filesystem: 'apfs', _blocks: 1024, _used: 256, _available: 768 }]),
+  getDiskInfoSync: jest
+    .fn()
+    .mockReturnValue([{ _mounted: '/', _filesystem: 'apfs', _blocks: 1024, _used: 256, _available: 768 }]),
 }));
 
 describe('Monitor module services', () => {
@@ -108,14 +110,28 @@ describe('Monitor module services', () => {
     });
 
     it('should create job and register cron when status is normal', async () => {
-      (prisma.sysJob.create as jest.Mock).mockResolvedValue({ jobName: 'demo', status: '0', cronExpression: '* * * * * *', invokeTarget: 'task' });
-      await service.create({ jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '0' } as any, 'admin');
+      (prisma.sysJob.create as jest.Mock).mockResolvedValue({
+        jobName: 'demo',
+        status: '0',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'task',
+      });
+      await service.create(
+        { jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '0' } as any,
+        'admin',
+      );
       expect(prisma.sysJob.create).toHaveBeenCalled();
       expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
     });
 
     it('should change status by controlling cron job', async () => {
-      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({ jobId: 1, jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '0' });
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'task',
+        status: '0',
+      });
       const cronRef = { start: jest.fn(), stop: jest.fn() };
       schedulerRegistry.getCronJob.mockReturnValue(cronRef);
       await service.changeStatus(1, '1', 'admin');
@@ -123,7 +139,12 @@ describe('Monitor module services', () => {
     });
 
     it('should run job immediately via task service', async () => {
-      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({ jobId: 1, jobName: 'demo', jobGroup: 'DEFAULT', invokeTarget: 'task' });
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        jobGroup: 'DEFAULT',
+        invokeTarget: 'task',
+      });
       await service.run(1);
       expect(taskService.executeTask).toHaveBeenCalledWith('task', 'demo', 'DEFAULT');
     });
@@ -158,7 +179,7 @@ describe('Monitor module services', () => {
         jobLogService as any,
         prisma as any,
         noticeService as any,
-        versionService as any
+        versionService as any,
       );
       (service as any).taskMap.set('demoTask', jest.fn());
     });
@@ -279,7 +300,9 @@ describe('Monitor module services', () => {
     const service = new ServerService();
 
     beforeEach(() => {
-      (nodeDiskInfo.getDiskInfoSync as jest.Mock).mockReturnValue([{ _mounted: '/', _filesystem: 'apfs', _blocks: 1024 * 4, _used: 1024, _available: 1024 * 3 }]);
+      (nodeDiskInfo.getDiskInfoSync as jest.Mock).mockReturnValue([
+        { _mounted: '/', _filesystem: 'apfs', _blocks: 1024 * 4, _used: 1024, _available: 1024 * 3 },
+      ]);
     });
 
     it('should convert bytes to gigabytes', () => {

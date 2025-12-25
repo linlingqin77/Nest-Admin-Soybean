@@ -172,7 +172,19 @@ describe('System module services', () => {
     it('should return full menu tree for super admin', async () => {
       userService.getRoleIds.mockResolvedValue([1]);
       (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([
-        { menuId: 1, parentId: 0, menuType: 'M', orderNum: 1, menuName: '仪表盘', path: '/dashboard', visible: '0', status: '0', perms: '*:*:*', component: 'Dashboard', delFlag: '0' } as any,
+        {
+          menuId: 1,
+          parentId: 0,
+          menuType: 'M',
+          orderNum: 1,
+          menuName: '仪表盘',
+          path: '/dashboard',
+          visible: '0',
+          status: '0',
+          perms: '*:*:*',
+          component: 'Dashboard',
+          delFlag: '0',
+        } as any,
       ]);
       const data = await service.getMenuListByUserId(1);
       expect(data.data).toHaveLength(1);
@@ -305,7 +317,9 @@ describe('System module services', () => {
     });
 
     it('should import table metadata and columns', async () => {
-      const selectSpy = jest.spyOn(service as any, 'selectDbTableListByNames').mockResolvedValue([{ tableName: 'sys_user', tableComment: '用户表' }]);
+      const selectSpy = jest
+        .spyOn(service as any, 'selectDbTableListByNames')
+        .mockResolvedValue([{ tableName: 'sys_user', tableComment: '用户表' }]);
       const columnSpy = jest.spyOn(service as any, 'getTableColumnInfo').mockResolvedValue([
         {
           tableId: 1,
@@ -320,7 +334,11 @@ describe('System module services', () => {
           sort: 1,
         },
       ]);
-      (prisma.genTable.create as jest.Mock).mockResolvedValue({ tableId: 1, tableName: 'sys_user', businessName: 'user' } as any);
+      (prisma.genTable.create as jest.Mock).mockResolvedValue({
+        tableId: 1,
+        tableName: 'sys_user',
+        businessName: 'user',
+      } as any);
       await service.importTable({ tableNames: 'sys_user' } as any, { userName: 'admin' } as any);
       expect(selectSpy).toHaveBeenCalled();
       expect(columnSpy).toHaveBeenCalled();

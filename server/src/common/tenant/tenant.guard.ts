@@ -14,7 +14,7 @@ export class TenantGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private config: AppConfigService,
-  ) { }
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     // 检查是否启用多租户
@@ -24,7 +24,10 @@ export class TenantGuard implements CanActivate {
     }
 
     // 检查是否标记为忽略租户
-    const ignoreTenant = this.reflector.getAllAndOverride<boolean>(IGNORE_TENANT_KEY, [context.getHandler(), context.getClass()]);
+    const ignoreTenant = this.reflector.getAllAndOverride<boolean>(IGNORE_TENANT_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     if (ignoreTenant) {
       // 设置忽略租户过滤标志

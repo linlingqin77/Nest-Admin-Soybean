@@ -4,14 +4,14 @@ import { ConfigService } from '@nestjs/config';
 
 /**
  * SystemPrismaService - 不应用租户扩展的 Prisma 客户端
- * 
+ *
  * 用于访问系统级表（如 sys_system_config），这些表不需要租户隔离
- * 
+ *
  * 关键特性：
  * 1. 不使用 tenantExtension - 所有查询不会自动添加 tenant_id 过滤
  * 2. 使用相同的数据库连接配置
  * 3. 专门用于系统级配置和跨租户操作
- * 
+ *
  * @example
  * ```typescript
  * // 查询系统配置（无租户过滤）

@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 defineOptions({
-  name: 'CronDay'
+  name: 'CronDay',
 });
 
 interface Props {
@@ -29,7 +29,7 @@ const workDay = ref(1);
 
 const dayOptions = Array.from({ length: 31 }, (_, i) => ({
   label: (i + 1).toString(),
-  value: i + 1
+  value: i + 1,
 }));
 
 const cronValue = computed(() => {
@@ -104,16 +104,16 @@ function parseValue(val: string) {
   }
 }
 
-watch(cronValue, val => {
+watch(cronValue, (val) => {
   emit('change', val);
 });
 
 watch(
   () => props.value,
-  val => {
+  (val) => {
     parseValue(val);
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

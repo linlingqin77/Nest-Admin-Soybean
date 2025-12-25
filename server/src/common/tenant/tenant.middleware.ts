@@ -10,7 +10,7 @@ import { TenantContext } from './tenant.context';
 export class TenantMiddleware implements NestMiddleware {
   private readonly logger = new Logger(TenantMiddleware.name);
 
-  constructor(private config: AppConfigService) { }
+  constructor(private config: AppConfigService) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     // 检查是否启用多租户

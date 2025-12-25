@@ -3,7 +3,7 @@ import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'LoginInforViewDrawer'
+  name: 'LoginInforViewDrawer',
 });
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const visible = defineModel<boolean>('visible', {
-  default: false
+  default: false,
 });
 
 const title = '登录信息详情';

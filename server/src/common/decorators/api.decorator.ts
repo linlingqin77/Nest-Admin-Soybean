@@ -1,5 +1,19 @@
 import { Type, applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiBody, ApiExtraModels, ApiOkResponse, ApiResponse, ApiParam, ApiQuery, ApiHeader, ApiConsumes, ApiProduces, ApiSecurity, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiBody,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiHeader,
+  ApiConsumes,
+  ApiProduces,
+  ApiSecurity,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { Result } from '../response';
 
 /**
@@ -493,7 +507,9 @@ export const Api = (options: ApiOptions) => {
 
       if (respOption.type) {
         const respIsBaseType = baseTypeNames.includes(respOption.type.name);
-        const respItems = respIsBaseType ? { type: respOption.type.name.toLowerCase() } : { $ref: getSchemaPath(respOption.type) };
+        const respItems = respIsBaseType
+          ? { type: respOption.type.name.toLowerCase() }
+          : { $ref: getSchemaPath(respOption.type) };
 
         respSchema.properties.data = respOption.isArray ? { type: 'array', items: respItems } : respItems;
       }

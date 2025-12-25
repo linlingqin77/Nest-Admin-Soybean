@@ -38,8 +38,8 @@ const options = reactive<CropperOptions>({
   img: imageUrl.value,
   fileName: '',
   stencilProps: {
-    aspectRatio: 1
-  }
+    aspectRatio: 1,
+  },
 });
 
 /** 编辑头像 */
@@ -110,7 +110,8 @@ function handleClose() {
     <div class="relative h-120px w-120px overflow-hidden rounded-full">
       <img :src="imageUrl" alt="user-avatar" class="h-full w-full object-cover" />
       <div
-        class="absolute inset-0 flex-center bg-black/50 text-white opacity-0 transition-opacity duration-300 hover:opacity-100">
+        class="absolute inset-0 flex-center bg-black/50 text-white opacity-0 transition-opacity duration-300 hover:opacity-100"
+      >
         <SvgIcon icon="ep:plus" class="text-24px" />
       </div>
     </div>
@@ -118,8 +119,12 @@ function handleClose() {
     <NModal v-model:show="showModal" preset="card" title="修改头像" class="w-400px" @close="handleClose">
       <div class="flex-col-center gap-20px py-20px">
         <div class="h-300px w-full">
-          <Cropper ref="cropperRef" class="h-full bg-gray-100" :src="options.img"
-            :stencil-props="options.stencilProps" />
+          <Cropper
+            ref="cropperRef"
+            class="h-full bg-gray-100"
+            :src="options.img"
+            :stencil-props="options.stencilProps"
+          />
         </div>
         <div class="flex gap-12px">
           <NUpload accept=".jpg,.jpeg,.png,.gif" :max="1" :show-file-list="false" @before-upload="handleFileSelect">

@@ -28,15 +28,15 @@ export function Captcha(CACHE_KEY: string) {
       // 生产环境启用验证码验证
       if (captchaEnabled) {
         const user = paramsKeyGetObj(originMethod, CACHE_KEY, args);
-        
+
         logger.log(`提取的用户数据:`, JSON.stringify(user, null, 2));
         logger.log(`验证码 UUID: ${user?.uuid}, 用户输入的验证码: ${user?.code}`);
-        
+
         const redisKey = CacheEnum.CAPTCHA_CODE_KEY + user.uuid;
         logger.log(`Redis 查询 Key: ${redisKey}`);
-        
+
         const code = await this.redisService.get(redisKey);
-        
+
         logger.log(`Redis 中存储的验证码: ${code}`);
 
         if (!user.code) {
@@ -51,12 +51,12 @@ export function Captcha(CACHE_KEY: string) {
         const userCodeLower = String(user.code).toLowerCase();
         const redisCode = String(code).toLowerCase();
         logger.log(`验证码对比: Redis=${redisCode}, 用户输入=${userCodeLower}, 匹配=${redisCode === userCodeLower}`);
-        
+
         if (redisCode !== userCodeLower) {
           logger.error(`验证码错误: 期望 ${redisCode}, 实际 ${userCodeLower}`);
           return Result.fail(500, `验证码错误`);
         }
-        
+
         logger.log('验证码验证成功');
       }
 

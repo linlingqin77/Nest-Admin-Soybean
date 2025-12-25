@@ -40,7 +40,7 @@ export function getAntDPaletteColorByIndex(color: AnyColor, index: ColorIndex): 
   const newHsv: HsvColor = {
     h: getHue(hsv, i, isLight),
     s: getSaturation(hsv, i, isLight),
-    v: getValue(hsv, i, isLight)
+    v: getValue(hsv, i, isLight),
   };
 
   return getHex(newHsv);
@@ -58,7 +58,7 @@ const darkColorMap = [
   { index: 4, opacity: 0.93 },
   { index: 3, opacity: 0.95 },
   { index: 2, opacity: 0.97 },
-  { index: 1, opacity: 0.98 }
+  { index: 1, opacity: 0.98 },
 ];
 
 /**
@@ -71,7 +71,7 @@ const darkColorMap = [
 export function getAntDColorPalette(color: AnyColor, darkTheme = false, darkThemeMixColor = '#141414'): string[] {
   const indexes: ColorIndex[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-  const patterns = indexes.map(index => getAntDPaletteColorByIndex(color, index));
+  const patterns = indexes.map((index) => getAntDPaletteColorByIndex(color, index));
 
   if (darkTheme) {
     const darkPatterns = darkColorMap.map(({ index, opacity }) => {
@@ -80,7 +80,7 @@ export function getAntDColorPalette(color: AnyColor, darkTheme = false, darkThem
       return darkColor;
     });
 
-    return darkPatterns.map(item => getHex(item));
+    return darkPatterns.map((item) => getHex(item));
   }
 
   return patterns;

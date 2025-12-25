@@ -17,7 +17,7 @@ import JobLogSearch from './modules/job-log-search.vue';
 import JobLogDetailDrawer from './modules/job-log-detail-drawer.vue';
 
 defineOptions({
-  name: 'JobLogList'
+  name: 'JobLogList',
 });
 
 useDict('sys_job_group');
@@ -47,7 +47,7 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
 } = useTable({
   apiFn: fetchGetJobLogList,
   apiParams: {
@@ -56,26 +56,26 @@ const {
     jobName: initialJobName,
     jobGroup: initialJobGroup,
     status: null,
-    params: {}
+    params: {},
   },
   columns: () => [
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      width: 48,
     },
     {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
     },
     {
       key: 'jobName',
       title: '任务名称',
       align: 'center',
       minWidth: 120,
-      ellipsis: { tooltip: true }
+      ellipsis: { tooltip: true },
     },
     {
       key: 'jobGroup',
@@ -84,21 +84,21 @@ const {
       width: 100,
       render(row) {
         return <DictTag value={row.jobGroup} dictCode="sys_job_group" />;
-      }
+      },
     },
     {
       key: 'invokeTarget',
       title: '调用目标字符串',
       align: 'center',
       minWidth: 200,
-      ellipsis: { tooltip: true }
+      ellipsis: { tooltip: true },
     },
     {
       key: 'jobMessage',
       title: '日志信息',
       align: 'center',
       minWidth: 150,
-      ellipsis: { tooltip: true }
+      ellipsis: { tooltip: true },
     },
     {
       key: 'status',
@@ -107,20 +107,20 @@ const {
       width: 100,
       render(row) {
         return <DictTag value={row.status} dictCode="sys_common_status" />;
-      }
+      },
     },
     {
       key: 'createTime',
       title: '执行时间',
       align: 'center',
-      width: 160
+      width: 160,
     },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 100,
-      render: row => {
+      render: (row) => {
         const viewBtn = () => (
           <ButtonIcon
             text
@@ -156,9 +156,9 @@ const {
             ))}
           </div>
         );
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
@@ -195,7 +195,7 @@ async function handleClean() {
       } catch {
         // 错误消息已在请求工具中显示
       }
-    }
+    },
   });
 }
 
@@ -225,10 +225,17 @@ onMounted(() => {
     <JobLogSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="调度日志" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
-        <TableHeaderOperation v-model:columns="columnChecks" :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading" :show-add="false" :show-delete="hasAuth('monitor:job:remove')"
-          :show-export="hasAuth('monitor:job:export')" @delete="handleBatchDelete" @export="handleExport"
-          @refresh="getData">
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="false"
+          :show-delete="hasAuth('monitor:job:remove')"
+          :show-export="hasAuth('monitor:job:export')"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
           <template #after>
             <NButton v-if="hasAuth('monitor:job:remove')" size="small" type="error" ghost @click="handleClean">
               <template #icon>
@@ -245,9 +252,19 @@ onMounted(() => {
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data" v-bind="tableProps"
-        :flex-height="!appStore.isMobile" :scroll-x="1000" :loading="loading" remote :row-key="row => row.jobLogId"
-        :pagination="mobilePagination" class="h-full" />
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        v-bind="tableProps"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="1000"
+        :loading="loading"
+        remote
+        :row-key="(row) => row.jobLogId"
+        :pagination="mobilePagination"
+        class="h-full"
+      />
       <JobLogDetailDrawer v-model:visible="detailVisible" :row-data="detailData" />
     </NCard>
   </div>

@@ -4,7 +4,7 @@ import { request } from '../request';
 export function fetchTenantList() {
   return request<Api.Auth.LoginTenant>({
     url: '/auth/tenant/list',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -12,7 +12,7 @@ export function fetchTenantList() {
 export function fetchCaptchaCode() {
   return request<Api.Auth.CaptchaCode>({
     url: '/auth/code',
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -29,9 +29,9 @@ export function fetchLogin(data: Api.Auth.PwdLoginForm) {
     headers: {
       isToken: false,
       isEncrypt: true,
-      repeatSubmit: false
+      repeatSubmit: false,
     },
-    data
+    data,
   });
 }
 
@@ -40,7 +40,7 @@ export function fetchSocialLoginCallback(data: Api.Auth.SocialLoginForm) {
   return request({
     url: '/auth/social/callback',
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -52,9 +52,9 @@ export function fetchRegister(data: Api.Auth.RegisterForm) {
     headers: {
       isToken: false,
       isEncrypt: true,
-      repeatSubmit: false
+      repeatSubmit: false,
     },
-    data
+    data,
   });
 }
 
@@ -68,11 +68,11 @@ export function fetchLogout() {
   if (import.meta.env.VITE_APP_SSE === 'Y') {
     request({
       url: '/resource/sse/close',
-      method: 'get'
+      method: 'get',
     });
   }
   return request({
     url: '/auth/logout',
-    method: 'post'
+    method: 'post',
   });
 }

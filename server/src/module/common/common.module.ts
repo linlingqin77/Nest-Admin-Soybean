@@ -30,4 +30,4 @@ import { AppConfigService } from 'src/config/app-config.service';
     AxiosModule,
   ],
 })
-export class CommonModule { }
+export class CommonModule {}
