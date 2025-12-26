@@ -3849,7 +3849,7 @@
             "name": "status",
             "required": false,
             "in": "query",
-            "description": "状态（0正常 1停用）",
+            "description": "状态（NORMAL正常 DISABLED停用）",
             "schema": {
               "$ref": "#/components/schemas/StatusEnum"
             }

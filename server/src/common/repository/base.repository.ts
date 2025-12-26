@@ -1,35 +1,11 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { DelFlagEnum } from 'src/common/enum/index';
 import { PrismaService } from '../../prisma/prisma.service';
-import { IPaginatedData } from '../response/response.interface';
+import type { PaginatedData, PaginationParams, SortOptions, QueryOptions } from '../types';
+import type { IPaginatedData } from '../response/response.interface';
 
-/**
- * 分页查询选项
- */
-export interface PaginationOptions {
-  pageNum?: number;
-  pageSize?: number;
-}
-
-/**
- * 排序选项
- */
-export interface SortOptions {
-  orderBy?: string;
-  order?: 'asc' | 'desc';
-}
-
-/**
- * 查询选项
- */
-export interface QueryOptions extends PaginationOptions, SortOptions {
-  /** 查询条件 */
-  where?: Record<string, any>;
-  /** 关联查询 */
-  include?: Record<string, any>;
-  /** 字段选择 */
-  select?: Record<string, any>;
-}
+// Re-export for backward compatibility
+export type { PaginationParams as PaginationOptions, SortOptions, QueryOptions } from '../types/common';
 
 /**
  * Prisma Delegate 类型约束
@@ -122,7 +98,9 @@ export abstract class BaseRepository<
    */
   async findPage(options: QueryOptions): Promise<IPaginatedData<TModel>> {
     const { pageNum = 1, pageSize = 10, where, include, select, orderBy, order } = options;
-    const skip = (pageNum - 1) * pageSize;
+    const numPageNum = Number(pageNum);
+    const numPageSize = Number(pageSize);
+    const skip = (numPageNum - 1) * numPageSize;
 
     const [rows, total] = await Promise.all([
       this.delegate.findMany({
@@ -131,7 +109,7 @@ export abstract class BaseRepository<
         select,
         orderBy: orderBy ? { [orderBy]: order || 'asc' } : undefined,
         skip,
-        take: pageSize,
+        take: numPageSize,
       }),
       this.delegate.count({ where }),
     ]);
@@ -139,9 +117,9 @@ export abstract class BaseRepository<
     return {
       rows,
       total,
-      pageNum,
-      pageSize,
-      pages: Math.ceil(total / pageSize),
+      pageNum: numPageNum,
+      pageSize: numPageSize,
+      pages: Math.ceil(total / numPageSize),
     };
   }
 

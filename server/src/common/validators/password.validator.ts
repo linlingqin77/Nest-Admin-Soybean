@@ -5,31 +5,20 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-
-export interface PasswordValidationConfig {
-  minLength?: number;
-  maxLength?: number;
-  requireUppercase?: boolean;
-  requireLowercase?: boolean;
-  requireNumber?: boolean;
-  requireSpecial?: boolean;
-  forbiddenPatterns?: RegExp[];
-}
+import type { PasswordValidationConfig, PasswordValidationResult } from '../types/validation';
 
 const DEFAULT_PASSWORD_CONFIG: Required<PasswordValidationConfig> = {
   minLength: 8,
   maxLength: 128,
   requireUppercase: true,
   requireLowercase: true,
+  requireNumbers: true,
   requireNumber: true,
+  requireSpecialChars: false,
   requireSpecial: false,
+  specialChars: '!@#$%^&*()_+-=[]{};\':"|,.<>/?',
   forbiddenPatterns: [],
 };
-
-export interface PasswordValidationResult {
-  valid: boolean;
-  errors: string[];
-}
 
 export class PasswordValidator {
   static validate(password: string, config: PasswordValidationConfig = {}): PasswordValidationResult {

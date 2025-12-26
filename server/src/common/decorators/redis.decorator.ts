@@ -34,7 +34,7 @@ export function CacheEvict(CACHE_NAME: string, CACHE_KEY: string) {
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: any, ...args: any[]) {
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);
 
       if (key === '*') {
@@ -76,7 +76,7 @@ export function CacheEvictMultiple(configs: Array<{ name: string; key: string }>
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: any, ...args: any[]) {
       for (const config of configs) {
         const key = paramsKeyFormat(originMethod, config.key, args);
 
@@ -113,7 +113,7 @@ export function Cacheable(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: any, ...args: any[]) {
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);
 
       if (key === null) {
@@ -156,7 +156,7 @@ export function CachePut(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN:
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: any, ...args: any[]) {
       const result = await originMethod.apply(this, args);
 
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);

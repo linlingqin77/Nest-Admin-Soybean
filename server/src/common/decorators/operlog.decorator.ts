@@ -1,13 +1,9 @@
 import { applyDecorators, SetMetadata, UseInterceptors } from '@nestjs/common';
 import { OperlogInterceptor } from '../interceptors/operlog.interceptor';
-import { BusinessType } from '../constant/business.constant';
 
-export type OperlogConfig =
-  | Partial<{
-      businessType?: (typeof BusinessType)[keyof Omit<typeof BusinessType, 'prototype'>];
-    }>
-  | undefined;
+// Re-export for backward compatibility
+export type { OperlogConfig } from '../types/decorator';
 
-export const Operlog = (logConfig?: OperlogConfig) => {
+export const Operlog = (logConfig?: import('../types/decorator').OperlogConfig) => {
   return applyDecorators(SetMetadata('operlog', logConfig), UseInterceptors(OperlogInterceptor));
 };

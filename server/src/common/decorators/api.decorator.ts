@@ -15,194 +15,24 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { Result } from '../response';
+import type {
+  ApiParamOption,
+  ApiQueryOption,
+  ApiHeaderOption,
+  ApiResponseOption,
+  FileUploadOption,
+  ApiOptions,
+} from '../types/decorator';
 
-/**
- * 路径参数配置
- */
-export interface ApiParamOption {
-  /** 参数名称 */
-  name: string;
-  /** 参数描述 */
-  description?: string;
-  /** 参数类型 */
-  type?: 'string' | 'number' | 'boolean';
-  /** 是否必填，默认 true */
-  required?: boolean;
-  /** 示例值 */
-  example?: any;
-  /** 枚举值 */
-  enum?: any[];
-}
-
-/**
- * 查询参数配置
- */
-export interface ApiQueryOption {
-  /** 参数名称 */
-  name: string;
-  /** 参数描述 */
-  description?: string;
-  /** 参数类型 */
-  type?: 'string' | 'number' | 'boolean' | 'array';
-  /** 是否必填，默认 false */
-  required?: boolean;
-  /** 示例值 */
-  example?: any;
-  /** 枚举值 */
-  enum?: any[];
-  /** 是否允许为空 */
-  allowEmptyValue?: boolean;
-}
-
-/**
- * 请求头配置
- */
-export interface ApiHeaderOption {
-  /** 请求头名称 */
-  name: string;
-  /** 描述 */
-  description?: string;
-  /** 是否必填 */
-  required?: boolean;
-  /** 示例值 */
-  example?: string;
-}
-
-/**
- * 自定义响应配置
- */
-export interface ApiResponseOption {
-  /** 响应描述 */
-  description: string;
-  /** 响应数据类型 */
-  type?: Type<any>;
-  /** 是否为数组 */
-  isArray?: boolean;
-}
-
-/**
- * 文件上传配置
- */
-export interface FileUploadOption {
-  /** 文件字段名，默认 'file' */
-  fieldName?: string;
-  /** 是否多文件，默认 false */
-  multiple?: boolean;
-  /** 文件描述 */
-  description?: string;
-  /** 允许的文件类型 */
-  allowedTypes?: string[];
-  /** 最大文件大小描述 */
-  maxSize?: string;
-}
-
-/**
- * API 装饰器配置选项
- */
-export interface ApiOptions {
-  /**
-   * 接口摘要（必填）
-   */
-  summary: string;
-
-  /**
-   * 接口详细描述
-   */
-  description?: string;
-
-  /**
-   * 请求体类型
-   */
-  body?: Type<any>;
-
-  /**
-   * 响应 data 字段的类型
-   */
-  type?: Type<any>;
-
-  /**
-   * 响应 data 是否为数组
-   */
-  isArray?: boolean;
-
-  /**
-   * 是否为分页格式 { rows: T[], total: number }
-   */
-  isPager?: boolean;
-
-  /**
-   * 是否标记为已弃用
-   */
-  deprecated?: boolean;
-
-  /**
-   * 路径参数配置
-   * @example [{ name: 'id', description: '用户ID', type: 'number' }]
-   */
-  params?: ApiParamOption[];
-
-  /**
-   * 查询参数配置
-   * @example [{ name: 'keyword', description: '搜索关键词', required: false }]
-   */
-  queries?: ApiQueryOption[];
-
-  /**
-   * 自定义请求头
-   * @example [{ name: 'X-Custom-Header', description: '自定义头' }]
-   */
-  headers?: ApiHeaderOption[];
-
-  /**
-   * 请求 Content-Type
-   * @example ['multipart/form-data']
-   */
-  consumes?: string[];
-
-  /**
-   * 响应 Content-Type
-   * @example ['application/json', 'application/xml']
-   */
-  produces?: string[];
-
-  /**
-   * 是否需要认证，设为 false 可关闭认证标记
-   */
-  security?: boolean;
-
-  /**
-   * 方法级别的额外标签
-   */
-  tags?: string[];
-
-  /**
-   * 自定义操作 ID
-   */
-  operationId?: string;
-
-  /**
-   * 自定义多状态码响应
-   * @example { 400: { description: '参数错误' }, 404: { description: '资源不存在' } }
-   */
-  responses?: Record<number, ApiResponseOption>;
-
-  /**
-   * 请求示例
-   */
-  requestExample?: any;
-
-  /**
-   * 响应示例
-   */
-  responseExample?: any;
-
-  /**
-   * 文件上传配置，设为 true 使用默认配置，或传入对象自定义
-   * @example true
-   * @example { fieldName: 'avatar', maxSize: '2MB', allowedTypes: ['image/jpeg', 'image/png'] }
-   */
-  fileUpload?: boolean | FileUploadOption;
-}
+// Re-export for backward compatibility
+export type {
+  ApiParamOption,
+  ApiQueryOption,
+  ApiHeaderOption,
+  ApiResponseOption,
+  FileUploadOption,
+  ApiOptions,
+} from '../types/decorator';
 
 /**
  * 基础类型名称列表
@@ -405,7 +235,7 @@ export const Api = (options: ApiOptions) => {
           type: param.type || 'string',
           required: param.required !== false,
           example: param.example,
-          enum: param.enum,
+          enum: param.enum as string[] | undefined,
         }),
       );
     });
@@ -421,7 +251,7 @@ export const Api = (options: ApiOptions) => {
           type: query.type || 'string',
           required: query.required === true,
           example: query.example,
-          enum: query.enum,
+          enum: query.enum as string[] | undefined,
           allowEmptyValue: query.allowEmptyValue,
         }),
       );

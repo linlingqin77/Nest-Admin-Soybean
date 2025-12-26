@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Query, UploadedFile, UseInterceptors, Http
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
+import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, UploadIdDto } from './dto/index';
 import { Result } from 'src/common/response';
 import { Api } from 'src/common/decorators/api.decorator';
 import { Operlog } from 'src/common/decorators/operlog.decorator';

@@ -1,6 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import * as Useragent from 'useragent';
 import { GetNowDate } from 'src/common/utils';
+import type { ClientInfo as ClientInfoDto } from '../types/common';
+
+// Re-export for backward compatibility
+export type { ClientInfo as ClientInfoDto } from '../types/common';
 
 export const ClientInfo = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
@@ -29,12 +33,3 @@ export const ClientInfo = createParamDecorator((data: unknown, ctx: ExecutionCon
 
   return clientInfo;
 });
-
-export type ClientInfoDto = {
-  ipaddr: string;
-  browser: string;
-  os: string;
-  loginLocation: string;
-  userName?: string;
-  deviceType: string;
-};

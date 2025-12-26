@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsStrongPassword } from 'src/common/validators/password.validator';
 import { TenantContext } from 'src/common/tenant/tenant.context';
@@ -44,6 +44,7 @@ export class AuthLoginDto {
 
   @ApiProperty({ description: '记住我', required: false })
   @IsOptional()
+  @IsBoolean()
   rememberMe?: boolean;
 }
 

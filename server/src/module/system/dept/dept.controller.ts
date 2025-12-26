@@ -9,6 +9,7 @@ import { DeptTreeNodeVo } from 'src/common/dto/dept-tree-node.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
 import { UserTool, UserToolType } from '../user/user.decorator';
+import { Status } from '@prisma/client';
 
 @ApiTags('部门管理')
 @Controller('system/dept')
@@ -36,7 +37,7 @@ export class DeptController {
     isArray: true,
     queries: [
       { name: 'deptName', description: '部门名称', required: false },
-      { name: 'status', description: '状态（0正常 1停用）', required: false, enum: ['0', '1'] },
+      { name: 'status', description: '状态（NORMAL正常 DISABLED停用）', required: false, enum: Object.values(Status) },
     ],
   })
   @RequirePermission('system:dept:list')

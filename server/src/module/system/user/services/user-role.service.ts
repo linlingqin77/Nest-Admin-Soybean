@@ -85,7 +85,7 @@ export class UserRoleService {
     ]);
 
     if (!user) {
-      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
+      throw new BusinessException(ResponseCode.USER_NOT_FOUND);
     }
 
     const dept = user.deptId

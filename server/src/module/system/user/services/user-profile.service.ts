@@ -58,7 +58,7 @@ export class UserProfileService {
 
     // 验证旧密码 - 需要用compareSync而不是直接比较
     if (!bcrypt.compareSync(updatePwdDto.oldPassword, user.user.password)) {
-      return Result.fail(ResponseCode.BUSINESS_ERROR, '修改密码失败，旧密码错误');
+      return Result.fail(ResponseCode.OLD_PASSWORD_ERROR);
     }
 
     const password = bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10));

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsString, IsEnum, Min, Max, IsDateString, ValidateNested } from 'class-validator';
+import { IsOptional, IsInt, IsString, IsEnum, Min, Max, IsDateString, ValidateNested, IsArray } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 /**
@@ -16,11 +16,13 @@ export enum SortOrder {
 export class DateRangeDto {
   @ApiPropertyOptional({ description: '开始时间', example: '2024-01-01' })
   @IsOptional()
+  @IsString()
   @IsDateString()
   beginTime?: string;
 
   @ApiPropertyOptional({ description: '结束时间', example: '2024-12-31' })
   @IsOptional()
+  @IsString()
   @IsDateString()
   endTime?: string;
 }
@@ -98,12 +100,12 @@ export class PageQueryDto {
   /**
    * 获取时间范围条件
    */
-  getDateRange(fieldName: string = 'createTime'): Record<string, any> | undefined {
+  getDateRange(fieldName: string = 'createTime'): Record<string, { gte?: Date; lte?: Date }> | undefined {
     if (!this.params?.beginTime && !this.params?.endTime) {
       return undefined;
     }
 
-    const condition: any = {};
+    const condition: { gte?: Date; lte?: Date } = {};
     if (this.params.beginTime) {
       condition.gte = new Date(this.params.beginTime);
     }
@@ -130,6 +132,7 @@ export class PageQueryWithStatusDto extends PageQueryDto {
  */
 export class IdsDto {
   @ApiProperty({ description: 'ID 数组', example: [1, 2, 3], type: [Number] })
+  @IsArray()
   @IsInt({ each: true })
   @Type(() => Number)
   ids: number[];
@@ -140,6 +143,7 @@ export class IdsDto {
  */
 export class StringIdsDto {
   @ApiProperty({ description: 'ID 数组', example: ['1', '2', '3'], type: [String] })
+  @IsArray()
   @IsString({ each: true })
   ids: string[];
 }
@@ -159,18 +163,26 @@ export class IdParamDto {
  */
 export class BaseEntityDto {
   @ApiPropertyOptional({ description: '创建者' })
+  @IsOptional()
+  @IsString()
   createBy?: string;
 
   @ApiPropertyOptional({ description: '创建时间' })
+  @IsOptional()
   createTime?: Date;
 
   @ApiPropertyOptional({ description: '更新者' })
+  @IsOptional()
+  @IsString()
   updateBy?: string;
 
   @ApiPropertyOptional({ description: '更新时间' })
+  @IsOptional()
   updateTime?: Date;
 
   @ApiPropertyOptional({ description: '备注' })
+  @IsOptional()
+  @IsString()
   remark?: string;
 }
 
@@ -179,5 +191,7 @@ export class BaseEntityDto {
  */
 export class TenantEntityDto extends BaseEntityDto {
   @ApiPropertyOptional({ description: '租户ID' })
+  @IsOptional()
+  @IsString()
   tenantId?: string;
 }

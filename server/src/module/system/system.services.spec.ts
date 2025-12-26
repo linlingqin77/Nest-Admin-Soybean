@@ -41,11 +41,15 @@ describe('System module services', () => {
       create: jest.fn(),
       update: jest.fn(),
     };
+    const systemConfigService = {
+      getConfigValue: jest.fn(),
+      getSystemConfigValue: jest.fn(),
+    };
     let service: ConfigService;
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new ConfigService(prisma, redisService as any, configRepo as any);
+      service = new ConfigService(prisma, redisService as any, configRepo as any, systemConfigService as any);
       jest.clearAllMocks();
     });
 

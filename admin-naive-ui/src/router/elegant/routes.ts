@@ -14,8 +14,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '403',
       i18nKey: 'route.403',
       constant: true,
-      hideInMenu: true,
-    },
+      hideInMenu: true
+    }
   },
   {
     name: '404',
@@ -25,8 +25,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '404',
       i18nKey: 'route.404',
       constant: true,
-      hideInMenu: true,
-    },
+      hideInMenu: true
+    }
   },
   {
     name: '500',
@@ -36,8 +36,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '500',
       i18nKey: 'route.500',
       constant: true,
-      hideInMenu: true,
-    },
+      hideInMenu: true
+    }
   },
   {
     name: 'home',
@@ -47,8 +47,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'home',
       i18nKey: 'route.home',
       icon: 'mdi:monitor-dashboard',
-      order: 1,
-    },
+      order: 1
+    }
   },
   {
     name: 'iframe-page',
@@ -60,8 +60,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.iframe-page',
       constant: true,
       hideInMenu: true,
-      keepAlive: true,
-    },
+      keepAlive: true
+    }
   },
   {
     name: 'login',
@@ -72,8 +72,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'login',
       i18nKey: 'route.login',
       constant: true,
-      hideInMenu: true,
-    },
+      hideInMenu: true
+    }
   },
   {
     name: 'monitor',
@@ -81,7 +81,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'monitor',
-      i18nKey: 'route.monitor',
+      i18nKey: 'route.monitor'
     },
     children: [
       {
@@ -90,7 +90,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_cache',
         meta: {
           title: 'monitor_cache',
-          i18nKey: 'route.monitor_cache',
+          i18nKey: 'route.monitor_cache'
         },
         children: [
           {
@@ -99,10 +99,10 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.monitor_cache_list',
             meta: {
               title: 'monitor_cache_list',
-              i18nKey: 'route.monitor_cache_list',
-            },
-          },
-        ],
+              i18nKey: 'route.monitor_cache_list'
+            }
+          }
+        ]
       },
       {
         name: 'monitor_job',
@@ -110,8 +110,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_job',
         meta: {
           title: 'monitor_job',
-          i18nKey: 'route.monitor_job',
-        },
+          i18nKey: 'route.monitor_job'
+        }
       },
       {
         name: 'monitor_job-log',
@@ -119,8 +119,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_job-log',
         meta: {
           title: 'monitor_job-log',
-          i18nKey: 'route.monitor_job-log',
-        },
+          i18nKey: 'route.monitor_job-log'
+        }
       },
       {
         name: 'monitor_logininfor',
@@ -128,8 +128,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_logininfor',
         meta: {
           title: 'monitor_logininfor',
-          i18nKey: 'route.monitor_logininfor',
-        },
+          i18nKey: 'route.monitor_logininfor'
+        }
       },
       {
         name: 'monitor_online',
@@ -137,8 +137,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_online',
         meta: {
           title: 'monitor_online',
-          i18nKey: 'route.monitor_online',
-        },
+          i18nKey: 'route.monitor_online'
+        }
       },
       {
         name: 'monitor_operlog',
@@ -146,8 +146,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_operlog',
         meta: {
           title: 'monitor_operlog',
-          i18nKey: 'route.monitor_operlog',
-        },
+          i18nKey: 'route.monitor_operlog'
+        }
       },
       {
         name: 'monitor_server',
@@ -155,10 +155,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.monitor_server',
         meta: {
           title: 'monitor_server',
-          i18nKey: 'route.monitor_server',
-        },
-      },
-    ],
+          i18nKey: 'route.monitor_server'
+        }
+      }
+    ]
   },
   {
     name: 'social-callback',
@@ -168,8 +168,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'social-callback',
       i18nKey: 'route.social-callback',
       constant: true,
-      hideInMenu: true,
-    },
+      hideInMenu: true
+    }
   },
   {
     name: 'system',
@@ -179,7 +179,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'system',
       i18nKey: 'route.system',
       localIcon: 'menu-system',
-      order: 1,
+      order: 1
     },
     children: [
       {
@@ -188,8 +188,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_client',
         meta: {
           title: 'system_client',
-          i18nKey: 'route.system_client',
-        },
+          i18nKey: 'route.system_client'
+        }
       },
       {
         name: 'system_config',
@@ -197,8 +197,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_config',
         meta: {
           title: 'system_config',
-          i18nKey: 'route.system_config',
-        },
+          i18nKey: 'route.system_config'
+        }
       },
       {
         name: 'system_dept',
@@ -206,8 +206,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_dept',
         meta: {
           title: 'system_dept',
-          i18nKey: 'route.system_dept',
-        },
+          i18nKey: 'route.system_dept'
+        }
       },
       {
         name: 'system_dict',
@@ -215,8 +215,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_dict',
         meta: {
           title: 'system_dict',
-          i18nKey: 'route.system_dict',
-        },
+          i18nKey: 'route.system_dict'
+        }
       },
       {
         name: 'system_file-manager',
@@ -224,8 +224,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_file-manager',
         meta: {
           title: 'system_file-manager',
-          i18nKey: 'route.system_file-manager',
-        },
+          i18nKey: 'route.system_file-manager'
+        }
       },
       {
         name: 'system_menu',
@@ -235,8 +235,8 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'system_menu',
           i18nKey: 'route.system_menu',
           localIcon: 'menu-tree-table',
-          order: 3,
-        },
+          order: 3
+        }
       },
       {
         name: 'system_notice',
@@ -244,8 +244,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_notice',
         meta: {
           title: 'system_notice',
-          i18nKey: 'route.system_notice',
-        },
+          i18nKey: 'route.system_notice'
+        }
       },
       {
         name: 'system_oss',
@@ -253,8 +253,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_oss',
         meta: {
           title: 'system_oss',
-          i18nKey: 'route.system_oss',
-        },
+          i18nKey: 'route.system_oss'
+        }
       },
       {
         name: 'system_oss-config',
@@ -265,8 +265,8 @@ export const generatedRoutes: GeneratedRoute[] = [
           i18nKey: 'route.system_oss-config',
           constant: true,
           hideInMenu: true,
-          icon: 'hugeicons:configuration-01',
-        },
+          icon: 'hugeicons:configuration-01'
+        }
       },
       {
         name: 'system_post',
@@ -274,8 +274,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_post',
         meta: {
           title: 'system_post',
-          i18nKey: 'route.system_post',
-        },
+          i18nKey: 'route.system_post'
+        }
       },
       {
         name: 'system_role',
@@ -283,8 +283,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_role',
         meta: {
           title: 'system_role',
-          i18nKey: 'route.system_role',
-        },
+          i18nKey: 'route.system_role'
+        }
       },
       {
         name: 'system_tenant',
@@ -292,8 +292,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_tenant',
         meta: {
           title: 'system_tenant',
-          i18nKey: 'route.system_tenant',
-        },
+          i18nKey: 'route.system_tenant'
+        }
       },
       {
         name: 'system_tenant-package',
@@ -301,8 +301,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_tenant-package',
         meta: {
           title: 'system_tenant-package',
-          i18nKey: 'route.system_tenant-package',
-        },
+          i18nKey: 'route.system_tenant-package'
+        }
       },
       {
         name: 'system_user',
@@ -310,10 +310,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.system_user',
         meta: {
           title: 'system_user',
-          i18nKey: 'route.system_user',
-        },
-      },
-    ],
+          i18nKey: 'route.system_user'
+        }
+      }
+    ]
   },
   {
     name: 'tool',
@@ -323,7 +323,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'tool',
       i18nKey: 'route.tool',
       localIcon: 'menu-tool',
-      order: 4,
+      order: 4
     },
     children: [
       {
@@ -332,8 +332,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.tool_build',
         meta: {
           title: 'tool_build',
-          i18nKey: 'route.tool_build',
-        },
+          i18nKey: 'route.tool_build'
+        }
       },
       {
         name: 'tool_gen',
@@ -343,8 +343,8 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'tool_gen',
           i18nKey: 'route.tool_gen',
           localIcon: 'menu-code',
-          order: 2,
-        },
+          order: 2
+        }
       },
       {
         name: 'tool_swagger',
@@ -352,10 +352,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.tool_swagger',
         meta: {
           title: 'tool_swagger',
-          i18nKey: 'route.tool_swagger',
-        },
-      },
-    ],
+          i18nKey: 'route.tool_swagger'
+        }
+      }
+    ]
   },
   {
     name: 'user-center',
@@ -365,7 +365,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'user-center',
       i18nKey: 'route.user-center',
       icon: 'material-symbols:account-circle-full',
-      hideInMenu: true,
-    },
-  },
+      hideInMenu: true
+    }
+  }
 ];

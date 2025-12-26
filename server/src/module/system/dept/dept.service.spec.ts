@@ -98,7 +98,7 @@ describe('DeptService', () => {
       await service.findAll(query);
 
       const callArgs = (prisma.sysDept.findMany as jest.Mock).mock.calls[0][0];
-      expect(callArgs.where.status).toBe('0');
+      expect(callArgs.where.status).toBe(Status.NORMAL);
     });
   });
 

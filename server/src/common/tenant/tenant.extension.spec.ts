@@ -89,7 +89,7 @@ describe('Tenant Extension Logic', () => {
         const args = { where: { status: Status.NORMAL } };
         const result = addTenantFilter('SysUser', args);
         expect(result.where.tenantId).toBe('100001');
-        expect(result.where.status).toBe('0');
+        expect(result.where.status).toBe(Status.NORMAL);
       });
     });
 

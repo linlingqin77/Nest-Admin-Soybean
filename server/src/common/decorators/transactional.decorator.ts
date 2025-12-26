@@ -1,4 +1,8 @@
 import { SetMetadata } from '@nestjs/common';
+import type { TransactionalOptions } from '../types/decorator';
+
+// Re-export for backward compatibility
+export type { TransactionalOptions } from '../types/decorator';
 
 /**
  * 事务装饰器元数据键
@@ -31,24 +35,6 @@ export enum Propagation {
   MANDATORY = 'MANDATORY',
   /** 以非事务方式执行，如果当前存在事务，则抛出异常 */
   NEVER = 'NEVER',
-}
-
-/**
- * 事务选项
- */
-export interface TransactionalOptions {
-  /** 隔离级别 */
-  isolationLevel?: IsolationLevel;
-  /** 传播行为 */
-  propagation?: Propagation;
-  /** 超时时间（毫秒） */
-  timeout?: number;
-  /** 只读事务 */
-  readOnly?: boolean;
-  /** 回滚异常类型 */
-  rollbackFor?: (new (...args: any[]) => Error)[];
-  /** 不回滚异常类型 */
-  noRollbackFor?: (new (...args: any[]) => Error)[];
 }
 
 /**

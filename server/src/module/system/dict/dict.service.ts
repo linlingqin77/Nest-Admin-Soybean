@@ -92,7 +92,7 @@ export class DictService {
     await this.dictDataRepo.create({
       ...createDictDataDto,
       dictSort: createDictDataDto.dictSort ?? 0,
-      status: createDictDataDto.status ?? '0',
+      status: createDictDataDto.status ?? StatusEnum.NORMAL,
       isDefault: 'N',
       delFlag: DelFlagEnum.NORMAL,
     });

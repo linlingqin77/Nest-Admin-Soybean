@@ -1,6 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import * as fs from 'fs';
-import * as path from 'path';
 
 /**
  * 系统配置表迁移脚本

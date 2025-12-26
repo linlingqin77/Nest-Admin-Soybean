@@ -14,6 +14,7 @@ export class CreateUserDto {
 
   @ApiProperty({ required: false, description: '邮箱地址' })
   @IsOptional()
+  @IsString()
   @Length(0, 50)
   email: string;
 

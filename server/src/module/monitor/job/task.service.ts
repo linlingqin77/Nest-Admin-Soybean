@@ -71,7 +71,7 @@ export class TaskService implements OnModuleInit {
    */
   async executeTask(invokeTarget: string, jobName?: string, jobGroup?: string) {
     const startTime = new Date();
-    let status = '0';
+    let status: string = StatusEnum.NORMAL;
     let jobMessage = '执行成功';
     let exceptionInfo = '';
 
@@ -92,7 +92,7 @@ export class TaskService implements OnModuleInit {
       await taskFn(...params);
       return true;
     } catch (error) {
-      status = '1';
+      status = StatusEnum.DISABLED;
       jobMessage = '执行失败';
       exceptionInfo = error.message;
       this.logger.error(`执行任务失败: ${error.message}`);

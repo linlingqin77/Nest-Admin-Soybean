@@ -26,7 +26,7 @@ export class PostService {
       postCategory: createPostDto.postCategory,
       postName: createPostDto.postName,
       postSort: createPostDto.postSort ?? 0,
-      status: createPostDto.status ?? '0',
+      status: createPostDto.status ?? StatusEnum.NORMAL,
       remark: createPostDto.remark ?? '',
       delFlag: DelFlagEnum.NORMAL,
       ...createPostDto,

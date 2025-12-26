@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, IsInt, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -32,21 +32,24 @@ export class ListFileDto {
   @ApiProperty({ required: false, description: '页码', default: 1 })
   @IsOptional()
   @Type(() => Number)
+  @IsInt()
   pageNum?: number;
 
   @ApiProperty({ required: false, description: '每页数量', default: 10 })
   @IsOptional()
   @Type(() => Number)
+  @IsInt()
   pageSize?: number;
 }
 
 export class MoveFileDto {
   @ApiProperty({ required: true, description: '文件ID列表', type: [String] })
+  @IsArray()
   @IsString({ each: true })
   uploadIds: string[];
 
   @ApiProperty({ required: true, description: '目标文件夹ID' })
-  @IsNumber()
+  @IsInt()
   targetFolderId: number;
 }
 

@@ -14,6 +14,7 @@ export const CONFIG_KEYS = {
   // 账户相关配置
   ACCOUNT: {
     CAPTCHA_ENABLED: 'sys.account.captchaEnabled',
+    REGISTER_USER: 'sys.account.registerUser',
   },
 
   // 文件相关配置

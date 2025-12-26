@@ -19,4 +19,4 @@ export { ResetPwdDto } from './reset-pwd.dto';
 export { UpdateProfileDto, UpdatePwdDto } from './profile.dto';
 
 // 类型定义
-export { UserType } from './user';
+export type { UserType } from './user';

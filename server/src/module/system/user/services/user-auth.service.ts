@@ -45,7 +45,7 @@ export class UserAuthService {
     const data = await this.userRepo.findByUserName(user.userName);
 
     if (!(data && bcrypt.compareSync(user.password, data.password))) {
-      return Result.fail(ResponseCode.BUSINESS_ERROR, `帐号或密码错误`);
+      return Result.fail(ResponseCode.PASSWORD_ERROR);
     }
 
     // 清除用户缓存
@@ -240,7 +240,7 @@ export class UserAuthService {
     const user = await this.userRepo.findById(userId);
 
     if (!user) {
-      throw new BusinessException(ResponseCode.BUSINESS_ERROR, '用户不存在');
+      throw new BusinessException(ResponseCode.USER_NOT_FOUND);
     }
 
     const [dept, roleIds, postRelations] = await Promise.all([

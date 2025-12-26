@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 /**
  * Type for uploaded file from multer
  */
-export interface UploadedFile {
+export type UploadedFile = {
   fieldname: string;
   originalname: string;
   encoding: string;
@@ -15,7 +15,7 @@ export interface UploadedFile {
   destination?: string;
   filename?: string;
   path?: string;
-}
+};
 
 export class FileUploadDto {
   @ApiProperty({ type: 'string', format: 'binary', description: '上传文件' })

@@ -9,6 +9,7 @@ import { StatusEnum, StatusEnumSchema } from 'src/common/enum';
 export class ListUserDto extends PageQueryDto {
   @ApiProperty({ required: false, description: '部门ID' })
   @IsOptional()
+  @IsString()
   @IsNumberString()
   deptId?: string;
 
@@ -59,6 +60,7 @@ export class AllocatedListDto extends PageQueryDto {
 
   @ApiProperty({ required: false, description: '角色ID' })
   @IsOptional()
+  @IsString()
   @IsNumberString()
   roleId?: string;
 }

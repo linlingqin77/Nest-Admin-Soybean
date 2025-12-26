@@ -121,11 +121,11 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
             },
           },
         },
-      }),
+      } as Prisma.SysUserFindManyArgs),
       this.prisma.sysUser.count({ where }),
     ]);
 
-    return { list, total };
+    return { list: list as SysUserWithDept[], total };
   }
 
   /**

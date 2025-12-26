@@ -1,10 +1,11 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseRepository, PrismaDelegate } from './base.repository';
 import { PrismaService } from '../../prisma/prisma.service';
+import { DelFlagEnum } from '../enum/index';
 
 /**
  * 软删除仓储基类
- * 自动处理软删除逻辑（delFlag = '0' 表示正常，'1' 表示已删除）
+ * 自动处理软删除逻辑（delFlag = NORMAL 表示正常，DELETED 表示已删除）
  *
  * @template TModel - Prisma 生成的模型类型
  * @template TDelegate - Prisma Delegate 类型
@@ -26,7 +27,7 @@ export abstract class SoftDeleteRepository<
     const idField = this.getIdField();
     return await (this.delegate as any).update({
       where: { [idField]: id },
-      data: { delFlag: '1' },
+      data: { delFlag: DelFlagEnum.DELETED },
     });
   }
 
@@ -39,7 +40,7 @@ export abstract class SoftDeleteRepository<
       where: {
         [idField]: { in: ids },
       },
-      data: { delFlag: '1' },
+      data: { delFlag: DelFlagEnum.DELETED },
     });
 
     return result.count;
@@ -53,7 +54,7 @@ export abstract class SoftDeleteRepository<
     const where = args?.where || {};
     // 只有在 where 中没有显式设置 delFlag 时才添加默认过滤
     if (!('delFlag' in where)) {
-      where.delFlag = '0';
+      where.delFlag = DelFlagEnum.NORMAL;
     }
 
     return await (this.delegate as any).findMany({
@@ -68,7 +69,7 @@ export abstract class SoftDeleteRepository<
   async findOne(where: any): Promise<TModel | null> {
     // 添加软删除过滤
     if (!('delFlag' in where)) {
-      where.delFlag = '0';
+      where.delFlag = DelFlagEnum.NORMAL;
     }
 
     return await (this.delegate as any).findFirst({ where });
@@ -87,7 +88,7 @@ export abstract class SoftDeleteRepository<
    */
   async exists(where: any): Promise<boolean> {
     if (!('delFlag' in where)) {
-      where.delFlag = '0';
+      where.delFlag = DelFlagEnum.NORMAL;
     }
 
     const count = await (this.delegate as any).count({ where });

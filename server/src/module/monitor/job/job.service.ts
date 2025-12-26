@@ -157,7 +157,7 @@ export class JobService {
 
     const cronJob = this.getCronJob(job.jobName);
 
-    if (status === '0') {
+    if (status === StatusEnum.NORMAL) {
       // 启用
       if (!cronJob) {
         this.addCronJob(job.jobName, job.cronExpression, job.invokeTarget);

@@ -1,6 +1,6 @@
 import { PartialType, OmitType } from '@nestjs/swagger';
 import { CreateTenantDto } from './create-tenant.dto';
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTenantDto extends PartialType(
@@ -12,7 +12,7 @@ export class UpdateTenantDto extends PartialType(
   id: number;
 
   @ApiProperty({ required: true, description: '租户编号' })
-  @IsNotEmpty()
+  @IsString()
   @IsNotEmpty()
   tenantId: string;
 }

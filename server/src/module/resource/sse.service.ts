@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Subject, Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+import type { SseMessage } from '../../common/types/sse';
 
-export interface SseMessage {
-  userId?: number;
-  message: string;
-  type?: string;
-}
+// Re-export for backward compatibility
+export type { SseMessage } from '../../common/types/sse';
 
 interface ClientConnection {
   userId: number;

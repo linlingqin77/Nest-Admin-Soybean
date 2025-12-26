@@ -200,7 +200,7 @@ export class UserService {
       userType: SYS_USER_TYPE.CUSTOM,
       phonenumber: userPayload.phonenumber ?? '',
       sex: userPayload.sex ?? '0',
-      status: userPayload.status ?? '0',
+      status: userPayload.status ?? StatusEnum.NORMAL,
       avatar: '',
       delFlag: DelFlagEnum.NORMAL,
       loginIp: '',
@@ -541,6 +541,6 @@ export class UserService {
     delete body.pageNum;
     delete body.pageSize;
     const list = await this.findAll(body, user);
-    return this.userExportService.export(res, list.data);
+    return this.userExportService.export(res, list.data as any);
   }
 }

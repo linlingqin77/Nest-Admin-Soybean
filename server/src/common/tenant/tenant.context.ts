@@ -1,12 +1,8 @@
 import { AsyncLocalStorage } from 'async_hooks';
+import type { TenantContext as TenantContextData } from '../types/tenant';
 
-/**
- * 租户上下文数据
- */
-export interface TenantContextData {
-  tenantId: string;
-  ignoreTenant?: boolean;
-}
+// Re-export for backward compatibility
+export type { TenantContext as TenantContextData } from '../types/tenant';
 
 /**
  * 租户上下文 - 使用 AsyncLocalStorage 在异步操作中传递租户信息

@@ -47,5 +47,5 @@ export const createPrismaMock = (): PrismaMock => {
     return param;
   });
 
-  return proxy as PrismaMock;
+  return proxy as unknown as PrismaMock;
 };

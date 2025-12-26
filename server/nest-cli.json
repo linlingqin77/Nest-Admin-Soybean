@@ -7,6 +7,7 @@
     "flat": false
   },
   "compilerOptions": {
+    "tsConfigPath": "tsconfig.build.json",
     "assets": [
       {
         "include": "config/*.yml",

@@ -114,12 +114,14 @@ export class ConfigExampleService {
   getLoggerConfig() {
     const logger = this.config.app.logger;
 
-    this.logger.log(`日志配置: ${JSON.stringify({
-      level: logger.level,
-      dir: logger.dir,
-      toFile: logger.toFile,
-      prettyPrint: logger.prettyPrint,
-    })}`);
+    this.logger.log(
+      `日志配置: ${JSON.stringify({
+        level: logger.level,
+        dir: logger.dir,
+        toFile: logger.toFile,
+        prettyPrint: logger.prettyPrint,
+      })}`,
+    );
 
     return logger;
   }

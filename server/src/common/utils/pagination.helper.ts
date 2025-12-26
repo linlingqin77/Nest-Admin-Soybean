@@ -1,21 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-
-export interface PaginatedResult<T> {
-  rows: T[];
-  total: number;
-}
-
-export interface PaginationParams {
-  pageNum?: number | string;
-  pageSize?: number | string;
-}
-
-export interface PaginationQuery {
-  skip: number;
-  take: number;
-  pageNum: number;
-  pageSize: number;
-}
+import type { PaginatedResult, PaginationParams, PaginationQuery } from '../types/common';
 
 export class PaginationHelper {
   static getPagination(params: PaginationParams = {}): PaginationQuery {

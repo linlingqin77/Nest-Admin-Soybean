@@ -15,6 +15,7 @@ export class UpdateProfileDto {
 
   @ApiProperty({ required: true, description: '邮箱地址' })
   @IsOptional()
+  @IsString()
   @IsEmail()
   @Length(0, 50)
   email: string;

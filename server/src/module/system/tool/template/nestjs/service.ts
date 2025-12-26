@@ -1,7 +1,23 @@
-import * as Lodash from 'lodash';
+import Lodash from 'lodash';
 import { GenConstants } from 'src/common/constant/gen.constant';
 
-export const serviceTem = (options) => {
+interface ColumnOption {
+  javaField: string;
+  javaType?: string;
+  isList?: string;
+  isQuery?: string;
+  queryType?: string;
+}
+
+interface ServiceTemplateOptions {
+  BusinessName: string;
+  primaryKey: string;
+  businessName: string;
+  className?: string;
+  columns: ColumnOption[];
+}
+
+export const serviceTem = (options: ServiceTemplateOptions): string => {
   const { BusinessName, primaryKey, businessName, className } = options;
   const modelName = className || Lodash.upperFirst(BusinessName);
   const delegateName = lowercaseFirst(modelName);
@@ -91,20 +107,20 @@ ${selectLine}    };
 }`;
 };
 
-const getListSelectDefinition = (options, modelName) => {
+const getListSelectDefinition = (options: ServiceTemplateOptions, modelName: string): string => {
   const { columns } = options;
-  const fields = columns.filter((column) => column.isList == '1').map((column) => column.javaField);
+  const fields = columns.filter((column: ColumnOption) => column.isList == '1').map((column: ColumnOption) => column.javaField);
   if (!fields.length) {
     return '';
   }
-  return `    const listSelect: Prisma.${modelName}Select = {\n${fields.map((field) => `      ${field}: true,`).join('\n')}\n    };\n`;
+  return `    const listSelect: Prisma.${modelName}Select = {\n${fields.map((field: string) => `      ${field}: true,`).join('\n')}\n    };\n`;
 };
 
-const getListQueryStr = (options) => {
+const getListQueryStr = (options: ServiceTemplateOptions): string => {
   const { columns } = options;
   const statements = columns
-    .filter((column) => column.isQuery == '1')
-    .map((column) => {
+    .filter((column: ColumnOption) => column.isQuery == '1')
+    .map((column: ColumnOption) => {
       const field = column.javaField;
       switch (column.queryType) {
         case GenConstants.QUERY_EQ:
@@ -131,17 +147,17 @@ const getListQueryStr = (options) => {
   return statements.join('');
 };
 
-const getPrimaryKeyType = (options) => {
+const getPrimaryKeyType = (options: ServiceTemplateOptions): string => {
   const { primaryKey, columns } = options;
 
   if (!primaryKey) {
     return 'string';
   }
-  const primaryKeyColumn = columns.find((item) => item.javaField === primaryKey);
+  const primaryKeyColumn = columns.find((item: ColumnOption) => item.javaField === primaryKey);
   return mapJavaTypeToTs(primaryKeyColumn?.javaType);
 };
 
-const lowercaseFirst = (str) => {
+const lowercaseFirst = (str: string): string => {
   if (!str) {
     return '';
   }

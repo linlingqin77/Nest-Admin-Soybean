@@ -17,8 +17,8 @@ export class CryptoService implements OnModuleInit {
   private readonly logger = new Logger(CryptoService.name);
 
   // RSA 密钥对
-  private publicKey: string;
-  private privateKey: string;
+  private publicKey!: string;
+  private privateKey!: string;
 
   // 是否启用加密
   private enabled: boolean = false;
@@ -121,8 +121,9 @@ export class CryptoService implements OnModuleInit {
       const decrypted = privateKeyObj.decrypt(encryptedBytes, 'RSAES-PKCS1-V1_5');
 
       return decrypted;
-    } catch (error) {
-      this.logger.error('RSA decrypt error:', error.message);
+    } catch (error: unknown) {
+      const err = error as Error;
+      this.logger.error('RSA decrypt error:', err.message);
       throw new Error('RSA decrypt failed');
     }
   }
@@ -141,8 +142,9 @@ export class CryptoService implements OnModuleInit {
 
       // Base64 编码
       return forge.util.encode64(encrypted);
-    } catch (error) {
-      this.logger.error('RSA encrypt error:', error.message);
+    } catch (error: unknown) {
+      const err = error as Error;
+      this.logger.error('RSA encrypt error:', err.message);
       throw new Error('RSA encrypt failed');
     }
   }
@@ -174,8 +176,9 @@ export class CryptoService implements OnModuleInit {
       decrypted = Buffer.concat([decrypted, decipher.final()]);
 
       return decrypted.toString('utf8');
-    } catch (error) {
-      this.logger.error('AES decrypt error:', error.message);
+    } catch (error: unknown) {
+      const err = error as Error;
+      this.logger.error('AES decrypt error:', err.message);
       throw new Error('AES decrypt failed');
     }
   }
@@ -204,8 +207,9 @@ export class CryptoService implements OnModuleInit {
       const ivAndCiphertext = Buffer.concat([iv, encrypted]);
 
       return ivAndCiphertext.toString('base64');
-    } catch (error) {
-      this.logger.error('AES encrypt error:', error.message);
+    } catch (error: unknown) {
+      const err = error as Error;
+      this.logger.error('AES encrypt error:', err.message);
       throw new Error('AES encrypt failed');
     }
   }

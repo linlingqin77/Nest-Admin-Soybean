@@ -4,10 +4,10 @@
 // Read more: https://github.com/soybeanjs/elegant-router
 
 import type { RouteComponent } from "vue-router";
-import type { LastLevelRouteKey, RouteLayout } from '@elegant-router/types';
+import type { LastLevelRouteKey, RouteLayout } from "@elegant-router/types";
 
-import BaseLayout from '@/layouts/base-layout/index.vue';
-import BlankLayout from '@/layouts/blank-layout/index.vue';
+import BaseLayout from "@/layouts/base-layout/index.vue";
+import BlankLayout from "@/layouts/blank-layout/index.vue";
 
 export const layouts: Record<RouteLayout, RouteComponent | (() => Promise<RouteComponent>)> = {
   base: BaseLayout,
@@ -15,37 +15,37 @@ export const layouts: Record<RouteLayout, RouteComponent | (() => Promise<RouteC
 };
 
 export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<RouteComponent>)> = {
-  403: () => import('@/views/_builtin/403/index.vue'),
-  404: () => import('@/views/_builtin/404/index.vue'),
-  500: () => import('@/views/_builtin/500/index.vue'),
-  'iframe-page': () => import('@/views/_builtin/iframe-page/[url].vue'),
-  login: () => import('@/views/_builtin/login/index.vue'),
-  'social-callback': () => import('@/views/_builtin/social-callback/index.vue'),
-  'user-center': () => import('@/views/_builtin/user-center/index.vue'),
-  home: () => import('@/views/home/index.vue'),
-  monitor_cache: () => import('@/views/monitor/cache/index.vue'),
-  monitor_cache_list: () => import('@/views/monitor/cache/list/index.vue'),
-  'monitor_job-log': () => import('@/views/monitor/job-log/index.vue'),
-  monitor_job: () => import('@/views/monitor/job/index.vue'),
-  monitor_logininfor: () => import('@/views/monitor/logininfor/index.vue'),
-  monitor_online: () => import('@/views/monitor/online/index.vue'),
-  monitor_operlog: () => import('@/views/monitor/operlog/index.vue'),
-  monitor_server: () => import('@/views/monitor/server/index.vue'),
-  system_client: () => import('@/views/system/client/index.vue'),
-  system_config: () => import('@/views/system/config/index.vue'),
-  system_dept: () => import('@/views/system/dept/index.vue'),
-  system_dict: () => import('@/views/system/dict/index.vue'),
-  'system_file-manager': () => import('@/views/system/file-manager/index.vue'),
-  system_menu: () => import('@/views/system/menu/index.vue'),
-  system_notice: () => import('@/views/system/notice/index.vue'),
-  'system_oss-config': () => import('@/views/system/oss-config/index.vue'),
-  system_oss: () => import('@/views/system/oss/index.vue'),
-  system_post: () => import('@/views/system/post/index.vue'),
-  system_role: () => import('@/views/system/role/index.vue'),
-  'system_tenant-package': () => import('@/views/system/tenant-package/index.vue'),
-  system_tenant: () => import('@/views/system/tenant/index.vue'),
-  system_user: () => import('@/views/system/user/index.vue'),
-  tool_build: () => import('@/views/tool/build/index.vue'),
-  tool_gen: () => import('@/views/tool/gen/index.vue'),
-  tool_swagger: () => import('@/views/tool/swagger/index.vue'),
+  403: () => import("@/views/_builtin/403/index.vue"),
+  404: () => import("@/views/_builtin/404/index.vue"),
+  500: () => import("@/views/_builtin/500/index.vue"),
+  "iframe-page": () => import("@/views/_builtin/iframe-page/[url].vue"),
+  login: () => import("@/views/_builtin/login/index.vue"),
+  "social-callback": () => import("@/views/_builtin/social-callback/index.vue"),
+  "user-center": () => import("@/views/_builtin/user-center/index.vue"),
+  home: () => import("@/views/home/index.vue"),
+  monitor_cache: () => import("@/views/monitor/cache/index.vue"),
+  monitor_cache_list: () => import("@/views/monitor/cache/list/index.vue"),
+  "monitor_job-log": () => import("@/views/monitor/job-log/index.vue"),
+  monitor_job: () => import("@/views/monitor/job/index.vue"),
+  monitor_logininfor: () => import("@/views/monitor/logininfor/index.vue"),
+  monitor_online: () => import("@/views/monitor/online/index.vue"),
+  monitor_operlog: () => import("@/views/monitor/operlog/index.vue"),
+  monitor_server: () => import("@/views/monitor/server/index.vue"),
+  system_client: () => import("@/views/system/client/index.vue"),
+  system_config: () => import("@/views/system/config/index.vue"),
+  system_dept: () => import("@/views/system/dept/index.vue"),
+  system_dict: () => import("@/views/system/dict/index.vue"),
+  "system_file-manager": () => import("@/views/system/file-manager/index.vue"),
+  system_menu: () => import("@/views/system/menu/index.vue"),
+  system_notice: () => import("@/views/system/notice/index.vue"),
+  "system_oss-config": () => import("@/views/system/oss-config/index.vue"),
+  system_oss: () => import("@/views/system/oss/index.vue"),
+  system_post: () => import("@/views/system/post/index.vue"),
+  system_role: () => import("@/views/system/role/index.vue"),
+  "system_tenant-package": () => import("@/views/system/tenant-package/index.vue"),
+  system_tenant: () => import("@/views/system/tenant/index.vue"),
+  system_user: () => import("@/views/system/user/index.vue"),
+  tool_build: () => import("@/views/tool/build/index.vue"),
+  tool_gen: () => import("@/views/tool/gen/index.vue"),
+  tool_swagger: () => import("@/views/tool/swagger/index.vue"),
 };

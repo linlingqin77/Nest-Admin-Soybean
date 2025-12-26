@@ -178,6 +178,7 @@ describe('UserService', () => {
           provide: ConfigService,
           useValue: {
             getConfigValue: jest.fn().mockResolvedValue('true'),
+            getSystemConfigValue: jest.fn().mockResolvedValue('false'),
           },
         },
         {

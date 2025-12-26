@@ -8,13 +8,13 @@ import ffmpeg from 'fluent-ffmpeg';
 import * as path from 'path';
 import * as fs from 'fs';
 
-export interface ThumbnailJobData {
+export type ThumbnailJobData = {
   uploadId: string;
   filePath: string;
   storageType: 'local' | 'cos';
   ext: string;
   mimeType?: string;
-}
+};
 
 /**
  * 缩略图生成队列处理器

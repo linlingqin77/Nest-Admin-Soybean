@@ -23,14 +23,5 @@ export function getApiPath(path: string, version: string = API_VERSION.CURRENT):
   return `${API_VERSION.PREFIX}/${version}${path}`;
 }
 
-/**
- * API 版本装饰器参数
- */
-export interface VersionOptions {
-  /** API 版本 */
-  version?: string;
-  /** 是否弃用 */
-  deprecated?: boolean;
-  /** 弃用说明 */
-  deprecationMessage?: string;
-}
+// Re-export for backward compatibility
+export type { VersionOptions } from '../types/decorator';

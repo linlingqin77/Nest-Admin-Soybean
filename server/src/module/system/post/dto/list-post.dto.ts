@@ -24,6 +24,7 @@ export class ListPostDto extends PageQueryDto {
 
   @ApiProperty({ required: false, description: '所属部门ID' })
   @IsOptional()
+  @IsString()
   @IsNumberString()
   belongDeptId?: string;
 }

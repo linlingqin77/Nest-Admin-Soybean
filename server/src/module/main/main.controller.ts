@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { MainService } from './main.service';
 import { RegisterDto, LoginDto } from './dto/index';
 import { createMath } from 'src/common/utils/captcha';
-import { Result, ResponseCode } from 'src/common/response';
+import { Result, ResponseCode, getResponseMessage } from 'src/common/response';
 import { GenerateUUID } from 'src/common/utils/index';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum } from 'src/common/enum/index';
@@ -13,6 +13,7 @@ import { NotRequireAuth, User, UserDto } from 'src/module/system/user/user.decor
 import { Api } from 'src/common/decorators/api.decorator';
 import { LoginVo, CaptchaVo, GetInfoVo } from './vo/main.vo';
 import { RouterVo } from 'src/module/system/menu/vo/menu.vo';
+import { CONFIG_KEYS } from 'src/common/constant/config.constants';
 
 @ApiTags('根目录')
 @Controller('/')
@@ -74,9 +75,9 @@ export class MainController {
   @Get('/registerUser')
   async registerUser() {
     // 使用 getSystemConfigValue 不依赖租户上下文（登录前调用）
-    const res = await this.configService.getSystemConfigValue('sys.account.registerUser');
+    const res = await this.configService.getSystemConfigValue(CONFIG_KEYS.ACCOUNT.REGISTER_USER);
     const enable = res === 'true';
-    return Result.ok(enable, '操作成功');
+    return Result.ok(enable);
   }
 
   @Api({
@@ -107,7 +108,7 @@ export class MainController {
           1000 * 60 * 5,
         );
       }
-      return Result.ok(data, '操作成功');
+      return Result.ok(data);
     } catch (err) {
       return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '生成验证码错误，请重试');
     }
@@ -121,7 +122,7 @@ export class MainController {
   @Get('/getInfo')
   async getInfo(@User() user: UserDto) {
     return {
-      msg: '操作成功',
+      msg: getResponseMessage(ResponseCode.SUCCESS),
       code: 200,
       permissions: user.permissions,
       roles: user.roles,

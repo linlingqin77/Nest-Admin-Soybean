@@ -50,6 +50,7 @@
 - **调度**: @nestjs/schedule - 定时任务
 - **监控**: Prometheus + Terminus - 健康检查与指标采集
 - **文档**: Swagger - 自动生成 API 文档
+- **类型安全**: TypeScript 严格模式 + ESLint - 完整的类型检查
 
 #### 前端技术
 - **框架**: Vue 3.x - 渐进式 JavaScript 框架
@@ -690,6 +691,15 @@ pnpm cleanup               # 清理依赖
 - 使用 TypeScript 类型注解
 - 编写清晰的注释
 - 提交前运行测试
+- 查看 [类型安全开发指南](server/docs/TYPE_SAFETY_GUIDE.md)
+
+### 相关文档
+
+- [类型安全开发指南](server/docs/TYPE_SAFETY_GUIDE.md) - 类型安全最佳实践
+- [类型安全迁移指南](server/docs/TYPE_SAFETY_MIGRATION.md) - 代码迁移步骤
+- [类型安全测试报告](server/docs/TYPE_SAFETY_TEST_REPORT.md) - 改造测试结果
+- [优化报告](server/docs/OPTIMIZATION_README.md) - 系统优化总结
+- [演示账户指南](server/docs/DEMO_ACCOUNT_GUIDE.md) - 演示账户使用说明
 
 ---
 

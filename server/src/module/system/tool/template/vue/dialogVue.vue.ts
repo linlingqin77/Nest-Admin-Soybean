@@ -1,6 +1,28 @@
 import { indexScriptDicts } from './indexVue.vue';
 
-export const dialogVue = (options) => {
+interface ColumnOption {
+  javaField: string;
+  columnComment: string;
+  dictType?: string;
+  htmlType: string;
+  isEdit?: string;
+  isPk?: string;
+  isInsert?: string;
+  isRequired?: string;
+}
+
+interface VueTemplateOptions {
+  columns: ColumnOption[];
+  BusinessName: string;
+  moduleName: string;
+  businessName: string;
+  primaryKey: string;
+  functionName: string;
+}
+
+type HtmlType = 'input' | 'imageUpload' | 'fileUpload' | 'editor' | 'select' | 'checkbox' | 'radio' | 'datetime' | 'textarea';
+
+export const dialogVue = (options: VueTemplateOptions): string => {
   const html = generateTemplate(options);
   const script = generateScriptSetup(options);
   return `
@@ -9,16 +31,16 @@ export const dialogVue = (options) => {
   `;
 };
 
-const generateTemplate = ({ columns }) => {
+const generateTemplate = ({ columns }: { columns: ColumnOption[] }): string => {
   let html = '';
-  columns.forEach((item) => {
+  columns.forEach((item: ColumnOption) => {
     if (item.isEdit === '1' && item.isPk === '0') {
       const comment = item.columnComment.split('(')[0];
       const field = item.javaField;
       const dictType = item.dictType;
       const htmlType = item.htmlType;
 
-      const htmlMap = {
+      const htmlMap: Record<HtmlType, string> = {
         input: `
           <el-form-item label="${comment}" prop="${field}">
             <el-input v-model="form.${field}" placeholder="请输入${comment}" />
@@ -96,7 +118,7 @@ const generateTemplate = ({ columns }) => {
         `,
       };
 
-      html += htmlMap[htmlType] || '';
+      html += htmlMap[htmlType as HtmlType] || '';
     }
   });
 
@@ -117,7 +139,7 @@ const generateTemplate = ({ columns }) => {
   `;
 };
 
-const generateScriptSetup = ({ columns, BusinessName, moduleName, businessName, primaryKey, functionName }) => {
+const generateScriptSetup = ({ columns, BusinessName, moduleName, businessName, primaryKey, functionName }: VueTemplateOptions): string => {
   const dicts = indexScriptDicts(columns);
   const form = generateFormData(columns);
   const rules = generateRulesData(columns);
@@ -177,19 +199,19 @@ const generateScriptSetup = ({ columns, BusinessName, moduleName, businessName, 
   `;
 };
 
-const generateFormData = (columns) => {
+const generateFormData = (columns: ColumnOption[]): string => {
   return columns
-    .filter((item) => item.isInsert === '1' && item.isPk === '0')
+    .filter((item: ColumnOption) => item.isInsert === '1' && item.isPk === '0')
     .map(
-      (item) => `
+      (item: ColumnOption) => `
     ${item.javaField}: ${item.htmlType === 'checkbox' ? '[]' : '""'}`,
     )
     .join(',\n');
 };
 
-const generateRulesData = (columns) => {
+const generateRulesData = (columns: ColumnOption[]): string => {
   return columns
-    .filter((item) => item.isRequired === '1')
-    .map((item) => `${item.javaField}: [{ required: true, message: "${item.columnComment}不能为空", trigger: "blur" }]`)
+    .filter((item: ColumnOption) => item.isRequired === '1')
+    .map((item: ColumnOption) => `${item.javaField}: [{ required: true, message: "${item.columnComment}不能为空", trigger: "blur" }]`)
     .join(',\n');
 };

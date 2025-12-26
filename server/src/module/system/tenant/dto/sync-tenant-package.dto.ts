@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SyncTenantPackageDto {
@@ -8,6 +8,7 @@ export class SyncTenantPackageDto {
   tenantId: string;
 
   @ApiProperty({ required: true, description: '套餐ID' })
+  @IsInt()
   @IsNotEmpty()
   packageId: number;
 }

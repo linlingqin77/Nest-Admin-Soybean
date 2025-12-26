@@ -2,27 +2,10 @@ import * as Lodash from 'lodash';
 import * as ExcelJS from 'exceljs';
 import { Response } from 'express';
 import { StatusEnum, SexEnum, DelFlagEnum } from 'src/common/enum/index';
+import type { ExportHeader, ExportOptions } from '../types/export';
 
-/**
- * 导出表头配置
- */
-export interface ExportHeader {
-  title: string;
-  dataIndex: string;
-  width?: number;
-  formateStr?: (value: unknown) => string;
-}
-
-/**
- * 导出选项配置
- */
-export interface ExportOptions {
-  data: Record<string, unknown>[];
-  header: ExportHeader[];
-  sheetName?: string;
-  dictMap?: Record<string, Record<string | number, string>>;
-  filename?: string;
-}
+// Re-export for backward compatibility
+export type { ExportHeader, ExportOptions } from '../types/export';
 
 /**
  * 通用枚举映射配置

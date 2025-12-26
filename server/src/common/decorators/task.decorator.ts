@@ -1,11 +1,10 @@
 import { SetMetadata } from '@nestjs/common';
+import type { TaskMetadata } from '../types/decorator';
+
+// Re-export for backward compatibility
+export type { TaskMetadata } from '../types/decorator';
 
 export const TASK_METADATA = 'task_metadata';
-
-export interface TaskMetadata {
-  name: string;
-  description?: string;
-}
 
 // 全局任务注册表
 export class TaskRegistry {
