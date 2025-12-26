@@ -51,31 +51,42 @@ export type PrismaDelegate = {
  * 基础仓储抽象类
  *
  * @description 提供通用的 CRUD 操作封装，减少 Service 层的样板代码
+ * @template TModel - Prisma 生成的模型类型
+ * @template TDelegate - Prisma Delegate 类型
+ * @template TModelName - Prisma 模型名称
  *
  * @example
  * ```typescript
  * @Injectable()
- * export class UserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate> {
+ * export class UserRepository extends BaseRepository<
+ *   SysUser,
+ *   Prisma.SysUserDelegate,
+ *   'sysUser'
+ * > {
  *   constructor(prisma: PrismaService) {
  *     super(prisma, 'sysUser');
  *   }
  * }
  * ```
  */
-export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegate> {
-  protected readonly delegate: D;
+export abstract class BaseRepository<
+  TModel,
+  TDelegate extends PrismaDelegate,
+  TModelName extends keyof PrismaClient = keyof PrismaClient
+> {
+  protected readonly delegate: TDelegate;
 
   constructor(
     protected readonly prisma: PrismaService,
-    protected readonly modelName: keyof PrismaClient,
+    protected readonly modelName: TModelName,
   ) {
-    this.delegate = (prisma as any)[modelName] as D;
+    this.delegate = (prisma as any)[modelName] as TDelegate;
   }
 
   /**
    * 根据主键查询单条记录
    */
-  async findById(id: number | string, options?: { include?: any; select?: any }): Promise<T | null> {
+  async findById(id: number | string, options?: { include?: any; select?: any }): Promise<TModel | null> {
     return this.delegate.findUnique({
       where: { [this.getPrimaryKeyName()]: id },
       ...options,
@@ -85,7 +96,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 根据条件查询单条记录
    */
-  async findOne(where: any, options?: { include?: any; select?: any }): Promise<T | null> {
+  async findOne(where: any, options?: { include?: any; select?: any }): Promise<TModel | null> {
     return this.delegate.findFirst({
       where,
       ...options,
@@ -95,7 +106,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 查询所有记录
    */
-  async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<T[]> {
+  async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<TModel[]> {
     const { where, include, select, orderBy, order } = options || {};
 
     return this.delegate.findMany({
@@ -109,7 +120,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 分页查询
    */
-  async findPage(options: QueryOptions): Promise<IPaginatedData<T>> {
+  async findPage(options: QueryOptions): Promise<IPaginatedData<TModel>> {
     const { pageNum = 1, pageSize = 10, where, include, select, orderBy, order } = options;
     const skip = (pageNum - 1) * pageSize;
 
@@ -136,10 +147,28 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
 
   /**
    * 创建记录
+   * @template T - Prisma create args type
    */
-  async create(data: any, options?: { include?: any; select?: any }): Promise<T> {
+  async create<T extends Prisma.Args<TDelegate, 'create'>>(
+    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'create'>>
+  ): Promise<Prisma.Result<TDelegate, T, 'create'>>;
+  
+  /**
+   * 创建记录（简化签名，向后兼容）
+   */
+  async create(data: any, options?: { include?: any; select?: any }): Promise<TModel>;
+  
+  async create(
+    argsOrData: any,
+    options?: { include?: any; select?: any }
+  ): Promise<any> {
+    // 如果第一个参数包含 data 属性，说明是新的 Prisma args 格式
+    if (argsOrData && typeof argsOrData === 'object' && 'data' in argsOrData) {
+      return this.delegate.create(argsOrData);
+    }
+    // 否则使用旧的格式（data, options）
     return this.delegate.create({
-      data,
+      data: argsOrData,
       ...options,
     });
   }
@@ -159,10 +188,29 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
 
   /**
    * 更新记录
+   * @template T - Prisma update args type
    */
-  async update(id: number | string, data: any, options?: { include?: any; select?: any }): Promise<T> {
+  async update<T extends Prisma.Args<TDelegate, 'update'>>(
+    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'update'>>
+  ): Promise<Prisma.Result<TDelegate, T, 'update'>>;
+  
+  /**
+   * 更新记录（简化签名，向后兼容）
+   */
+  async update(id: number | string, data: any, options?: { include?: any; select?: any }): Promise<TModel>;
+  
+  async update(
+    argsOrId: any,
+    data?: any,
+    options?: { include?: any; select?: any }
+  ): Promise<any> {
+    // 如果第一个参数包含 where 属性，说明是新的 Prisma args 格式
+    if (argsOrId && typeof argsOrId === 'object' && 'where' in argsOrId) {
+      return this.delegate.update(argsOrId);
+    }
+    // 否则使用旧的格式（id, data, options）
     return this.delegate.update({
-      where: { [this.getPrimaryKeyName()]: id },
+      where: { [this.getPrimaryKeyName()]: argsOrId },
       data,
       ...options,
     });
@@ -184,7 +232,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 删除记录
    */
-  async delete(id: number | string): Promise<T> {
+  async delete(id: number | string): Promise<TModel> {
     return this.delegate.delete({
       where: { [this.getPrimaryKeyName()]: id },
     });
@@ -234,7 +282,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 软删除（设置 delFlag）
    */
-  async softDelete(id: number | string): Promise<T> {
+  async softDelete(id: number | string): Promise<TModel> {
     return this.update(id, { delFlag: '1' });
   }
 
@@ -265,8 +313,15 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
  * 带软删除的仓储基类
  *
  * @description 自动在查询条件中添加 delFlag = '0' 过滤
+ * @template TModel - Prisma 生成的模型类型
+ * @template TDelegate - Prisma Delegate 类型
+ * @template TModelName - Prisma 模型名称
  */
-export abstract class SoftDeleteRepository<T, D extends PrismaDelegate = PrismaDelegate> extends BaseRepository<T, D> {
+export abstract class SoftDeleteRepository<
+  TModel,
+  TDelegate extends PrismaDelegate,
+  TModelName extends keyof PrismaClient = keyof PrismaClient
+> extends BaseRepository<TModel, TDelegate, TModelName> {
   /**
    * 获取默认的查询条件（排除已删除）
    */
@@ -281,18 +336,18 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate = PrismaD
     return { ...this.getDefaultWhere(), ...where };
   }
 
-  async findOne(where: any, options?: { include?: any; select?: any }): Promise<T | null> {
+  async findOne(where: any, options?: { include?: any; select?: any }): Promise<TModel | null> {
     return super.findOne(this.mergeWhere(where), options);
   }
 
-  async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<T[]> {
+  async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<TModel[]> {
     return super.findAll({
       ...options,
       where: this.mergeWhere(options?.where),
     });
   }
 
-  async findPage(options: QueryOptions): Promise<IPaginatedData<T>> {
+  async findPage(options: QueryOptions): Promise<IPaginatedData<TModel>> {
     return super.findPage({
       ...options,
       where: this.mergeWhere(options.where),

@@ -1,19 +1,28 @@
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseRepository, PrismaDelegate } from './base.repository';
 import { PrismaService } from '../../prisma/prisma.service';
 
 /**
  * 软删除仓储基类
  * 自动处理软删除逻辑（delFlag = '0' 表示正常，'1' 表示已删除）
+ * 
+ * @template TModel - Prisma 生成的模型类型
+ * @template TDelegate - Prisma Delegate 类型
+ * @template TModelName - Prisma 模型名称
  */
-export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends BaseRepository<T, D> {
-  constructor(prisma: PrismaService, modelName: any) {
+export abstract class SoftDeleteRepository<
+  TModel,
+  TDelegate extends PrismaDelegate,
+  TModelName extends keyof PrismaClient = keyof PrismaClient
+> extends BaseRepository<TModel, TDelegate, TModelName> {
+  constructor(prisma: PrismaService, modelName: TModelName) {
     super(prisma, modelName);
   }
 
   /**
    * 软删除单条记录
    */
-  async softDelete(id: number): Promise<T> {
+  async softDelete(id: number): Promise<TModel> {
     const idField = this.getIdField();
     return await (this.delegate as any).update({
       where: { [idField]: id },
@@ -40,7 +49,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
    * 查询所有未删除的记录
    * 重写 findMany 以自动过滤软删除的记录
    */
-  async findMany(args?: any): Promise<T[]> {
+  async findMany(args?: any): Promise<TModel[]> {
     const where = args?.where || {};
     // 只有在 where 中没有显式设置 delFlag 时才添加默认过滤
     if (!('delFlag' in where)) {
@@ -56,7 +65,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
   /**
    * 查询单条未删除的记录
    */
-  async findOne(where: any): Promise<T | null> {
+  async findOne(where: any): Promise<TModel | null> {
     // 添加软删除过滤
     if (!('delFlag' in where)) {
       where.delFlag = '0';
@@ -68,7 +77,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
   /**
    * 根据ID查询（过滤软删除）
    */
-  override async findById(id: number): Promise<T | null> {
+  override async findById(id: number): Promise<TModel | null> {
     const idField = this.getIdField();
     return this.findOne({ [idField]: id });
   }

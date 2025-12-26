@@ -44,35 +44,35 @@
     - 验证生成的 TypeScript 枚举
     - _Requirements: 4.4_
 
-- [-] 2.6 编写 Prisma Schema 枚举验证测试
+- [x] 2.6 编写 Prisma Schema 枚举验证测试
   - **Property 6: Prisma Schema 状态字段使用枚举**
   - **Property 7: Prisma Schema delFlag 字段使用枚举**
   - **Validates: Requirements 4.1, 4.2, 4.3**
 
-- [ ] 3. 创建常量管理模块
-  - [ ] 3.1 创建常量目录结构
+- [x] 3. 创建常量管理模块
+  - [x] 3.1 创建常量目录结构
     - 创建 `src/common/constants/` 目录
     - 创建 `index.ts` 作为统一导出文件
     - _Requirements: 5.5_
 
-  - [ ] 3.2 定义状态相关常量
+  - [x] 3.2 定义状态相关常量
     - 创建 `status.constants.ts`
     - 定义 `STATUS` 和 `DEL_FLAG` 常量对象
     - 导出类型定义
     - _Requirements: 5.2, 5.3_
 
-  - [ ] 3.3 定义错误消息常量
+  - [x] 3.3 定义错误消息常量
     - 创建 `error.constants.ts`
     - 整理现有错误消息字符串
     - _Requirements: 5.4_
 
-  - [ ] 3.4 定义配置相关常量
+  - [x] 3.4 定义配置相关常量
     - 创建 `config.constants.ts`
     - 整理配置键名等常量
     - _Requirements: 5.3_
 
-- [ ] 4. 优化 Repository 泛型类型
-  - [ ] 4.1 重构 `BaseRepository` 类型定义
+- [x] 4. 优化 Repository 泛型类型
+  - [x] 4.1 重构 `BaseRepository` 类型定义
     - 添加 Prisma 泛型类型参数
     - 更新 `create` 方法使用 `Prisma.ModelCreateInput`
     - 更新 `update` 方法使用 `Prisma.ModelUpdateInput`
@@ -80,12 +80,12 @@
     - 确保返回类型使用 Prisma 生成的模型类型
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [ ] 4.2 更新 `SoftDeleteRepository` 类型定义
+  - [x] 4.2 更新 `SoftDeleteRepository` 类型定义
     - 继承优化后的 `BaseRepository`
     - 确保类型推导正确传递
     - _Requirements: 6.1, 6.6_
 
-- [ ]* 4.3 编写 Repository 类型推导测试
+- [x] 4.3 编写 Repository 类型推导测试
   - **Property 10: Repository 方法类型推导完整**
   - **Validates: Requirements 6.6**
 
