@@ -12,6 +12,7 @@ import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
 import { CacheEnum, DataScopeEnum } from 'src/common/enum/index';
 import { JwtService } from '@nestjs/jwt';
+import { Status, DelFlag } from '@prisma/client';
 
 jest.mock('src/common/utils/export', () => ({
   ExportTable: jest.fn(),

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Query, Request, Put, Delete 
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { NoticeService } from './notice.service';
 import { CreateNoticeDto, UpdateNoticeDto, ListNoticeDto } from './dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
 import { GetNowDate } from 'src/common/utils';
 import { Api } from 'src/common/decorators/api.decorator';
 import { NoticeVo, NoticeListVo } from './vo/notice.vo';

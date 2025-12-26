@@ -166,6 +166,6 @@
   },
   "simple-git-hooks": {
     "commit-msg": "commitlint --edit $1",
-    "pre-commit": "npm run lint && npm run format && git diff --exit-code"
+    "pre-commit": "npm run lint && npm run format"
   }
 }

@@ -5,6 +5,13 @@ import { SoftDeleteRepository } from '../../../common/repository/base.repository
 import { PrismaService } from '../../../prisma/prisma.service';
 
 /**
+ * Type for SysRole with menu count
+ */
+export type SysRoleWithMenuCount = SysRole & {
+  menuCount: number;
+};
+
+/**
  * 角色仓储层
  */
 @Injectable()
@@ -81,7 +88,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
     skip: number,
     take: number,
     orderBy?: Prisma.SysRoleOrderByWithRelationInput,
-  ): Promise<{ list: any[]; total: number }> {
+  ): Promise<{ list: SysRoleWithMenuCount[]; total: number }> {
     // 先查询角色列表
     const [roles, total] = await this.prisma.$transaction([
       this.prisma.sysRole.findMany({
@@ -107,7 +114,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
 
     const menuCountMap = new Map(menuCounts.map((item) => [item.roleId, item._count.menuId]));
 
-    const list = roles.map((role: any) => ({
+    const list: SysRoleWithMenuCount[] = roles.map((role) => ({
       ...role,
       menuCount: menuCountMap.get(role.roleId) || 0,
     }));

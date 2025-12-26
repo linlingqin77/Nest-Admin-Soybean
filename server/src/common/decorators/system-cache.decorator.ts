@@ -62,6 +62,9 @@ export function SystemCacheable(options: { key: string | ((args: any[]) => strin
         }
       } catch (error) {
         // 缓存读取失败，继续执行原方法
+        // Note: Decorators cannot use dependency injection for logger
+        // This is a non-critical error that should not block execution
+        // eslint-disable-next-line no-console
         console.warn(`[SystemCacheable] Cache read error for key ${fullKey}:`, error);
       }
 
@@ -74,6 +77,9 @@ export function SystemCacheable(options: { key: string | ((args: any[]) => strin
           await redisService.set(fullKey, JSON.stringify(result), options.ttl || 3600);
         } catch (error) {
           // 缓存写入失败不影响业务逻辑
+          // Note: Decorators cannot use dependency injection for logger
+          // This is a non-critical error that should not block execution
+          // eslint-disable-next-line no-console
           console.warn(`[SystemCacheable] Cache write error for key ${fullKey}:`, error);
         }
       }
@@ -128,6 +134,9 @@ export function ClearSystemCache(keys: string[]) {
               await redisService.del(fullKey);
             }
           } catch (error) {
+            // Note: Decorators cannot use dependency injection for logger
+            // This is a non-critical error that should not block execution
+            // eslint-disable-next-line no-console
             console.warn(`[ClearSystemCache] Cache clear error for key ${key}:`, error);
           }
         }

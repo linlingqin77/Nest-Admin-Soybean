@@ -2,7 +2,7 @@ import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
 import { OnlineService } from './online.service';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { OnlineListDto } from './dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
 import { OnlineUserListVo } from 'src/module/monitor/vo/monitor.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';

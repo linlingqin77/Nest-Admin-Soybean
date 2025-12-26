@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 /**
  * 软删除仓储基类
  * 自动处理软删除逻辑（delFlag = '0' 表示正常，'1' 表示已删除）
- * 
+ *
  * @template TModel - Prisma 生成的模型类型
  * @template TDelegate - Prisma Delegate 类型
  * @template TModelName - Prisma 模型名称
@@ -13,7 +13,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export abstract class SoftDeleteRepository<
   TModel,
   TDelegate extends PrismaDelegate,
-  TModelName extends keyof PrismaClient = keyof PrismaClient
+  TModelName extends keyof PrismaClient = keyof PrismaClient,
 > extends BaseRepository<TModel, TDelegate, TModelName> {
   constructor(prisma: PrismaService, modelName: TModelName) {
     super(prisma, modelName);

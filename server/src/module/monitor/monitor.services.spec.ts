@@ -11,6 +11,7 @@ import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
 import { ModuleRef } from '@nestjs/core';
 import * as nodeDiskInfo from 'node-disk-info';
+import { Status } from '@prisma/client';
 
 jest.mock('src/common/utils/export', () => ({
   ExportTable: jest.fn(),

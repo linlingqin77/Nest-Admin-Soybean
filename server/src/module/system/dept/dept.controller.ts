@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Query, Delete, HttpCode } from
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DeptService } from './dept.service';
 import { CreateDeptDto, UpdateDeptDto, ListDeptDto } from './dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
 import { DeptVo } from './vo/dept.vo';
 import { DeptTreeNodeVo } from 'src/common/dto/dept-tree-node.vo';

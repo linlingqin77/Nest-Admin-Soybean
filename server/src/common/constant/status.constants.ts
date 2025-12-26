@@ -8,7 +8,7 @@ export const STATUS = {
    * Normal status
    */
   NORMAL: '0',
-  
+
   /**
    * 停用状态
    * Disabled status
@@ -26,7 +26,7 @@ export const DEL_FLAG = {
    * Normal (not deleted)
    */
   NORMAL: '0',
-  
+
   /**
    * 已删除
    * Deleted
@@ -38,10 +38,10 @@ export const DEL_FLAG = {
  * 状态值类型
  * Status value type
  */
-export type StatusValue = typeof STATUS[keyof typeof STATUS];
+export type StatusValue = (typeof STATUS)[keyof typeof STATUS];
 
 /**
  * 删除标志值类型
  * Delete flag value type
  */
-export type DelFlagValue = typeof DEL_FLAG[keyof typeof DEL_FLAG];
+export type DelFlagValue = (typeof DEL_FLAG)[keyof typeof DEL_FLAG];

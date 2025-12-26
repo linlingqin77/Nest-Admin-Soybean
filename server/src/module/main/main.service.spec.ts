@@ -1,5 +1,6 @@
 import { MainService } from './main.service';
 import { Result } from 'src/common/response';
+import { Status } from '@prisma/client';
 
 describe('MainService', () => {
   let service: MainService;
@@ -29,7 +30,9 @@ describe('MainService', () => {
 
     expect(res).toEqual(loginResult);
     expect(axiosService.getIpAddress).toHaveBeenCalledWith('127.0.0.1');
-    expect(loginlogService.create).toHaveBeenCalledWith(expect.objectContaining({ status: Status.NORMAL, msg: '登录成功' }));
+    expect(loginlogService.create).toHaveBeenCalledWith(
+      expect.objectContaining({ status: Status.NORMAL, msg: '登录成功' }),
+    );
   });
 
   it('should record failed login attempts', async () => {

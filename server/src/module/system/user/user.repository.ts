@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum } from 'src/common/enum/index';
-import { Prisma, SysUser } from '@prisma/client';
+import { Prisma, SysUser, SysDept } from '@prisma/client';
 import { SoftDeleteRepository } from '../../../common/repository/base.repository';
 import { PrismaService } from '../../../prisma/prisma.service';
+
+/**
+ * Type for SysUser with dept included
+ */
+export type SysUserWithDept = SysUser & {
+  dept: Pick<SysDept, 'deptId' | 'deptName'> | null;
+};
 
 /**
  * 用户仓储层
@@ -99,9 +106,9 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
     skip: number,
     take: number,
     orderBy?: Prisma.SysUserOrderByWithRelationInput,
-  ): Promise<{ list: any[]; total: number }> {
+  ): Promise<{ list: SysUserWithDept[]; total: number }> {
     const [list, total] = await this.prisma.$transaction([
-      (this.prisma.sysUser.findMany as any)({
+      this.prisma.sysUser.findMany({
         where,
         skip,
         take,

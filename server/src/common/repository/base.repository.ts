@@ -72,7 +72,7 @@ export type PrismaDelegate = {
 export abstract class BaseRepository<
   TModel,
   TDelegate extends PrismaDelegate,
-  TModelName extends keyof PrismaClient = keyof PrismaClient
+  TModelName extends keyof PrismaClient = keyof PrismaClient,
 > {
   protected readonly delegate: TDelegate;
 
@@ -150,18 +150,15 @@ export abstract class BaseRepository<
    * @template T - Prisma create args type
    */
   async create<T extends Prisma.Args<TDelegate, 'create'>>(
-    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'create'>>
+    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'create'>>,
   ): Promise<Prisma.Result<TDelegate, T, 'create'>>;
-  
+
   /**
    * 创建记录（简化签名，向后兼容）
    */
   async create(data: any, options?: { include?: any; select?: any }): Promise<TModel>;
-  
-  async create(
-    argsOrData: any,
-    options?: { include?: any; select?: any }
-  ): Promise<any> {
+
+  async create(argsOrData: any, options?: { include?: any; select?: any }): Promise<any> {
     // 如果第一个参数包含 data 属性，说明是新的 Prisma args 格式
     if (argsOrData && typeof argsOrData === 'object' && 'data' in argsOrData) {
       return this.delegate.create(argsOrData);
@@ -191,19 +188,15 @@ export abstract class BaseRepository<
    * @template T - Prisma update args type
    */
   async update<T extends Prisma.Args<TDelegate, 'update'>>(
-    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'update'>>
+    args: Prisma.Exact<T, Prisma.Args<TDelegate, 'update'>>,
   ): Promise<Prisma.Result<TDelegate, T, 'update'>>;
-  
+
   /**
    * 更新记录（简化签名，向后兼容）
    */
   async update(id: number | string, data: any, options?: { include?: any; select?: any }): Promise<TModel>;
-  
-  async update(
-    argsOrId: any,
-    data?: any,
-    options?: { include?: any; select?: any }
-  ): Promise<any> {
+
+  async update(argsOrId: any, data?: any, options?: { include?: any; select?: any }): Promise<any> {
     // 如果第一个参数包含 where 属性，说明是新的 Prisma args 格式
     if (argsOrId && typeof argsOrId === 'object' && 'where' in argsOrId) {
       return this.delegate.update(argsOrId);
@@ -320,7 +313,7 @@ export abstract class BaseRepository<
 export abstract class SoftDeleteRepository<
   TModel,
   TDelegate extends PrismaDelegate,
-  TModelName extends keyof PrismaClient = keyof PrismaClient
+  TModelName extends keyof PrismaClient = keyof PrismaClient,
 > extends BaseRepository<TModel, TDelegate, TModelName> {
   /**
    * 获取默认的查询条件（排除已删除）

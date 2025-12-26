@@ -1,4 +1,5 @@
 import { TenantContext } from './tenant.context';
+import { Status } from '@prisma/client';
 
 // 引入实际的扩展逻辑函数进行测试
 // 注意：由于 tenantExtension 是 Prisma 扩展，我们测试其内部逻辑

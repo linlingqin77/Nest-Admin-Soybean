@@ -76,9 +76,9 @@ export class UserAuthService {
 
     const roles = (userData.roles ?? []).map((item) => item.roleKey);
 
-    const safeDept = (userData.dept as any) ?? ({} as any);
-    const safeRoles = (userData.roles as any) ?? [];
-    const safePosts = (userData.posts as any) ?? [];
+    const safeDept = userData.dept ?? null;
+    const safeRoles = userData.roles ?? [];
+    const safePosts = userData.posts ?? [];
     const userInfo: Partial<UserType> = {
       browser: clientInfo.browser,
       ipaddr: clientInfo.ipaddr,
@@ -101,7 +101,12 @@ export class UserAuthService {
     };
 
     // 添加额外的用户信息
-    (userInfo.user as any).deptName = deptData?.deptName || '';
+    if (userInfo.user && deptData?.deptName) {
+      userInfo.user.dept = {
+        ...userInfo.user.dept,
+        deptName: deptData.deptName,
+      } as SysDept;
+    }
 
     await this.updateRedisToken(uuid, userInfo);
 

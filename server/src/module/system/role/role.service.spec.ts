@@ -5,6 +5,7 @@ import { RoleRepository } from './role.repository';
 import { MenuService } from '../menu/menu.service';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { ResponseCode } from 'src/common/response';
+import { Status } from '@prisma/client';
 
 describe('RoleService', () => {
   let service: RoleService;

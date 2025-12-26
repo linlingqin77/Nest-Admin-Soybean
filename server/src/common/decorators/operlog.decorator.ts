@@ -1,5 +1,5 @@
 import { applyDecorators, SetMetadata, UseInterceptors } from '@nestjs/common';
-import { OperlogInterceptor } from '../interceptor/operlog.interceptor';
+import { OperlogInterceptor } from '../interceptors/operlog.interceptor';
 import { BusinessType } from '../constant/business.constant';
 
 export type OperlogConfig =

@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { ExportTable } from 'src/common/utils/export';
-import { ListUserDto } from '../dto/index';
-import { UserType } from '../dto/user';
+import { SysUser } from '@prisma/client';
+
+/**
+ * Type for user export data with dept info
+ */
+export type UserExportData = SysUser & {
+  deptName?: string;
+  dept?: {
+    leader?: string;
+  };
+};
 
 /**
  * 用户导出服务
@@ -16,7 +25,7 @@ export class UserExportService {
   /**
    * 导出用户数据到Excel
    */
-  async export(res: Response, data: { rows: any[]; total: number }) {
+  async export(res: Response, data: { rows: UserExportData[]; total: number }): Promise<void> {
     const options = {
       sheetName: '用户数据',
       data: data.rows,

@@ -1,7 +1,7 @@
 /**
  * 错误消息常量
  * Error Message Constants
- * 
+ *
  * 用于统一管理系统中的错误消息，避免硬编码字符串
  * Used to centrally manage error messages in the system, avoiding hardcoded strings
  */

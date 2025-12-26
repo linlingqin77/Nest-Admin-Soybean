@@ -6,7 +6,7 @@
  */
 
 // 操作日志拦截器
-export * from '../interceptor/operlog.interceptor';
+export * from './operlog.interceptor';
 
 // 事务拦截器
 export * from './transactional.interceptor';

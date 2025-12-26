@@ -12,7 +12,7 @@ import {
   AuthUserSelectAllDto,
 } from './dto/index';
 import { AllocatedListDto } from '../user/dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
 import { Api } from 'src/common/decorators/api.decorator';
 import { RoleVo, RoleListVo, RoleDeptTreeVo, AllocatedUserListVo } from './vo/role.vo';
 import { Operlog } from 'src/common/decorators/operlog.decorator';

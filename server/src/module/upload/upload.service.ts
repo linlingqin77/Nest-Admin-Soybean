@@ -128,7 +128,7 @@ export class UploadService {
     const versionMode = await this.getConfigValue('sys.file.versionMode', 'overwrite');
     let version = 1;
     let parentFileId: string | null = null;
-    let isLatest = true;
+    const isLatest = true;
 
     if (versionMode === 'version') {
       // 查找同名文件
@@ -152,10 +152,7 @@ export class UploadService {
         await this.prisma.$transaction([
           this.prisma.sysUpload.updateMany({
             where: {
-              OR: [
-                { uploadId: parentFileId },
-                { parentFileId: parentFileId },
-              ],
+              OR: [{ uploadId: parentFileId }, { parentFileId: parentFileId }],
               isLatest: true,
             },
             data: { isLatest: false },
@@ -210,26 +207,26 @@ export class UploadService {
 
     // 9. 异步生成缩略图
     if (res.filePath || this.isLocal) {
-      const filePath = res.filePath || path.join(
-        process.cwd(),
-        this.config.app.file.location,
-        res.newFileName
-      );
+      const filePath = res.filePath || path.join(process.cwd(), this.config.app.file.location, res.newFileName);
 
-      await this.thumbnailQueue.add('generate-thumbnail', {
-        uploadId,
-        filePath,
-        storageType,
-        ext,
-        mimeType,
-      }, {
-        priority: 1,
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 2000,
+      await this.thumbnailQueue.add(
+        'generate-thumbnail',
+        {
+          uploadId,
+          filePath,
+          storageType,
+          ext,
+          mimeType,
         },
-      });
+        {
+          priority: 1,
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000,
+          },
+        },
+      );
 
       this.logger.log(`已加入缩略图生成队列: ${uploadId}`);
     }
@@ -265,12 +262,12 @@ export class UploadService {
 
     if (storageUsed + requiredMB > storageQuota) {
       throw new BadRequestException(
-        `存储空间不足！已使用${storageUsed}MB，配额${storageQuota}MB，剩余${remaining}MB，需要${requiredMB}MB`
+        `存储空间不足！已使用${storageUsed}MB，配额${storageQuota}MB，剩余${remaining}MB，需要${requiredMB}MB`,
       );
     }
 
     this.logger.log(
-      `租户${companyName}存储检查通过: 使用${storageUsed}MB/配额${storageQuota}MB, 即将使用${requiredMB}MB`
+      `租户${companyName}存储检查通过: 使用${storageUsed}MB/配额${storageQuota}MB, 即将使用${requiredMB}MB`,
     );
   }
 

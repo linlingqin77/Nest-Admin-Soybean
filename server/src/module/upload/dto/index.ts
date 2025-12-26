@@ -2,9 +2,24 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
+/**
+ * Type for uploaded file from multer
+ */
+export interface UploadedFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+  destination?: string;
+  filename?: string;
+  path?: string;
+}
+
 export class FileUploadDto {
   @ApiProperty({ type: 'string', format: 'binary', description: '上传文件' })
-  file: any;
+  file: UploadedFile;
 
   @ApiProperty({ required: false, description: '文件夹ID', default: 0 })
   @IsOptional()
@@ -12,7 +27,8 @@ export class FileUploadDto {
   @IsNumber()
   folderId?: number;
 }
-export class uploadIdDto {
+
+export class UploadIdDto {
   @ApiProperty({ type: 'string', description: '上传标识ID' })
   uploadId: string;
 }

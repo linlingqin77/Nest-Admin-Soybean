@@ -5,6 +5,7 @@ import { DeptRepository } from './dept.repository';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import { StatusEnum, DelFlagEnum } from 'src/common/enum/index';
 import { ResponseCode } from 'src/common/response';
+import { Status } from '@prisma/client';
 
 describe('DeptService', () => {
   let service: DeptService;

@@ -9,7 +9,7 @@ import {
   UpdateDictDataDto,
   ListDictData,
 } from './dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
 import { Response } from 'express';
 import { Api } from 'src/common/decorators/api.decorator';
 import { DictTypeVo, DictTypeListVo, DictDataVo, DictDataListVo } from './vo/dict.vo';

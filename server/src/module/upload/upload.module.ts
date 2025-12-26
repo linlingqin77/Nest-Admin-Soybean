@@ -13,11 +13,7 @@ import { VersionService } from './services/version.service';
     }),
   ],
   controllers: [UploadController],
-  providers: [
-    UploadService,
-    ThumbnailProcessor,
-    VersionService,
-  ],
+  providers: [UploadService, ThumbnailProcessor, VersionService],
   exports: [UploadService, VersionService],
 })
-export class UploadModule { }
+export class UploadModule {}

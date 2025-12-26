@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppConfigService } from 'src/config/app-config.service';
+import { AppLogger } from 'src/common/logger/app-logger.service';
 
 /**
  * 配置使用示例服务
@@ -8,7 +9,12 @@ import { AppConfigService } from 'src/config/app-config.service';
  */
 @Injectable()
 export class ConfigExampleService {
-  constructor(private readonly config: AppConfigService) {}
+  constructor(
+    private readonly config: AppConfigService,
+    private readonly logger: AppLogger,
+  ) {
+    this.logger.setContext(ConfigExampleService.name);
+  }
 
   /**
    * 示例 1: 获取应用配置
@@ -19,7 +25,7 @@ export class ConfigExampleService {
     const prefix = this.config.app.prefix; // string
     const env = this.config.app.env; // 'development' | 'test' | 'production'
 
-    console.log(`应用运行在 ${env} 环境，端口 ${port}，前缀 ${prefix}`);
+    this.logger.log(`应用运行在 ${env} 环境，端口 ${port}，前缀 ${prefix}`);
   }
 
   /**
@@ -28,10 +34,10 @@ export class ConfigExampleService {
   getDatabaseConfig() {
     const { host, port, database, username } = this.config.db.postgresql;
 
-    console.log(`数据库连接: ${username}@${host}:${port}/${database}`);
+    this.logger.log(`数据库连接: ${username}@${host}:${port}/${database}`);
 
     // 密码会自动脱敏
-    console.log('完整配置:', this.config.db);
+    this.logger.log(`完整配置: ${JSON.stringify(this.config.db)}`);
   }
 
   /**
@@ -53,11 +59,11 @@ export class ConfigExampleService {
    */
   environmentChecks() {
     if (this.config.isProduction) {
-      console.log('生产环境: 启用所有安全特性');
+      this.logger.log('生产环境: 启用所有安全特性');
     } else if (this.config.isDevelopment) {
-      console.log('开发环境: 启用调试日志');
+      this.logger.log('开发环境: 启用调试日志');
     } else if (this.config.isTest) {
-      console.log('测试环境: 使用测试数据库');
+      this.logger.log('测试环境: 使用测试数据库');
     }
   }
 
@@ -67,8 +73,8 @@ export class ConfigExampleService {
   getJwtConfig() {
     const { secretkey, expiresin, refreshExpiresIn } = this.config.jwt;
 
-    console.log(`JWT 配置: 过期时间 ${expiresin}, 刷新过期时间 ${refreshExpiresIn}`);
-    console.log(`密钥长度: ${secretkey.length} 字符`);
+    this.logger.log(`JWT 配置: 过期时间 ${expiresin}, 刷新过期时间 ${refreshExpiresIn}`);
+    this.logger.log(`密钥长度: ${secretkey.length} 字符`);
   }
 
   /**
@@ -78,9 +84,9 @@ export class ConfigExampleService {
     const tenant = this.config.tenant;
 
     if (tenant.enabled) {
-      console.log(`多租户已启用，超级租户 ID: ${tenant.superTenantId}`);
+      this.logger.log(`多租户已启用，超级租户 ID: ${tenant.superTenantId}`);
     } else {
-      console.log('多租户已禁用');
+      this.logger.log('多租户已禁用');
     }
 
     return tenant;
@@ -93,13 +99,13 @@ export class ConfigExampleService {
     const file = this.config.app.file;
 
     if (file.isLocal) {
-      console.log(`本地存储: ${file.location}`);
+      this.logger.log(`本地存储: ${file.location}`);
     } else {
-      console.log(`云存储: ${file.domain}`);
+      this.logger.log(`云存储: ${file.domain}`);
     }
 
-    console.log(`最大文件大小: ${file.maxSize}MB`);
-    console.log(`缩略图: ${file.thumbnailEnabled ? '启用' : '禁用'}`);
+    this.logger.log(`最大文件大小: ${file.maxSize}MB`);
+    this.logger.log(`缩略图: ${file.thumbnailEnabled ? '启用' : '禁用'}`);
   }
 
   /**
@@ -108,12 +114,12 @@ export class ConfigExampleService {
   getLoggerConfig() {
     const logger = this.config.app.logger;
 
-    console.log('日志配置:', {
+    this.logger.log(`日志配置: ${JSON.stringify({
       level: logger.level,
       dir: logger.dir,
       toFile: logger.toFile,
       prettyPrint: logger.prettyPrint,
-    });
+    })}`);
 
     return logger;
   }
@@ -124,9 +130,9 @@ export class ConfigExampleService {
   getPermissionConfig() {
     const whitelist = this.config.perm.router.whitelist;
 
-    console.log('路由白名单:');
+    this.logger.log('路由白名单:');
     whitelist.forEach((route) => {
-      console.log(`  ${route.method} ${route.path}`);
+      this.logger.log(`  ${route.method} ${route.path}`);
     });
 
     return whitelist;
@@ -138,7 +144,7 @@ export class ConfigExampleService {
   getAllConfig() {
     // 仅在非生产环境输出完整配置
     if (!this.config.isProduction) {
-      console.log('完整配置:', this.config.all);
+      this.logger.log(`完整配置: ${JSON.stringify(this.config.all)}`);
     }
   }
 
@@ -175,6 +181,9 @@ function Deprecated(message: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const original = descriptor.value;
     descriptor.value = function (...args: any[]) {
+      // Note: In production, this should use a proper logger instance
+      // For decorator context, we use console.warn as a fallback
+      // eslint-disable-next-line no-console
       console.warn(`⚠️  ${propertyKey} is deprecated: ${message}`);
       return original.apply(this, args);
     };

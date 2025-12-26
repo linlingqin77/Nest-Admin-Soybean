@@ -65,7 +65,11 @@ export class FileManagerService {
       const parent = await this.prisma.sysFileFolder.findUnique({
         where: { folderId: parentId },
       });
-      BusinessException.throwIf(!parent || parent.delFlag === DelFlagEnum.DELETED, '父文件夹不存在', ResponseCode.DATA_NOT_FOUND);
+      BusinessException.throwIf(
+        !parent || parent.delFlag === DelFlagEnum.DELETED,
+        '父文件夹不存在',
+        ResponseCode.DATA_NOT_FOUND,
+      );
       folderPath = `${parent.folderPath}${parent.folderName}/`;
     }
 

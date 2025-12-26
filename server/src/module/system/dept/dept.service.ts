@@ -54,7 +54,7 @@ export class DeptService {
       payload.status = StatusEnum.NORMAL;
     }
     // Merge other fields from DTO
-    Object.keys(createDeptDto).forEach(key => {
+    Object.keys(createDeptDto).forEach((key) => {
       if (!['parentId', 'deptName', 'orderNum', 'leader', 'phone', 'email', 'status'].includes(key)) {
         payload[key] = createDeptDto[key];
       }

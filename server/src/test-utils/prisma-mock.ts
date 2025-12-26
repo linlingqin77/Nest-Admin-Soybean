@@ -2,15 +2,18 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 export type PrismaMock = jest.Mocked<PrismaService>;
 
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction<TReturn = unknown> = (...args: unknown[]) => TReturn;
 
-const createModelMock = () =>
-  new Proxy(
+interface ModelMock {
+  [key: string]: jest.Mock;
+}
+
+const createModelMock = (): ModelMock =>
+  new Proxy<ModelMock>(
     {},
     {
       get(target, prop: string) {
         if (!Object.prototype.hasOwnProperty.call(target, prop)) {
-          // eslint-disable-next-line @typescript-eslint/ban-types
           target[prop] = jest.fn();
         }
         return target[prop];
@@ -19,14 +22,14 @@ const createModelMock = () =>
   );
 
 export const createPrismaMock = (): PrismaMock => {
-  const base: Record<string, any> = {
-    $transaction: jest.fn<Promise<any>, [any]>(),
+  const base: Record<string, unknown> = {
+    $transaction: jest.fn<Promise<unknown>, [unknown]>(),
     $queryRaw: jest.fn(),
     $queryRawUnsafe: jest.fn(),
     $executeRaw: jest.fn(),
   };
 
-  const handler: ProxyHandler<Record<string, any>> = {
+  const handler: ProxyHandler<Record<string, unknown>> = {
     get(target, prop: string) {
       if (!Object.prototype.hasOwnProperty.call(target, prop)) {
         target[prop] = createModelMock();
@@ -37,7 +40,7 @@ export const createPrismaMock = (): PrismaMock => {
 
   const proxy = new Proxy(base, handler);
 
-  (base.$transaction as jest.MockedFunction<AnyFunction>).mockImplementation(async (param) => {
+  (base.$transaction as jest.MockedFunction<AnyFunction<Promise<unknown>>>).mockImplementation(async (param) => {
     if (typeof param === 'function') {
       return param(proxy);
     }

@@ -6,14 +6,14 @@
 
 ## Tasks
 
-- [ ] 1. 配置 TypeScript 和 ESLint 严格模式
+- [x] 1. 配置 TypeScript 和 ESLint 严格模式
   - 更新 `tsconfig.json` 启用严格类型检查
   - 更新 `.eslintrc.js` 添加禁止 `any` 和 `console` 的规则
   - 添加命名规范规则
   - 配置 Git hooks 自动运行 lint 检查
   - _Requirements: 1.6, 2.4, 7.1, 7.2, 7.3, 7.5_
 
-- [ ]* 1.1 编写 ESLint 配置验证测试
+- [x] 1.1 编写 ESLint 配置验证测试
   - **Property 1: ESLint 配置包含禁止 any 规则**
   - **Property 2: ESLint 配置包含禁止 console 规则**
   - **Validates: Requirements 1.6, 2.4, 7.1, 7.2**
@@ -89,27 +89,27 @@
   - **Property 10: Repository 方法类型推导完整**
   - **Validates: Requirements 6.6**
 
-- [ ] 5. 创建统一 Logger 模块
-  - [ ] 5.1 创建 `AppLogger` 服务
+- [x] 5. 创建统一 Logger 模块
+  - [x] 5.1 创建 `AppLogger` 服务
     - 继承 `PinoLogger`
     - 注入 `ClsService` 获取上下文
     - 实现 `log`, `error`, `warn`, `debug` 方法
     - 在日志中自动注入 `tenantId` 和 `userId`
     - _Requirements: 2.3, 2.5_
 
-  - [ ] 5.2 创建 Logger 模块
+  - [x] 5.2 创建 Logger 模块
     - 创建 `LoggerModule`
     - 配置 Pino 日志格式
     - 导出 `AppLogger` 服务
     - _Requirements: 2.3_
 
-- [ ]* 5.3 编写 Logger 单元测试
+- [x] 5.3 编写 Logger 单元测试
   - 测试日志输出格式
   - 测试上下文信息注入
   - 测试不同日志级别
   - _Requirements: 2.3, 2.5_
 
-- [ ]* 5.4 编写 Logger 属性测试
+- [ ] 5.4 编写 Logger 属性测试
   - **Property 3: 日志输出包含上下文信息**
   - **Property 4: Error 级别日志包含堆栈信息**
   - **Validates: Requirements 2.3, 2.5**
@@ -121,75 +121,75 @@
   - 询问用户是否有问题
 
 
-- [ ] 7. 扫描并消除 any 类型
-  - [ ] 7.1 扫描代码库中的 any 类型使用
+- [x] 7. 扫描并消除 any 类型
+  - [x] 7.1 扫描代码库中的 any 类型使用
     - 使用 ESLint 或 TypeScript Compiler API 扫描
     - 生成 any 类型使用报告
     - _Requirements: 1.1_
 
-  - [ ] 7.2 替换 Repository 中的 any 类型
+  - [x] 7.2 替换 Repository 中的 any 类型
     - 更新所有 Repository 方法参数类型
     - 使用 Prisma 生成的类型
     - _Requirements: 1.2, 1.3_
 
-  - [ ] 7.3 替换 Service 中的 any 类型
+  - [x] 7.3 替换 Service 中的 any 类型
     - 更新所有 Service 方法参数和返回类型
     - 使用明确的类型定义或泛型
     - _Requirements: 1.2_
 
-  - [ ] 7.4 替换 Controller 中的 any 类型
+  - [x] 7.4 替换 Controller 中的 any 类型
     - 更新所有 Controller 方法参数和返回类型
     - 使用 DTO 类型
     - _Requirements: 1.2_
 
-  - [ ] 7.5 替换工具函数中的 any 类型
+  - [x] 7.5 替换工具函数中的 any 类型
     - 更新所有工具函数的类型定义
     - 使用泛型或明确类型
     - _Requirements: 1.2_
 
-  - [ ] 7.6 添加显式函数返回类型
+  - [x] 7.6 添加显式函数返回类型
     - 为所有函数添加返回类型注解
     - 确保类型推导正确
     - _Requirements: 1.5_
 
-- [ ] 8. 扫描并替换 console 调用
-  - [ ] 8.1 扫描代码库中的 console 调用
+- [x] 8. 扫描并替换 console 调用
+  - [x] 8.1 扫描代码库中的 console 调用
     - 使用 ESLint 扫描所有 console.log/error/warn 调用
     - 生成 console 使用报告
     - _Requirements: 2.1_
 
-  - [ ] 8.2 替换 Service 中的 console 调用
+  - [x] 8.2 替换 Service 中的 console 调用
     - 注入 `AppLogger`
     - 替换所有 console 调用为 Logger 方法
     - _Requirements: 2.2_
 
-  - [ ] 8.3 替换 Controller 中的 console 调用
+  - [x] 8.3 替换 Controller 中的 console 调用
     - 注入 `AppLogger`
     - 替换所有 console 调用为 Logger 方法
     - _Requirements: 2.2_
 
-  - [ ] 8.4 替换中间件和拦截器中的 console 调用
+  - [x] 8.4 替换中间件和拦截器中的 console 调用
     - 注入 `AppLogger`
     - 替换所有 console 调用为 Logger 方法
     - _Requirements: 2.2_
 
-- [ ] 9. 统一文件和目录命名
-  - [ ] 9.1 扫描并修正文件命名错误
+- [x] 9. 统一文件和目录命名
+  - [x] 9.1 扫描并修正文件命名错误
     - 修正 `require-premission.decorator.ts` 为 `require-permission.decorator.ts`
     - 识别其他拼写错误的文件
     - _Requirements: 3.1, 3.2_
 
-  - [ ] 9.2 统一目录结构
+  - [x] 9.2 统一目录结构
     - 合并 `interceptor/` 和 `interceptors/` 目录
     - 统一使用复数形式
     - _Requirements: 3.3, 3.4_
 
-  - [ ] 9.3 合并重复文件
+  - [x] 9.3 合并重复文件
     - 识别重复的 DTO 文件
     - 合并功能相同的文件
     - _Requirements: 3.5_
 
-- [ ]* 9.4 编写文件命名规范验证测试
+- [-] 9.4 编写文件命名规范验证测试
   - **Property 5: 文件名符合 kebab-case 规范**
   - **Validates: Requirements 3.6**
 

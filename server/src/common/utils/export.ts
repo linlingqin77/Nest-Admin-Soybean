@@ -120,6 +120,9 @@ export async function ExportTable(options: ExportOptions, res: Response) {
 
   // 检查响应头是否已发送
   if (res.headersSent) {
+    // Note: Utility functions cannot use dependency injection for logger
+    // This is a critical error that prevents file export
+    // eslint-disable-next-line no-console
     console.error('Headers already sent, cannot export file');
     return;
   }

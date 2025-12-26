@@ -52,6 +52,9 @@ export function ListToTree(arr, getId, getLabel) {
       if (kData[parentId]) {
         kData[parentId].children.push(kData[id]);
       } else {
+        // Note: Utility functions cannot use dependency injection for logger
+        // This is a data integrity warning that helps with debugging
+        // eslint-disable-next-line no-console
         console.warn(`Parent menuId: ${parentId} not found for child menuId: ${id}`);
       }
     }

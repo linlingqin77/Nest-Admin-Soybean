@@ -53,12 +53,7 @@ describe('UploadService', () => {
 
   beforeEach(() => {
     prisma = createPrismaMock();
-    service = new UploadService(
-      prisma,
-      configService as any,
-      versionService as any,
-      thumbnailQueue as any
-    );
+    service = new UploadService(prisma, configService as any, versionService as any, thumbnailQueue as any);
   });
 
   it('should create chunk upload id', async () => {
