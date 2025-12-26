@@ -85,7 +85,7 @@ describe('Tenant Extension Logic', () => {
 
     it('should add tenantId to args for tenant models', () => {
       runWithTenant('100001', false, () => {
-        const args = { where: { status: '0' } };
+        const args = { where: { status: Status.NORMAL } };
         const result = addTenantFilter('SysUser', args);
         expect(result.where.tenantId).toBe('100001');
         expect(result.where.status).toBe('0');
@@ -94,7 +94,7 @@ describe('Tenant Extension Logic', () => {
 
     it('should not add tenantId when ignoreTenant is set', () => {
       runWithTenant('100001', true, () => {
-        const args = { where: { status: '0' } };
+        const args = { where: { status: Status.NORMAL } };
         const result = addTenantFilter('SysUser', args);
         expect(result.where.tenantId).toBeUndefined();
       });
@@ -102,7 +102,7 @@ describe('Tenant Extension Logic', () => {
 
     it('should not add tenantId for super tenant', () => {
       runWithTenant('000000', false, () => {
-        const args = { where: { status: '0' } };
+        const args = { where: { status: Status.NORMAL } };
         const result = addTenantFilter('SysUser', args);
         expect(result.where.tenantId).toBeUndefined();
       });

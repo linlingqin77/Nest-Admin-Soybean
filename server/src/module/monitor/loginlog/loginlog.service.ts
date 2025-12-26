@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result } from 'src/common/response';
-import { DelFlagEnum } from 'src/common/enum/index';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { CreateLoginlogDto, ListLoginlogDto } from './dto/index';
@@ -27,7 +27,7 @@ export class LoginlogService {
         browser: createLoginlogDto.browser ?? '',
         os: createLoginlogDto.os ?? '',
         msg: createLoginlogDto.msg ?? '',
-        status: createLoginlogDto.status ?? '0',
+        status: (createLoginlogDto.status ?? StatusEnum.NORMAL) as Status,
         delFlag: DelFlagEnum.NORMAL,
       },
     });
@@ -56,7 +56,7 @@ export class LoginlogService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     // 使用 getDateRange 便捷方法
@@ -94,7 +94,7 @@ export class LoginlogService {
         },
       },
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
     return Result.ok(data.count);
@@ -107,7 +107,7 @@ export class LoginlogService {
   async removeAll() {
     await this.prisma.sysLogininfor.updateMany({
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
     return Result.ok();

@@ -1,5 +1,6 @@
+import { StatusEnum } from 'src/common/enum/index';
 import { Injectable } from '@nestjs/common';
-import { Prisma, SysNotice } from '@prisma/client';
+import { Prisma, SysNotice, Status } from '@prisma/client';
 import { SoftDeleteRepository } from '../../../common/repository/soft-delete.repository';
 import { PrismaService } from '../../../prisma/prisma.service';
 
@@ -68,7 +69,7 @@ export class NoticeRepository extends SoftDeleteRepository<SysNotice, Prisma.Sys
    */
   async countByStatus(status: string): Promise<number> {
     return this.delegate.count({
-      where: { status },
+      where: { status: status as Status },
     });
   }
 }

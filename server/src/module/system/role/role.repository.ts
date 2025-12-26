@@ -124,7 +124,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
         roleId: { in: roleIds },
         delFlag: DelFlagEnum.NORMAL,
       },
-      data: { delFlag: '2' },
+      data: { delFlag: DelFlagEnum.DELETED },
     });
 
     return result.count;

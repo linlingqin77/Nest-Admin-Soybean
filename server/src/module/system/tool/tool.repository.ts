@@ -1,3 +1,4 @@
+import { DelFlagEnum } from 'src/common/enum/index';
 import { Injectable } from '@nestjs/common';
 import { Prisma, GenTable } from '@prisma/client';
 import { SoftDeleteRepository } from 'src/common/repository/base.repository';
@@ -86,7 +87,7 @@ export class ToolRepository extends SoftDeleteRepository<GenTable, Prisma.GenTab
   async existsByTableName(tableName: string, excludeId?: number): Promise<boolean> {
     const where: Prisma.GenTableWhereInput = {
       tableName,
-      delFlag: '0',
+      delFlag: DelFlagEnum.NORMAL,
     };
 
     if (excludeId) {

@@ -30,7 +30,7 @@ export class ${Lodash.upperFirst(BusinessName)}Service {
 
   async findAll(query: Query${Lodash.upperFirst(BusinessName)}Dto) {
 ${listSelectDefinition || ''}    const where: Prisma.${modelName}WhereInput = {
-      delFlag: '0',
+      delFlag: DelFlag.NORMAL,
     };
 ${queryConditions || ''}    const pageSize = Number(query.pageSize ?? 10);
     const pageNum = Number(query.pageNum ?? 1);
@@ -58,7 +58,7 @@ ${selectLine}    };
   async findOne(${primaryKey}: ${primaryKeyType}) {
     const res = await this.prisma.${delegateName}.findFirst({
       where: {
-        delFlag: '0',
+        delFlag: DelFlag.NORMAL,
         ${primaryKey}: ${primaryKey},
       },
     });

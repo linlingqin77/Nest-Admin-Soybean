@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Response } from 'express';
 import { Result } from 'src/common/response';
 import { ListToTree, FormatDateFields } from 'src/common/utils/index';
@@ -28,7 +28,7 @@ export class RoleService {
       data: {
         ...rolePayload,
         roleSort: rolePayload.roleSort ?? 0,
-        status: rolePayload.status ?? '0',
+        status: (rolePayload.status ?? StatusEnum.NORMAL) as Status,
         delFlag: DelFlagEnum.NORMAL,
       },
     });
@@ -65,7 +65,7 @@ export class RoleService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     if (query.params?.beginTime && query.params?.endTime) {
@@ -91,7 +91,7 @@ export class RoleService {
 
   @Transactional()
   async update(updateRoleDto: UpdateRoleDto) {
-    const { menuIds = [], ...rolePayload } = updateRoleDto as UpdateRoleDto & { menuIds?: number[] };
+    const { menuIds = [], roleId, ...rolePayload } = updateRoleDto as UpdateRoleDto & { menuIds?: number[] };
 
     await this.prisma.sysRoleMenu.deleteMany({ where: { roleId: updateRoleDto.roleId } });
 
@@ -101,9 +101,14 @@ export class RoleService {
       });
     }
 
+    const updateData: any = { ...rolePayload };
+    if (rolePayload.status) {
+      updateData.status = rolePayload.status as Status;
+    }
+
     const res = await this.prisma.sysRole.update({
       where: { roleId: updateRoleDto.roleId },
-      data: rolePayload,
+      data: updateData,
     });
 
     return Result.ok(res);
@@ -111,7 +116,7 @@ export class RoleService {
 
   @Transactional()
   async dataScope(updateRoleDto: UpdateRoleDto) {
-    const { deptIds = [], ...rolePayload } = updateRoleDto as UpdateRoleDto & { deptIds?: number[] };
+    const { deptIds = [], roleId, ...rolePayload } = updateRoleDto as UpdateRoleDto & { deptIds?: number[] };
 
     await this.prisma.sysRoleDept.deleteMany({ where: { roleId: updateRoleDto.roleId } });
 
@@ -121,9 +126,14 @@ export class RoleService {
       });
     }
 
+    const updateData: any = { ...rolePayload };
+    if (rolePayload.status) {
+      updateData.status = rolePayload.status as Status;
+    }
+
     const res = await this.prisma.sysRole.update({
       where: { roleId: updateRoleDto.roleId },
-      data: rolePayload,
+      data: updateData,
     });
 
     return Result.ok(res);
@@ -132,7 +142,7 @@ export class RoleService {
   async changeStatus(changeStatusDto: ChangeRoleStatusDto) {
     const res = await this.prisma.sysRole.update({
       where: { roleId: changeStatusDto.roleId },
-      data: { status: changeStatusDto.status },
+      data: { status: changeStatusDto.status as Status },
     });
     return Result.ok(res);
   }
@@ -145,7 +155,7 @@ export class RoleService {
         },
       },
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
     return Result.ok(data.count);

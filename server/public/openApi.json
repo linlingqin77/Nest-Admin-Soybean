@@ -25385,10 +25385,10 @@
       },
       "StatusEnum": {
         "type": "string",
-        "description": "数据状态枚举\n- NORMAL (0): 正常/启用\n- STOP (1): 停用/禁用",
+        "description": "数据状态枚举\n- NORMAL: 正常/启用\n- DISABLED: 停用/禁用",
         "enum": [
-          "0",
-          "1"
+          "NORMAL",
+          "DISABLED"
         ]
       },
       "RoleInfoVo": {

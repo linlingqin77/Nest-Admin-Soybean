@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, SysJob } from '@prisma/client';
+import { Prisma, SysJob, Status } from '@prisma/client';
 import { BaseRepository } from 'src/common/repository/base.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StatusEnum } from 'src/common/enum';
@@ -75,7 +75,7 @@ export class JobRepository extends BaseRepository<SysJob, Prisma.SysJobDelegate>
         jobId: { in: jobIds },
       },
       data: {
-        status,
+        status: status as Status,
         updateBy,
         updateTime: new Date(),
       },

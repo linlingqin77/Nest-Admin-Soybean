@@ -4,7 +4,7 @@ import { BusinessException } from 'src/common/exceptions';
 import { RedisService } from 'src/module/common/redis/redis.service';
 import * as bcrypt from 'bcryptjs';
 import { Response } from 'express';
-import { Prisma, SysDept, SysPost, SysRole, SysUser } from '@prisma/client';
+import { Prisma, SysDept, SysPost, SysRole, SysUser, Status } from '@prisma/client';
 import { GetNowDate, GenerateUUID, Uniq, FormatDate, FormatDateFields } from 'src/common/utils/index';
 import { ExportTable } from 'src/common/utils/export';
 import { PaginationHelper } from 'src/common/utils/pagination.helper';
@@ -257,7 +257,7 @@ export class UserService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const createTime = PaginationHelper.buildDateRange(query.params);

@@ -91,7 +91,7 @@ describe('DeptService', () => {
     });
 
     it('should filter departments by status', async () => {
-      const query = { status: '0' };
+      const query = { status: Status.NORMAL };
       (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([mockDept]);
 
       await service.findAll(query);

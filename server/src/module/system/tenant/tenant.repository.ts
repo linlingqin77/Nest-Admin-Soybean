@@ -140,7 +140,7 @@ export class TenantRepository {
   async softDelete(tenantId: string): Promise<SysTenant> {
     return this.prisma.sysTenant.update({
       where: { tenantId },
-      data: { delFlag: DelFlagEnum.DELETE },
+      data: { delFlag: DelFlagEnum.DELETED },
     });
   }
 

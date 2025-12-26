@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
-import { Prisma, SysMenu } from '@prisma/client';
+import { Prisma, SysMenu, Status } from '@prisma/client';
 import { BaseRepository } from '../../../common/repository/base.repository';
 import { PrismaService } from '../../../prisma/prisma.service';
 
@@ -98,7 +98,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
     const where: Prisma.SysMenuWhereInput = {};
 
     if (query?.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     if (query?.parentId !== undefined) {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result, ResponseCode } from 'src/common/response';
 import { BusinessException } from 'src/common/exceptions';
 import { CreateDeptDto, UpdateDeptDto, ListDeptDto } from './dto/index';
@@ -37,7 +37,7 @@ export class DeptService {
       }
       ancestors = parent.ancestors ? `${parent.ancestors},${createDeptDto.parentId}` : `${createDeptDto.parentId}`;
     }
-    const payload: Prisma.SysDeptUncheckedCreateInput = {
+    const payload: any = {
       parentId: createDeptDto.parentId,
       ancestors,
       deptName: createDeptDto.deptName,
@@ -45,11 +45,20 @@ export class DeptService {
       leader: createDeptDto.leader ?? '',
       phone: createDeptDto.phone ?? '',
       email: createDeptDto.email ?? '',
-      status: createDeptDto.status ?? '0',
       delFlag: DelFlagEnum.NORMAL,
-      ...createDeptDto,
       remark: null,
     };
+    if (createDeptDto.status) {
+      payload.status = createDeptDto.status as Status;
+    } else {
+      payload.status = StatusEnum.NORMAL;
+    }
+    // Merge other fields from DTO
+    Object.keys(createDeptDto).forEach(key => {
+      if (!['parentId', 'deptName', 'orderNum', 'leader', 'phone', 'email', 'status'].includes(key)) {
+        payload[key] = createDeptDto[key];
+      }
+    });
     await this.deptRepo.create(payload);
     return Result.ok();
   }
@@ -66,7 +75,7 @@ export class DeptService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const res = await this.prisma.sysDept.findMany({

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, SysTenantPackage } from '@prisma/client';
+import { Prisma, SysTenantPackage, Status, DelFlag } from '@prisma/client';
 import { SoftDeleteRepository } from 'src/common/repository/base.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -42,7 +42,7 @@ export class TenantPackageRepository extends SoftDeleteRepository<SysTenantPacka
   async findByPackageName(packageName: string, excludeId?: number): Promise<SysTenantPackage | null> {
     const where: Prisma.SysTenantPackageWhereInput = {
       packageName,
-      delFlag: '0',
+      delFlag: DelFlag.NORMAL,
     };
 
     if (excludeId) {
@@ -59,7 +59,7 @@ export class TenantPackageRepository extends SoftDeleteRepository<SysTenantPacka
     const count = await this.prisma.sysTenant.count({
       where: {
         packageId,
-        delFlag: '0',
+        delFlag: DelFlag.NORMAL,
       },
     });
 
@@ -72,8 +72,8 @@ export class TenantPackageRepository extends SoftDeleteRepository<SysTenantPacka
   async findAllNormalPackages(): Promise<SysTenantPackage[]> {
     return this.delegate.findMany({
       where: {
-        status: '0',
-        delFlag: '0',
+        status: Status.NORMAL,
+        delFlag: DelFlag.NORMAL,
       },
       orderBy: { createTime: 'desc' },
     });

@@ -70,7 +70,7 @@ export class TenantHelper {
    * ```typescript
    * // 简单查询
    * const users = await this.prisma.sysUser.findMany({
-   *   where: this.tenantHelper.addTenantFilter({ status: '0' }),
+   *   where: this.tenantHelper.addTenantFilter({ status: Status.NORMAL }),
    * });
    *
    * // 复杂查询

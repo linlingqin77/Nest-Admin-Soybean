@@ -3,7 +3,7 @@ import { AppConfigService } from 'src/config/app-config.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { Result, ResponseCode } from 'src/common/response';
-import { StatusEnum } from 'src/common/enum/index';
+import { StatusEnum, DelFlagEnum } from 'src/common/enum/index';
 import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 import { GenerateUUID } from 'src/common/utils/index';
 import fs from 'fs';
@@ -70,7 +70,7 @@ export class UploadService {
       where: {
         fileMd5,
         tenantId,
-        delFlag: '0',
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
 
@@ -95,8 +95,8 @@ export class UploadService {
           version: 1,
           isLatest: true,
           downloadCount: 0,
-          status: '0',
-          delFlag: '0',
+          status: StatusEnum.NORMAL,
+          delFlag: DelFlagEnum.NORMAL,
         },
       });
 
@@ -137,7 +137,7 @@ export class UploadService {
           fileName: originalFilename,
           folderId: folderId || 0,
           tenantId,
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
         },
         orderBy: { version: 'desc' },
       });
@@ -171,10 +171,10 @@ export class UploadService {
           fileName: originalFilename,
           folderId: folderId || 0,
           tenantId,
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
         },
         data: {
-          delFlag: '1',
+          delFlag: DelFlagEnum.DELETED,
           updateTime: new Date(),
         },
       });
@@ -200,8 +200,8 @@ export class UploadService {
         parentFileId,
         isLatest,
         downloadCount: 0,
-        status: '0',
-        delFlag: '0',
+        status: StatusEnum.NORMAL,
+        delFlag: DelFlagEnum.NORMAL,
       },
     });
 
@@ -296,7 +296,7 @@ export class UploadService {
   private async getConfigValue(key: string, defaultValue: string): Promise<string> {
     try {
       const config = await this.prisma.sysConfig.findFirst({
-        where: { configKey: key, delFlag: '0' },
+        where: { configKey: key, delFlag: DelFlagEnum.NORMAL },
       });
       return config?.configValue || defaultValue;
     } catch (error) {
@@ -618,7 +618,7 @@ export class UploadService {
     if (data) {
       return Result.ok({
         data: data,
-        msg: data.status === '0' ? '上传成功' : '上传中',
+        msg: data.status === StatusEnum.NORMAL ? '上传成功' : '上传中',
       });
     } else {
       return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '文件不存在');

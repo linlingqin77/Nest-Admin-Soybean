@@ -1,6 +1,7 @@
+import { StatusEnum } from 'src/common/enum/index';
 import { Injectable, Inject, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Request, Response } from 'express';
 import { Result } from 'src/common/response';
 import { FormatDateFields } from 'src/common/utils/index';
@@ -74,7 +75,7 @@ export class OperlogService {
       };
     }
     if (!isEmpty(query.status)) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const orderBy =
@@ -175,7 +176,7 @@ export class OperlogService {
       businessType: businessType ?? 0,
       operatorType: 1,
       operTime: new Date(),
-      status: errorMsg ? '1' : '0',
+      status: (errorMsg ? StatusEnum.DISABLED : StatusEnum.NORMAL) as Status,
     };
 
     // 确保errorMsg是字符串类型

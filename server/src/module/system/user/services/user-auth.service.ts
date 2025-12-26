@@ -53,10 +53,10 @@ export class UserAuthService {
 
     const userData = await this.getUserinfo(data.userId);
 
-    if (userData.delFlag === DelFlagEnum.DELETE) {
+    if (userData.delFlag === DelFlagEnum.DELETED) {
       return Result.fail(ResponseCode.BUSINESS_ERROR, `您已被禁用，如需正常使用请联系管理员`);
     }
-    if (userData.status === StatusEnum.STOP) {
+    if (userData.status === StatusEnum.DISABLED) {
       return Result.fail(ResponseCode.BUSINESS_ERROR, `您已被停用，如需正常使用请联系管理员`);
     }
 

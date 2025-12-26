@@ -108,7 +108,7 @@ export class MenuService {
         },
       },
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
     return Result.ok(data.count);

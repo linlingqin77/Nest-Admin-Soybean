@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result } from 'src/common/response';
-import { CacheEnum, DelFlagEnum } from 'src/common/enum/index';
+import { CacheEnum, DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { Cacheable } from 'src/common/decorators/redis.decorator';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
@@ -59,7 +59,7 @@ export class DictService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     if (query.params?.beginTime && query.params?.endTime) {
@@ -125,7 +125,7 @@ export class DictService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const { list, total } = await this.dictDataRepo.findPageWithFilter(where, query.skip, query.take);

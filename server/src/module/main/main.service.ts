@@ -23,7 +23,7 @@ export class MainService {
    * @returns
    */
   async login(user: LoginDto, clientInfo: ClientInfoDto) {
-    const loginLog = {
+    const loginLog: any = {
       ...clientInfo,
       status: StatusEnum.NORMAL,
       msg: '',
@@ -40,7 +40,7 @@ export class MainService {
       });
 
     const loginRes = await this.userService.login(user, loginLog);
-    loginLog.status = loginRes.code === SUCCESS_CODE ? StatusEnum.NORMAL : StatusEnum.STOP;
+    loginLog.status = loginRes.code === SUCCESS_CODE ? StatusEnum.NORMAL : StatusEnum.DISABLED;
     loginLog.msg = loginRes.msg;
     this.loginlogService.create(loginLog);
     return loginRes;

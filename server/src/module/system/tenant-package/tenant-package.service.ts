@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result, ResponseCode } from 'src/common/response';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { BusinessException } from 'src/common/exceptions';
@@ -39,7 +39,7 @@ export class TenantPackageService {
         packageName: createTenantPackageDto.packageName,
         menuIds,
         menuCheckStrictly: createTenantPackageDto.menuCheckStrictly ?? false,
-        status: createTenantPackageDto.status ?? '0',
+        status: (createTenantPackageDto.status ?? StatusEnum.NORMAL) as Status,
         remark: createTenantPackageDto.remark,
         delFlag: DelFlagEnum.NORMAL,
       },
@@ -64,7 +64,7 @@ export class TenantPackageService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const [list, total] = await this.prisma.$transaction([
@@ -153,12 +153,13 @@ export class TenantPackageService {
 
     const menuIdsStr = menuIds ? menuIds.join(',') : undefined;
 
+    const finalUpdateData: any = { ...updateData };
+    if (menuIdsStr !== undefined) finalUpdateData.menuIds = menuIdsStr;
+    if (updateData.status) finalUpdateData.status = updateData.status as Status;
+
     await this.prisma.sysTenantPackage.update({
       where: { packageId },
-      data: {
-        ...updateData,
-        menuIds: menuIdsStr,
-      },
+      data: finalUpdateData,
     });
 
     return Result.ok();
@@ -187,7 +188,7 @@ export class TenantPackageService {
         packageId: { in: packageIds },
       },
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
 
@@ -209,7 +210,7 @@ export class TenantPackageService {
 
     await this.prisma.sysTenantPackage.update({
       where: { packageId },
-      data: { status },
+      data: { status: status as Status },
     });
 
     return Result.ok();

@@ -150,7 +150,7 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
         userId: { in: userIds },
         delFlag: DelFlagEnum.NORMAL,
       },
-      data: { delFlag: '2' },
+      data: { delFlag: DelFlagEnum.DELETED },
     });
 
     return result.count;

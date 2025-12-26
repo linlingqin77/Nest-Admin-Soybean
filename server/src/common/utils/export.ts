@@ -30,7 +30,7 @@ export interface ExportOptions {
 export const commonExportMap = {
   status: {
     [StatusEnum.NORMAL]: '正常',
-    [StatusEnum.STOP]: '停用',
+    [StatusEnum.DISABLED]: '停用',
   },
   sex: {
     [SexEnum.MAN]: '男',
@@ -38,7 +38,7 @@ export const commonExportMap = {
   },
   delFlag: {
     [DelFlagEnum.NORMAL]: '正常',
-    [DelFlagEnum.DELETE]: '已删除',
+    [DelFlagEnum.DELETED]: '已删除',
   },
 };
 

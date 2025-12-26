@@ -17,7 +17,7 @@ import * as path from 'path';
 import { UserDto } from 'src/module/system/user/user.decorator';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, GenTable, GenTableColumn } from '@prisma/client';
+import { Prisma, GenTable, GenTableColumn, Status, DelFlag } from '@prisma/client';
 import { Response } from 'express';
 
 type DbTableRow = {
@@ -77,8 +77,8 @@ export class ToolService {
       dictType: column.dictType ?? '',
       columnDefault: column.columnDefault,
       sort: Number(column.sort),
-      status: column.status ?? '0',
-      delFlag: column.delFlag ?? '0',
+      status: (column.status ?? StatusEnum.NORMAL) as Status,
+      delFlag: (column.delFlag ?? DelFlagEnum.NORMAL) as DelFlag,
       createBy: column.createBy ?? 'admin',
       createTime: column.createTime ?? new Date(),
       updateBy: column.updateBy ?? 'admin',
@@ -509,8 +509,8 @@ export class ToolService {
     column.createTime = column.createTime || new Date();
     column.updateBy = 'admin';
     column.updateTime = new Date();
-    column.status = column.status || '0';
-    column.delFlag = column.delFlag || '0';
+    column.status = (column.status || StatusEnum.NORMAL) as Status;
+    column.delFlag = (column.delFlag || DelFlagEnum.NORMAL) as DelFlag;
     column.dictType = column.dictType || '';
     column.isInsert = column.isInsert ?? GenConstants.NOT_REQUIRE;
     column.isEdit = column.isEdit ?? GenConstants.NOT_REQUIRE;

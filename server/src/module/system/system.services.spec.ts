@@ -180,10 +180,10 @@ describe('System module services', () => {
           menuName: '仪表盘',
           path: '/dashboard',
           visible: '0',
-          status: '0',
+          status: Status.NORMAL,
           perms: '*:*:*',
           component: 'Dashboard',
-          delFlag: '0',
+          delFlag: DelFlag.NORMAL,
         } as any,
       ]);
       const data = await service.getMenuListByUserId(1);
@@ -192,8 +192,8 @@ describe('System module services', () => {
 
     it('should build role menu tree select payload', async () => {
       menuRepo.findAllMenus.mockResolvedValue([
-        { menuId: 1, parentId: 0, menuName: '系统管理', orderNum: 1, status: '0', delFlag: '0' },
-        { menuId: 2, parentId: 1, menuName: '用户管理', orderNum: 1, status: '0', delFlag: '0' },
+        { menuId: 1, parentId: 0, menuName: '系统管理', orderNum: 1, status: Status.NORMAL, delFlag: DelFlag.NORMAL },
+        { menuId: 2, parentId: 1, menuName: '用户管理', orderNum: 1, status: Status.NORMAL, delFlag: DelFlag.NORMAL },
       ] as any);
       menuRepo.findRoleMenus.mockResolvedValue([{ menuId: 2 }]);
       const res = await service.roleMenuTreeselect(1);

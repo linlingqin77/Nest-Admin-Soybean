@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DelFlagEnum } from 'src/common/enum/index';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,7 +33,7 @@ export class VersionService {
                         { uploadId: parentFileId },
                         { parentFileId: parentFileId },
                     ],
-                    delFlag: '0',
+                    delFlag: DelFlagEnum.NORMAL,
                 },
                 orderBy: { version: 'desc' },
             });
@@ -122,7 +123,7 @@ export class VersionService {
     private async getConfigValue(key: string, defaultValue: string): Promise<string> {
         try {
             const config = await this.prisma.sysConfig.findFirst({
-                where: { configKey: key, delFlag: '0' },
+                where: { configKey: key, delFlag: DelFlagEnum.NORMAL },
             });
             return config?.configValue || defaultValue;
         } catch (error) {

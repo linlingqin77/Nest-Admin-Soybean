@@ -1,5 +1,6 @@
+import { StatusEnum } from 'src/common/enum/index';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { ListJobLogDto } from './dto/create-job.dto';
 import { Result } from 'src/common/response';
 import { ExportTable } from 'src/common/utils/export';
@@ -26,7 +27,7 @@ export class JobLogService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     // 使用 getDateRange 便捷方法

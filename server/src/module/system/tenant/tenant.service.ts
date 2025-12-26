@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result, ResponseCode } from 'src/common/response';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { SYS_USER_TYPE } from 'src/common/constant/index';
@@ -78,7 +78,7 @@ export class TenantService {
           packageId: createTenantDto.packageId,
           expireTime: createTenantDto.expireTime,
           accountCount: createTenantDto.accountCount ?? -1,
-          status: createTenantDto.status ?? '0',
+          status: (createTenantDto.status ?? StatusEnum.NORMAL) as Status,
           remark: createTenantDto.remark,
           delFlag: DelFlagEnum.NORMAL,
         },
@@ -138,7 +138,7 @@ export class TenantService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     if (query.beginTime && query.endTime) {
@@ -228,9 +228,14 @@ export class TenantService {
       }
     }
 
+    const finalUpdateData: any = { ...updateData };
+    if (updateData.status) {
+      finalUpdateData.status = updateData.status as Status;
+    }
+
     await this.prisma.sysTenant.update({
       where: { id },
-      data: updateData,
+      data: finalUpdateData,
     });
 
     return Result.ok();
@@ -246,7 +251,7 @@ export class TenantService {
         id: { in: ids },
       },
       data: {
-        delFlag: '1',
+        delFlag: DelFlagEnum.DELETED,
       },
     });
 

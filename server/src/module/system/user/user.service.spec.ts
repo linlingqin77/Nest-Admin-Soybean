@@ -411,7 +411,7 @@ describe('UserService', () => {
         userType: '00',
       });
 
-      const result = await service.changeStatus({ userId: 1, status: StatusEnum.STOP });
+      const result = await service.changeStatus({ userId: 1, status: StatusEnum.DISABLED });
 
       expect(result.code).not.toBe(200);
       expect(result.msg).toContain('系统角色');
@@ -423,7 +423,7 @@ describe('UserService', () => {
         userType: '01',
       });
 
-      const result = await service.changeStatus({ userId: 2, status: StatusEnum.STOP });
+      const result = await service.changeStatus({ userId: 2, status: StatusEnum.DISABLED });
 
       expect(result.code).toBe(200);
     });

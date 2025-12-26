@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { CreateJobDto, ListJobDto } from './dto/create-job.dto';
 import { Result, ResponseCode } from 'src/common/response';
 import { BusinessException } from 'src/common/exceptions';
@@ -44,7 +44,7 @@ export class JobService {
       where.jobGroup = query.jobGroup;
     }
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     const [list, total] = await this.prisma.$transaction([
@@ -75,13 +75,14 @@ export class JobService {
     const job = await this.prisma.sysJob.create({
       data: {
         ...createJobDto,
+        status: createJobDto.status as Status,
         createBy: userName,
         updateBy: userName,
       },
     });
 
     // 如果状态为正常，则添加到调度器
-    if (job.status === '0') {
+    if (job.status === StatusEnum.NORMAL) {
       this.addCronJob(job.jobName, job.cronExpression, createJobDto.invokeTarget);
     }
 
@@ -108,7 +109,7 @@ export class JobService {
         this.deleteCronJob(job.jobName);
       }
 
-      if (nextStatus === '0') {
+      if (nextStatus === StatusEnum.NORMAL) {
         this.addCronJob(job.jobName, nextCron, nextInvokeTarget);
       }
     }
@@ -117,6 +118,7 @@ export class JobService {
       where: { jobId: Number(jobId) },
       data: {
         ...updateJobDto,
+        status: updateJobDto.status ? (updateJobDto.status as Status) : undefined,
         updateBy: userName,
         updateTime: new Date(),
       },
@@ -172,7 +174,7 @@ export class JobService {
     await this.prisma.sysJob.update({
       where: { jobId: Number(jobId) },
       data: {
-        status,
+        status: status as Status,
         updateBy: userName,
         updateTime: new Date(),
       },

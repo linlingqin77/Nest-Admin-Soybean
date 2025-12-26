@@ -1,3 +1,4 @@
+import { StatusEnum } from 'src/common/enum/index';
 import { Injectable } from '@nestjs/common';
 import { Prisma, SysLogininfor } from '@prisma/client';
 import { BaseRepository } from 'src/common/repository/base.repository';
@@ -88,7 +89,7 @@ export class LoginlogRepository extends BaseRepository<SysLogininfor, Prisma.Sys
    */
   async countSuccessLogin(userName?: string): Promise<number> {
     const where: Prisma.SysLogininforWhereInput = {
-      status: '0', // 0表示成功
+      status: StatusEnum.NORMAL, // 0表示成功
     };
 
     if (userName) {
@@ -103,7 +104,7 @@ export class LoginlogRepository extends BaseRepository<SysLogininfor, Prisma.Sys
    */
   async countFailedLogin(userName?: string): Promise<number> {
     const where: Prisma.SysLogininforWhereInput = {
-      status: '1', // 1表示失败
+      status: StatusEnum.DISABLED, // 1表示失败
     };
 
     if (userName) {

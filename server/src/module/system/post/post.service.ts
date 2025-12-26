@@ -1,7 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Result } from 'src/common/response';
-import { DelFlagEnum } from 'src/common/enum/index';
+import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { ExportTable } from 'src/common/utils/export';
 import { FormatDateFields } from 'src/common/utils/index';
 import { Response } from 'express';
@@ -52,7 +52,7 @@ export class PostService {
     }
 
     if (query.status) {
-      where.status = query.status;
+      where.status = query.status as Status;
     }
 
     if (query.belongDeptId) {

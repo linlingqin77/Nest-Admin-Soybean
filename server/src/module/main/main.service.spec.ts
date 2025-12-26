@@ -29,7 +29,7 @@ describe('MainService', () => {
 
     expect(res).toEqual(loginResult);
     expect(axiosService.getIpAddress).toHaveBeenCalledWith('127.0.0.1');
-    expect(loginlogService.create).toHaveBeenCalledWith(expect.objectContaining({ status: '0', msg: '登录成功' }));
+    expect(loginlogService.create).toHaveBeenCalledWith(expect.objectContaining({ status: Status.NORMAL, msg: '登录成功' }));
   });
 
   it('should record failed login attempts', async () => {
@@ -40,7 +40,7 @@ describe('MainService', () => {
     await service.login(loginDto as any, clientInfo as any);
 
     expect(loginlogService.create).toHaveBeenCalledWith(
-      expect.objectContaining({ status: '1', msg: '帐号或密码错误' }),
+      expect.objectContaining({ status: Status.DISABLED, msg: '帐号或密码错误' }),
     );
   });
 

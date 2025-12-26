@@ -1,3 +1,5 @@
+import { Status } from '@prisma/client';
+import { StatusEnum, DelFlagEnum } from 'src/common/enum/index';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Task, TaskRegistry } from 'src/common/decorators/task.decorator';
@@ -104,7 +106,7 @@ export class TaskService implements OnModuleInit {
         jobName: jobName || '未知任务',
         jobGroup: jobGroup || 'DEFAULT',
         invokeTarget,
-        status,
+        status: status as Status,
         jobMessage: `${jobMessage}，耗时 ${duration}ms`,
         exceptionInfo,
         createTime: startTime,
@@ -202,8 +204,8 @@ export class TaskService implements OnModuleInit {
       // 查询所有正常状态的租户
       const tenants = await this.prisma.sysTenant.findMany({
         where: {
-          status: '0',
-          delFlag: '0',
+          status: StatusEnum.NORMAL,
+          delFlag: DelFlagEnum.NORMAL,
         },
         select: {
           tenantId: true,
@@ -251,7 +253,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
               noticeTitle: `存储空间${status}`,
               noticeType: '1', // 系统通知
               noticeContent,
-              status: '0',
+              status: StatusEnum.NORMAL,
             });
           });
 
@@ -284,7 +286,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
       const autoCleanConfig = await this.prisma.sysConfig.findFirst({
         where: {
           configKey: 'sys.file.autoCleanVersions',
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
         },
       });
 
@@ -297,7 +299,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
       const maxVersionsConfig = await this.prisma.sysConfig.findFirst({
         where: {
           configKey: 'sys.file.maxVersions',
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
         },
       });
 
@@ -309,7 +311,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
         by: ['parentFileId'],
         where: {
           parentFileId: { not: null },
-          delFlag: '0',
+          delFlag: DelFlagEnum.NORMAL,
         },
         _count: {
           uploadId: true,
@@ -332,7 +334,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
         const versions = await this.prisma.sysUpload.findMany({
           where: {
             OR: [{ uploadId: parentFileId }, { parentFileId: parentFileId }],
-            delFlag: '0',
+            delFlag: DelFlagEnum.NORMAL,
           },
           orderBy: { version: 'desc' },
         });
