@@ -43,7 +43,7 @@ const importResult = ref<{ success: number; failed: number; errors: string[] }>(
 // 预览表格列
 const previewColumns = computed<DataTableColumns<any>>(() => [
   { title: '行号', key: '_rowIndex', width: 60 },
-<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% insertColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
   { title: '<%= col.columnComment %>', key: '<%= col.javaField %>', width: <%= col.columnWidth || 120 %> },
 <% }); -%>
 ]);

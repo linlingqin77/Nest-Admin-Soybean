@@ -114,7 +114,7 @@ export class TemplateEngineService {
     columns: GenTableColumn[],
     options?: GenOptions,
   ): TemplateContext {
-    const pkColumn = columns.find(col => col.isPk === '1') || null;
+    const pkColumn = columns.find(col => col.isPk === 'YES') || null;
     const genOptions = this.parseOptions(table.options, options);
 
     return {
@@ -140,11 +140,11 @@ export class TemplateEngineService {
       columns,
       pkColumn,
       primaryKey: pkColumn?.javaField || null,
-      listColumns: columns.filter(col => col.isList === '1'),
-      formColumns: columns.filter(col => col.isInsert === '1' || col.isEdit === '1'),
-      queryColumns: columns.filter(col => col.isQuery === '1'),
-      insertColumns: columns.filter(col => col.isInsert === '1'),
-      editColumns: columns.filter(col => col.isEdit === '1'),
+      listColumns: columns.filter(col => col.isList === 'YES'),
+      formColumns: columns.filter(col => col.isInsert === 'YES' || col.isEdit === 'YES'),
+      queryColumns: columns.filter(col => col.isQuery === 'YES'),
+      insertColumns: columns.filter(col => col.isInsert === 'YES'),
+      editColumns: columns.filter(col => col.isEdit === 'YES'),
 
       // 辅助信息
       datetime: new Date().toISOString().split('T')[0],

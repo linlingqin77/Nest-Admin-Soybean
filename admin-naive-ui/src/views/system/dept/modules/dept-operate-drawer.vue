@@ -63,7 +63,7 @@ function createDefaultModel(): Model {
     leader: null,
     phone: '',
     email: '',
-    status: '0',
+    status: 'NORMAL',
   };
 }
 

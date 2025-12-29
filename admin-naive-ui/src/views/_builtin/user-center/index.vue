@@ -40,7 +40,7 @@ function createDefaultProfileModel(): ProfileModel {
     nickName: userInfo.user?.nickName || '',
     email: userInfo.user?.email || '',
     phonenumber: userInfo.user?.phonenumber || '',
-    sex: userInfo.user?.sex || '0',
+    sex: userInfo.user?.sex || 'MALE',
   };
 }
 
@@ -167,8 +167,8 @@ async function updatePassword() {
             </NFormItem>
             <NFormItem label="性别" path="sex">
               <NRadioGroup v-model:value="profileModel.sex">
-                <NRadio value="0">男</NRadio>
-                <NRadio value="1">女</NRadio>
+                <NRadio value="MALE">男</NRadio>
+                <NRadio value="FEMALE">女</NRadio>
               </NRadioGroup>
             </NFormItem>
             <NFormItem class="flex items-center justify-end">

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, GenTableColumn } from '@prisma/client';
+import { Prisma, GenTableColumn, YesNo } from '@prisma/client';
 import { TableMetadata, ColumnMetadata, TYPE_MAPPING, HTML_TYPE_MAPPING } from '../interfaces';
 import { GenConstants } from 'src/common/constant/gen.constant';
 import { camelCase, toLower } from 'lodash';
@@ -13,9 +13,9 @@ interface DbColumnRow {
   columnName: string;
   columnComment: string | null;
   columnType: string;
-  isRequired: string;
-  isPk: string;
-  isIncrement: string;
+  isRequired: 'YES' | 'NO';
+  isPk: 'YES' | 'NO';
+  isIncrement: 'YES' | 'NO';
   columnDefault: string | null;
   sort: number;
   maxLength: number | null;
@@ -108,9 +108,9 @@ export class DatabaseIntrospectorService {
         c.column_name AS "columnName",
         COALESCE(col_description((quote_ident(c.table_schema) || '.' || quote_ident(c.table_name))::regclass, c.ordinal_position)::text, c.column_name) AS "columnComment",
         c.data_type AS "columnType",
-        CASE WHEN c.is_nullable = 'NO' AND c.column_default IS NULL THEN '1' ELSE '0' END AS "isRequired",
-        CASE WHEN c.column_name IN (SELECT column_name FROM pk_columns) THEN '1' ELSE '0' END AS "isPk",
-        CASE WHEN c.is_identity = 'YES' OR c.column_default LIKE 'nextval%' THEN '1' ELSE '0' END AS "isIncrement",
+        CASE WHEN c.is_nullable = 'NO' AND c.column_default IS NULL THEN 'YES' ELSE 'NO' END AS "isRequired",
+        CASE WHEN c.column_name IN (SELECT column_name FROM pk_columns) THEN 'YES' ELSE 'NO' END AS "isPk",
+        CASE WHEN c.is_identity = 'YES' OR c.column_default LIKE 'nextval%' THEN 'YES' ELSE 'NO' END AS "isIncrement",
         c.column_default AS "columnDefault",
         c.ordinal_position AS "sort",
         c.character_maximum_length AS "maxLength"
@@ -152,13 +152,13 @@ export class DatabaseIntrospectorService {
       columnType: dataType,
       javaType: this.getJavaType(dataType),
       javaField: camelCase(columnName),
-      isPk: column.isPk,
-      isIncrement: column.isIncrement,
-      isRequired: GenConstants.NOT_REQUIRE,
-      isInsert: GenConstants.NOT_REQUIRE,
-      isEdit: GenConstants.NOT_REQUIRE,
-      isList: GenConstants.NOT_REQUIRE,
-      isQuery: GenConstants.NOT_REQUIRE,
+      isPk: column.isPk as YesNo,
+      isIncrement: column.isIncrement as YesNo,
+      isRequired: YesNo.NO,
+      isInsert: YesNo.NO,
+      isEdit: YesNo.NO,
+      isList: YesNo.NO,
+      isQuery: YesNo.NO,
       queryType: GenConstants.QUERY_EQ,
       htmlType: this.getHtmlType(dataType),
       dictType: '',
@@ -188,30 +188,30 @@ export class DatabaseIntrospectorService {
 
     // 插入字段
     if (!this.isNotInsertColumn(columnName)) {
-      config.isInsert = GenConstants.REQUIRE;
+      config.isInsert = YesNo.YES;
     }
 
     // 编辑字段
     if (!this.isNotEditColumn(columnName)) {
-      config.isEdit = GenConstants.REQUIRE;
+      config.isEdit = YesNo.YES;
     }
 
     // 列表字段
     if (!this.isNotListColumn(columnName)) {
-      config.isList = GenConstants.REQUIRE;
+      config.isList = YesNo.YES;
     }
 
     // 查询字段
     if (!this.isNotQueryColumn(columnName) && config.htmlType !== GenConstants.HTML_TEXTAREA) {
-      config.isQuery = GenConstants.REQUIRE;
+      config.isQuery = YesNo.YES;
     }
 
     // 主键字段特殊处理
-    if (column.isPk === '1') {
-      config.isInsert = GenConstants.NOT_REQUIRE;
-      config.isEdit = GenConstants.REQUIRE;
-      config.isQuery = GenConstants.REQUIRE;
-      config.isList = GenConstants.REQUIRE;
+    if (column.isPk === 'YES') {
+      config.isInsert = YesNo.NO;
+      config.isEdit = YesNo.YES;
+      config.isQuery = YesNo.YES;
+      config.isList = YesNo.YES;
     }
 
     // 根据列名设置特殊配置

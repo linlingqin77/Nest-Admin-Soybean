@@ -10,8 +10,16 @@ declare namespace Api {
    * backend api module: "system"
    */
   namespace System {
-    /** data scope */
-    type DataScope = '1' | '2' | '3' | '4' | '5' | '6';
+    /**
+     * 数据范围
+     *
+     * - "ALL": 全部数据权限
+     * - "CUSTOM": 自定数据权限
+     * - "DEPT": 本部门数据权限
+     * - "DEPT_AND_CHILD": 本部门及以下数据权限
+     * - "SELF": 仅本人数据权限
+     */
+    type DataScope = 'ALL' | 'CUSTOM' | 'DEPT' | 'DEPT_AND_CHILD' | 'SELF';
 
     /** role */
     type Role = Common.CommonRecord<{
@@ -83,12 +91,13 @@ declare namespace Api {
     type AllRole = Pick<Role, 'roleId' | 'roleName' | 'roleKey'>;
 
     /**
-     * user gender
+     * 用户性别
      *
-     * - "1": "male"
-     * - "2": "female"
+     * - "MALE": 男
+     * - "FEMALE": 女
+     * - "UNKNOWN": 未知
      */
-    type UserGender = '1' | '2';
+    type UserGender = 'MALE' | 'FEMALE' | 'UNKNOWN';
 
     /** user */
     type User = Common.CommonTenantRecord<{
@@ -237,11 +246,11 @@ declare namespace Api {
     /**
      * menu type
      *
-     * - "M": "目录"
-     * - "C": "菜单"
-     * - "F": "按钮"
+     * - "DIRECTORY": "目录"
+     * - "MENU": "菜单"
+     * - "BUTTON": "按钮"
      */
-    type MenuType = 'M' | 'C' | 'F';
+    type MenuType = 'DIRECTORY' | 'MENU' | 'BUTTON';
 
     /**
      * 是否外链
@@ -613,8 +622,13 @@ declare namespace Api {
     /** tenant package select list */
     type TenantPackageSelectList = Common.CommonRecord<Pick<TenantPackage, 'packageId' | 'packageName'>>;
 
-    /** 通知公告类型 */
-    type NoticeType = '1' | '2';
+    /**
+     * 通知公告类型
+     *
+     * - "NOTICE": 通知
+     * - "ANNOUNCEMENT": 公告
+     */
+    type NoticeType = 'NOTICE' | 'ANNOUNCEMENT';
 
     /** notice */
     type Notice = Common.CommonRecord<{

@@ -16,6 +16,13 @@ export class LoginlogRepository extends BaseRepository<SysLogininfor, Prisma.Sys
   }
 
   /**
+   * 覆盖主键字段名，SysLogininfor 使用 infoId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'infoId';
+  }
+
+  /**
    * 分页查询登录日志
    */
   async findPageWithFilter(

@@ -61,7 +61,7 @@ function createDefaultModel(): Model {
     roleKey: '',
     roleSort: 1,
     menuCheckStrictly: true,
-    status: '0',
+    status: 'NORMAL',
     remark: '',
   };
 }

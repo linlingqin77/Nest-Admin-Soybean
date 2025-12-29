@@ -31,26 +31,26 @@ declare namespace Api {
     /**
      * 启用状态
      *
-     * - "0": 正常
-     * - "1": 停用
+     * - "NORMAL": 正常
+     * - "DISABLED": 停用
      */
-    type EnableStatus = '0' | '1';
+    type EnableStatus = 'NORMAL' | 'DISABLED';
 
     /**
      * 显示状态
      *
-     * - "0": 显示
-     * - "1": 隐藏
+     * - "NORMAL": 显示
+     * - "DISABLED": 隐藏
      */
-    type VisibleStatus = '0' | '1';
+    type VisibleStatus = 'NORMAL' | 'DISABLED';
 
     /**
      * 是否状态
      *
-     * - "Y": 是
-     * - "N": 否
+     * - "YES": 是
+     * - "NO": 否
      */
-    type YesOrNoStatus = 'Y' | 'N';
+    type YesOrNoStatus = 'YES' | 'NO';
 
     /** common record */
     type CommonRecord<T = any> = {

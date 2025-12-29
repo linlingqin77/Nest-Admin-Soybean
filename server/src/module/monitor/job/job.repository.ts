@@ -16,6 +16,13 @@ export class JobRepository extends BaseRepository<SysJob, Prisma.SysJobDelegate>
   }
 
   /**
+   * 覆盖主键字段名，SysJob 使用 jobId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'jobId';
+  }
+
+  /**
    * 分页查询任务列表
    */
   async findPageWithFilter(

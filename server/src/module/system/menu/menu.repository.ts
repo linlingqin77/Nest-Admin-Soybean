@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum, StatusEnum } from 'src/common/enum/index';
-import { Prisma, SysMenu, Status } from '@prisma/client';
+import { Prisma, SysMenu, Status, MenuType } from '@prisma/client';
 import { BaseRepository } from '../../../common/repository/base.repository';
 import { PrismaService } from '../../../prisma/prisma.service';
 
@@ -11,6 +11,13 @@ import { PrismaService } from '../../../prisma/prisma.service';
 export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelegate> {
   constructor(prisma: PrismaService) {
     super(prisma, 'sysMenu');
+  }
+
+  /**
+   * 覆盖主键字段名，SysMenu 使用 menuId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'menuId';
   }
 
   /**
@@ -106,7 +113,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
     }
 
     if (query?.menuType) {
-      where.menuType = query.menuType as any;
+      where.menuType = query.menuType as MenuType;
     }
 
     return this.delegate.findMany({

@@ -50,7 +50,7 @@ describe('<%= BusinessName %>Service', () => {
   describe('create', () => {
     it('should create a new <%= businessName %>', async () => {
       const createDto = {
-<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% insertColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
         <%= col.javaField %>: 1,
 <% } else if (col.javaType === 'Date') { -%>
@@ -162,7 +162,7 @@ describe('<%= BusinessName %>Service', () => {
     it('should update a <%= businessName %>', async () => {
       const updateDto = {
         <%= primaryKey %>: 1,
-<% editColumns.filter(col => col.isPk !== '1').slice(0, 2).forEach(function(col) { -%>
+<% editColumns.filter(col => col.isPk !== 'YES').slice(0, 2).forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
         <%= col.javaField %>: 2,
 <% } else { -%>

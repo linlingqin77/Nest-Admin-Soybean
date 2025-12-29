@@ -11,7 +11,7 @@ import { <%= className %> } from '@prisma/client';
  */
 export function create<%= BusinessName %>Factory(overrides: Partial<<%= className %>> = {}): Partial<<%= className %>> {
   return {
-<% columns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% columns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
     <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
 <% } else if (col.javaType === 'Date') { -%>
@@ -19,7 +19,7 @@ export function create<%= BusinessName %>Factory(overrides: Partial<<%= classNam
 <% } else if (col.htmlType === 'textarea') { -%>
     <%= col.javaField %>: faker.lorem.paragraph(),
 <% } else if (col.htmlType === 'select' || col.htmlType === 'radio') { -%>
-    <%= col.javaField %>: faker.helpers.arrayElement(['0', '1']),
+    <%= col.javaField %>: faker.helpers.arrayElement(['NO', 'YES']),
 <% } else if (col.columnName.includes('email')) { -%>
     <%= col.javaField %>: faker.internet.email(),
 <% } else if (col.columnName.includes('phone') || col.columnName.includes('mobile')) { -%>
@@ -66,7 +66,7 @@ export function create<%= BusinessName %>Entity(overrides: Partial<<%= className
  */
 export function createCreate<%= BusinessName %>DtoFactory(overrides: Partial<any> = {}): any {
   return {
-<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% insertColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
     <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
 <% } else if (col.javaType === 'Date') { -%>
@@ -85,7 +85,7 @@ export function createCreate<%= BusinessName %>DtoFactory(overrides: Partial<any
 export function createUpdate<%= BusinessName %>DtoFactory(overrides: Partial<any> = {}): any {
   return {
     <%= primaryKey %>: faker.number.int({ min: 1, max: 10000 }),
-<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% editColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
     <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
 <% } else if (col.javaType === 'Date') { -%>

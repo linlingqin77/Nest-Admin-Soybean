@@ -52,7 +52,7 @@ function createDefaultModel(): Model {
     deptIds: [],
     menuIds: [],
     deptCheckStrictly: true,
-    dataScope: '1',
+    dataScope: 'ALL',
   };
 }
 
@@ -100,7 +100,7 @@ async function handleSubmit() {
       roleKey,
       roleSort,
       dataScope,
-      deptIds: dataScope === '2' ? deptIds : [],
+      deptIds: dataScope === 'CUSTOM' ? deptIds : [],
       menuIds,
     });
     window.$message?.success($t('common.updateSuccess'));
@@ -138,7 +138,7 @@ watch(visible, () => {
         <NFormItem label="权限范围" path="dataScope">
           <NSelect v-model:value="model.dataScope" :options="dataScopeOptions" />
         </NFormItem>
-        <NFormItem v-if="model.dataScope === '2'" label="数据权限" path="deptIds" class="pr-24px">
+        <NFormItem v-if="model.dataScope === 'CUSTOM'" label="数据权限" path="deptIds" class="pr-24px">
           <DeptTree
             v-if="visible"
             ref="deptTreeRef"

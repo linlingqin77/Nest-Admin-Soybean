@@ -27556,11 +27556,11 @@
       },
       "MenuTypeEnum": {
         "type": "string",
-        "description": "菜单类型枚举\n- M: 目录\n- C: 菜单\n- F: 按钮",
+        "description": "菜单类型枚举\n- DIRECTORY: 目录\n- MENU: 菜单\n- BUTTON: 按钮",
         "enum": [
-          "M",
-          "C",
-          "F"
+          "DIRECTORY",
+          "MENU",
+          "BUTTON"
         ]
       },
       "MenuVo": {
@@ -27677,6 +27677,14 @@
           "updateTime"
         ]
       },
+      "YesNoEnum": {
+        "type": "string",
+        "description": "是/否枚举\n- YES: 是\n- NO: 否",
+        "enum": [
+          "YES",
+          "NO"
+        ]
+      },
       "CreateMenuDto": {
         "type": "object",
         "properties": {
@@ -27726,20 +27734,32 @@
             ]
           },
           "isCache": {
-            "type": "string",
-            "description": "是否缓存（0缓存 1不缓存）"
+            "description": "是否缓存（YES缓存 NO不缓存）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "isFrame": {
-            "type": "string",
-            "description": "是否为外链（0是 1否）"
+            "description": "是否为外链（YES是 NO否）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "status": {
             "type": "string",
-            "description": "菜单状态（0正常 1停用）"
+            "description": "菜单状态（NORMAL正常 DISABLED停用）"
           },
           "visible": {
-            "type": "string",
-            "description": "显示状态（0显示 1隐藏）"
+            "description": "显示状态（YES显示 NO隐藏）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "perms": {
             "type": "string",
@@ -27848,20 +27868,32 @@
             ]
           },
           "isCache": {
-            "type": "string",
-            "description": "是否缓存（0缓存 1不缓存）"
+            "description": "是否缓存（YES缓存 NO不缓存）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "isFrame": {
-            "type": "string",
-            "description": "是否为外链（0是 1否）"
+            "description": "是否为外链（YES是 NO否）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "status": {
             "type": "string",
-            "description": "菜单状态（0正常 1停用）"
+            "description": "菜单状态（NORMAL正常 DISABLED停用）"
           },
           "visible": {
-            "type": "string",
-            "description": "显示状态（0显示 1隐藏）"
+            "description": "显示状态（YES显示 NO隐藏）",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YesNoEnum"
+              }
+            ]
           },
           "perms": {
             "type": "string",

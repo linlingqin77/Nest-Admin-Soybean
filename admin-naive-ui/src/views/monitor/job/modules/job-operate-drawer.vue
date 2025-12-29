@@ -54,7 +54,7 @@ function createDefaultModel(): Model {
     cronExpression: '',
     misfirePolicy: '1',
     concurrent: '1',
-    status: '0',
+    status: 'NORMAL',
   };
 }
 

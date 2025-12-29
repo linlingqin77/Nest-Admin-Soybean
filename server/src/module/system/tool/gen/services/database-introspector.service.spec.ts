@@ -102,9 +102,9 @@ describe('DatabaseIntrospectorService', () => {
           columnName: 'user_id',
           columnComment: '用户ID',
           columnType: 'bigint',
-          isRequired: '1',
-          isPk: '1',
-          isIncrement: '1',
+          isRequired: 'YES',
+          isPk: 'YES',
+          isIncrement: 'YES',
           columnDefault: null,
           sort: 1,
           maxLength: null,
@@ -113,9 +113,9 @@ describe('DatabaseIntrospectorService', () => {
           columnName: 'user_name',
           columnComment: '用户名',
           columnType: 'character varying',
-          isRequired: '1',
-          isPk: '0',
-          isIncrement: '0',
+          isRequired: 'YES',
+          isPk: 'NO',
+          isIncrement: 'NO',
           columnDefault: null,
           sort: 2,
           maxLength: 50,
@@ -160,9 +160,9 @@ describe('DatabaseIntrospectorService', () => {
       columnName: 'test_column',
       columnComment: '测试列',
       columnType: 'character varying',
-      isRequired: '0',
-      isPk: '0',
-      isIncrement: '0',
+      isRequired: 'NO' as const,
+      isPk: 'NO' as const,
+      isIncrement: 'NO' as const,
       columnDefault: null,
       sort: 1,
       maxLength: 50,
@@ -179,11 +179,11 @@ describe('DatabaseIntrospectorService', () => {
     });
 
     it('should set primary key config correctly', () => {
-      const pkColumn = { ...baseColumn, isPk: '1', isIncrement: '1' };
+      const pkColumn = { ...baseColumn, isPk: 'YES' as const, isIncrement: 'YES' as const };
       const result = service.initColumnConfig(pkColumn, 1);
 
-      expect(result.isPk).toBe('1');
-      expect(result.isIncrement).toBe('1');
+      expect(result.isPk).toBe('YES');
+      expect(result.isIncrement).toBe('YES');
       expect(result.isInsert).toBe(GenConstants.NOT_REQUIRE);
       expect(result.isEdit).toBe(GenConstants.REQUIRE);
       expect(result.isQuery).toBe(GenConstants.REQUIRE);
@@ -294,13 +294,13 @@ describe('DatabaseIntrospectorService', () => {
         columnType: 'bigint',
         javaType: 'Long',
         javaField: 'userId',
-        isPk: '1',
-        isIncrement: '1',
-        isRequired: '1',
-        isInsert: '0',
-        isEdit: '1',
-        isList: '1',
-        isQuery: '1',
+        isPk: 'YES',
+        isIncrement: 'YES',
+        isRequired: 'YES',
+        isInsert: 'NO',
+        isEdit: 'YES',
+        isList: 'YES',
+        isQuery: 'YES',
         queryType: 'EQ',
         htmlType: 'input',
         dictType: '',
@@ -321,13 +321,13 @@ describe('DatabaseIntrospectorService', () => {
         columnType: 'varchar',
         javaType: 'String',
         javaField: 'oldColumn',
-        isPk: '0',
-        isIncrement: '0',
-        isRequired: '0',
-        isInsert: '1',
-        isEdit: '1',
-        isList: '1',
-        isQuery: '0',
+        isPk: 'NO',
+        isIncrement: 'NO',
+        isRequired: 'NO',
+        isInsert: 'YES',
+        isEdit: 'YES',
+        isList: 'YES',
+        isQuery: 'NO',
         queryType: 'EQ',
         htmlType: 'input',
         dictType: '',
@@ -344,8 +344,8 @@ describe('DatabaseIntrospectorService', () => {
 
     it('should detect new columns', async () => {
       const dbColumns = [
-        { columnName: 'user_id', columnComment: '用户ID', columnType: 'bigint', isRequired: '1', isPk: '1', isIncrement: '1', columnDefault: null, sort: 1, maxLength: null },
-        { columnName: 'new_column', columnComment: '新列', columnType: 'varchar', isRequired: '0', isPk: '0', isIncrement: '0', columnDefault: null, sort: 3, maxLength: 50 },
+        { columnName: 'user_id', columnComment: '用户ID', columnType: 'bigint', isRequired: 'YES', isPk: 'YES', isIncrement: 'YES', columnDefault: null, sort: 1, maxLength: null },
+        { columnName: 'new_column', columnComment: '新列', columnType: 'varchar', isRequired: 'NO', isPk: 'NO', isIncrement: 'NO', columnDefault: null, sort: 3, maxLength: 50 },
       ];
       (prisma.$queryRaw as jest.Mock).mockResolvedValue(dbColumns);
 
@@ -358,7 +358,7 @@ describe('DatabaseIntrospectorService', () => {
 
     it('should detect deleted columns', async () => {
       const dbColumns = [
-        { columnName: 'user_id', columnComment: '用户ID', columnType: 'bigint', isRequired: '1', isPk: '1', isIncrement: '1', columnDefault: null, sort: 1, maxLength: null },
+        { columnName: 'user_id', columnComment: '用户ID', columnType: 'bigint', isRequired: 'YES', isPk: 'YES', isIncrement: 'YES', columnDefault: null, sort: 1, maxLength: null },
       ];
       (prisma.$queryRaw as jest.Mock).mockResolvedValue(dbColumns);
 
@@ -369,8 +369,8 @@ describe('DatabaseIntrospectorService', () => {
 
     it('should detect type changes', async () => {
       const dbColumns = [
-        { columnName: 'user_id', columnComment: '用户ID', columnType: 'integer', isRequired: '1', isPk: '1', isIncrement: '1', columnDefault: null, sort: 1, maxLength: null },
-        { columnName: 'old_column', columnComment: '旧列', columnType: 'varchar', isRequired: '0', isPk: '0', isIncrement: '0', columnDefault: null, sort: 2, maxLength: 50 },
+        { columnName: 'user_id', columnComment: '用户ID', columnType: 'integer', isRequired: 'YES', isPk: 'YES', isIncrement: 'YES', columnDefault: null, sort: 1, maxLength: null },
+        { columnName: 'old_column', columnComment: '旧列', columnType: 'varchar', isRequired: 'NO', isPk: 'NO', isIncrement: 'NO', columnDefault: null, sort: 2, maxLength: 50 },
       ];
       (prisma.$queryRaw as jest.Mock).mockResolvedValue(dbColumns);
 
@@ -390,8 +390,8 @@ describe('DatabaseIntrospectorService', () => {
 
     it('should preserve custom configurations on update', async () => {
       const dbColumns = [
-        { columnName: 'user_id', columnComment: '用户ID', columnType: 'integer', isRequired: '1', isPk: '1', isIncrement: '1', columnDefault: null, sort: 1, maxLength: null },
-        { columnName: 'old_column', columnComment: '旧列', columnType: 'varchar', isRequired: '0', isPk: '0', isIncrement: '0', columnDefault: null, sort: 2, maxLength: 50 },
+        { columnName: 'user_id', columnComment: '用户ID', columnType: 'integer', isRequired: 'YES', isPk: 'YES', isIncrement: 'YES', columnDefault: null, sort: 1, maxLength: null },
+        { columnName: 'old_column', columnComment: '旧列', columnType: 'varchar', isRequired: 'NO', isPk: 'NO', isIncrement: 'NO', columnDefault: null, sort: 2, maxLength: 50 },
       ];
       (prisma.$queryRaw as jest.Mock).mockResolvedValue(dbColumns);
 

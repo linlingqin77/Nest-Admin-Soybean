@@ -58,7 +58,7 @@ function createDefaultModel(): Model {
     packageId: null,
     expireTime: null,
     accountCount: null,
-    status: '0',
+    status: 'NORMAL',
     username: '',
     password: '',
   };

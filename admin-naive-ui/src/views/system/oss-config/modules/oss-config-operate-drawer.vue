@@ -52,7 +52,7 @@ function createDefaultModel(): Model {
     prefix: '',
     endpoint: '',
     domain: '',
-    isHttps: 'N',
+    isHttps: 'NO',
     region: '',
     accessPolicy: '1',
     remark: '',

@@ -13,6 +13,13 @@ export class DictTypeRepository extends SoftDeleteRepository<SysDictType, Prisma
   }
 
   /**
+   * 覆盖主键字段名，SysDictType 使用 dictId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'dictId';
+  }
+
+  /**
    * 根据字典类型查询
    */
   async findByDictType(dictType: string): Promise<SysDictType | null> {
@@ -82,6 +89,13 @@ export class DictTypeRepository extends SoftDeleteRepository<SysDictType, Prisma
 export class DictDataRepository extends SoftDeleteRepository<SysDictData, Prisma.SysDictDataDelegate> {
   constructor(prisma: PrismaService) {
     super(prisma, 'sysDictData');
+  }
+
+  /**
+   * 覆盖主键字段名，SysDictData 使用 dictCode 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'dictCode';
   }
 
   /**

@@ -65,7 +65,7 @@ function createDefaultModel(): Model {
     cssClass: '',
     listClass: null,
     remark: '',
-    isDefault: 'N',
+    isDefault: 'NO',
   };
 }
 

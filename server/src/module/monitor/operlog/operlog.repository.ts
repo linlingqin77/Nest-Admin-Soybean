@@ -15,6 +15,13 @@ export class OperlogRepository extends BaseRepository<SysOperLog, Prisma.SysOper
   }
 
   /**
+   * 覆盖主键字段名，SysOperLog 使用 operId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'operId';
+  }
+
+  /**
    * 分页查询操作日志
    */
   async findPageWithFilter(

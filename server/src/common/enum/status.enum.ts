@@ -1,4 +1,4 @@
-import { Status, DelFlag } from '@prisma/client';
+import { Status, DelFlag, YesNo } from '@prisma/client';
 
 /**
  * 数据状态枚举
@@ -42,4 +42,20 @@ export const DelFlagEnumSchema = {
   description: `删除标志枚举
 - NORMAL: 正常（未删除）
 - DELETED: 已删除`,
+};
+
+/**
+ * 是/否枚举
+ * 使用 Prisma 生成的枚举，保持类型安全
+ * - YES: 是
+ * - NO: 否
+ */
+export const YesNoEnum = YesNo;
+export type YesNoEnum = YesNo;
+
+/** YesNoEnum Swagger Schema */
+export const YesNoEnumSchema = {
+  description: `是/否枚举
+- YES: 是
+- NO: 否`,
 };

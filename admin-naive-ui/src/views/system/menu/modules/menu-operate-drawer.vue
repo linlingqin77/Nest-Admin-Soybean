@@ -66,10 +66,10 @@ function createDefaultModel(): Model {
     component: '',
     queryParam: '',
     isFrame: '1',
-    isCache: '1',
-    menuType: props.menuType || 'M',
-    visible: '0',
-    status: '0',
+    isCache: 'DISABLED',
+    menuType: props.menuType || 'DIRECTORY',
+    visible: 'NORMAL',
+    status: 'NORMAL',
     perms: '',
     icon: defaultIcon,
     remark: '',
@@ -86,13 +86,13 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 // 是否为目录类型
-const isCatalog = computed(() => model.menuType === 'M');
+const isCatalog = computed(() => model.menuType === 'DIRECTORY');
 
 // 是否为菜单类型
-const isMenu = computed(() => model.menuType === 'C');
+const isMenu = computed(() => model.menuType === 'MENU');
 
 // 是否为按钮类型
-const isBtn = computed(() => model.menuType === 'F');
+const isBtn = computed(() => model.menuType === 'BUTTON');
 
 // 外链类型
 const isExternalType = computed(() => model.isFrame === '0');
@@ -241,7 +241,7 @@ async function handleSubmit() {
 watch(
   () => model.menuType,
   (newType) => {
-    if (newType === 'M') {
+    if (newType === 'DIRECTORY') {
       model.isFrame = '1';
     }
   },
@@ -278,7 +278,7 @@ function onCreate() {
           <NFormItemGi v-if="!isBtn" :span="24" :label="$t('page.system.menu.menuType')" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
-                v-for="item in menuTypeOptions.filter((item) => item.value !== 'F')"
+                v-for="item in menuTypeOptions.filter((item) => item.value !== 'BUTTON')"
                 :key="item.value"
                 :value="item.value"
                 :label="item.label"
@@ -348,8 +348,8 @@ function onCreate() {
             </template>
             <NRadioGroup v-model:value="model.isCache">
               <NSpace>
-                <NRadio value="0" label="是" />
-                <NRadio value="1" label="否" />
+                <NRadio value="NORMAL" label="是" />
+                <NRadio value="DISABLED" label="否" />
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>

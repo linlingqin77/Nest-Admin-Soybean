@@ -10,7 +10,7 @@
 export interface <%= BusinessName %>VO {
 <% columns.forEach(function(col) { -%>
   /** <%= col.columnComment %> */
-  <%= col.javaField %><%= col.isRequired === '1' ? '' : '?' %>: <%= getTsType(col) %>;
+  <%= col.javaField %><%= col.isRequired === 'YES' ? '' : '?' %>: <%= getTsType(col) %>;
 <% }); -%>
 }
 
@@ -18,7 +18,7 @@ export interface <%= BusinessName %>VO {
  * <%= functionName %> 表单
  */
 export interface <%= BusinessName %>Form {
-<% formColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% formColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
   /** <%= col.columnComment %> */
 <% if (col.htmlType === 'checkbox') { -%>
   <%= col.javaField %>?: string[];

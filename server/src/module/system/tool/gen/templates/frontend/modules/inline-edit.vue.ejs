@@ -75,7 +75,7 @@ function isEditing(row: Api.<%= BusinessName %>.<%= BusinessName %>) {
 
 // 生成可编辑列
 const columns = computed<DataTableColumns<Api.<%= BusinessName %>.<%= BusinessName %>>>(() => [
-<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% editColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
   {
     title: '<%= col.columnComment %>',
     key: '<%= col.javaField %>',
@@ -105,8 +105,8 @@ const columns = computed<DataTableColumns<Api.<%= BusinessName %>.<%= BusinessNa
         });
 <% } else if (col.htmlType === 'switch') { -%>
         return h(NSwitch, {
-          value: editingData.value.<%= col.javaField %> === '1',
-          onUpdateValue: (v: boolean) => { editingData.value.<%= col.javaField %> = v ? '1' : '0'; },
+          value: editingData.value.<%= col.javaField %> === 'YES',
+          onUpdateValue: (v: boolean) => { editingData.value.<%= col.javaField %> = v ? 'YES' : 'NO'; },
           size: 'small',
         });
 <% } else if (col.htmlType === 'date' || col.htmlType === 'datetime') { -%>

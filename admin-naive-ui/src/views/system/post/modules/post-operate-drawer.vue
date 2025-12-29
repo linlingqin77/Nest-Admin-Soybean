@@ -51,7 +51,7 @@ function createDefaultModel(): Model {
     postCategory: '',
     postName: '',
     postSort: null,
-    status: '0',
+    status: 'NORMAL',
     remark: '',
   };
 }

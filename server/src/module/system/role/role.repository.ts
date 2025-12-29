@@ -21,6 +21,13 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
   }
 
   /**
+   * 覆盖主键字段名，SysRole 使用 roleId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'roleId';
+  }
+
+  /**
    * 根据角色key查询角色
    */
   async findByRoleKey(roleKey: string): Promise<SysRole | null> {

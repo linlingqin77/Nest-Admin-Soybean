@@ -36,7 +36,7 @@ async function getMenuList() {
         menuId: 0,
         menuName: '根目录',
         icon: 'material-symbols:home-outline-rounded',
-        children: handleTree(data, { idField: 'menuId', filterFn: (item) => item.menuType !== 'F' }),
+        children: handleTree(data, { idField: 'menuId', filterFn: (item) => item.menuType !== 'BUTTON' }),
       },
     ] as Api.System.MenuList;
   } catch {

@@ -21,7 +21,7 @@ function closeDrawer() {
 }
 
 function getStatusText(value?: string) {
-  return value === '0' ? '成功' : '失败';
+  return value === 'NORMAL' ? '成功' : '失败';
 }
 </script>
 
@@ -48,11 +48,11 @@ function getStatusText(value?: string) {
           {{ rowData?.jobMessage ?? '-' }}
         </NDescriptionsItem>
         <NDescriptionsItem label="执行状态">
-          <NTag :type="rowData?.status === '0' ? 'success' : 'error'">
+          <NTag :type="rowData?.status === 'NORMAL' ? 'success' : 'error'">
             {{ getStatusText(rowData?.status) }}
           </NTag>
         </NDescriptionsItem>
-        <NDescriptionsItem v-if="rowData?.status === '1'" label="异常信息" :span="2">
+        <NDescriptionsItem v-if="rowData?.status === 'DISABLED'" label="异常信息" :span="2">
           <NText type="error">{{ rowData?.exceptionInfo ?? '-' }}</NText>
         </NDescriptionsItem>
       </NDescriptions>

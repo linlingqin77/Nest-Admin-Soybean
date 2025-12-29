@@ -17,7 +17,7 @@ import * as path from 'path';
 import { UserDto } from 'src/module/system/user/user.decorator';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, GenTable, GenTableColumn, Status, DelFlag } from '@prisma/client';
+import { Prisma, GenTable, GenTableColumn, Status, DelFlag, YesNo } from '@prisma/client';
 import { Response } from 'express';
 
 type DbTableRow = {
@@ -29,12 +29,12 @@ type DbTableRow = {
 
 type DbColumnRow = Partial<GenTableColumn> & {
   columnName: string;
-  isRequired: string;
-  isPk: string;
+  isRequired: 'YES' | 'NO';
+  isPk: 'YES' | 'NO';
   sort: number;
   columnComment: string | null;
   columnDefault: string | null;
-  isIncrement: string;
+  isIncrement: 'YES' | 'NO';
   columnType: string;
 };
 
@@ -68,10 +68,10 @@ export class ToolService {
       isPk: column.isPk,
       isIncrement: column.isIncrement,
       isRequired: column.isRequired,
-      isInsert: column.isInsert ?? GenConstants.NOT_REQUIRE,
-      isEdit: column.isEdit ?? GenConstants.NOT_REQUIRE,
-      isList: column.isList ?? GenConstants.NOT_REQUIRE,
-      isQuery: column.isQuery ?? GenConstants.NOT_REQUIRE,
+      isInsert: column.isInsert ?? YesNo.NO,
+      isEdit: column.isEdit ?? YesNo.NO,
+      isList: column.isList ?? YesNo.NO,
+      isQuery: column.isQuery ?? YesNo.NO,
       queryType: column.queryType ?? GenConstants.QUERY_EQ,
       htmlType: column.htmlType ?? GenConstants.HTML_INPUT,
       dictType: column.dictType ?? '',
@@ -190,7 +190,7 @@ export class ToolService {
         const prevColumn = tableColumnMap[column.columnName];
         column.columnId = prevColumn.columnId;
         column.sort = Number(column.sort);
-        if (column.isList === '1') {
+        if (column.isList === 'YES') {
           // 如果是列表，继续保留查询方式/字典类型选项
           column.dictType = prevColumn.dictType;
           column.queryType = prevColumn.queryType;
@@ -263,12 +263,12 @@ export class ToolService {
       )
       SELECT
         c.column_name AS "columnName",
-        CASE WHEN c.is_nullable = 'NO' AND c.column_default IS NULL THEN '1' ELSE '0' END AS "isRequired",
-        CASE WHEN c.column_name IN (SELECT column_name FROM pk_columns) THEN '1' ELSE '0' END AS "isPk",
+        CASE WHEN c.is_nullable = 'NO' AND c.column_default IS NULL THEN 'YES' ELSE 'NO' END AS "isRequired",
+        CASE WHEN c.column_name IN (SELECT column_name FROM pk_columns) THEN 'YES' ELSE 'NO' END AS "isPk",
         c.ordinal_position AS "sort",
         COALESCE(col_description((quote_ident(c.table_schema) || '.' || quote_ident(c.table_name))::regclass, c.ordinal_position)::text, c.column_name) AS "columnComment",
         c.column_default AS "columnDefault",
-        CASE WHEN c.is_identity = 'YES' OR c.column_default LIKE 'nextval%' THEN '1' ELSE '0' END AS "isIncrement",
+        CASE WHEN c.is_identity = 'YES' OR c.column_default LIKE 'nextval%' THEN 'YES' ELSE 'NO' END AS "isIncrement",
         c.data_type AS "columnType"
       FROM information_schema.columns c
       WHERE c.table_schema = current_schema()
@@ -412,7 +412,7 @@ export class ToolService {
    */
   async getPrimaryKey(columns: GenTableColumn[]) {
     for (const column of columns) {
-      if (column.isPk === '1') {
+      if (column.isPk === 'YES') {
         return column.javaField;
       }
     }
@@ -512,10 +512,10 @@ export class ToolService {
     column.status = (column.status || StatusEnum.NORMAL) as Status;
     column.delFlag = (column.delFlag || DelFlagEnum.NORMAL) as DelFlag;
     column.dictType = column.dictType || '';
-    column.isInsert = column.isInsert ?? GenConstants.NOT_REQUIRE;
-    column.isEdit = column.isEdit ?? GenConstants.NOT_REQUIRE;
-    column.isList = column.isList ?? GenConstants.NOT_REQUIRE;
-    column.isQuery = column.isQuery ?? GenConstants.NOT_REQUIRE;
+    column.isInsert = column.isInsert ?? YesNo.NO;
+    column.isEdit = column.isEdit ?? YesNo.NO;
+    column.isList = column.isList ?? YesNo.NO;
+    column.isQuery = column.isQuery ?? YesNo.NO;
     column.htmlType = column.htmlType || GenConstants.HTML_INPUT;
     if (arraysContains(GenConstants.COLUMNTYPE_TEXT, dataType)) {
       column.htmlType = GenConstants.HTML_TEXTAREA;
@@ -530,35 +530,35 @@ export class ToolService {
       column.javaType = GenConstants.TYPE_NUMBER;
     }
 
-    column.isRequired = GenConstants.NOT_REQUIRE;
+    column.isRequired = YesNo.NO;
 
     // 插入字段
     if (!arraysContains(GenConstants.COLUMNNAME_NOT_INSERT, columnName)) {
-      column.isInsert = GenConstants.REQUIRE;
+      column.isInsert = YesNo.YES;
     }
 
     // 编辑字段
     if (!arraysContains(GenConstants.COLUMNNAME_NOT_EDIT, columnName)) {
-      column.isEdit = GenConstants.REQUIRE;
+      column.isEdit = YesNo.YES;
     }
     // 列表字段
     if (!arraysContains(GenConstants.COLUMNNAME_NOT_LIST, columnName)) {
-      column.isList = GenConstants.REQUIRE;
+      column.isList = YesNo.YES;
     }
     // 查询字段
     if (
       !arraysContains(GenConstants.COLUMNNAME_NOT_QUERY, columnName) &&
       column.htmlType != GenConstants.HTML_TEXTAREA
     ) {
-      column.isQuery = GenConstants.REQUIRE;
+      column.isQuery = YesNo.YES;
     }
 
     // 主键字段
-    if (column.isPk == '1') {
-      column.isInsert = GenConstants.NOT_REQUIRE;
-      column.isEdit = GenConstants.REQUIRE;
-      column.isQuery = GenConstants.REQUIRE;
-      column.isList = GenConstants.REQUIRE;
+    if (column.isPk === 'YES') {
+      column.isInsert = YesNo.NO;
+      column.isEdit = YesNo.YES;
+      column.isQuery = YesNo.YES;
+      column.isList = YesNo.YES;
     }
 
     const lowerColumnName = toLower(columnName);

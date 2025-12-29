@@ -47,9 +47,9 @@ const model: Model = reactive(createDefaultModel());
 function createDefaultModel(): Model {
   return {
     noticeTitle: '',
-    noticeType: '1',
+    noticeType: 'NOTICE',
     noticeContent: '',
-    status: '0',
+    status: 'NORMAL',
   };
 }
 

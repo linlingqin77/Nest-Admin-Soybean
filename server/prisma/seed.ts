@@ -4515,6 +4515,29 @@ async function main() {
     skipDuplicates: true,
   });
 
+  // 重置所有序列，确保新记录的 ID 不会与种子数据冲突
+  console.log('重置数据库序列...');
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_tenant_package', 'package_id'), COALESCE((SELECT MAX(package_id) FROM sys_tenant_package), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_tenant', 'id'), COALESCE((SELECT MAX(id) FROM sys_tenant), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_client', 'id'), COALESCE((SELECT MAX(id) FROM sys_client), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_dict_type', 'dict_id'), COALESCE((SELECT MAX(dict_id) FROM sys_dict_type), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_dict_data', 'dict_code'), COALESCE((SELECT MAX(dict_code) FROM sys_dict_data), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_config', 'config_id'), COALESCE((SELECT MAX(config_id) FROM sys_config), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_dept', 'dept_id'), COALESCE((SELECT MAX(dept_id) FROM sys_dept), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_post', 'post_id'), COALESCE((SELECT MAX(post_id) FROM sys_post), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_role', 'role_id'), COALESCE((SELECT MAX(role_id) FROM sys_role), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_menu', 'menu_id'), COALESCE((SELECT MAX(menu_id) FROM sys_menu), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_user', 'user_id'), COALESCE((SELECT MAX(user_id) FROM sys_user), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_notice', 'notice_id'), COALESCE((SELECT MAX(notice_id) FROM sys_notice), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_job', 'job_id'), COALESCE((SELECT MAX(job_id) FROM sys_job), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_logininfor', 'info_id'), COALESCE((SELECT MAX(info_id) FROM sys_logininfor), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_oper_log', 'oper_id'), COALESCE((SELECT MAX(oper_id) FROM sys_oper_log), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('gen_table', 'table_id'), COALESCE((SELECT MAX(table_id) FROM gen_table), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('gen_table_column', 'column_id'), COALESCE((SELECT MAX(column_id) FROM gen_table_column), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_system_config', 'config_id'), COALESCE((SELECT MAX(config_id) FROM sys_system_config), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_file_folder', 'folder_id'), COALESCE((SELECT MAX(folder_id) FROM sys_file_folder), 1))`;
+  await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('sys_job_log', 'job_log_id'), COALESCE((SELECT MAX(job_log_id) FROM sys_job_log), 1))`;
+
   console.log('种子数据导入完成!');
 }
 

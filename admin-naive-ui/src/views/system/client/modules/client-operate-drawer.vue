@@ -50,7 +50,7 @@ function createDefaultModel(): Model {
     deviceType: undefined,
     activeTimeout: 1800,
     timeout: 604800,
-    status: '0',
+    status: 'NORMAL',
   };
 }
 

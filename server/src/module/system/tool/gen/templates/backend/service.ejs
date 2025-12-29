@@ -186,7 +186,7 @@ export class <%= BusinessName %>Service {
     
     // 设置表头
     worksheet.columns = [
-<% columns.filter(col => col.isList === '1').forEach(function(col) { -%>
+<% columns.filter(col => col.isList === 'YES').forEach(function(col) { -%>
       { header: '<%= col.columnComment %>', key: '<%= col.javaField %>', width: 20 },
 <% }); -%>
     ];
@@ -218,7 +218,7 @@ export class <%= BusinessName %>Service {
       if (rowNumber === 1) return; // 跳过表头
       
       const data: any = {};
-<% columns.filter(col => col.isInsert === '1').forEach(function(col, index) { -%>
+<% columns.filter(col => col.isInsert === 'YES').forEach(function(col, index) { -%>
       data.<%= col.javaField %> = row.getCell(<%= index + 1 %>).value;
 <% }); -%>
       rows.push(data);
@@ -241,7 +241,7 @@ export class <%= BusinessName %>Service {
     const worksheet = workbook.addWorksheet('<%= functionName %>导入模板');
     
     worksheet.columns = [
-<% columns.filter(col => col.isInsert === '1').forEach(function(col) { -%>
+<% columns.filter(col => col.isInsert === 'YES').forEach(function(col) { -%>
       { header: '<%= col.columnComment %>', key: '<%= col.javaField %>', width: 20 },
 <% }); -%>
     ];

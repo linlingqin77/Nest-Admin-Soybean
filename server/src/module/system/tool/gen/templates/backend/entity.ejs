@@ -11,7 +11,7 @@
 export interface <%= className %> {
 <% columns.forEach(function(col) { -%>
   /** <%= col.columnComment %> */
-  <%= col.javaField %><%= col.isRequired === '1' ? '' : '?' %>: <%= getTsType(col) %><%= col.isRequired === '1' ? '' : ' | null' %>;
+  <%= col.javaField %><%= col.isRequired === 'YES' ? '' : '?' %>: <%= getTsType(col) %><%= col.isRequired === 'YES' ? '' : ' | null' %>;
 <% }); -%>
 }
 

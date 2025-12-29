@@ -23,6 +23,13 @@ export class ToolRepository extends SoftDeleteRepository<GenTable, Prisma.GenTab
   }
 
   /**
+   * 覆盖主键字段名，GenTable 使用 tableId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'tableId';
+  }
+
+  /**
    * 分页查询生成表列表
    */
   async findPageWithColumns(

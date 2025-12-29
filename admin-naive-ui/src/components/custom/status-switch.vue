@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   info: '',
 });
 
-const value = defineModel<Api.Common.EnableStatus>('value', { default: '0' });
+const value = defineModel<Api.Common.EnableStatus>('value', { default: 'NORMAL' });
 
 interface Emits {
   (e: 'submitted', value: Api.Common.EnableStatus, callback: (flag: boolean) => void): void;
@@ -28,7 +28,7 @@ const emit = defineEmits<Emits>();
 const { bool: loading, setTrue: startLoading, setFalse: endLoading } = useBoolean();
 
 const handleUpdateValue = (val: Api.Common.EnableStatus) => {
-  value.value = val === '0' ? '1' : '0';
+  value.value = val === 'NORMAL' ? 'DISABLED' : 'NORMAL';
   window.$dialog?.warning({
     title: '系统提示',
     content: `确定要${enableStatusRecord[val]} ${props.info} 吗？`,
@@ -51,8 +51,8 @@ const handleUpdateValue = (val: Api.Common.EnableStatus) => {
     v-model:value="value"
     :loading="loading"
     :rubber-band="false"
-    checked-value="0"
-    unchecked-value="1"
+    checked-value="NORMAL"
+    unchecked-value="DISABLED"
     :disabled="props.disabled"
     @update:value="handleUpdateValue"
   />

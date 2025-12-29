@@ -41,10 +41,10 @@ const checkedKeys = ref<CommonType.IdType[]>([0]);
 const expandedKeys = ref<CommonType.IdType[]>([0]);
 
 // 是否为目录类型
-const isCatalog = computed(() => currentMenu.value?.menuType === 'M');
+const isCatalog = computed(() => currentMenu.value?.menuType === 'DIRECTORY');
 
 // 是否为菜单类型
-const isMenu = computed(() => currentMenu.value?.menuType === 'C');
+const isMenu = computed(() => currentMenu.value?.menuType === 'MENU');
 
 // 外链类型
 const isExternalType = computed(() => currentMenu.value?.isFrame === '0');
@@ -64,7 +64,7 @@ const getMeunTree = async () => {
         menuId: 0,
         menuName: $t('page.system.menu.rootName'),
         icon: 'material-symbols:home-outline-rounded',
-        children: handleTree(data, { idField: 'menuId', filterFn: (item) => item.menuType !== 'F' }),
+        children: handleTree(data, { idField: 'menuId', filterFn: (item) => item.menuType !== 'BUTTON' }),
       },
     ] as Api.System.Menu[];
   } catch {
@@ -77,7 +77,7 @@ const getMeunTree = async () => {
 getMeunTree();
 
 async function handleSubmitted(menuType?: Api.System.MenuType) {
-  if (menuType === 'F') {
+  if (menuType === 'BUTTON') {
     await getBtnMenuList();
     return;
   }
@@ -89,7 +89,7 @@ async function handleSubmitted(menuType?: Api.System.MenuType) {
 
 function handleAddMenu(pid: CommonType.IdType) {
   createPid.value = pid;
-  createType.value = pid === 0 ? 'M' : 'C';
+  createType.value = pid === 0 ? 'DIRECTORY' : 'MENU';
   operateType.value = 'add';
   openDrawer();
 }
@@ -123,7 +123,7 @@ function renderLabel({ option }: { option: TreeOption }) {
     label = $t(label as App.I18n.I18nKey);
   }
   // 禁用的菜单显示红色
-  if (option.status === '1') {
+  if (option.status === 'DISABLED') {
     return (
       <div class="flex items-center gap-4px text-error-200">
         {label}
@@ -132,7 +132,7 @@ function renderLabel({ option }: { option: TreeOption }) {
     );
   }
   // 隐藏的菜单显示灰色
-  if (option.visible === '1') {
+  if (option.visible === 'DISABLED') {
     return (
       <div class="flex items-center gap-4px text-gray-400">
         {label}
@@ -151,7 +151,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
 }
 
 function renderSuffix({ option }: { option: TreeOption }) {
-  if (!['M'].includes(String(option.menuType)) || !hasAuth('system:menu:add')) {
+  if (!['DIRECTORY'].includes(String(option.menuType)) || !hasAuth('system:menu:add')) {
     return null;
   }
 
@@ -204,7 +204,7 @@ async function getBtnMenuList() {
   startBtnLoading();
   btnData.value = [];
   try {
-    const { data } = await fetchGetMenuList({ parentId: currentMenu.value?.menuId, menuType: 'F' }, controller.signal);
+    const { data } = await fetchGetMenuList({ parentId: currentMenu.value?.menuId, menuType: 'BUTTON' }, controller.signal);
     btnData.value = data || [];
   } catch {
     // error handled by request interceptor
@@ -215,7 +215,7 @@ async function getBtnMenuList() {
 
 function addBtnMenu() {
   operateType.value = 'add';
-  createType.value = 'F';
+  createType.value = 'BUTTON';
   createPid.value = currentMenu.value?.menuId || 0;
   openDrawer();
 }

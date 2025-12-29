@@ -42,7 +42,7 @@ const loading = ref(false);
 
 // 批量编辑的字段
 const batchFields = ref<Record<string, boolean>>({
-<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% editColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
   <%= col.javaField %>: false,
 <% }); -%>
 });
@@ -127,7 +127,7 @@ defineExpose({
     </div>
     
     <NForm label-placement="left" label-width="120px">
-<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% editColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
       <NFormItem label="<%= col.columnComment %>">
         <div class="flex items-center gap-2 w-full">
           <NSwitch v-model:value="batchFields.<%= col.javaField %>" size="small" />

@@ -420,7 +420,7 @@ export class CodeGeneratorService {
    * 获取主键字段
    */
   getPrimaryKey(columns: GenTableColumn[]): string | null {
-    const pkColumn = columns.find((col) => col.isPk === '1');
+    const pkColumn = columns.find((col) => col.isPk === 'YES');
     return pkColumn?.javaField || null;
   }
 

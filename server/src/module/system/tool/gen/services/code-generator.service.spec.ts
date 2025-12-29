@@ -47,13 +47,13 @@ describe('CodeGeneratorService', () => {
       columnType: 'bigint',
       javaType: 'Long',
       javaField: 'testId',
-      isPk: '1',
-      isIncrement: '1',
-      isRequired: '1',
-      isInsert: '0',
-      isEdit: '1',
-      isList: '1',
-      isQuery: '1',
+      isPk: 'YES',
+      isIncrement: 'YES',
+      isRequired: 'YES',
+      isInsert: 'NO',
+      isEdit: 'YES',
+      isList: 'YES',
+      isQuery: 'YES',
       queryType: 'EQ',
       htmlType: 'input',
       dictType: '',
@@ -74,13 +74,13 @@ describe('CodeGeneratorService', () => {
       columnType: 'varchar',
       javaType: 'String',
       javaField: 'testName',
-      isPk: '0',
-      isIncrement: '0',
-      isRequired: '1',
-      isInsert: '1',
-      isEdit: '1',
-      isList: '1',
-      isQuery: '1',
+      isPk: 'NO',
+      isIncrement: 'NO',
+      isRequired: 'YES',
+      isInsert: 'YES',
+      isEdit: 'YES',
+      isList: 'YES',
+      isQuery: 'YES',
       queryType: 'LIKE',
       htmlType: 'input',
       dictType: '',
@@ -207,8 +207,8 @@ describe('CodeGeneratorService', () => {
       const mockTableMeta = [
         { tableName: 'sys_test', tableComment: '测试表', createTime: new Date(), updateTime: new Date() },
       ];
-      const mockDbColumns = [
-        { columnName: 'test_id', columnComment: '测试ID', columnType: 'bigint', isRequired: '1', isPk: '1', isIncrement: '1', columnDefault: null, sort: 1, maxLength: null },
+      const mockDbColumns: Array<{ columnName: string; columnComment: string; columnType: string; isRequired: 'YES' | 'NO'; isPk: 'YES' | 'NO'; isIncrement: 'YES' | 'NO'; columnDefault: null; sort: number; maxLength: null }> = [
+        { columnName: 'test_id', columnComment: '测试ID', columnType: 'bigint', isRequired: 'YES', isPk: 'YES', isIncrement: 'YES', columnDefault: null, sort: 1, maxLength: null },
       ];
 
       introspector.getTablesByNames.mockResolvedValue(mockTableMeta);
@@ -220,8 +220,8 @@ describe('CodeGeneratorService', () => {
         columnType: 'bigint',
         javaType: 'Long',
         javaField: 'testId',
-        isPk: '1',
-        isIncrement: '1',
+        isPk: 'YES',
+        isIncrement: 'YES',
       });
       (prisma.genTable.create as jest.Mock).mockResolvedValue({ ...mockTable, tableId: 1 });
       (prisma.genTableColumn.create as jest.Mock).mockResolvedValue({});
@@ -398,7 +398,7 @@ describe('CodeGeneratorService', () => {
     });
 
     it('should return null when no primary key', () => {
-      const columnsWithoutPk = mockColumns.map(c => ({ ...c, isPk: '0' }));
+      const columnsWithoutPk = mockColumns.map(c => ({ ...c, isPk: 'NO' }));
       const result = service.getPrimaryKey(columnsWithoutPk as any);
 
       expect(result).toBeNull();

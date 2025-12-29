@@ -30,7 +30,7 @@ const getDictOptions = (dictType: string) => dictStore.getDictOptions(dictType);
 
 interface SubTableRow {
 <% if (subTable) { -%>
-<% subTable.columns.filter(col => col.isPk !== '1' && col.columnName !== table.subTableFkName).forEach(function(col) { -%>
+<% subTable.columns.filter(col => col.isPk !== 'YES' && col.columnName !== table.subTableFkName).forEach(function(col) { -%>
   <%= col.javaField %>?: <%= getTsType(col) %>;
 <% }); -%>
 <% } -%>
@@ -62,7 +62,7 @@ watch(
 
 const columns = [
 <% if (subTable) { -%>
-<% subTable.columns.filter(col => col.isPk !== '1' && col.columnName !== table.subTableFkName && col.isList === '1').forEach(function(col) { -%>
+<% subTable.columns.filter(col => col.isPk !== 'YES' && col.columnName !== table.subTableFkName && col.isList === 'YES').forEach(function(col) { -%>
 <% if (col.htmlType === 'input') { -%>
   {
     title: '<%= col.columnComment %>',

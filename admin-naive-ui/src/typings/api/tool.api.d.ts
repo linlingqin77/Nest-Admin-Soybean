@@ -120,19 +120,19 @@ declare namespace Api {
       tsType?: TsType;
       /** TypeScript属性名 */
       tsField?: string;
-      /** 是否主键（Y是 N否） */
+      /** 是否主键 */
       isPk?: Common.YesOrNoStatus;
-      /** 是否自增（Y是 N否） */
+      /** 是否自增 */
       isIncrement?: Common.YesOrNoStatus;
-      /** 是否必填（Y是 N否） */
+      /** 是否必填 */
       isRequired?: Common.YesOrNoStatus;
-      /** 是否为插入字段（Y是 N否） */
+      /** 是否为插入字段 */
       isInsert?: Common.YesOrNoStatus;
-      /** 是否编辑字段（Y是 N否） */
+      /** 是否编辑字段 */
       isEdit?: Common.YesOrNoStatus;
-      /** 是否列表字段（Y是 N否） */
+      /** 是否列表字段 */
       isList?: Common.YesOrNoStatus;
-      /** 是否查询字段（Y是 N否） */
+      /** 是否查询字段 */
       isQuery?: Common.YesOrNoStatus;
       /** 查询方式 */
       queryType?: QueryType;

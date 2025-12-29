@@ -9,7 +9,7 @@ export { CacheEnum } from './cache.enum';
 export { DataScopeEnum, DataScopeEnumSchema } from './data-scope.enum';
 
 // 状态相关
-export { StatusEnum, StatusEnumSchema, DelFlagEnum, DelFlagEnumSchema } from './status.enum';
+export { StatusEnum, StatusEnumSchema, DelFlagEnum, DelFlagEnumSchema, YesNoEnum, YesNoEnumSchema } from './status.enum';
 
 // 用户相关
 export { SexEnum, SexEnumSchema } from './user.enum';

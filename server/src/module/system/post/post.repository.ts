@@ -13,6 +13,13 @@ export class PostRepository extends SoftDeleteRepository<SysPost, Prisma.SysPost
   }
 
   /**
+   * 覆盖主键字段名，SysPost 使用 postId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'postId';
+  }
+
+  /**
    * 根据岗位编码查询
    */
   async findByPostCode(postCode: string): Promise<SysPost | null> {

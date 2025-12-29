@@ -13,6 +13,13 @@ export class ConfigRepository extends SoftDeleteRepository<SysConfig, Prisma.Sys
   }
 
   /**
+   * 覆盖主键字段名，SysConfig 使用 configId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'configId';
+  }
+
+  /**
    * 根据配置键查询
    */
   async findByConfigKey(configKey: string): Promise<SysConfig | null> {

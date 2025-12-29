@@ -9,7 +9,7 @@
         label-width="100"
       >
 <% formColumns.forEach(function(col) { -%>
-<% if (col.isPk !== '1') { -%>
+<% if (col.isPk !== 'YES') { -%>
 <% if (col.htmlType === 'input') { -%>
         <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
           <n-input v-model:value="formData.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" />
@@ -146,7 +146,7 @@ const <%= primaryKey %> = ref<number>();
 const title = computed(() => (<%= primaryKey %>.value ? '编辑<%= functionName %>' : '新增<%= functionName %>'));
 
 const initFormData = (): <%= BusinessName %>Form => ({
-<% formColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% formColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
 <% if (col.javaType === 'Number') { -%>
   <%= col.javaField %>: undefined,
 <% } else if (col.htmlType === 'checkbox') { -%>
@@ -160,7 +160,7 @@ const initFormData = (): <%= BusinessName %>Form => ({
 const formData = reactive<<%= BusinessName %>Form>(initFormData());
 
 const rules = {
-<% formColumns.filter(col => col.isPk !== '1' && col.isRequired === '1').forEach(function(col) { -%>
+<% formColumns.filter(col => col.isPk !== 'YES' && col.isRequired === 'YES').forEach(function(col) { -%>
   <%= col.javaField %>: { required: true, message: '请输入<%= col.columnComment %>', trigger: 'blur' },
 <% }); -%>
 };

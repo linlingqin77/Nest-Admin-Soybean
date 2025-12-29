@@ -15,6 +15,13 @@ export class TenantPackageRepository extends SoftDeleteRepository<SysTenantPacka
   }
 
   /**
+   * 覆盖主键字段名，SysTenantPackage 使用 packageId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'packageId';
+  }
+
+  /**
    * 分页查询租户套餐列表
    */
   async findPageWithFilter(

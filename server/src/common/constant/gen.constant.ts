@@ -159,10 +159,10 @@ export class GenConstants {
   public static readonly QUERY_BETWEEN: string = 'BETWEEN';
 
   /** 需要 */
-  public static readonly REQUIRE: string = '1';
+  public static readonly REQUIRE: string = 'YES';
 
   /** 不需要 */
-  public static readonly NOT_REQUIRE: string = '0';
+  public static readonly NOT_REQUIRE: string = 'NO';
 
   public static readonly TYPE_NUMBER: string = 'Number';
 }

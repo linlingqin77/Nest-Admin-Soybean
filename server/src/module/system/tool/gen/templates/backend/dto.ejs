@@ -13,7 +13,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
  */
 export class Base<%= BusinessName %>Dto {
 <% columns.forEach(function(col) { -%>
-<% if (col.isPk === '1') { -%>
+<% if (col.isPk === 'YES') { -%>
   @ApiProperty({ description: '<%= col.columnComment %>' })
 <% if (col.javaType === 'Number') { -%>
   @IsNumber()
@@ -24,7 +24,7 @@ export class Base<%= BusinessName %>Dto {
 
 <% } else { -%>
   @ApiPropertyOptional({ description: '<%= col.columnComment %>' })
-<% if (col.isRequired === '1') { -%>
+<% if (col.isRequired === 'YES') { -%>
   @IsNotEmpty({ message: '<%= col.columnComment %>不能为空' })
 <% } else { -%>
   @IsOptional()
@@ -48,8 +48,8 @@ export class Base<%= BusinessName %>Dto {
  * 创建 <%= functionName %> DTO
  */
 export class Create<%= BusinessName %>Dto extends OmitType(Base<%= BusinessName %>Dto, ['<%= primaryKey %>'] as const) {
-<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
-<% if (col.isRequired === '1') { -%>
+<% insertColumns.filter(col => col.isPk !== 'YES').forEach(function(col) { -%>
+<% if (col.isRequired === 'YES') { -%>
   @ApiProperty({ description: '<%= col.columnComment %>' })
   @IsNotEmpty({ message: '<%= col.columnComment %>不能为空' })
 <% if (col.javaType === 'Number') { -%>

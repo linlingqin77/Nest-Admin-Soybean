@@ -156,13 +156,13 @@ const columnProperties = [
   { name: 'columnType', type: 'string', description: '列类型（数据库类型）' },
   { name: 'tsType', type: 'string', description: 'TypeScript 类型' },
   { name: 'tsField', type: 'string', description: 'TypeScript 属性名（camelCase）' },
-  { name: 'isPk', type: "'Y'|'N'", description: '是否主键' },
-  { name: 'isIncrement', type: "'Y'|'N'", description: '是否自增' },
-  { name: 'isRequired', type: "'Y'|'N'", description: '是否必填' },
-  { name: 'isInsert', type: "'Y'|'N'", description: '是否插入字段' },
-  { name: 'isEdit', type: "'Y'|'N'", description: '是否编辑字段' },
-  { name: 'isList', type: "'Y'|'N'", description: '是否列表字段' },
-  { name: 'isQuery', type: "'Y'|'N'", description: '是否查询字段' },
+  { name: 'isPk', type: "'YES'|'NO'", description: '是否主键' },
+  { name: 'isIncrement', type: "'YES'|'NO'", description: '是否自增' },
+  { name: 'isRequired', type: "'YES'|'NO'", description: '是否必填' },
+  { name: 'isInsert', type: "'YES'|'NO'", description: '是否插入字段' },
+  { name: 'isEdit', type: "'YES'|'NO'", description: '是否编辑字段' },
+  { name: 'isList', type: "'YES'|'NO'", description: '是否列表字段' },
+  { name: 'isQuery', type: "'YES'|'NO'", description: '是否查询字段' },
   { name: 'queryType', type: 'QueryType', description: '查询方式（EQ, LIKE, BETWEEN 等）' },
   { name: 'htmlType', type: 'HtmlType', description: '显示类型（input, select, datetime 等）' },
   { name: 'dictType', type: 'string', description: '字典类型' }
@@ -188,7 +188,7 @@ function closeModal() {
 // 示例代码
 const exampleCode = `// 遍历字段生成表单项
 <% columns.forEach(function(col) { %>
-  <% if (col.isInsert === 'Y') { %>
+  <% if (col.isInsert === 'YES') { %>
     <NFormItem label="<%= col.columnComment %>" path="<%= col.tsField %>">
       <% if (col.htmlType === 'input') { %>
         <NInput v-model:value="formData.<%= col.tsField %>" />

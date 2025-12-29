@@ -14,6 +14,13 @@ export class NoticeRepository extends SoftDeleteRepository<SysNotice, Prisma.Sys
   }
 
   /**
+   * 覆盖主键字段名，SysNotice 使用 noticeId 作为主键
+   */
+  protected getPrimaryKeyName(): string {
+    return 'noticeId';
+  }
+
+  /**
    * 根据通知标题查询
    */
   async findByNoticeTitle(noticeTitle: string): Promise<SysNotice | null> {
