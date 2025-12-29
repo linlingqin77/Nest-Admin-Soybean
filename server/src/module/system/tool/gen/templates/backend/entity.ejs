@@ -1,0 +1,49 @@
+/**
+ * <%= functionName %> 实体
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+
+/**
+ * <%= functionName %> 实体类型定义
+ * 对应数据库表: <%= tableName %>
+ */
+export interface <%= className %> {
+<% columns.forEach(function(col) { -%>
+  /** <%= col.columnComment %> */
+  <%= col.javaField %><%= col.isRequired === '1' ? '' : '?' %>: <%= getTsType(col) %><%= col.isRequired === '1' ? '' : ' | null' %>;
+<% }); -%>
+}
+
+/**
+ * <%= functionName %> 创建参数
+ */
+export type Create<%= className %>Input = Omit<<%= className %>, '<%= primaryKey %>' | 'createTime' | 'updateTime' | 'delFlag'>;
+
+/**
+ * <%= functionName %> 更新参数
+ */
+export type Update<%= className %>Input = Partial<Create<%= className %>Input> & { <%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %> };
+
+/**
+ * <%= functionName %> 查询参数
+ */
+export interface Query<%= className %>Input {
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+  /** <%= col.columnComment %>范围 */
+  <%= col.javaField %>?: [<%= getTsType(col) %>, <%= getTsType(col) %>];
+<% } else { -%>
+  /** <%= col.columnComment %> */
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+<% } -%>
+<% }); -%>
+  /** 页码 */
+  pageNum?: number;
+  /** 每页数量 */
+  pageSize?: number;
+  /** 排序字段 */
+  orderByColumn?: string;
+  /** 排序方向 */
+  isAsc?: 'ascending' | 'descending';
+}

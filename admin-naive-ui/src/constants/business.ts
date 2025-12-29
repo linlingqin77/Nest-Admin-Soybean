@@ -42,8 +42,19 @@ export const menuIconTypeRecord: Record<Api.System.IconType, string> = {
 
 export const menuIconTypeOptions = transformRecordToOption(menuIconTypeRecord);
 
-/** gen java type */
-export const genJavaTypeRecord: Record<Api.Tool.JavaType, string> = {
+/** gen TypeScript type */
+export const genTsTypeRecord: Record<Api.Tool.TsType, string> = {
+  number: 'number',
+  string: 'string',
+  boolean: 'boolean',
+  Date: 'Date',
+  object: 'object',
+};
+
+export const genTsTypeOptions = transformRecordToOption(genTsTypeRecord);
+
+/** gen java type (for compatibility) */
+export const genJavaTypeRecord = {
   Long: 'Long',
   String: 'String',
   Integer: 'Integer',
@@ -65,6 +76,8 @@ export const genQueryTypeRecord: Record<Api.Tool.QueryType, string> = {
   LE: '<=',
   LIKE: 'LIKE',
   BETWEEN: 'BETWEEN',
+  IN: 'IN',
+  NOT_IN: 'NOT IN',
 };
 
 export const genQueryTypeOptions = transformRecordToOption(genQueryTypeRecord);
@@ -77,17 +90,28 @@ export const genHtmlTypeRecord: Record<Api.Tool.HtmlType, string> = {
   radio: '单选框',
   checkbox: '复选框',
   datetime: '日期时间控件',
+  date: '日期控件',
+  time: '时间控件',
+  number: '数字框',
+  switch: '开关',
   imageUpload: '图片上传',
   fileUpload: '文件上传',
+  upload: '文件上传',
   editor: '富文本控件',
+  slider: '滑块',
+  rate: '评分',
+  colorPicker: '颜色选择器',
+  treeSelect: '树选择',
+  cascader: '级联选择',
+  transfer: '穿梭框',
 };
 
 export const genHtmlTypeOptions = transformRecordToOption(genHtmlTypeRecord);
 
 /** gen type */
 export const genTypeRecord: Record<Api.Tool.GenType, string> = {
-  '0': 'ZIP 压缩包',
-  '1': '自定义路径',
+  ZIP: 'ZIP 压缩包',
+  PATH: '自定义路径',
 };
 
 export const genTypeOptions = transformRecordToOption(genTypeRecord);
@@ -96,6 +120,7 @@ export const genTypeOptions = transformRecordToOption(genTypeRecord);
 export const genTplCategoryRecord: Record<Api.Tool.TplCategory, string> = {
   crud: '单表（增删改查）',
   tree: '树表（增删改查）',
+  sub: '主子表（增删改查）',
 };
 
 export const genTplCategoryOptions = transformRecordToOption(genTplCategoryRecord);

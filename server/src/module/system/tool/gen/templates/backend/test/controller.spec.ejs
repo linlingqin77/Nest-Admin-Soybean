@@ -1,0 +1,181 @@
+/**
+ * <%= functionName %> 控制器单元测试
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Test, TestingModule } from '@nestjs/testing';
+import { <%= BusinessName %>Controller } from '../<%= businessName %>.controller';
+import { <%= BusinessName %>Service } from '../<%= businessName %>.service';
+import { Result } from 'src/common/response';
+import {
+  createCreate<%= BusinessName %>DtoFactory,
+  createUpdate<%= BusinessName %>DtoFactory,
+  createQuery<%= BusinessName %>DtoFactory,
+  create<%= BusinessName %>Entity,
+} from './factory';
+
+describe('<%= BusinessName %>Controller', () => {
+  let controller: <%= BusinessName %>Controller;
+  let service: <%= BusinessName %>Service;
+
+  const mockService = {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
+<% if (options.enableExport) { -%>
+    export: jest.fn(),
+<% } -%>
+<% if (options.enableImport) { -%>
+    import: jest.fn(),
+    importTemplate: jest.fn(),
+<% } -%>
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [<%= BusinessName %>Controller],
+      providers: [
+        {
+          provide: <%= BusinessName %>Service,
+          useValue: mockService,
+        },
+      ],
+    }).compile();
+
+    controller = module.get<<%= BusinessName %>Controller>(<%= BusinessName %>Controller);
+    service = module.get<<%= BusinessName %>Service>(<%= BusinessName %>Service);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a new <%= businessName %>', async () => {
+      const createDto = createCreate<%= BusinessName %>DtoFactory();
+      const expectedResult = create<%= BusinessName %>Entity();
+
+      mockService.create.mockResolvedValue(Result.ok(expectedResult));
+
+      const result = await controller.create(createDto);
+
+      expect(result.data).toEqual(expectedResult);
+      expect(mockService.create).toHaveBeenCalledWith(createDto);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return paginated list', async () => {
+      const query = createQuery<%= BusinessName %>DtoFactory();
+      const mockList = [create<%= BusinessName %>Entity(), create<%= BusinessName %>Entity()];
+
+      mockService.findAll.mockResolvedValue(Result.ok({
+        rows: mockList,
+        total: 2,
+      }));
+
+      const result = await controller.findAll(query);
+
+      expect(result.data.rows).toHaveLength(2);
+      expect(result.data.total).toBe(2);
+      expect(mockService.findAll).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a single <%= businessName %>', async () => {
+      const <%= primaryKey %> = '1';
+      const expectedResult = create<%= BusinessName %>Entity({ <%= primaryKey %>: 1 });
+
+      mockService.findOne.mockResolvedValue(Result.ok(expectedResult));
+
+      const result = await controller.findOne(<%= primaryKey %>);
+
+      expect(result.data).toEqual(expectedResult);
+      expect(mockService.findOne).toHaveBeenCalledWith(<%= primaryKey %>);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a <%= businessName %>', async () => {
+      const updateDto = createUpdate<%= BusinessName %>DtoFactory();
+
+      mockService.update.mockResolvedValue(Result.ok({ value: true }));
+
+      const result = await controller.update(updateDto);
+
+      expect(result.data.value).toBe(true);
+      expect(mockService.update).toHaveBeenCalledWith(updateDto);
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete <%= businessName %>s', async () => {
+      const <%= primaryKey %> = '1,2,3';
+
+      mockService.remove.mockResolvedValue(Result.ok({ value: true }));
+
+      const result = await controller.remove(<%= primaryKey %>);
+
+      expect(result.data.value).toBe(true);
+      expect(mockService.remove).toHaveBeenCalledWith([1, 2, 3]);
+    });
+  });
+<% if (options.enableExport) { -%>
+
+  describe('export', () => {
+    it('should export <%= businessName %> data', async () => {
+      const query = createQuery<%= BusinessName %>DtoFactory();
+      const mockRes = {
+        setHeader: jest.fn(),
+        end: jest.fn(),
+      };
+
+      mockService.export.mockResolvedValue(undefined);
+
+      await controller.export(query, mockRes as any);
+
+      expect(mockService.export).toHaveBeenCalledWith(query, mockRes);
+    });
+  });
+<% } -%>
+<% if (options.enableImport) { -%>
+
+  describe('import', () => {
+    it('should import <%= businessName %> data', async () => {
+      const mockFile = {
+        buffer: Buffer.from('test'),
+        originalname: 'test.xlsx',
+      };
+
+      mockService.import.mockResolvedValue(Result.ok({ count: 10 }));
+
+      const result = await controller.import(mockFile as any);
+
+      expect(result.data.count).toBe(10);
+      expect(mockService.import).toHaveBeenCalledWith(mockFile);
+    });
+  });
+
+  describe('importTemplate', () => {
+    it('should download import template', async () => {
+      const mockRes = {
+        setHeader: jest.fn(),
+        end: jest.fn(),
+      };
+
+      mockService.importTemplate.mockResolvedValue(undefined);
+
+      await controller.importTemplate(mockRes as any);
+
+      expect(mockService.importTemplate).toHaveBeenCalledWith(mockRes);
+    });
+  });
+<% } -%>
+});

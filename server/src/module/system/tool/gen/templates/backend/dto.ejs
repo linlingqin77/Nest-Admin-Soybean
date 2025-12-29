@@ -1,0 +1,116 @@
+/**
+ * <%= functionName %> DTO
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ApiProperty, ApiPropertyOptional, PartialType, OmitType } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, IsDate, MaxLength, Min, Max } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+
+/**
+ * <%= functionName %> 基础 DTO
+ */
+export class Base<%= BusinessName %>Dto {
+<% columns.forEach(function(col) { -%>
+<% if (col.isPk === '1') { -%>
+  @ApiProperty({ description: '<%= col.columnComment %>' })
+<% if (col.javaType === 'Number') { -%>
+  @IsNumber()
+<% } else { -%>
+  @IsString()
+<% } -%>
+  <%= col.javaField %>: <%= getTsType(col) %>;
+
+<% } else { -%>
+  @ApiPropertyOptional({ description: '<%= col.columnComment %>' })
+<% if (col.isRequired === '1') { -%>
+  @IsNotEmpty({ message: '<%= col.columnComment %>不能为空' })
+<% } else { -%>
+  @IsOptional()
+<% } -%>
+<% if (col.javaType === 'Number') { -%>
+  @IsNumber()
+  @Type(() => Number)
+<% } else if (col.javaType === 'Date') { -%>
+  @IsDate()
+  @Type(() => Date)
+<% } else { -%>
+  @IsString()
+<% } -%>
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+
+<% } -%>
+<% }); -%>
+}
+
+/**
+ * 创建 <%= functionName %> DTO
+ */
+export class Create<%= BusinessName %>Dto extends OmitType(Base<%= BusinessName %>Dto, ['<%= primaryKey %>'] as const) {
+<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.isRequired === '1') { -%>
+  @ApiProperty({ description: '<%= col.columnComment %>' })
+  @IsNotEmpty({ message: '<%= col.columnComment %>不能为空' })
+<% if (col.javaType === 'Number') { -%>
+  @IsNumber()
+  @Type(() => Number)
+<% } else if (col.javaType === 'Date') { -%>
+  @Type(() => Date)
+<% } else { -%>
+  @IsString()
+<% } -%>
+  <%= col.javaField %>: <%= getTsType(col) %>;
+
+<% } -%>
+<% }); -%>
+}
+
+/**
+ * 更新 <%= functionName %> DTO
+ */
+export class Update<%= BusinessName %>Dto extends PartialType(Create<%= BusinessName %>Dto) {
+  @ApiProperty({ description: '<%= pkColumn ? pkColumn.columnComment : '主键' %>' })
+  @IsNotEmpty({ message: '主键不能为空' })
+<% if (pkColumn && pkColumn.javaType === 'Number') { -%>
+  @IsNumber()
+  @Type(() => Number)
+<% } else { -%>
+  @IsString()
+<% } -%>
+  <%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %>;
+}
+
+/**
+ * 查询 <%= functionName %> DTO
+ */
+export class Query<%= BusinessName %>Dto extends PaginationDto {
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+  @ApiPropertyOptional({ description: '<%= col.columnComment %>范围', type: [String] })
+  @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.split(',') : value))
+  <%= col.javaField %>?: string[];
+
+<% } else { -%>
+  @ApiPropertyOptional({ description: '<%= col.columnComment %>' })
+  @IsOptional()
+<% if (col.javaType === 'Number') { -%>
+  @Type(() => Number)
+<% } -%>
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+
+<% } -%>
+<% }); -%>
+}
+
+/**
+ * 列表 <%= functionName %> DTO
+ */
+export class List<%= BusinessName %>Dto {
+<% listColumns.forEach(function(col) { -%>
+  @ApiPropertyOptional({ description: '<%= col.columnComment %>' })
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+
+<% }); -%>
+}

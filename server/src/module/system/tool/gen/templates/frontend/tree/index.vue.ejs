@@ -1,0 +1,180 @@
+<template>
+  <CommonPage>
+    <template #action>
+      <n-space>
+        <n-button v-permission="'<%= moduleName %>:<%= businessName %>:add'" type="primary" @click="handleAdd()">
+          <template #icon><n-icon :component="AddOutline" /></template>
+          新增
+        </n-button>
+        <n-button @click="handleExpandAll">
+          {{ expandAll ? '折叠全部' : '展开全部' }}
+        </n-button>
+      </n-space>
+    </template>
+
+    <!-- 搜索区域 -->
+    <Search ref="searchRef" @search="handleSearch" @reset="handleReset" />
+
+    <!-- 树形表格 -->
+    <n-data-table
+      ref="tableRef"
+      :columns="columns"
+      :data="tableData"
+      :loading="loading"
+      :row-key="(row) => row.<%= primaryKey %>"
+      :default-expand-all="expandAll"
+      :cascade="false"
+    />
+
+    <!-- 编辑抽屉 -->
+    <Drawer ref="drawerRef" :tree-data="treeSelectData" @success="handleSuccess" />
+  </CommonPage>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, h } from 'vue';
+import { NButton, NSpace, NPopconfirm, useMessage } from 'naive-ui';
+import { AddOutline } from '@vicons/ionicons5';
+import CommonPage from '@/components/common/CommonPage.vue';
+import Search from './modules/search.vue';
+import Drawer from './modules/drawer.vue';
+import { list<%= BusinessName %>, delete<%= BusinessName %>, treeSelect<%= BusinessName %> } from '@/api/<%= moduleName %>/<%= businessName %>';
+import type { <%= BusinessName %>VO, <%= BusinessName %>Query } from '@/api/<%= moduleName %>/<%= businessName %>/types';
+
+defineOptions({ name: '<%= BusinessName %>' });
+
+const message = useMessage();
+const searchRef = ref();
+const drawerRef = ref();
+const tableRef = ref();
+
+const loading = ref(false);
+const expandAll = ref(false);
+const tableData = ref<<%= BusinessName %>VO[]>([]);
+const treeSelectData = ref<any[]>([]);
+const queryParams = reactive<<%= BusinessName %>Query>({});
+
+const columns = [
+<% listColumns.forEach(function(col, index) { -%>
+<% if (index === 0) { -%>
+  { title: '<%= col.columnComment %>', key: '<%= col.javaField %>', tree: true },
+<% } else if (col.dictType) { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: <%= BusinessName %>VO) => {
+      return h('span', {}, getDictLabel('<%= col.dictType %>', row.<%= col.javaField %>));
+    },
+  },
+<% } else { -%>
+  { title: '<%= col.columnComment %>', key: '<%= col.javaField %>' },
+<% } -%>
+<% }); -%>
+  {
+    title: '操作',
+    key: 'actions',
+    width: 250,
+    render: (row: <%= BusinessName %>VO) => {
+      return h(NSpace, {}, () => [
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'primary',
+            text: true,
+            onClick: () => handleAdd(row.<%= primaryKey %>),
+          },
+          { default: () => '新增' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'info',
+            text: true,
+            onClick: () => handleEdit(row),
+          },
+          { default: () => '编辑' }
+        ),
+        h(
+          NPopconfirm,
+          {
+            onPositiveClick: () => handleDelete(row.<%= primaryKey %>),
+          },
+          {
+            trigger: () =>
+              h(
+                NButton,
+                { size: 'small', type: 'error', text: true },
+                { default: () => '删除' }
+              ),
+            default: () => '确认删除该记录吗？',
+          }
+        ),
+      ]);
+    },
+  },
+];
+
+/** 获取列表数据 */
+async function getList() {
+  loading.value = true;
+  try {
+    const res = await list<%= BusinessName %>(queryParams);
+    tableData.value = res.data;
+  } finally {
+    loading.value = false;
+  }
+}
+
+/** 获取树形下拉数据 */
+async function getTreeSelect() {
+  const res = await treeSelect<%= BusinessName %>();
+  treeSelectData.value = res.data;
+}
+
+/** 搜索 */
+function handleSearch(params: <%= BusinessName %>Query) {
+  Object.assign(queryParams, params);
+  getList();
+}
+
+/** 重置 */
+function handleReset() {
+  getList();
+}
+
+/** 展开/折叠全部 */
+function handleExpandAll() {
+  expandAll.value = !expandAll.value;
+}
+
+/** 新增 */
+function handleAdd(parentId?: number) {
+  drawerRef.value?.open(undefined, parentId);
+}
+
+/** 编辑 */
+function handleEdit(row: <%= BusinessName %>VO) {
+  drawerRef.value?.open(row.<%= primaryKey %>);
+}
+
+/** 删除 */
+async function handleDelete(<%= primaryKey %>: number) {
+  await delete<%= BusinessName %>(<%= primaryKey %>);
+  message.success('删除成功');
+  getList();
+  getTreeSelect();
+}
+
+/** 操作成功回调 */
+function handleSuccess() {
+  getList();
+  getTreeSelect();
+}
+
+onMounted(() => {
+  getList();
+  getTreeSelect();
+});
+</script>

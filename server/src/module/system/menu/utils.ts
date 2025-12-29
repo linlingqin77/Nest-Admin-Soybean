@@ -2,34 +2,61 @@ import { isURL } from 'class-validator';
 import * as Lodash from 'lodash';
 import * as UserConstants from 'src/module/system/user/user.constant';
 
+// Prisma 枚举值
+const MENU_TYPE = {
+  DIRECTORY: 'DIRECTORY',
+  MENU: 'MENU',
+  BUTTON: 'BUTTON',
+};
+
+const YES_NO = {
+  YES: 'YES',
+  NO: 'NO',
+};
+
 /**
  * 菜单列表转树形结构
  * @param arr
  */
 export const buildMenus = (arr) => {
-  //保证父级菜单排在前面
-  arr.sort((a, b) => a.parentId - b.parentId);
+  // 按 orderNum 排序
+  arr.sort((a, b) => a.orderNum - b.orderNum);
+  
   const kData = {}; // 以id做key的对象 暂时储存数据
   const lData = []; // 最终的数据 arr
+  
+  // 第一遍：先将所有菜单存入 kData
   arr.forEach((m) => {
-    m = {
+    const menuItem = {
       ...m,
       id: m.menuId,
       parentId: m.parentId,
+      children: [],
     };
-    kData[m.id] = {
-      ...m,
-      id: m.id,
-      parentId: m.parentId,
-    };
+    kData[m.menuId] = menuItem;
+  });
+  
+  // 第二遍：构建树形结构
+  arr.forEach((m) => {
     if (m.parentId === 0) {
-      lData.push(kData[m.id]);
-    } else {
-      kData[m.parentId] = kData[m.parentId] || {};
-      kData[m.parentId].children = kData[m.parentId].children || [];
-      kData[m.parentId].children.push(kData[m.id]);
+      lData.push(kData[m.menuId]);
+    } else if (kData[m.parentId]) {
+      kData[m.parentId].children.push(kData[m.menuId]);
     }
   });
+  
+  // 移除空的 children 数组
+  const cleanEmptyChildren = (items) => {
+    items.forEach((item) => {
+      if (item.children && item.children.length === 0) {
+        delete item.children;
+      } else if (item.children) {
+        cleanEmptyChildren(item.children);
+      }
+    });
+  };
+  cleanEmptyChildren(lData);
+  
   return formatTreeNodeBuildMenus(lData);
 };
 
@@ -42,7 +69,7 @@ export const buildMenus = (arr) => {
 const formatTreeNodeBuildMenus = (menus: any[]): any[] => {
   return menus.map((menu) => {
     const router: any = {};
-    router.hidden = menu.visible === '1';
+    router.hidden = menu.visible === YES_NO.YES;
     router.name = getRouteName(menu);
     router.path = getRouterPath(menu);
     router.component = getComponent(menu);
@@ -50,7 +77,7 @@ const formatTreeNodeBuildMenus = (menus: any[]): any[] => {
     router.meta = setMeta(menu);
 
     const hasChildren = menu.children && menu.children.length > 0;
-    const isDirectory = menu.menuType === UserConstants.TYPE_DIR;
+    const isDirectory = menu.menuType === MENU_TYPE.DIRECTORY;
 
     if (hasChildren && isDirectory) {
       router.alwaysShow = true;
@@ -98,7 +125,7 @@ const setMeta = (menu) => {
   const meta = {
     title: menu.menuName,
     icon: menu.icon,
-    noCache: menu.isCache === '1',
+    noCache: menu.isCache === YES_NO.YES,
   };
 
   if (isURL(menu.link)) {
@@ -122,6 +149,7 @@ const getRouteName = (menu) => {
   }
   return routerName;
 };
+
 /**
  * 是否为菜单内部跳转
  *
@@ -129,7 +157,7 @@ const getRouteName = (menu) => {
  * @return 结果
  */
 const isMenuFrame = (menu): boolean => {
-  return menu.parentId === 0 && menu.menuType === UserConstants.TYPE_MENU && menu.isFrame === UserConstants.NO_FRAME;
+  return menu.parentId === 0 && menu.menuType === MENU_TYPE.MENU && menu.isFrame === YES_NO.YES;
 };
 
 /**
@@ -139,7 +167,7 @@ const isMenuFrame = (menu): boolean => {
  * @return 结果
  */
 const isInnerLink = (menu): boolean => {
-  return menu.isFrame === UserConstants.NO_FRAME && isURL(menu.path);
+  return menu.isFrame === YES_NO.YES && isURL(menu.path);
 };
 
 /**
@@ -149,7 +177,7 @@ const isInnerLink = (menu): boolean => {
  * @return 结果
  */
 const isParentView = (menu): boolean => {
-  return menu.parentId !== 0 && menu.menuType === UserConstants.TYPE_DIR;
+  return menu.parentId !== 0 && menu.menuType === MENU_TYPE.DIRECTORY;
 };
 
 /**
@@ -205,7 +233,7 @@ const getRouterPath = (menu): string => {
     routerPath = innerLinkReplaceEach(routerPath);
   }
   // 非外链并且是一级目录（类型为目录）
-  if (menu.parentId === 0 && menu.menuType === UserConstants.TYPE_DIR && menu.isFrame === UserConstants.NO_FRAME) {
+  if (menu.parentId === 0 && menu.menuType === MENU_TYPE.DIRECTORY && menu.isFrame === YES_NO.YES) {
     routerPath = '/' + menu.path;
   }
   // 非外链并且是一级目录（类型为菜单）

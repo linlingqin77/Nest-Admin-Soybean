@@ -1,0 +1,148 @@
+<script setup lang="tsx">
+/**
+ * <%= functionName %> 表格列配置组件
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ref, computed, watch } from 'vue';
+import { NPopover, NCheckbox, NCheckboxGroup, NButton, NSpace, NDivider, NIcon } from 'naive-ui';
+import { useStorage } from '@vueuse/core';
+
+defineOptions({
+  name: '<%= BusinessName %>ColumnSetting',
+});
+
+interface ColumnConfig {
+  key: string;
+  title: string;
+  visible: boolean;
+  fixed?: 'left' | 'right' | false;
+  width?: number;
+}
+
+interface Props {
+  storageKey?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  storageKey: '<%= businessName %>-columns',
+});
+
+interface Emits {
+  (e: 'change', columns: ColumnConfig[]): void;
+}
+
+const emit = defineEmits<Emits>();
+
+// 默认列配置
+const defaultColumns: ColumnConfig[] = [
+<% listColumns.forEach(function(col, index) { -%>
+  { key: '<%= col.javaField %>', title: '<%= col.columnComment %>', visible: true<% if (index === 0) { %>, fixed: 'left'<% } %> },
+<% }); -%>
+  { key: 'actions', title: '操作', visible: true, fixed: 'right', width: 150 },
+];
+
+// 从本地存储读取配置
+const storedColumns = useStorage<ColumnConfig[]>(props.storageKey, defaultColumns);
+
+// 当前列配置
+const columns = ref<ColumnConfig[]>([...storedColumns.value]);
+
+// 选中的列
+const checkedColumns = computed({
+  get: () => columns.value.filter(col => col.visible).map(col => col.key),
+  set: (keys: string[]) => {
+    columns.value = columns.value.map(col => ({
+      ...col,
+      visible: keys.includes(col.key),
+    }));
+  },
+});
+
+// 全选状态
+const isAllChecked = computed(() => columns.value.every(col => col.visible));
+const isIndeterminate = computed(() => {
+  const visibleCount = columns.value.filter(col => col.visible).length;
+  return visibleCount > 0 && visibleCount < columns.value.length;
+});
+
+// 监听变化并保存
+watch(columns, (newColumns) => {
+  storedColumns.value = newColumns;
+  emit('change', newColumns);
+}, { deep: true });
+
+function handleCheckAll(checked: boolean) {
+  columns.value = columns.value.map(col => ({
+    ...col,
+    visible: checked,
+  }));
+}
+
+function handleReset() {
+  columns.value = [...defaultColumns];
+}
+
+// 固定列
+function handleFixColumn(key: string, fixed: 'left' | 'right' | false) {
+  const index = columns.value.findIndex(col => col.key === key);
+  if (index !== -1) {
+    columns.value[index].fixed = fixed;
+  }
+}
+</script>
+
+<template>
+  <NPopover trigger="click" placement="bottom-end">
+    <template #trigger>
+      <NButton quaternary>
+        <template #icon>
+          <icon-ic-round-settings class="text-icon" />
+        </template>
+        列设置
+      </NButton>
+    </template>
+    <div class="w-200px">
+      <div class="flex items-center justify-between mb-2">
+        <NCheckbox
+          :checked="isAllChecked"
+          :indeterminate="isIndeterminate"
+          @update:checked="handleCheckAll"
+        >
+          全选
+        </NCheckbox>
+        <NButton text size="small" @click="handleReset">重置</NButton>
+      </div>
+      <NDivider class="my-2" />
+      <NCheckboxGroup v-model:value="checkedColumns">
+        <div class="flex flex-col gap-2">
+          <div
+            v-for="col in columns"
+            :key="col.key"
+            class="flex items-center justify-between"
+          >
+            <NCheckbox :value="col.key" :label="col.title" />
+            <NSpace size="small">
+              <NButton
+                text
+                size="tiny"
+                :type="col.fixed === 'left' ? 'primary' : 'default'"
+                @click="handleFixColumn(col.key, col.fixed === 'left' ? false : 'left')"
+              >
+                <icon-ic-round-push-pin class="text-icon rotate-[-45deg]" />
+              </NButton>
+              <NButton
+                text
+                size="tiny"
+                :type="col.fixed === 'right' ? 'primary' : 'default'"
+                @click="handleFixColumn(col.key, col.fixed === 'right' ? false : 'right')"
+              >
+                <icon-ic-round-push-pin class="text-icon rotate-45" />
+              </NButton>
+            </NSpace>
+          </div>
+        </div>
+      </NCheckboxGroup>
+    </div>
+  </NPopover>
+</template>

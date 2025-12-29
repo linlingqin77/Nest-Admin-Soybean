@@ -251,7 +251,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
           await TenantContext.run({ tenantId }, async () => {
             await this.noticeService.create({
               noticeTitle: `存储空间${status}`,
-              noticeType: '1', // 系统通知
+              noticeType: 'NOTICE', // 系统通知 (Prisma 枚举名)
               noticeContent,
               status: StatusEnum.NORMAL,
             });

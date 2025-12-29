@@ -1,0 +1,52 @@
+/**
+ * <%= functionName %> 类型定义
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+
+/**
+ * <%= functionName %> VO
+ */
+export interface <%= BusinessName %>VO {
+<% columns.forEach(function(col) { -%>
+  /** <%= col.columnComment %> */
+  <%= col.javaField %><%= col.isRequired === '1' ? '' : '?' %>: <%= getTsType(col) %>;
+<% }); -%>
+}
+
+/**
+ * <%= functionName %> 表单
+ */
+export interface <%= BusinessName %>Form {
+<% formColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+  /** <%= col.columnComment %> */
+<% if (col.htmlType === 'checkbox') { -%>
+  <%= col.javaField %>?: string[];
+<% } else { -%>
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+<% } -%>
+<% }); -%>
+}
+
+/**
+ * <%= functionName %> 查询参数
+ */
+export interface <%= BusinessName %>Query {
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+  /** <%= col.columnComment %>范围 */
+  <%= col.javaField %>?: [number, number] | undefined;
+<% } else { -%>
+  /** <%= col.columnComment %> */
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+<% } -%>
+<% }); -%>
+  /** 页码 */
+  pageNum?: number;
+  /** 每页数量 */
+  pageSize?: number;
+  /** 排序字段 */
+  orderByColumn?: string;
+  /** 排序方向 */
+  isAsc?: 'ascending' | 'descending';
+}

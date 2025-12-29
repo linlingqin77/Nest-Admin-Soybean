@@ -1,0 +1,202 @@
+<script setup lang="tsx">
+/**
+ * <%= functionName %> 批量编辑组件
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ref, computed } from 'vue';
+import { NModal, NForm, NFormItem, NInput, NInputNumber, NSelect, NDatePicker, NSwitch, NButton, NSpace, useMessage } from 'naive-ui';
+<% if (hasDict) { -%>
+import { useDict } from '@/hooks/common/dict';
+<% } -%>
+import { fetchUpdate<%= BusinessName %> } from '@/service/api/<%= moduleName %>/<%= businessName %>';
+
+defineOptions({
+  name: '<%= BusinessName %>BatchEdit',
+});
+
+interface Props {
+  selectedRows: Api.<%= BusinessName %>.<%= BusinessName %>[];
+}
+
+const props = defineProps<Props>();
+
+interface Emits {
+  (e: 'success'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const message = useMessage();
+
+<% if (hasDict) { -%>
+// 字典数据
+<% dictTypes.forEach(function(dictType) { -%>
+const { options: <%= dictType %>Options } = useDict('<%= dictType %>');
+<% }); -%>
+<% } -%>
+
+// 弹窗状态
+const visible = ref(false);
+const loading = ref(false);
+
+// 批量编辑的字段
+const batchFields = ref<Record<string, boolean>>({
+<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+  <%= col.javaField %>: false,
+<% }); -%>
+});
+
+// 批量编辑的值
+const batchValues = ref<Partial<Api.<%= BusinessName %>.<%= BusinessName %>>>({});
+
+// 打开弹窗
+function open() {
+  visible.value = true;
+  // 重置
+  Object.keys(batchFields.value).forEach(key => {
+    batchFields.value[key] = false;
+  });
+  batchValues.value = {};
+}
+
+// 关闭弹窗
+function close() {
+  visible.value = false;
+}
+
+// 提交批量编辑
+async function handleSubmit() {
+  const selectedFields = Object.entries(batchFields.value)
+    .filter(([_, selected]) => selected)
+    .map(([key]) => key);
+
+  if (selectedFields.length === 0) {
+    message.warning('请至少选择一个要修改的字段');
+    return;
+  }
+
+  if (props.selectedRows.length === 0) {
+    message.warning('请选择要修改的数据');
+    return;
+  }
+
+  loading.value = true;
+  try {
+    // 构建更新数据
+    const updateData: Partial<Api.<%= BusinessName %>.<%= BusinessName %>> = {};
+    selectedFields.forEach(field => {
+      updateData[field as keyof Api.<%= BusinessName %>.<%= BusinessName %>] = batchValues.value[field as keyof Api.<%= BusinessName %>.<%= BusinessName %>];
+    });
+
+    // 批量更新
+    const promises = props.selectedRows.map(row => 
+      fetchUpdate<%= BusinessName %>({
+        <%= primaryKey %>: row.<%= primaryKey %>,
+        ...updateData,
+      } as Api.<%= BusinessName %>.<%= BusinessName %>OperateParams)
+    );
+
+    await Promise.all(promises);
+    message.success(`成功更新 ${props.selectedRows.length} 条数据`);
+    close();
+    emit('success');
+  } catch (error) {
+    message.error('批量更新失败');
+  } finally {
+    loading.value = false;
+  }
+}
+
+defineExpose({
+  open,
+  close,
+});
+</script>
+
+<template>
+  <NModal
+    v-model:show="visible"
+    preset="card"
+    title="批量编辑"
+    :style="{ width: '600px' }"
+    :mask-closable="false"
+  >
+    <div class="mb-4 text-gray-500">
+      已选择 {{ selectedRows.length }} 条数据，勾选要修改的字段并填写新值
+    </div>
+    
+    <NForm label-placement="left" label-width="120px">
+<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+      <NFormItem label="<%= col.columnComment %>">
+        <div class="flex items-center gap-2 w-full">
+          <NSwitch v-model:value="batchFields.<%= col.javaField %>" size="small" />
+<% if (col.htmlType === 'input') { -%>
+          <NInput
+            v-model:value="batchValues.<%= col.javaField %>"
+            placeholder="请输入<%= col.columnComment %>"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else if (col.htmlType === 'textarea') { -%>
+          <NInput
+            v-model:value="batchValues.<%= col.javaField %>"
+            type="textarea"
+            placeholder="请输入<%= col.columnComment %>"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else if (col.htmlType === 'number') { -%>
+          <NInputNumber
+            v-model:value="batchValues.<%= col.javaField %>"
+            placeholder="请输入<%= col.columnComment %>"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else if (col.htmlType === 'select') { -%>
+          <NSelect
+            v-model:value="batchValues.<%= col.javaField %>"
+            placeholder="请选择<%= col.columnComment %>"
+<% if (col.dictType) { -%>
+            :options="<%= col.dictType %>Options"
+<% } -%>
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else if (col.htmlType === 'switch' || col.htmlType === 'radio') { -%>
+          <NSelect
+            v-model:value="batchValues.<%= col.javaField %>"
+            placeholder="请选择<%= col.columnComment %>"
+            :options="[{ label: '是', value: '1' }, { label: '否', value: '0' }]"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else if (col.htmlType === 'date' || col.htmlType === 'datetime') { -%>
+          <NDatePicker
+            v-model:value="batchValues.<%= col.javaField %>"
+            type="<%= col.htmlType === 'datetime' ? 'datetime' : 'date' %>"
+            placeholder="请选择<%= col.columnComment %>"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } else { -%>
+          <NInput
+            v-model:value="batchValues.<%= col.javaField %>"
+            placeholder="请输入<%= col.columnComment %>"
+            :disabled="!batchFields.<%= col.javaField %>"
+            class="flex-1"
+          />
+<% } -%>
+        </div>
+      </NFormItem>
+<% }); -%>
+    </NForm>
+
+    <template #footer>
+      <NSpace justify="end">
+        <NButton @click="close">取消</NButton>
+        <NButton type="primary" :loading="loading" @click="handleSubmit">确定</NButton>
+      </NSpace>
+    </template>
+  </NModal>
+</template>

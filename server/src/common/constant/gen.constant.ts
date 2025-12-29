@@ -98,6 +98,15 @@ export class GenConstants {
   /** 日期控件 */
   public static readonly HTML_DATETIME: string = 'datetime';
 
+  /** 日期控件 */
+  public static readonly HTML_DATE: string = 'date';
+
+  /** 数字输入框 */
+  public static readonly HTML_NUMBER: string = 'number';
+
+  /** 开关控件 */
+  public static readonly HTML_SWITCH: string = 'switch';
+
   /** 图片上传控件 */
   public static readonly HTML_IMAGE_UPLOAD: string = 'imageUpload';
 

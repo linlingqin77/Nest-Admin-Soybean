@@ -13601,63 +13601,8 @@
     "/api/tool/gen/list": {
       "get": {
         "description": "分页查询已导入的数据表列表",
-        "operationId": "ToolController_findAll",
-        "parameters": [
-          {
-            "name": "pageNum",
-            "required": false,
-            "in": "query",
-            "description": "页码",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "pageSize",
-            "required": false,
-            "in": "query",
-            "description": "每页条数",
-            "schema": {
-              "minimum": 1,
-              "maximum": 100,
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "orderByColumn",
-            "required": false,
-            "in": "query",
-            "description": "排序字段",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isAsc",
-            "required": false,
-            "in": "query",
-            "description": "排序方向",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "params",
-            "required": false,
-            "in": "query",
-            "description": "时间范围",
-            "schema": {
-              "$ref": "#/components/schemas/DateRangeDto"
-            }
-          }
-        ],
+        "operationId": "GenController_listGenTables",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "操作成功",
@@ -13762,72 +13707,17 @@
             "Authorization": []
           }
         ],
-        "summary": "数据表列表",
+        "summary": "查询已导入表列表",
         "tags": [
-          "系统工具"
+          "代码生成"
         ]
       }
     },
     "/api/tool/gen/db/list": {
       "get": {
         "description": "查询数据库中未导入的表",
-        "operationId": "ToolController_genDbList",
-        "parameters": [
-          {
-            "name": "pageNum",
-            "required": false,
-            "in": "query",
-            "description": "页码",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "pageSize",
-            "required": false,
-            "in": "query",
-            "description": "每页条数",
-            "schema": {
-              "minimum": 1,
-              "maximum": 100,
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "orderByColumn",
-            "required": false,
-            "in": "query",
-            "description": "排序字段",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isAsc",
-            "required": false,
-            "in": "query",
-            "description": "排序方向",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "params",
-            "required": false,
-            "in": "query",
-            "description": "时间范围",
-            "schema": {
-              "$ref": "#/components/schemas/DateRangeDto"
-            }
-          }
-        ],
+        "operationId": "GenController_listDbTables",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "操作成功",
@@ -13934,7 +13824,7 @@
         ],
         "summary": "查询数据库表列表",
         "tags": [
-          "系统工具"
+          "代码生成"
         ]
       }
     },
@@ -14056,14 +13946,14 @@
     "/api/tool/gen/importTable": {
       "post": {
         "description": "将数据库表导入到代码生成列表",
-        "operationId": "ToolController_genImportTable",
+        "operationId": "GenController_importTable",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TableName"
+                "$ref": "#/components/schemas/ImportTableDto"
               }
             }
           }
@@ -14177,7 +14067,7 @@
         ],
         "summary": "导入表",
         "tags": [
-          "系统工具"
+          "代码生成"
         ]
       }
     },
@@ -14557,14 +14447,14 @@
     "/api/tool/gen": {
       "put": {
         "description": "修改表的代码生成配置",
-        "operationId": "ToolController_genUpdate",
+        "operationId": "GenController_updateGenTable",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GenTableUpdate"
+                "$ref": "#/components/schemas/UpdateGenTableDto"
               }
             }
           }
@@ -14673,9 +14563,9 @@
             "Authorization": []
           }
         ],
-        "summary": "修改代码生成信息",
+        "summary": "修改代码生成配置",
         "tags": [
-          "系统工具"
+          "代码生成"
         ]
       }
     },
@@ -14926,6 +14816,882 @@
         "summary": "预览生成代码",
         "tags": [
           "系统工具"
+        ]
+      }
+    },
+    "/api/tool/gen/{tableId}": {
+      "get": {
+        "description": "获取代码生成表详情，包含字段信息",
+        "operationId": "GenController_getGenTable",
+        "parameters": [
+          {
+            "name": "tableId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "查询表详情",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/{tableIds}": {
+      "delete": {
+        "description": "从代码生成列表中删除表",
+        "operationId": "GenController_removeGenTable",
+        "parameters": [
+          {
+            "name": "tableIds",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "删除表配置",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/preview/{tableId}": {
+      "get": {
+        "description": "在线预览生成的代码内容",
+        "operationId": "GenController_previewCode",
+        "parameters": [
+          {
+            "name": "tableId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "预览代码",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/download/{tableName}": {
+      "get": {
+        "description": "生成代码并下载为zip压缩包",
+        "operationId": "GenController_downloadCode",
+        "parameters": [
+          {
+            "name": "tableName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "下载代码",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/batchGenCode": {
+      "get": {
+        "description": "批量生成代码并下载为zip压缩包",
+        "operationId": "GenController_batchGenCode",
+        "parameters": [
+          {
+            "name": "tables",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "批量生成代码",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/genCode/{tableName}": {
+      "get": {
+        "description": "生成代码到指定目录",
+        "operationId": "GenController_genCodeToPath",
+        "parameters": [
+          {
+            "name": "tableName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "genPath",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "生成代码到路径",
+        "tags": [
+          "代码生成"
+        ]
+      }
+    },
+    "/api/tool/gen/synchDb/{tableId}": {
+      "get": {
+        "description": "从数据库同步表字段结构",
+        "operationId": "GenController_syncTable",
+        "parameters": [
+          {
+            "name": "tableId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Result"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean",
+                              "default": true
+                            }
+                          },
+                          "nullable": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录或登录已过期",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "请先登录"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无权限访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "没有操作权限"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "系统异常"
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "summary": "同步表结构",
+        "tags": [
+          "代码生成"
         ]
       }
     },
@@ -27587,13 +28353,13 @@
       },
       "DataScopeEnum": {
         "type": "string",
-        "description": "数据权限范围枚举\n- DATA_SCOPE_ALL (1): 全部数据权限\n- DATA_SCOPE_CUSTOM (2): 自定数据权限\n- DATA_SCOPE_DEPT (3): 本部门数据权限\n- DATA_SCOPE_DEPT_AND_CHILD (4): 本部门及以下数据权限\n- DATA_SCOPE_SELF (5): 仅本人数据权限",
+        "description": "数据权限范围枚举\n- ALL: 全部数据权限\n- CUSTOM: 自定数据权限\n- DEPT: 本部门数据权限\n- DEPT_AND_CHILD: 本部门及以下数据权限\n- SELF: 仅本人数据权限",
         "enum": [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5"
+          "ALL",
+          "CUSTOM",
+          "DEPT",
+          "DEPT_AND_CHILD",
+          "SELF"
         ]
       },
       "RoleVo": {
@@ -28462,17 +29228,175 @@
           "tableNames"
         ]
       },
+      "GenOptionsDto": {
+        "type": "object",
+        "properties": {
+          "treeCode": {
+            "type": "string",
+            "description": "树编码字段"
+          },
+          "treeParentCode": {
+            "type": "string",
+            "description": "树父编码字段"
+          },
+          "treeName": {
+            "type": "string",
+            "description": "树名称字段"
+          },
+          "parentMenuId": {
+            "type": "number",
+            "description": "上级菜单ID"
+          },
+          "parentMenuName": {
+            "type": "string",
+            "description": "上级菜单名称"
+          },
+          "enableDataScope": {
+            "type": "boolean",
+            "description": "是否启用数据权限"
+          },
+          "dataScopeColumn": {
+            "type": "string",
+            "description": "数据权限关联字段"
+          },
+          "dataScopeType": {
+            "enum": [
+              "ALL",
+              "CUSTOM",
+              "DEPT",
+              "DEPT_AND_CHILD",
+              "SELF"
+            ],
+            "type": "string",
+            "description": "数据权限类型"
+          },
+          "enableExport": {
+            "type": "boolean",
+            "description": "是否启用导出功能"
+          },
+          "enableImport": {
+            "type": "boolean",
+            "description": "是否启用导入功能"
+          },
+          "exportFields": {
+            "description": "导出字段列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "importFields": {
+            "description": "导入字段列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exportFileName": {
+            "type": "string",
+            "description": "导出文件名模板"
+          },
+          "enableTenant": {
+            "type": "boolean",
+            "description": "是否启用多租户"
+          },
+          "tenantColumn": {
+            "type": "string",
+            "description": "租户字段名"
+          },
+          "enableOperlog": {
+            "type": "boolean",
+            "description": "是否启用操作日志"
+          },
+          "operlogTitle": {
+            "type": "string",
+            "description": "操作日志标题"
+          },
+          "enableAdvancedSearch": {
+            "type": "boolean",
+            "description": "是否启用高级搜索"
+          },
+          "defaultSortField": {
+            "type": "string",
+            "description": "默认排序字段"
+          },
+          "defaultSortOrder": {
+            "type": "object",
+            "description": "默认排序方向"
+          },
+          "enableColumnResize": {
+            "type": "boolean",
+            "description": "是否启用列宽调整"
+          },
+          "enableColumnToggle": {
+            "type": "boolean",
+            "description": "是否启用列显示切换"
+          },
+          "enableInlineEdit": {
+            "type": "boolean",
+            "description": "是否启用行内编辑"
+          },
+          "enableBatchEdit": {
+            "type": "boolean",
+            "description": "是否启用批量编辑"
+          },
+          "tableHeight": {
+            "type": "number",
+            "description": "表格固定高度"
+          },
+          "apiGroup": {
+            "type": "string",
+            "description": "API 分组名称"
+          },
+          "apiDescription": {
+            "type": "string",
+            "description": "API 描述"
+          },
+          "enableUnitTest": {
+            "type": "boolean",
+            "description": "是否生成单元测试"
+          },
+          "enableE2ETest": {
+            "type": "boolean",
+            "description": "是否生成 E2E 测试"
+          }
+        }
+      },
       "GenTableUpdate": {
         "type": "object",
         "properties": {
           "tableId": {
             "type": "number",
             "description": "表ID"
+          },
+          "subTableName": {
+            "type": "string",
+            "description": "关联子表的表名"
+          },
+          "subTableFkName": {
+            "type": "string",
+            "description": "子表关联的外键名"
+          },
+          "genOptions": {
+            "description": "企业级功能配置",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GenOptionsDto"
+              }
+            ]
           }
         },
         "required": [
           "tableId"
         ]
+      },
+      "ImportTableDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateGenTableDto": {
+        "type": "object",
+        "properties": {}
       },
       "UserVo": {
         "type": "object",

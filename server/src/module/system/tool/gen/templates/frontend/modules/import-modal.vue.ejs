@@ -1,0 +1,278 @@
+<script setup lang="tsx">
+/**
+ * <%= functionName %> 导入弹窗组件
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ref, computed } from 'vue';
+import { NModal, NUpload, NButton, NSpace, NDataTable, NAlert, NProgress, useMessage } from 'naive-ui';
+import type { UploadFileInfo, DataTableColumns } from 'naive-ui';
+import { fetchImport<%= BusinessName %>, fetchImportTemplate } from '@/service/api/<%= moduleName %>/<%= businessName %>';
+
+defineOptions({
+  name: '<%= BusinessName %>ImportModal',
+});
+
+interface Emits {
+  (e: 'success'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const message = useMessage();
+
+// 弹窗状态
+const visible = ref(false);
+const loading = ref(false);
+const step = ref<'upload' | 'preview' | 'result'>('upload');
+
+// 上传文件
+const fileList = ref<UploadFileInfo[]>([]);
+
+// 预览数据
+const previewData = ref<any[]>([]);
+const errorData = ref<{ row: number; field: string; message: string }[]>([]);
+
+// 导入结果
+const importResult = ref<{ success: number; failed: number; errors: string[] }>({
+  success: 0,
+  failed: 0,
+  errors: [],
+});
+
+// 预览表格列
+const previewColumns = computed<DataTableColumns<any>>(() => [
+  { title: '行号', key: '_rowIndex', width: 60 },
+<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+  { title: '<%= col.columnComment %>', key: '<%= col.javaField %>', width: <%= col.columnWidth || 120 %> },
+<% }); -%>
+]);
+
+// 错误表格列
+const errorColumns: DataTableColumns<any> = [
+  { title: '行号', key: 'row', width: 60 },
+  { title: '字段', key: 'field', width: 100 },
+  { title: '错误信息', key: 'message' },
+];
+
+// 打开弹窗
+function open() {
+  visible.value = true;
+  step.value = 'upload';
+  fileList.value = [];
+  previewData.value = [];
+  errorData.value = [];
+  importResult.value = { success: 0, failed: 0, errors: [] };
+}
+
+// 关闭弹窗
+function close() {
+  visible.value = false;
+}
+
+// 下载模板
+async function handleDownloadTemplate() {
+  try {
+    const response = await fetchImportTemplate();
+    // 处理文件下载
+    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = '<%= businessName %>_template.xlsx';
+    link.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    message.error('下载模板失败');
+  }
+}
+
+// 文件变化
+function handleFileChange(options: { fileList: UploadFileInfo[] }) {
+  fileList.value = options.fileList;
+}
+
+// 解析文件预览
+async function handlePreview() {
+  if (fileList.value.length === 0) {
+    message.warning('请先选择文件');
+    return;
+  }
+
+  const file = fileList.value[0].file;
+  if (!file) return;
+
+  // 这里可以使用 xlsx 库解析文件进行预览
+  // 简化处理，直接进入导入步骤
+  step.value = 'preview';
+  
+  // 模拟预览数据（实际应该解析 Excel）
+  previewData.value = [];
+}
+
+// 执行导入
+async function handleImport() {
+  if (fileList.value.length === 0) {
+    message.warning('请先选择文件');
+    return;
+  }
+
+  const file = fileList.value[0].file;
+  if (!file) return;
+
+  loading.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const result = await fetchImport<%= BusinessName %>(formData);
+    
+    importResult.value = {
+      success: result.data?.count || 0,
+      failed: 0,
+      errors: [],
+    };
+    
+    step.value = 'result';
+    message.success(`成功导入 ${importResult.value.success} 条数据`);
+    emit('success');
+  } catch (error: any) {
+    importResult.value = {
+      success: 0,
+      failed: 0,
+      errors: [error.message || '导入失败'],
+    };
+    step.value = 'result';
+  } finally {
+    loading.value = false;
+  }
+}
+
+defineExpose({
+  open,
+  close,
+});
+</script>
+
+<template>
+  <NModal
+    v-model:show="visible"
+    preset="card"
+    title="导入<%= functionName %>"
+    :style="{ width: '800px' }"
+    :mask-closable="false"
+  >
+    <!-- 上传步骤 -->
+    <template v-if="step === 'upload'">
+      <NAlert type="info" class="mb-4">
+        <template #header>导入说明</template>
+        <ol class="list-decimal pl-4">
+          <li>请先下载导入模板，按照模板格式填写数据</li>
+          <li>支持 .xlsx、.xls 格式的 Excel 文件</li>
+          <li>单次导入数据量建议不超过 1000 条</li>
+        </ol>
+      </NAlert>
+
+      <div class="flex justify-center mb-4">
+        <NButton type="primary" ghost @click="handleDownloadTemplate">
+          <template #icon>
+            <icon-ic-round-download class="text-icon" />
+          </template>
+          下载导入模板
+        </NButton>
+      </div>
+
+      <NUpload
+        :file-list="fileList"
+        :max="1"
+        accept=".xlsx,.xls"
+        :default-upload="false"
+        @change="handleFileChange"
+      >
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary">
+          <icon-ic-round-cloud-upload class="text-4xl text-gray-400 mb-2" />
+          <p class="text-gray-500">点击或拖拽文件到此处上传</p>
+          <p class="text-gray-400 text-sm">支持 .xlsx、.xls 格式</p>
+        </div>
+      </NUpload>
+    </template>
+
+    <!-- 预览步骤 -->
+    <template v-else-if="step === 'preview'">
+      <NAlert v-if="errorData.length > 0" type="warning" class="mb-4">
+        发现 {{ errorData.length }} 条数据存在问题，请检查后重新上传
+      </NAlert>
+
+      <div v-if="errorData.length > 0" class="mb-4">
+        <h4 class="font-medium mb-2">错误数据</h4>
+        <NDataTable
+          :columns="errorColumns"
+          :data="errorData"
+          :max-height="200"
+          size="small"
+        />
+      </div>
+
+      <div v-if="previewData.length > 0">
+        <h4 class="font-medium mb-2">预览数据（前 10 条）</h4>
+        <NDataTable
+          :columns="previewColumns"
+          :data="previewData.slice(0, 10)"
+          :max-height="300"
+          size="small"
+        />
+        <p class="text-gray-500 text-sm mt-2">共 {{ previewData.length }} 条数据</p>
+      </div>
+    </template>
+
+    <!-- 结果步骤 -->
+    <template v-else-if="step === 'result'">
+      <div class="text-center py-8">
+        <template v-if="importResult.success > 0">
+          <icon-ic-round-check-circle class="text-6xl text-success mb-4" />
+          <h3 class="text-xl font-medium mb-2">导入完成</h3>
+          <p class="text-gray-500">
+            成功导入 <span class="text-success font-medium">{{ importResult.success }}</span> 条数据
+            <template v-if="importResult.failed > 0">
+              ，失败 <span class="text-error font-medium">{{ importResult.failed }}</span> 条
+            </template>
+          </p>
+        </template>
+        <template v-else>
+          <icon-ic-round-error class="text-6xl text-error mb-4" />
+          <h3 class="text-xl font-medium mb-2">导入失败</h3>
+          <p class="text-gray-500">{{ importResult.errors[0] || '未知错误' }}</p>
+        </template>
+      </div>
+
+      <div v-if="importResult.errors.length > 0" class="mt-4">
+        <NAlert type="error">
+          <template #header>错误详情</template>
+          <ul class="list-disc pl-4">
+            <li v-for="(error, index) in importResult.errors" :key="index">{{ error }}</li>
+          </ul>
+        </NAlert>
+      </div>
+    </template>
+
+    <template #footer>
+      <NSpace justify="end">
+        <NButton @click="close">{{ step === 'result' ? '关闭' : '取消' }}</NButton>
+        <template v-if="step === 'upload'">
+          <NButton type="primary" :loading="loading" @click="handleImport">
+            开始导入
+          </NButton>
+        </template>
+        <template v-else-if="step === 'preview'">
+          <NButton @click="step = 'upload'">上一步</NButton>
+          <NButton type="primary" :loading="loading" :disabled="errorData.length > 0" @click="handleImport">
+            确认导入
+          </NButton>
+        </template>
+        <template v-else-if="step === 'result' && importResult.success > 0">
+          <NButton type="primary" @click="close">完成</NButton>
+        </template>
+      </NSpace>
+    </template>
+  </NModal>
+</template>

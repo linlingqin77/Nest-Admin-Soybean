@@ -1,0 +1,159 @@
+<script setup lang="tsx">
+/**
+ * <%= functionName %> 行内编辑组件
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ref, computed, h } from 'vue';
+import { NInput, NInputNumber, NSelect, NDatePicker, NSwitch, NButton, NSpace, useMessage } from 'naive-ui';
+import type { DataTableColumns } from 'naive-ui';
+<% if (hasDict) { -%>
+import { useDict } from '@/hooks/common/dict';
+<% } -%>
+import { fetchUpdate<%= BusinessName %> } from '@/service/api/<%= moduleName %>/<%= businessName %>';
+
+defineOptions({
+  name: '<%= BusinessName %>InlineEdit',
+});
+
+interface Props {
+  data: Api.<%= BusinessName %>.<%= BusinessName %>[];
+}
+
+const props = defineProps<Props>();
+
+interface Emits {
+  (e: 'refresh'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const message = useMessage();
+
+<% if (hasDict) { -%>
+// 字典数据
+<% dictTypes.forEach(function(dictType) { -%>
+const { options: <%= dictType %>Options } = useDict('<%= dictType %>');
+<% }); -%>
+<% } -%>
+
+// 编辑状态
+const editingKey = ref<number | null>(null);
+const editingData = ref<Partial<Api.<%= BusinessName %>.<%= BusinessName %>>>({});
+
+// 开始编辑
+function startEdit(row: Api.<%= BusinessName %>.<%= BusinessName %>) {
+  editingKey.value = row.<%= primaryKey %>;
+  editingData.value = { ...row };
+}
+
+// 取消编辑
+function cancelEdit() {
+  editingKey.value = null;
+  editingData.value = {};
+}
+
+// 保存编辑
+async function saveEdit() {
+  if (!editingKey.value) return;
+  
+  try {
+    await fetchUpdate<%= BusinessName %>(editingData.value as Api.<%= BusinessName %>.<%= BusinessName %>OperateParams);
+    message.success('保存成功');
+    editingKey.value = null;
+    editingData.value = {};
+    emit('refresh');
+  } catch (error) {
+    message.error('保存失败');
+  }
+}
+
+// 判断是否正在编辑
+function isEditing(row: Api.<%= BusinessName %>.<%= BusinessName %>) {
+  return editingKey.value === row.<%= primaryKey %>;
+}
+
+// 生成可编辑列
+const columns = computed<DataTableColumns<Api.<%= BusinessName %>.<%= BusinessName %>>>(() => [
+<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    width: <%= col.columnWidth || 150 %>,
+    render(row) {
+      if (isEditing(row)) {
+<% if (col.htmlType === 'input') { -%>
+        return h(NInput, {
+          value: editingData.value.<%= col.javaField %>,
+          onUpdateValue: (v: string) => { editingData.value.<%= col.javaField %> = v; },
+          size: 'small',
+        });
+<% } else if (col.htmlType === 'number') { -%>
+        return h(NInputNumber, {
+          value: editingData.value.<%= col.javaField %>,
+          onUpdateValue: (v: number) => { editingData.value.<%= col.javaField %> = v; },
+          size: 'small',
+        });
+<% } else if (col.htmlType === 'select') { -%>
+        return h(NSelect, {
+          value: editingData.value.<%= col.javaField %>,
+          onUpdateValue: (v: string) => { editingData.value.<%= col.javaField %> = v; },
+<% if (col.dictType) { -%>
+          options: <%= col.dictType %>Options.value,
+<% } -%>
+          size: 'small',
+        });
+<% } else if (col.htmlType === 'switch') { -%>
+        return h(NSwitch, {
+          value: editingData.value.<%= col.javaField %> === '1',
+          onUpdateValue: (v: boolean) => { editingData.value.<%= col.javaField %> = v ? '1' : '0'; },
+          size: 'small',
+        });
+<% } else if (col.htmlType === 'date' || col.htmlType === 'datetime') { -%>
+        return h(NDatePicker, {
+          value: editingData.value.<%= col.javaField %> ? new Date(editingData.value.<%= col.javaField %>).getTime() : null,
+          onUpdateValue: (v: number) => { editingData.value.<%= col.javaField %> = v ? new Date(v).toISOString() : undefined; },
+          type: '<%= col.htmlType === 'datetime' ? 'datetime' : 'date' %>',
+          size: 'small',
+        });
+<% } else { -%>
+        return h(NInput, {
+          value: editingData.value.<%= col.javaField %>,
+          onUpdateValue: (v: string) => { editingData.value.<%= col.javaField %> = v; },
+          size: 'small',
+        });
+<% } -%>
+      }
+      return row.<%= col.javaField %>;
+    },
+  },
+<% }); -%>
+  {
+    title: '操作',
+    key: 'actions',
+    width: 120,
+    fixed: 'right',
+    render(row) {
+      if (isEditing(row)) {
+        return h(NSpace, { size: 'small' }, () => [
+          h(NButton, { size: 'small', type: 'primary', onClick: saveEdit }, () => '保存'),
+          h(NButton, { size: 'small', onClick: cancelEdit }, () => '取消'),
+        ]);
+      }
+      return h(NButton, { size: 'small', text: true, type: 'primary', onClick: () => startEdit(row) }, () => '编辑');
+    },
+  },
+]);
+
+defineExpose({
+  columns,
+  startEdit,
+  cancelEdit,
+  saveEdit,
+  isEditing,
+});
+</script>
+
+<template>
+  <slot :columns="columns" :is-editing="isEditing" />
+</template>

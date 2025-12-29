@@ -1,0 +1,196 @@
+<template>
+  <div class="sub-table">
+    <div class="sub-table-header">
+      <span class="title"><%= subTable ? subTable.tableComment || '子表数据' : '子表数据' %></span>
+      <n-button type="primary" size="small" @click="handleAdd">
+        <template #icon><n-icon :component="AddOutline" /></template>
+        添加
+      </n-button>
+    </div>
+    
+    <n-data-table
+      :columns="columns"
+      :data="tableData"
+      :row-key="(row, index) => index"
+      size="small"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, h } from 'vue';
+import { NButton, NInput, NInputNumber, NSelect, NDatePicker, NPopconfirm } from 'naive-ui';
+import { AddOutline, TrashOutline } from '@vicons/ionicons5';
+<% if (subTable && hasDict) { -%>
+import { useDictStore } from '@/store/modules/dict';
+
+const dictStore = useDictStore();
+const getDictOptions = (dictType: string) => dictStore.getDictOptions(dictType);
+<% } -%>
+
+interface SubTableRow {
+<% if (subTable) { -%>
+<% subTable.columns.filter(col => col.isPk !== '1' && col.columnName !== table.subTableFkName).forEach(function(col) { -%>
+  <%= col.javaField %>?: <%= getTsType(col) %>;
+<% }); -%>
+<% } -%>
+}
+
+const props = defineProps<{
+  modelValue: SubTableRow[];
+}>();
+
+const emit = defineEmits(['update:modelValue']);
+
+const tableData = ref<SubTableRow[]>([]);
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    tableData.value = val || [];
+  },
+  { immediate: true }
+);
+
+watch(
+  tableData,
+  (val) => {
+    emit('update:modelValue', val);
+  },
+  { deep: true }
+);
+
+const columns = [
+<% if (subTable) { -%>
+<% subTable.columns.filter(col => col.isPk !== '1' && col.columnName !== table.subTableFkName && col.isList === '1').forEach(function(col) { -%>
+<% if (col.htmlType === 'input') { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: SubTableRow, index: number) => {
+      return h(NInput, {
+        value: row.<%= col.javaField %>,
+        placeholder: '请输入<%= col.columnComment %>',
+        onUpdateValue: (val: string) => {
+          tableData.value[index].<%= col.javaField %> = val;
+        },
+      });
+    },
+  },
+<% } else if (col.htmlType === 'number') { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: SubTableRow, index: number) => {
+      return h(NInputNumber, {
+        value: row.<%= col.javaField %>,
+        placeholder: '请输入<%= col.columnComment %>',
+        onUpdateValue: (val: number) => {
+          tableData.value[index].<%= col.javaField %> = val;
+        },
+      });
+    },
+  },
+<% } else if (col.htmlType === 'select') { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: SubTableRow, index: number) => {
+      return h(NSelect, {
+        value: row.<%= col.javaField %>,
+        placeholder: '请选择<%= col.columnComment %>',
+<% if (col.dictType) { -%>
+        options: getDictOptions('<%= col.dictType %>'),
+<% } else { -%>
+        options: [],
+<% } -%>
+        onUpdateValue: (val: string) => {
+          tableData.value[index].<%= col.javaField %> = val;
+        },
+      });
+    },
+  },
+<% } else if (col.htmlType === 'datetime' || col.htmlType === 'date') { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: SubTableRow, index: number) => {
+      return h(NDatePicker, {
+        value: row.<%= col.javaField %>,
+        type: '<%= col.htmlType === 'datetime' ? 'datetime' : 'date' %>',
+        placeholder: '请选择<%= col.columnComment %>',
+        onUpdateValue: (val: number) => {
+          tableData.value[index].<%= col.javaField %> = val;
+        },
+      });
+    },
+  },
+<% } else { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: SubTableRow, index: number) => {
+      return h(NInput, {
+        value: row.<%= col.javaField %>,
+        placeholder: '请输入<%= col.columnComment %>',
+        onUpdateValue: (val: string) => {
+          tableData.value[index].<%= col.javaField %> = val;
+        },
+      });
+    },
+  },
+<% } -%>
+<% }); -%>
+<% } -%>
+  {
+    title: '操作',
+    key: 'actions',
+    width: 80,
+    render: (_row: SubTableRow, index: number) => {
+      return h(
+        NPopconfirm,
+        {
+          onPositiveClick: () => handleDelete(index),
+        },
+        {
+          trigger: () =>
+            h(
+              NButton,
+              { size: 'small', type: 'error', text: true },
+              { icon: () => h(TrashOutline) }
+            ),
+          default: () => '确认删除？',
+        }
+      );
+    },
+  },
+];
+
+/** 添加行 */
+function handleAdd() {
+  tableData.value.push({});
+}
+
+/** 删除行 */
+function handleDelete(index: number) {
+  tableData.value.splice(index, 1);
+}
+</script>
+
+<style scoped>
+.sub-table {
+  margin-top: 16px;
+}
+
+.sub-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 14px;
+}
+</style>

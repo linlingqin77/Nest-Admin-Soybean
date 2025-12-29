@@ -1,0 +1,76 @@
+/**
+ * <%= functionName %> API
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { request } from '@/utils/request';
+import type { <%= BusinessName %>VO, <%= BusinessName %>Form, <%= BusinessName %>Query } from './types';
+
+/**
+ * 查询<%= functionName %>列表
+ */
+export function list<%= BusinessName %>(params: <%= BusinessName %>Query) {
+  return request.get<<%= BusinessName %>VO[]>('<%= apiPath %>/list', { params });
+}
+
+/**
+ * 查询<%= functionName %>详情
+ */
+export function get<%= BusinessName %>(<%= primaryKey %>: number) {
+  return request.get<<%= BusinessName %>VO>(`<%= apiPath %>/${<%= primaryKey %>}`);
+}
+
+/**
+ * 新增<%= functionName %>
+ */
+export function add<%= BusinessName %>(data: <%= BusinessName %>Form) {
+  return request.post('<%= apiPath %>', data);
+}
+
+/**
+ * 修改<%= functionName %>
+ */
+export function update<%= BusinessName %>(data: <%= BusinessName %>Form & { <%= primaryKey %>: number }) {
+  return request.put('<%= apiPath %>', data);
+}
+
+/**
+ * 删除<%= functionName %>
+ */
+export function delete<%= BusinessName %>(<%= primaryKey %>: number | number[]) {
+  const ids = Array.isArray(<%= primaryKey %>) ? <%= primaryKey %>.join(',') : <%= primaryKey %>;
+  return request.delete(`<%= apiPath %>/${ids}`);
+}
+<% if (options.enableExport) { -%>
+
+/**
+ * 导出<%= functionName %>
+ */
+export function export<%= BusinessName %>(params: <%= BusinessName %>Query) {
+  return request.post('<%= apiPath %>/export', params, {
+    responseType: 'blob',
+  });
+}
+<% } -%>
+<% if (options.enableImport) { -%>
+
+/**
+ * 导入<%= functionName %>
+ */
+export function import<%= BusinessName %>(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request.post('<%= apiPath %>/import', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+}
+
+/**
+ * 下载导入模板
+ */
+export function downloadTemplate() {
+  return request.get('<%= apiPath %>/importTemplate', {
+    responseType: 'blob',
+  });
+}
+<% } -%>

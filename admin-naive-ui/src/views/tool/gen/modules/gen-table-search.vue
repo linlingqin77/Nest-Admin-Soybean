@@ -7,12 +7,6 @@ defineOptions({
   name: 'GenTableSearch',
 });
 
-interface Props {
-  options: CommonType.Option[];
-}
-
-defineProps<Props>();
-
 interface Emits {
   (e: 'reset'): void;
   (e: 'search'): void;
@@ -28,12 +22,19 @@ const dateRange = ref<[string, string]>();
 
 function onDateRangeUpdate(value: [string, string] | null) {
   if (value?.length) {
-    model.value.params!.beginTime = value[0];
-    model.value.params!.endTime = value[1];
+    model.value.params = model.value.params || {};
+    model.value.params.beginTime = value[0];
+    model.value.params.endTime = value[1];
+  } else {
+    if (model.value.params) {
+      model.value.params.beginTime = undefined;
+      model.value.params.endTime = undefined;
+    }
   }
 }
 
 async function reset() {
+  dateRange.value = undefined;
   await restoreValidation();
   emit('reset');
 }
@@ -47,17 +48,14 @@ async function search() {
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
-      <NCollapseItem :title="$t('common.search')" name="user-search">
+      <NCollapseItem :title="$t('common.search')" name="gen-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="数据源" path="dataName" class="pr-24px">
-              <NSelect v-model:value="model.dataName" :options="options" placeholder="请选择数据源" />
-            </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="表名称" path="tableName" class="pr-24px">
-              <NInput v-model:value="model.tableName" placeholder="请输入表名称" />
+              <NInput v-model:value="model.tableName" placeholder="请输入表名称" clearable />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="表描述" path="tableComment" class="pr-24px">
-              <NInput v-model:value="model.tableComment" placeholder="请输入表描述" />
+              <NInput v-model:value="model.tableComment" placeholder="请输入表描述" clearable />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="创建时间" class="pr-24px">
               <NDatePicker
@@ -68,7 +66,7 @@ async function search() {
                 @update:formatted-value="onDateRangeUpdate"
               />
             </NFormItemGi>
-            <NFormItemGi :show-feedback="false" span="24" class="pb-6px pr-24px">
+            <NFormItemGi :show-feedback="false" span="24 s:12 m:6" class="pb-6px pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

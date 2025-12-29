@@ -1,0 +1,185 @@
+<script setup lang="tsx">
+/**
+ * <%= functionName %> 高级搜索组件
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { ref, computed } from 'vue';
+import { NForm, NFormItem, NInput, NSelect, NDatePicker, NInputNumber, NButton, NSpace, NGrid, NGi, NCollapse, NCollapseItem } from 'naive-ui';
+<% if (hasDict) { -%>
+import { useDict } from '@/hooks/common/dict';
+<% } -%>
+
+defineOptions({
+  name: '<%= BusinessName %>AdvancedSearch',
+});
+
+interface Emits {
+  (e: 'search'): void;
+  (e: 'reset'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const model = defineModel<Api.<%= BusinessName %>.<%= BusinessName %>SearchParams>('model', { required: true });
+
+// 展开/收起状态
+const isExpanded = ref(false);
+
+<% if (hasDict) { -%>
+// 字典数据
+<% dictTypes.forEach(function(dictType) { -%>
+const { options: <%= dictType %>Options } = useDict('<%= dictType %>');
+<% }); -%>
+<% } -%>
+
+// 基础搜索字段（始终显示）
+const basicFields = computed(() => [
+<% queryColumns.slice(0, 3).forEach(function(col) { -%>
+  '<%= col.javaField %>',
+<% }); -%>
+]);
+
+// 高级搜索字段（展开后显示）
+const advancedFields = computed(() => [
+<% queryColumns.slice(3).forEach(function(col) { -%>
+  '<%= col.javaField %>',
+<% }); -%>
+]);
+
+function handleSearch() {
+  emit('search');
+}
+
+function handleReset() {
+  model.value = {
+    pageNum: 1,
+    pageSize: 10,
+<% queryColumns.forEach(function(col) { -%>
+    <%= col.javaField %>: undefined,
+<% }); -%>
+  };
+  emit('reset');
+}
+
+function toggleExpand() {
+  isExpanded.value = !isExpanded.value;
+}
+</script>
+
+<template>
+  <NForm :model="model" label-placement="left" label-width="auto" inline>
+    <NGrid :cols="24" :x-gap="16" responsive="screen" item-responsive>
+      <!-- 基础搜索字段 -->
+<% queryColumns.slice(0, 3).forEach(function(col) { -%>
+      <NGi span="24 s:12 m:8 l:6">
+        <NFormItem label="<%= col.columnComment %>" path="<%= col.javaField %>">
+<% if (col.htmlType === 'input') { -%>
+          <NInput v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } else if (col.htmlType === 'select') { -%>
+          <NSelect
+            v-model:value="model.<%= col.javaField %>"
+            placeholder="请选择<%= col.columnComment %>"
+<% if (col.dictType) { -%>
+            :options="<%= col.dictType %>Options"
+<% } -%>
+            clearable
+          />
+<% } else if (col.htmlType === 'datetime' || col.htmlType === 'date') { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+          <NDatePicker
+            v-model:value="model.<%= col.javaField %>"
+            type="daterange"
+            clearable
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />
+<% } else { -%>
+          <NDatePicker
+            v-model:value="model.<%= col.javaField %>"
+            type="<%= col.htmlType === 'datetime' ? 'datetime' : 'date' %>"
+            placeholder="请选择<%= col.columnComment %>"
+            clearable
+          />
+<% } -%>
+<% } else if (col.htmlType === 'number') { -%>
+          <NInputNumber v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } else { -%>
+          <NInput v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } -%>
+        </NFormItem>
+      </NGi>
+<% }); -%>
+
+      <!-- 高级搜索字段（可展开） -->
+      <template v-if="isExpanded">
+<% queryColumns.slice(3).forEach(function(col) { -%>
+        <NGi span="24 s:12 m:8 l:6">
+          <NFormItem label="<%= col.columnComment %>" path="<%= col.javaField %>">
+<% if (col.htmlType === 'input') { -%>
+            <NInput v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } else if (col.htmlType === 'select') { -%>
+            <NSelect
+              v-model:value="model.<%= col.javaField %>"
+              placeholder="请选择<%= col.columnComment %>"
+<% if (col.dictType) { -%>
+              :options="<%= col.dictType %>Options"
+<% } -%>
+              clearable
+            />
+<% } else if (col.htmlType === 'datetime' || col.htmlType === 'date') { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+            <NDatePicker
+              v-model:value="model.<%= col.javaField %>"
+              type="daterange"
+              clearable
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
+<% } else { -%>
+            <NDatePicker
+              v-model:value="model.<%= col.javaField %>"
+              type="<%= col.htmlType === 'datetime' ? 'datetime' : 'date' %>"
+              placeholder="请选择<%= col.columnComment %>"
+              clearable
+            />
+<% } -%>
+<% } else if (col.htmlType === 'number') { -%>
+            <NInputNumber v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } else { -%>
+            <NInput v-model:value="model.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" clearable />
+<% } -%>
+          </NFormItem>
+        </NGi>
+<% }); -%>
+      </template>
+
+      <!-- 操作按钮 -->
+      <NGi span="24 s:12 m:8 l:6">
+        <NSpace>
+          <NButton type="primary" @click="handleSearch">
+            <template #icon>
+              <icon-ic-round-search class="text-icon" />
+            </template>
+            搜索
+          </NButton>
+          <NButton @click="handleReset">
+            <template #icon>
+              <icon-ic-round-refresh class="text-icon" />
+            </template>
+            重置
+          </NButton>
+<% if (queryColumns.length > 3) { -%>
+          <NButton text @click="toggleExpand">
+            {{ isExpanded ? '收起' : '展开' }}
+            <template #icon>
+              <icon-ic-round-keyboard-arrow-down v-if="!isExpanded" class="text-icon" />
+              <icon-ic-round-keyboard-arrow-up v-else class="text-icon" />
+            </template>
+          </NButton>
+<% } -%>
+        </NSpace>
+      </NGi>
+    </NGrid>
+  </NForm>
+</template>

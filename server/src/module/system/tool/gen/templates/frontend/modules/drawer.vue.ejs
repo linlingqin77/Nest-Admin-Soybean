@@ -1,0 +1,208 @@
+<template>
+  <n-drawer v-model:show="visible" :width="500" :title="title">
+    <n-drawer-content>
+      <n-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-placement="left"
+        label-width="100"
+      >
+<% formColumns.forEach(function(col) { -%>
+<% if (col.isPk !== '1') { -%>
+<% if (col.htmlType === 'input') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-input v-model:value="formData.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" />
+        </n-form-item>
+<% } else if (col.htmlType === 'textarea') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-input
+            v-model:value="formData.<%= col.javaField %>"
+            type="textarea"
+            placeholder="请输入<%= col.columnComment %>"
+            :rows="3"
+          />
+        </n-form-item>
+<% } else if (col.htmlType === 'select') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-select
+            v-model:value="formData.<%= col.javaField %>"
+            placeholder="请选择<%= col.columnComment %>"
+<% if (col.dictType) { -%>
+            :options="getDictOptions('<%= col.dictType %>')"
+<% } else { -%>
+            :options="[]"
+<% } -%>
+          />
+        </n-form-item>
+<% } else if (col.htmlType === 'radio') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-radio-group v-model:value="formData.<%= col.javaField %>">
+<% if (col.dictType) { -%>
+            <n-radio
+              v-for="item in getDictOptions('<%= col.dictType %>')"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </n-radio>
+<% } -%>
+          </n-radio-group>
+        </n-form-item>
+<% } else if (col.htmlType === 'checkbox') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-checkbox-group v-model:value="formData.<%= col.javaField %>">
+<% if (col.dictType) { -%>
+            <n-checkbox
+              v-for="item in getDictOptions('<%= col.dictType %>')"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </n-checkbox>
+<% } -%>
+          </n-checkbox-group>
+        </n-form-item>
+<% } else if (col.htmlType === 'datetime') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-date-picker
+            v-model:value="formData.<%= col.javaField %>"
+            type="datetime"
+            placeholder="请选择<%= col.columnComment %>"
+            style="width: 100%"
+          />
+        </n-form-item>
+<% } else if (col.htmlType === 'date') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-date-picker
+            v-model:value="formData.<%= col.javaField %>"
+            type="date"
+            placeholder="请选择<%= col.columnComment %>"
+            style="width: 100%"
+          />
+        </n-form-item>
+<% } else if (col.htmlType === 'number') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-input-number
+            v-model:value="formData.<%= col.javaField %>"
+            placeholder="请输入<%= col.columnComment %>"
+            style="width: 100%"
+          />
+        </n-form-item>
+<% } else if (col.htmlType === 'switch') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-switch v-model:value="formData.<%= col.javaField %>" />
+        </n-form-item>
+<% } else if (col.htmlType === 'imageUpload') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <ImageUpload v-model:value="formData.<%= col.javaField %>" />
+        </n-form-item>
+<% } else if (col.htmlType === 'fileUpload') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <FileUpload v-model:value="formData.<%= col.javaField %>" />
+        </n-form-item>
+<% } else if (col.htmlType === 'editor') { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <Editor v-model:value="formData.<%= col.javaField %>" />
+        </n-form-item>
+<% } else { -%>
+        <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+          <n-input v-model:value="formData.<%= col.javaField %>" placeholder="请输入<%= col.columnComment %>" />
+        </n-form-item>
+<% } -%>
+<% } -%>
+<% }); -%>
+      </n-form>
+      <template #footer>
+        <n-space>
+          <n-button @click="handleClose">取消</n-button>
+          <n-button type="primary" :loading="submitLoading" @click="handleSubmit">确定</n-button>
+        </n-space>
+      </template>
+    </n-drawer-content>
+  </n-drawer>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, computed } from 'vue';
+import { useMessage } from 'naive-ui';
+import { get<%= BusinessName %>, add<%= BusinessName %>, update<%= BusinessName %> } from '@/api/<%= moduleName %>/<%= businessName %>';
+import type { <%= BusinessName %>Form } from '@/api/<%= moduleName %>/<%= businessName %>/types';
+<% if (hasDict) { -%>
+import { useDictStore } from '@/store/modules/dict';
+
+const dictStore = useDictStore();
+const getDictOptions = (dictType: string) => dictStore.getDictOptions(dictType);
+<% } -%>
+
+const emit = defineEmits(['success']);
+const message = useMessage();
+
+const visible = ref(false);
+const submitLoading = ref(false);
+const formRef = ref();
+const <%= primaryKey %> = ref<number>();
+
+const title = computed(() => (<%= primaryKey %>.value ? '编辑<%= functionName %>' : '新增<%= functionName %>'));
+
+const initFormData = (): <%= BusinessName %>Form => ({
+<% formColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+  <%= col.javaField %>: undefined,
+<% } else if (col.htmlType === 'checkbox') { -%>
+  <%= col.javaField %>: [],
+<% } else { -%>
+  <%= col.javaField %>: '',
+<% } -%>
+<% }); -%>
+});
+
+const formData = reactive<<%= BusinessName %>Form>(initFormData());
+
+const rules = {
+<% formColumns.filter(col => col.isPk !== '1' && col.isRequired === '1').forEach(function(col) { -%>
+  <%= col.javaField %>: { required: true, message: '请输入<%= col.columnComment %>', trigger: 'blur' },
+<% }); -%>
+};
+
+/** 打开抽屉 */
+async function open(id?: number) {
+  visible.value = true;
+  <%= primaryKey %>.value = id;
+  
+  if (id) {
+    const res = await get<%= BusinessName %>(id);
+    Object.assign(formData, res.data);
+  } else {
+    Object.assign(formData, initFormData());
+  }
+}
+
+/** 关闭抽屉 */
+function handleClose() {
+  visible.value = false;
+  formRef.value?.restoreValidation();
+}
+
+/** 提交表单 */
+async function handleSubmit() {
+  await formRef.value?.validate();
+  
+  submitLoading.value = true;
+  try {
+    if (<%= primaryKey %>.value) {
+      await update<%= BusinessName %>({ ...(formData as any), <%= primaryKey %>: <%= primaryKey %>.value });
+      message.success('修改成功');
+    } else {
+      await add<%= BusinessName %>(formData);
+      message.success('新增成功');
+    }
+    handleClose();
+    emit('success');
+  } finally {
+    submitLoading.value = false;
+  }
+}
+
+defineExpose({ open });
+</script>

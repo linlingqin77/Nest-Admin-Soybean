@@ -1,0 +1,195 @@
+/**
+ * <%= functionName %> 树表服务
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Injectable } from '@nestjs/common';
+import { Prisma, DelFlag } from '@prisma/client';
+import { Result } from 'src/common/response';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Create<%= BusinessName %>Dto, Update<%= BusinessName %>Dto, Query<%= BusinessName %>Dto } from './dto/<%= businessName %>.dto';
+import { isEmpty } from 'src/common/utils';
+
+interface TreeNode {
+  <%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %>;
+  <%= options.treeParentCode || 'parentId' %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %> | null;
+  <%= options.treeName || 'name' %>: string;
+  children?: TreeNode[];
+  [key: string]: any;
+}
+
+@Injectable()
+export class <%= BusinessName %>Service {
+  constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * 创建<%= functionName %>
+   */
+  async create(create<%= BusinessName %>Dto: Create<%= BusinessName %>Dto) {
+    const res = await this.prisma.<%= classNameLower %>.create({
+      data: create<%= BusinessName %>Dto,
+    });
+    return Result.ok(res);
+  }
+
+  /**
+   * 查询<%= functionName %>列表（树形结构）
+   */
+  async findAll(query: Query<%= BusinessName %>Dto) {
+    const where: Prisma.<%= className %>WhereInput = {
+      delFlag: DelFlag.NORMAL,
+    };
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'LIKE') { -%>
+    if (!isEmpty(query.<%= col.javaField %>)) {
+      where.<%= col.javaField %> = { contains: query.<%= col.javaField %> };
+    }
+<% } else if (col.queryType === 'EQ') { -%>
+    if (!isEmpty(query.<%= col.javaField %>)) {
+      where.<%= col.javaField %> = query.<%= col.javaField %>;
+    }
+<% } -%>
+<% }); -%>
+
+    const list = await this.prisma.<%= classNameLower %>.findMany({
+      where,
+      orderBy: { <%= options.treeCode || primaryKey %>: 'asc' },
+    });
+
+    // 构建树形结构
+    const tree = this.buildTree(list as TreeNode[]);
+
+    return Result.ok(tree);
+  }
+
+  /**
+   * 查询<%= functionName %>详情
+   */
+  async findOne(<%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %>) {
+    const res = await this.prisma.<%= classNameLower %>.findFirst({
+      where: {
+        delFlag: DelFlag.NORMAL,
+        <%= primaryKey %>: <%= primaryKey %>,
+      },
+    });
+    return Result.ok(res);
+  }
+
+  /**
+   * 修改<%= functionName %>
+   */
+  async update(update<%= BusinessName %>Dto: Update<%= BusinessName %>Dto) {
+    // 检查是否将父节点设置为自己的子节点
+    if (update<%= BusinessName %>Dto.<%= options.treeParentCode || 'parentId' %>) {
+      const children = await this.getChildrenIds(update<%= BusinessName %>Dto.<%= primaryKey %>);
+      if (children.includes(update<%= BusinessName %>Dto.<%= options.treeParentCode || 'parentId' %>)) {
+        return Result.fail('不能将父节点设置为自己的子节点');
+      }
+    }
+
+    const res = await this.prisma.<%= classNameLower %>.update({
+      where: {
+        <%= primaryKey %>: update<%= BusinessName %>Dto.<%= primaryKey %>,
+      },
+      data: update<%= BusinessName %>Dto,
+    });
+    return Result.ok({ value: Boolean(res) });
+  }
+
+  /**
+   * 删除<%= functionName %>
+   */
+  async remove(<%= primaryKey %>s: <%= pkColumn ? getTsType(pkColumn) : 'number' %>[]) {
+    // 检查是否有子节点
+    for (const id of <%= primaryKey %>s) {
+      const children = await this.prisma.<%= classNameLower %>.count({
+        where: {
+          <%= options.treeParentCode || 'parentId' %>: id,
+          delFlag: DelFlag.NORMAL,
+        },
+      });
+      if (children > 0) {
+        return Result.fail('存在子节点，不能删除');
+      }
+    }
+
+    const res = await this.prisma.<%= classNameLower %>.updateMany({
+      where: {
+        <%= primaryKey %>: {
+          in: <%= primaryKey %>s,
+        },
+      },
+      data: {
+        delFlag: '1',
+      },
+    });
+    return Result.ok({ value: res.count >= 1 });
+  }
+
+  /**
+   * 获取下拉树列表
+   */
+  async treeSelect() {
+    const list = await this.prisma.<%= classNameLower %>.findMany({
+      where: { delFlag: DelFlag.NORMAL },
+      select: {
+        <%= primaryKey %>: true,
+        <%= options.treeParentCode || 'parentId' %>: true,
+        <%= options.treeName || 'name' %>: true,
+      },
+      orderBy: { <%= options.treeCode || primaryKey %>: 'asc' },
+    });
+
+    const tree = this.buildTree(list as TreeNode[]);
+    return Result.ok(tree);
+  }
+
+  /**
+   * 构建树形结构
+   */
+  private buildTree(list: TreeNode[]): TreeNode[] {
+    const map = new Map<number, TreeNode>();
+    const roots: TreeNode[] = [];
+
+    // 创建节点映射
+    for (const item of list) {
+      map.set(item.<%= primaryKey %>, { ...item, children: [] });
+    }
+
+    // 构建树
+    for (const item of list) {
+      const node = map.get(item.<%= primaryKey %>)!;
+      const parentId = item.<%= options.treeParentCode || 'parentId' %>;
+
+      if (parentId && map.has(parentId)) {
+        map.get(parentId)!.children!.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+
+    return roots;
+  }
+
+  /**
+   * 获取所有子节点ID
+   */
+  private async getChildrenIds(<%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %>): Promise<number[]> {
+    const children = await this.prisma.<%= classNameLower %>.findMany({
+      where: {
+        <%= options.treeParentCode || 'parentId' %>: <%= primaryKey %>,
+        delFlag: DelFlag.NORMAL,
+      },
+      select: { <%= primaryKey %>: true },
+    });
+
+    const ids: number[] = children.map((c) => c.<%= primaryKey %>);
+
+    for (const child of children) {
+      const grandChildren = await this.getChildrenIds(child.<%= primaryKey %>);
+      ids.push(...grandChildren);
+    }
+
+    return ids;
+  }
+}

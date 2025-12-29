@@ -1,0 +1,37 @@
+-- <%= functionName %> 菜单 SQL
+-- @author <%= functionAuthor %>
+-- @date <%= datetime %>
+
+-- 菜单 SQL
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>', <%= options.parentMenuId || 0 %>, 1, '<%= businessName %>', '<%= moduleName %>/<%= businessName %>/index', NULL, 1, 0, 'C', '0', '0', '<%= moduleName %>:<%= businessName %>:list', '#', 'admin', NOW(), '', NULL, '<%= functionName %>菜单');
+
+-- 按钮父菜单ID
+-- 按钮 SQL
+-- 查询按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>查询', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 1, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:query', '#', 'admin', NOW(), '', NULL, '');
+
+-- 新增按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>新增', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 2, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:add', '#', 'admin', NOW(), '', NULL, '');
+
+-- 修改按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>修改', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 3, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:edit', '#', 'admin', NOW(), '', NULL, '');
+
+-- 删除按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>删除', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 4, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:remove', '#', 'admin', NOW(), '', NULL, '');
+<% if (options.enableExport) { -%>
+
+-- 导出按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>导出', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 5, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:export', '#', 'admin', NOW(), '', NULL, '');
+<% } -%>
+<% if (options.enableImport) { -%>
+
+-- 导入按钮
+INSERT INTO sys_menu (menu_name, parent_id, order_num, path, component, query, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES ('<%= functionName %>导入', (SELECT menu_id FROM sys_menu WHERE menu_name = '<%= functionName %>' LIMIT 1), 6, '', NULL, NULL, 1, 0, 'F', '0', '0', '<%= moduleName %>:<%= businessName %>:import', '#', 'admin', NOW(), '', NULL, '');
+<% } -%>

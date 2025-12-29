@@ -1,0 +1,237 @@
+/**
+ * <%= functionName %> E2E 测试
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from 'src/app.module';
+import { PrismaService } from 'src/prisma/prisma.service';
+import {
+  createCreate<%= BusinessName %>DtoFactory,
+  createUpdate<%= BusinessName %>DtoFactory,
+} from './factory';
+
+describe('<%= BusinessName %>Controller (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+  let authToken: string;
+  let created<%= BusinessName %>Id: number;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    
+    prisma = app.get<PrismaService>(PrismaService);
+    
+    await app.init();
+
+    // 获取认证 token（根据实际认证方式调整）
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ username: 'admin', password: 'admin123' });
+    
+    authToken = loginResponse.body.data?.token || '';
+  });
+
+  afterAll(async () => {
+    // 清理测试数据
+    if (created<%= BusinessName %>Id) {
+      await prisma.<%= classNameLower %>.delete({
+        where: { <%= primaryKey %>: created<%= BusinessName %>Id },
+      }).catch(() => {});
+    }
+    await app.close();
+  });
+
+  describe('POST /<%= moduleName %>/<%= businessName %>', () => {
+    it('should create a new <%= businessName %>', async () => {
+      const createDto = createCreate<%= BusinessName %>DtoFactory();
+
+      const response = await request(app.getHttpServer())
+        .post('/<%= moduleName %>/<%= businessName %>')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(createDto)
+        .expect(201);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data).toBeDefined();
+      created<%= BusinessName %>Id = response.body.data.<%= primaryKey %>;
+    });
+
+    it('should fail with invalid data', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/<%= moduleName %>/<%= businessName %>')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({})
+        .expect(400);
+
+      expect(response.body.code).not.toBe(200);
+    });
+  });
+
+  describe('GET /<%= moduleName %>/<%= businessName %>/list', () => {
+    it('should return paginated list', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/<%= moduleName %>/<%= businessName %>/list')
+        .set('Authorization', `Bearer ${authToken}`)
+        .query({ pageNum: 1, pageSize: 10 })
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.rows).toBeDefined();
+      expect(response.body.data.total).toBeDefined();
+    });
+
+    it('should filter by query params', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/<%= moduleName %>/<%= businessName %>/list')
+        .set('Authorization', `Bearer ${authToken}`)
+        .query({
+          pageNum: 1,
+          pageSize: 10,
+<% queryColumns.slice(0, 1).forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+          <%= col.javaField %>: 1,
+<% } else { -%>
+          <%= col.javaField %>: 'test',
+<% } -%>
+<% }); -%>
+        })
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+    });
+  });
+
+  describe('GET /<%= moduleName %>/<%= businessName %>/:id', () => {
+    it('should return a single <%= businessName %>', async () => {
+      // 先确保有数据
+      if (!created<%= BusinessName %>Id) {
+        const createDto = createCreate<%= BusinessName %>DtoFactory();
+        const createResponse = await request(app.getHttpServer())
+          .post('/<%= moduleName %>/<%= businessName %>')
+          .set('Authorization', `Bearer ${authToken}`)
+          .send(createDto);
+        created<%= BusinessName %>Id = createResponse.body.data.<%= primaryKey %>;
+      }
+
+      const response = await request(app.getHttpServer())
+        .get(`/<%= moduleName %>/<%= businessName %>/${created<%= BusinessName %>Id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.<%= primaryKey %>).toBe(created<%= BusinessName %>Id);
+    });
+
+    it('should return null for non-existent id', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/<%= moduleName %>/<%= businessName %>/999999')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.data).toBeNull();
+    });
+  });
+
+  describe('PUT /<%= moduleName %>/<%= businessName %>', () => {
+    it('should update a <%= businessName %>', async () => {
+      // 先确保有数据
+      if (!created<%= BusinessName %>Id) {
+        const createDto = createCreate<%= BusinessName %>DtoFactory();
+        const createResponse = await request(app.getHttpServer())
+          .post('/<%= moduleName %>/<%= businessName %>')
+          .set('Authorization', `Bearer ${authToken}`)
+          .send(createDto);
+        created<%= BusinessName %>Id = createResponse.body.data.<%= primaryKey %>;
+      }
+
+      const updateDto = createUpdate<%= BusinessName %>DtoFactory({
+        <%= primaryKey %>: created<%= BusinessName %>Id,
+      });
+
+      const response = await request(app.getHttpServer())
+        .put('/<%= moduleName %>/<%= businessName %>')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updateDto)
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.value).toBe(true);
+    });
+  });
+
+  describe('DELETE /<%= moduleName %>/<%= businessName %>/:id', () => {
+    it('should delete a <%= businessName %>', async () => {
+      // 创建一个用于删除的数据
+      const createDto = createCreate<%= BusinessName %>DtoFactory();
+      const createResponse = await request(app.getHttpServer())
+        .post('/<%= moduleName %>/<%= businessName %>')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(createDto);
+      const deleteId = createResponse.body.data.<%= primaryKey %>;
+
+      const response = await request(app.getHttpServer())
+        .delete(`/<%= moduleName %>/<%= businessName %>/${deleteId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.value).toBe(true);
+    });
+
+    it('should delete multiple <%= businessName %>s', async () => {
+      // 创建多个用于删除的数据
+      const ids: number[] = [];
+      for (let i = 0; i < 2; i++) {
+        const createDto = createCreate<%= BusinessName %>DtoFactory();
+        const createResponse = await request(app.getHttpServer())
+          .post('/<%= moduleName %>/<%= businessName %>')
+          .set('Authorization', `Bearer ${authToken}`)
+          .send(createDto);
+        ids.push(createResponse.body.data.<%= primaryKey %>);
+      }
+
+      const response = await request(app.getHttpServer())
+        .delete(`/<%= moduleName %>/<%= businessName %>/${ids.join(',')}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.value).toBe(true);
+    });
+  });
+<% if (options.enableExport) { -%>
+
+  describe('POST /<%= moduleName %>/<%= businessName %>/export', () => {
+    it('should export <%= businessName %> data', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/<%= moduleName %>/<%= businessName %>/export')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ pageNum: 1, pageSize: 100 })
+        .expect(200);
+
+      expect(response.headers['content-type']).toContain('spreadsheetml');
+    });
+  });
+<% } -%>
+<% if (options.enableImport) { -%>
+
+  describe('GET /<%= moduleName %>/<%= businessName %>/importTemplate', () => {
+    it('should download import template', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/<%= moduleName %>/<%= businessName %>/importTemplate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.headers['content-type']).toContain('spreadsheetml');
+    });
+  });
+<% } -%>
+});

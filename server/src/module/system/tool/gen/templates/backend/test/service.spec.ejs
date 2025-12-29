@@ -1,0 +1,213 @@
+/**
+ * <%= functionName %> 服务单元测试
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Test, TestingModule } from '@nestjs/testing';
+import { <%= BusinessName %>Service } from '../<%= businessName %>.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { DelFlag } from '@prisma/client';
+
+describe('<%= BusinessName %>Service', () => {
+  let service: <%= BusinessName %>Service;
+  let prismaService: PrismaService;
+
+  const mockPrismaService = {
+    <%= classNameLower %>: {
+      create: jest.fn(),
+      findMany: jest.fn(),
+      findFirst: jest.fn(),
+      update: jest.fn(),
+      updateMany: jest.fn(),
+      count: jest.fn(),
+    },
+    $transaction: jest.fn((callbacks) => Promise.all(callbacks)),
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        <%= BusinessName %>Service,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
+      ],
+    }).compile();
+
+    service = module.get<<%= BusinessName %>Service>(<%= BusinessName %>Service);
+    prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a new <%= businessName %>', async () => {
+      const createDto = {
+<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+        <%= col.javaField %>: 1,
+<% } else if (col.javaType === 'Date') { -%>
+        <%= col.javaField %>: new Date(),
+<% } else { -%>
+        <%= col.javaField %>: 'test',
+<% } -%>
+<% }); -%>
+      };
+
+      const expectedResult = {
+        <%= primaryKey %>: 1,
+        ...createDto,
+      };
+
+      mockPrismaService.<%= classNameLower %>.create.mockResolvedValue(expectedResult);
+
+      const result = await service.create(createDto as any);
+
+      expect(result.data).toEqual(expectedResult);
+      expect(mockPrismaService.<%= classNameLower %>.create).toHaveBeenCalledWith({
+        data: createDto,
+      });
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return paginated list', async () => {
+      const query = {
+        pageNum: 1,
+        pageSize: 10,
+      };
+
+      const mockList = [
+        { <%= primaryKey %>: 1 },
+        { <%= primaryKey %>: 2 },
+      ];
+
+      mockPrismaService.<%= classNameLower %>.findMany.mockResolvedValue(mockList);
+      mockPrismaService.<%= classNameLower %>.count.mockResolvedValue(2);
+      mockPrismaService.$transaction.mockResolvedValue([mockList, 2]);
+
+      const result = await service.findAll(query as any);
+
+      expect(result.data.rows).toEqual(mockList);
+      expect(result.data.total).toBe(2);
+    });
+
+    it('should filter by query params', async () => {
+      const query = {
+        pageNum: 1,
+        pageSize: 10,
+<% queryColumns.slice(0, 1).forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+        <%= col.javaField %>: 1,
+<% } else { -%>
+        <%= col.javaField %>: 'test',
+<% } -%>
+<% }); -%>
+      };
+
+      mockPrismaService.<%= classNameLower %>.findMany.mockResolvedValue([]);
+      mockPrismaService.<%= classNameLower %>.count.mockResolvedValue(0);
+      mockPrismaService.$transaction.mockResolvedValue([[], 0]);
+
+      await service.findAll(query as any);
+
+      expect(mockPrismaService.$transaction).toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a single <%= businessName %>', async () => {
+      const <%= primaryKey %> = 1;
+      const expectedResult = {
+        <%= primaryKey %>: 1,
+<% listColumns.slice(0, 3).forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+        <%= col.javaField %>: 1,
+<% } else { -%>
+        <%= col.javaField %>: 'test',
+<% } -%>
+<% }); -%>
+      };
+
+      mockPrismaService.<%= classNameLower %>.findFirst.mockResolvedValue(expectedResult);
+
+      const result = await service.findOne(<%= primaryKey %>);
+
+      expect(result.data).toEqual(expectedResult);
+      expect(mockPrismaService.<%= classNameLower %>.findFirst).toHaveBeenCalledWith({
+        where: {
+          delFlag: DelFlag.NORMAL,
+          <%= primaryKey %>: <%= primaryKey %>,
+        },
+      });
+    });
+
+    it('should return null if not found', async () => {
+      mockPrismaService.<%= classNameLower %>.findFirst.mockResolvedValue(null);
+
+      const result = await service.findOne(999);
+
+      expect(result.data).toBeNull();
+    });
+  });
+
+  describe('update', () => {
+    it('should update a <%= businessName %>', async () => {
+      const updateDto = {
+        <%= primaryKey %>: 1,
+<% editColumns.filter(col => col.isPk !== '1').slice(0, 2).forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+        <%= col.javaField %>: 2,
+<% } else { -%>
+        <%= col.javaField %>: 'updated',
+<% } -%>
+<% }); -%>
+      };
+
+      mockPrismaService.<%= classNameLower %>.update.mockResolvedValue(updateDto);
+
+      const result = await service.update(updateDto as any);
+
+      expect(result.data.value).toBe(true);
+      expect(mockPrismaService.<%= classNameLower %>.update).toHaveBeenCalledWith({
+        where: { <%= primaryKey %>: updateDto.<%= primaryKey %> },
+        data: updateDto,
+      });
+    });
+  });
+
+  describe('remove', () => {
+    it('should soft delete <%= businessName %>s', async () => {
+      const <%= primaryKey %>s = [1, 2];
+
+      mockPrismaService.<%= classNameLower %>.updateMany.mockResolvedValue({ count: 2 });
+
+      const result = await service.remove(<%= primaryKey %>s);
+
+      expect(result.data.value).toBe(true);
+      expect(mockPrismaService.<%= classNameLower %>.updateMany).toHaveBeenCalledWith({
+        where: {
+          <%= primaryKey %>: { in: <%= primaryKey %>s },
+        },
+        data: {
+          delFlag: '1',
+        },
+      });
+    });
+
+    it('should return false if no records deleted', async () => {
+      mockPrismaService.<%= classNameLower %>.updateMany.mockResolvedValue({ count: 0 });
+
+      const result = await service.remove([999]);
+
+      expect(result.data.value).toBe(false);
+    });
+  });
+});

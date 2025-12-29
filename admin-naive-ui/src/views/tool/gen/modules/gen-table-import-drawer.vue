@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { ref, watch } from 'vue';
-import { fetchGetGenDataNames, fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
+import { watch } from 'vue';
+import { fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate, useTableProps } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -31,9 +31,6 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
   apiParams: {
     pageNum: 1,
     pageSize: 15,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    dataName: null,
     tableName: null,
     tableComment: null,
   },
@@ -53,13 +50,19 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
       key: 'tableName',
       title: '表名称',
       align: 'center',
-      minWidth: 120,
+      minWidth: 150,
     },
     {
       key: 'tableComment',
       title: '表描述',
       align: 'center',
-      minWidth: 120,
+      minWidth: 150,
+    },
+    {
+      key: 'createTime',
+      title: '创建时间',
+      align: 'center',
+      minWidth: 150,
     },
   ],
 });
@@ -72,9 +75,8 @@ function closeDrawer() {
 
 async function handleSubmit() {
   if (checkedRowKeys.value.length > 0) {
-    // request
     try {
-      await fetchImportGenTable(checkedRowKeys.value as string[], searchParams.dataName!);
+      await fetchImportGenTable(checkedRowKeys.value as string[]);
       window.$message?.success('导入成功');
       emit('submitted');
     } catch {
@@ -84,10 +86,7 @@ async function handleSubmit() {
   closeDrawer();
 }
 
-const dataNameOptions = ref<CommonType.Option[]>([]);
-
 async function handleResetSearchParams() {
-  searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
   searchParams.tableName = null;
   searchParams.tableComment = null;
   data.value = [];
@@ -95,18 +94,8 @@ async function handleResetSearchParams() {
   await getDataByPage();
 }
 
-async function getDataNames() {
-  try {
-    const { data: dataNames } = await fetchGetGenDataNames();
-    dataNameOptions.value = dataNames.map((item) => ({ label: item, value: item }));
-  } catch {
-    // error handled by request interceptor
-  }
-}
-
 watch(visible, async () => {
   if (visible.value) {
-    await getDataNames();
     await handleResetSearchParams();
   }
 });
@@ -118,7 +107,6 @@ watch(visible, async () => {
       <div class="h-full flex-col">
         <GenTableDbSearch
           v-model:model="searchParams"
-          :options="dataNameOptions"
           @reset="handleResetSearchParams"
           @search="getDataByPage"
         />
@@ -129,7 +117,7 @@ watch(visible, async () => {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="750"
+          :scroll-x="600"
           :loading="loading"
           remote
           :row-key="(row) => row.tableName"

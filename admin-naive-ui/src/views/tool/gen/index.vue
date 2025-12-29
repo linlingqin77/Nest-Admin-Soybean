@@ -1,12 +1,10 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
 import {
   fetchBatchDeleteGenTable,
   fetchGenCode,
-  fetchGetGenDataNames,
   fetchGetGenTableList,
   fetchSynchGenDbList,
 } from '@/service/api/tool';
@@ -20,12 +18,14 @@ import GenTableSearch from './modules/gen-table-search.vue';
 import GenTableImportDrawer from './modules/gen-table-import-drawer.vue';
 import GenTableOperateDrawer from './modules/gen-table-operate-drawer.vue';
 import GenTablePreviewDrawer from './modules/gen-table-preview-drawer.vue';
+import GenTemplateModal from './modules/gen-template-modal.vue';
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
 const { zip } = useDownload();
 const { bool: importVisible, setTrue: openImportVisible } = useBoolean();
 const { bool: previewVisible, setTrue: openPreviewVisible } = useBoolean();
+const { bool: templateVisible, setTrue: openTemplateVisible } = useBoolean();
 
 const tableProps = useTableProps();
 
@@ -45,9 +45,6 @@ const {
   apiParams: {
     pageNum: 1,
     pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    dataName: null,
     tableName: null,
     tableComment: null,
     params: {},
@@ -65,26 +62,20 @@ const {
       width: 64,
     },
     {
-      key: 'dataName',
-      title: '数据源',
-      align: 'center',
-      minWidth: 120,
-    },
-    {
       key: 'tableName',
       title: '表名称',
       align: 'center',
-      minWidth: 120,
+      minWidth: 150,
     },
     {
       key: 'tableComment',
       title: '表描述',
       align: 'center',
-      minWidth: 120,
+      minWidth: 150,
     },
     {
       key: 'className',
-      title: '实体',
+      title: '实体类名',
       align: 'center',
       minWidth: 120,
     },
@@ -170,9 +161,9 @@ const {
         const buttons = [];
         if (hasAuth('tool:gen:preview')) buttons.push(previewBtn());
         if (hasAuth('tool:gen:edit')) buttons.push(editBtn());
-        if (hasAuth('tool:gen:refresh')) buttons.push(refreshBtn());
-        if (hasAuth('tool:gen:genCode')) buttons.push(genCodeBtn());
-        if (hasAuth('tool:gen:delete')) buttons.push(deleteBtn());
+        if (hasAuth('tool:gen:edit')) buttons.push(refreshBtn());
+        if (hasAuth('tool:gen:code')) buttons.push(genCodeBtn());
+        if (hasAuth('tool:gen:remove')) buttons.push(deleteBtn());
 
         return (
           <div class="flex-center gap-8px">
@@ -196,11 +187,9 @@ const {
   checkedRowKeys,
   onBatchDeleted,
   onDeleted,
-  // closeDrawer
 } = useTableOperate(data, getData);
 
 async function handleBatchDelete() {
-  // request
   try {
     await fetchBatchDeleteGenTable(checkedRowKeys.value);
     onBatchDeleted();
@@ -210,7 +199,6 @@ async function handleBatchDelete() {
 }
 
 async function handleDelete(id: CommonType.IdType) {
-  // request
   try {
     await fetchBatchDeleteGenTable([id]);
     onDeleted();
@@ -224,10 +212,10 @@ function edit(id: CommonType.IdType) {
 }
 
 async function refresh(id: CommonType.IdType) {
-  // request
   try {
     await fetchSynchGenDbList(id);
     window.$message?.success('同步成功');
+    getData();
   } catch {
     // error handled by request interceptor
   }
@@ -244,43 +232,33 @@ function handlePreview(id: CommonType.IdType) {
 }
 
 async function handleGenCode(row?: Api.Tool.GenTable) {
-  const tableIds = row?.tableId || checkedRowKeys.value.join(',');
-  if (!tableIds || tableIds === '') {
+  const tableNames = row?.tableName || checkedRowKeys.value.map(id => {
+    const item = data.value.find(d => d.tableId === id);
+    return item?.tableName;
+  }).filter(Boolean).join(',');
+  
+  if (!tableNames || tableNames === '') {
     window.$message?.error('请选择要生成的数据');
     return;
   }
-  // request
-  if (row?.genType === '1') {
+
+  if (row?.genType === 'PATH') {
     try {
-      await fetchGenCode(row.tableId!);
+      await fetchGenCode(row.tableName);
       window.$message?.success('生成成功');
     } catch {
       // error handled by request interceptor
     }
   } else {
-    zip(`/tool/gen/batchGenCode?tableIdStr=${tableIds}`, `RuoYi-${row?.tableId ? `${row.className}` : Date.now()}.zip`);
+    zip(`/tool/gen/batchGenCode?tables=${tableNames}`, `code-${row?.tableName ? row.className : Date.now()}.zip`);
   }
 }
-
-const dataNameOptions = ref<CommonType.Option[]>([]);
-
-async function getDataNames() {
-  try {
-    const { data: dataNames } = await fetchGetGenDataNames();
-    dataNameOptions.value = dataNames.map((item) => ({ label: item, value: item }));
-  } catch {
-    // error handled by request interceptor
-  }
-}
-
-getDataNames();
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
     <GenTableSearch
       v-model:model="searchParams"
-      :options="dataNameOptions"
       @reset="resetSearchParams"
       @search="getDataByPage"
     />
@@ -297,6 +275,7 @@ getDataNames();
         >
           <template #prefix>
             <NButton
+              v-if="hasAuth('tool:gen:code')"
               :disabled="checkedRowKeys.length === 0"
               size="small"
               ghost
@@ -308,11 +287,17 @@ getDataNames();
               </template>
               生成代码
             </NButton>
-            <NButton size="small" ghost type="primary" @click="handleImport">
+            <NButton v-if="hasAuth('tool:gen:import')" size="small" ghost type="primary" @click="handleImport">
               <template #icon>
                 <icon-material-symbols:upload-rounded class="text-icon" />
               </template>
               导入
+            </NButton>
+            <NButton size="small" ghost type="info" @click="openTemplateVisible">
+              <template #icon>
+                <icon-material-symbols:code class="text-icon" />
+              </template>
+              模板管理
             </NButton>
           </template>
         </TableHeaderOperation>
@@ -330,13 +315,14 @@ getDataNames();
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <GenTableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getData" />
+      <GenTableImportDrawer v-model:visible="importVisible" @submitted="getData" />
       <GenTableOperateDrawer v-model:visible="drawerVisible" :row-data="editingData" @submitted="getData" />
       <GenTablePreviewDrawer
         v-model:visible="previewVisible"
         :row-data="editingData"
         @submitted="() => handleGenCode(editingData!)"
       />
+      <GenTemplateModal v-model:visible="templateVisible" />
     </NCard>
   </div>
 </template>

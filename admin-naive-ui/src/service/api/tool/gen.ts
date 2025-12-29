@@ -12,14 +12,13 @@ export function fetchGetGenTableList(params?: Api.Tool.GenTableSearchParams) {
 /**
  * 导入表结构
  *
- * @param tables 表名称
- * @param dataName 数据源名称
+ * @param tables 表名称数组
  */
-export function fetchImportGenTable(tables: string[], dataName: string) {
+export function fetchImportGenTable(tables: string[]) {
   return request<boolean>({
     url: '/tool/gen/importTable',
     method: 'post',
-    params: { tables: tables.join(','), dataName },
+    data: { tableNames: tables.join(',') },
   });
 }
 
@@ -49,14 +48,6 @@ export function fetchBatchDeleteGenTable(tableIds: CommonType.IdType[]) {
   });
 }
 
-/** 查询数据源名称列表 */
-export function fetchGetGenDataNames() {
-  return request<string[]>({
-    url: '/tool/gen/getDataNames',
-    method: 'get',
-  });
-}
-
 /** 查询数据库列表 */
 export function fetchGetGenDbList(params?: Api.Tool.GenTableDbSearchParams) {
   return request<Api.Tool.GenTableDbList>({
@@ -68,7 +59,7 @@ export function fetchGetGenDbList(params?: Api.Tool.GenTableDbSearchParams) {
 
 /** 同步数据库 */
 export function fetchSynchGenDbList(tableId: CommonType.IdType) {
-  return request<Api.Tool.GenTableDbList>({
+  return request<boolean>({
     url: `/tool/gen/synchDb/${tableId}`,
     method: 'get',
   });
@@ -83,19 +74,28 @@ export function fetchGetGenPreview(tableId: CommonType.IdType) {
 }
 
 /** 生成代码（自定义路径） */
-export function fetchGenCode(tableId: CommonType.IdType) {
-  return request<Api.Tool.GenTableDbList>({
-    url: `/tool/gen/genCode/${tableId}`,
+export function fetchGenCode(tableName: string) {
+  return request<boolean>({
+    url: `/tool/gen/genCode/${tableName}`,
     method: 'get',
   });
 }
 
-/** 批量生成代码 */
-export function fetchBatchGenCode(tableIds: CommonType.IdType[]) {
-  const tableIdStr = tableIds.join(',');
-  return request<Api.Tool.GenTableDbList>({
-    url: '/tool/gen/genCode/',
+/** 下载代码（单表） */
+export function fetchDownloadCode(tableName: string) {
+  return request<Blob>({
+    url: `/tool/gen/download/${tableName}`,
     method: 'get',
-    params: { tableIdStr },
+    responseType: 'blob',
+  });
+}
+
+/** 批量生成代码下载 */
+export function fetchBatchGenCode(tableNames: string[]) {
+  return request<Blob>({
+    url: '/tool/gen/batchGenCode',
+    method: 'get',
+    params: { tables: tableNames.join(',') },
+    responseType: 'blob',
   });
 }

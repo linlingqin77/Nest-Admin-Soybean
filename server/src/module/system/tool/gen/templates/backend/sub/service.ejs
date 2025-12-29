@@ -1,0 +1,192 @@
+/**
+ * <%= functionName %> 主子表服务
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Injectable } from '@nestjs/common';
+import { Prisma, DelFlag } from '@prisma/client';
+import { Result } from 'src/common/response';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Create<%= BusinessName %>Dto, Update<%= BusinessName %>Dto, Query<%= BusinessName %>Dto } from './dto/<%= businessName %>.dto';
+import { isEmpty } from 'src/common/utils';
+import { Transactional } from 'src/common/decorators/transactional.decorator';
+
+@Injectable()
+export class <%= BusinessName %>Service {
+  constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * 创建<%= functionName %>（含子表数据）
+   */
+  @Transactional()
+  async create(create<%= BusinessName %>Dto: Create<%= BusinessName %>Dto) {
+    const { <%= table.subTableName ? camelCase(table.subTableName) + 'List' : 'subList' %>, ...mainData } = create<%= BusinessName %>Dto;
+
+    // 创建主表数据
+    const mainRecord = await this.prisma.<%= classNameLower %>.create({
+      data: mainData,
+    });
+
+    // 创建子表数据
+<% if (table.subTableName) { -%>
+    if (<%= camelCase(table.subTableName) %>List && <%= camelCase(table.subTableName) %>List.length > 0) {
+      const subData = <%= camelCase(table.subTableName) %>List.map((item) => ({
+        ...item,
+        <%= table.subTableFkName || 'mainId' %>: mainRecord.<%= primaryKey %>,
+      }));
+      await this.prisma.<%= camelCase(table.subTableName) %>.createMany({
+        data: subData,
+      });
+    }
+<% } -%>
+
+    return Result.ok(mainRecord);
+  }
+
+  /**
+   * 查询<%= functionName %>列表
+   */
+  async findAll(query: Query<%= BusinessName %>Dto) {
+    const where: Prisma.<%= className %>WhereInput = {
+      delFlag: DelFlag.NORMAL,
+    };
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'LIKE') { -%>
+    if (!isEmpty(query.<%= col.javaField %>)) {
+      where.<%= col.javaField %> = { contains: query.<%= col.javaField %> };
+    }
+<% } else if (col.queryType === 'EQ') { -%>
+    if (!isEmpty(query.<%= col.javaField %>)) {
+      where.<%= col.javaField %> = query.<%= col.javaField %>;
+    }
+<% } else if (col.queryType === 'BETWEEN') { -%>
+    if (Array.isArray(query.<%= col.javaField %>) && query.<%= col.javaField %>.length === 2) {
+      where.<%= col.javaField %> = { gte: query.<%= col.javaField %>[0], lte: query.<%= col.javaField %>[1] };
+    }
+<% } -%>
+<% }); -%>
+
+    const pageSize = Number(query.pageSize ?? 10);
+    const pageNum = Number(query.pageNum ?? 1);
+
+    const [list, total] = await this.prisma.$transaction([
+      this.prisma.<%= classNameLower %>.findMany({
+        where,
+        skip: pageSize * (pageNum - 1),
+        take: pageSize,
+        orderBy: { <%= primaryKey %>: 'desc' },
+      }),
+      this.prisma.<%= classNameLower %>.count({ where }),
+    ]);
+
+    return Result.ok({
+      rows: list,
+      total,
+    });
+  }
+
+  /**
+   * 查询<%= functionName %>详情（含子表数据）
+   */
+  async findOne(<%= primaryKey %>: <%= pkColumn ? getTsType(pkColumn) : 'number' %>) {
+    const mainRecord = await this.prisma.<%= classNameLower %>.findFirst({
+      where: {
+        delFlag: DelFlag.NORMAL,
+        <%= primaryKey %>: <%= primaryKey %>,
+      },
+    });
+
+    if (!mainRecord) {
+      return Result.ok(null);
+    }
+
+<% if (table.subTableName) { -%>
+    // 查询子表数据
+    const <%= camelCase(table.subTableName) %>List = await this.prisma.<%= camelCase(table.subTableName) %>.findMany({
+      where: {
+        <%= table.subTableFkName || 'mainId' %>: <%= primaryKey %>,
+        delFlag: DelFlag.NORMAL,
+      },
+    });
+
+    return Result.ok({
+      ...mainRecord,
+      <%= camelCase(table.subTableName) %>List,
+    });
+<% } else { -%>
+    return Result.ok(mainRecord);
+<% } -%>
+  }
+
+  /**
+   * 修改<%= functionName %>（含子表数据）
+   */
+  @Transactional()
+  async update(update<%= BusinessName %>Dto: Update<%= BusinessName %>Dto) {
+    const { <%= table.subTableName ? camelCase(table.subTableName) + 'List' : 'subList' %>, ...mainData } = update<%= BusinessName %>Dto;
+
+    // 更新主表数据
+    await this.prisma.<%= classNameLower %>.update({
+      where: {
+        <%= primaryKey %>: update<%= BusinessName %>Dto.<%= primaryKey %>,
+      },
+      data: mainData,
+    });
+
+<% if (table.subTableName) { -%>
+    // 删除原有子表数据
+    await this.prisma.<%= camelCase(table.subTableName) %>.deleteMany({
+      where: {
+        <%= table.subTableFkName || 'mainId' %>: update<%= BusinessName %>Dto.<%= primaryKey %>,
+      },
+    });
+
+    // 创建新的子表数据
+    if (<%= camelCase(table.subTableName) %>List && <%= camelCase(table.subTableName) %>List.length > 0) {
+      const subData = <%= camelCase(table.subTableName) %>List.map((item) => ({
+        ...item,
+        <%= table.subTableFkName || 'mainId' %>: update<%= BusinessName %>Dto.<%= primaryKey %>,
+      }));
+      await this.prisma.<%= camelCase(table.subTableName) %>.createMany({
+        data: subData,
+      });
+    }
+<% } -%>
+
+    return Result.ok({ value: true });
+  }
+
+  /**
+   * 删除<%= functionName %>（含子表数据）
+   */
+  @Transactional()
+  async remove(<%= primaryKey %>s: <%= pkColumn ? getTsType(pkColumn) : 'number' %>[]) {
+<% if (table.subTableName) { -%>
+    // 删除子表数据
+    await this.prisma.<%= camelCase(table.subTableName) %>.updateMany({
+      where: {
+        <%= table.subTableFkName || 'mainId' %>: {
+          in: <%= primaryKey %>s,
+        },
+      },
+      data: {
+        delFlag: '1',
+      },
+    });
+
+<% } -%>
+    // 删除主表数据
+    const res = await this.prisma.<%= classNameLower %>.updateMany({
+      where: {
+        <%= primaryKey %>: {
+          in: <%= primaryKey %>s,
+        },
+      },
+      data: {
+        delFlag: '1',
+      },
+    });
+
+    return Result.ok({ value: res.count >= 1 });
+  }
+}

@@ -4,6 +4,7 @@ import {
   IsNumber,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ColumnOptionsDto } from './gen-options.dto';
 
 export class CreateGenTableCloumnDto {
   @ApiProperty({ type: Number, description: '归属表编号' })
@@ -48,7 +49,7 @@ export class CreateGenTableCloumnDto {
   public isRequired!: string;
 }
 
-export class genTableCloumnUpdate {
+export class genTableCloumnUpdate extends ColumnOptionsDto {
   @ApiProperty({
     required: true,
   })

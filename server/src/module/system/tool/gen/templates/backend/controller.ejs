@@ -1,0 +1,119 @@
+/**
+ * <%= functionName %> 控制器
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Controller, Get, Post, Put, Body, Query, Param, Delete } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { RequirePermission } from 'src/common/decorators/require-permission.decorator';
+<% if (options.enableOperlog) { -%>
+import { Operlog } from 'src/common/decorators/operlog.decorator';
+import { BusinessType } from 'src/common/enum';
+<% } -%>
+<% if (options.enableDataScope) { -%>
+import { DataScope } from 'src/common/decorators/data-scope.decorator';
+<% } -%>
+import { <%= BusinessName %>Service } from './<%= businessName %>.service';
+import {
+  Create<%= BusinessName %>Dto,
+  Base<%= BusinessName %>Dto,
+  Update<%= BusinessName %>Dto,
+  Query<%= BusinessName %>Dto,
+  List<%= BusinessName %>Dto,
+} from './dto/<%= businessName %>.dto';
+import { ApiDataResponse } from 'src/common/decorators/api.decorator';
+<% if (options.enableExport || options.enableImport) { -%>
+import { Response } from 'express';
+import { Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+<% } -%>
+
+@ApiTags('<%= functionName %>')
+@Controller('<%= moduleName %>/<%= businessName %>')
+export class <%= BusinessName %>Controller {
+  constructor(private readonly <%= businessName %>Service: <%= BusinessName %>Service) {}
+
+  @ApiOperation({ summary: '<%= functionName %>-创建' })
+  @ApiDataResponse(Base<%= BusinessName %>Dto)
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:add')
+<% if (options.enableOperlog) { -%>
+  @Operlog({ title: '<%= functionName %>', businessType: BusinessType.INSERT })
+<% } -%>
+  @Post()
+  create(@Body() body: Create<%= BusinessName %>Dto) {
+    return this.<%= businessName %>Service.create(body);
+  }
+
+  @ApiOperation({ summary: '<%= functionName %>-列表' })
+  @ApiDataResponse(List<%= BusinessName %>Dto, true, true)
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:list')
+<% if (options.enableDataScope) { -%>
+  @DataScope({ deptAlias: '<%= options.dataScopeColumn || 'dept_id' %>' })
+<% } -%>
+  @Get('list')
+  findAll(@Query() query: Query<%= BusinessName %>Dto) {
+    return this.<%= businessName %>Service.findAll(query);
+  }
+
+  @ApiOperation({ summary: '<%= functionName %>-详情' })
+  @ApiDataResponse(Base<%= BusinessName %>Dto)
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:query')
+  @Get(':<%= primaryKey %>')
+  findOne(@Param('<%= primaryKey %>') <%= primaryKey %>: string) {
+    return this.<%= businessName %>Service.findOne(<%= primaryKey %>);
+  }
+
+  @ApiOperation({ summary: '<%= functionName %>-修改' })
+  @ApiDataResponse()
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:edit')
+<% if (options.enableOperlog) { -%>
+  @Operlog({ title: '<%= functionName %>', businessType: BusinessType.UPDATE })
+<% } -%>
+  @Put()
+  update(@Body() body: Update<%= BusinessName %>Dto) {
+    return this.<%= businessName %>Service.update(body);
+  }
+
+  @ApiOperation({ summary: '<%= functionName %>-删除' })
+  @ApiDataResponse()
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:remove')
+<% if (options.enableOperlog) { -%>
+  @Operlog({ title: '<%= functionName %>', businessType: BusinessType.DELETE })
+<% } -%>
+  @Delete(':<%= primaryKey %>')
+  remove(@Param('<%= primaryKey %>') <%= primaryKey %>: string) {
+    const <%= primaryKey %>s = <%= primaryKey %>.split(',').map((<%= primaryKey %>) => +<%= primaryKey %>);
+    return this.<%= businessName %>Service.remove(<%= primaryKey %>s);
+  }
+<% if (options.enableExport) { -%>
+
+  @ApiOperation({ summary: '<%= functionName %>-导出' })
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:export')
+<% if (options.enableOperlog) { -%>
+  @Operlog({ title: '<%= functionName %>', businessType: BusinessType.EXPORT })
+<% } -%>
+  @Post('export')
+  async export(@Body() query: Query<%= BusinessName %>Dto, @Res() res: Response) {
+    return this.<%= businessName %>Service.export(query, res);
+  }
+<% } -%>
+<% if (options.enableImport) { -%>
+
+  @ApiOperation({ summary: '<%= functionName %>-导入' })
+  @RequirePermission('<%= moduleName %>:<%= businessName %>:import')
+<% if (options.enableOperlog) { -%>
+  @Operlog({ title: '<%= functionName %>', businessType: BusinessType.IMPORT })
+<% } -%>
+  @Post('import')
+  @UseInterceptors(FileInterceptor('file'))
+  async import(@UploadedFile() file: Express.Multer.File) {
+    return this.<%= businessName %>Service.import(file);
+  }
+
+  @ApiOperation({ summary: '<%= functionName %>-下载导入模板' })
+  @Get('importTemplate')
+  async importTemplate(@Res() res: Response) {
+    return this.<%= businessName %>Service.importTemplate(res);
+  }
+<% } -%>
+}

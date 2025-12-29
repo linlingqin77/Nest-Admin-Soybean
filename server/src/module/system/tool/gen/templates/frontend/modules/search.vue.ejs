@@ -1,0 +1,130 @@
+<template>
+  <n-card :bordered="false" class="mb-4">
+    <n-form
+      ref="formRef"
+      :model="queryParams"
+      inline
+      label-placement="left"
+      label-width="auto"
+    >
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.htmlType === 'input' || col.queryType === 'LIKE') { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-input
+          v-model:value="queryParams.<%= col.javaField %>"
+          placeholder="请输入<%= col.columnComment %>"
+          clearable
+          @keyup.enter="handleSearch"
+        />
+      </n-form-item>
+<% } else if (col.htmlType === 'select') { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-select
+          v-model:value="queryParams.<%= col.javaField %>"
+          placeholder="请选择<%= col.columnComment %>"
+          clearable
+          style="width: 200px"
+<% if (col.dictType) { -%>
+          :options="getDictOptions('<%= col.dictType %>')"
+<% } else { -%>
+          :options="[]"
+<% } -%>
+        />
+      </n-form-item>
+<% } else if (col.queryType === 'BETWEEN' && (col.htmlType === 'datetime' || col.htmlType === 'date')) { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-date-picker
+          v-model:value="queryParams.<%= col.javaField %>"
+          type="daterange"
+          clearable
+          style="width: 300px"
+        />
+      </n-form-item>
+<% } else if (col.htmlType === 'datetime') { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-date-picker
+          v-model:value="queryParams.<%= col.javaField %>"
+          type="datetime"
+          clearable
+        />
+      </n-form-item>
+<% } else if (col.htmlType === 'date') { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-date-picker
+          v-model:value="queryParams.<%= col.javaField %>"
+          type="date"
+          clearable
+        />
+      </n-form-item>
+<% } else { -%>
+      <n-form-item label="<%= col.columnComment %>" path="<%= col.javaField %>">
+        <n-input
+          v-model:value="queryParams.<%= col.javaField %>"
+          placeholder="请输入<%= col.columnComment %>"
+          clearable
+          @keyup.enter="handleSearch"
+        />
+      </n-form-item>
+<% } -%>
+<% }); -%>
+      <n-form-item>
+        <n-space>
+          <n-button type="primary" @click="handleSearch">
+            <template #icon><n-icon :component="SearchOutline" /></template>
+            搜索
+          </n-button>
+          <n-button @click="handleReset">
+            <template #icon><n-icon :component="RefreshOutline" /></template>
+            重置
+          </n-button>
+        </n-space>
+      </n-form-item>
+    </n-form>
+  </n-card>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive } from 'vue';
+import { SearchOutline, RefreshOutline } from '@vicons/ionicons5';
+import type { <%= BusinessName %>Query } from '@/api/<%= moduleName %>/<%= businessName %>/types';
+<% if (hasDict) { -%>
+import { useDictStore } from '@/store/modules/dict';
+
+const dictStore = useDictStore();
+const getDictOptions = (dictType: string) => dictStore.getDictOptions(dictType);
+<% } -%>
+
+const emit = defineEmits(['search', 'reset']);
+
+const formRef = ref();
+const queryParams = reactive<<%= BusinessName %>Query>({
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+  <%= col.javaField %>: undefined,
+<% } else if (col.javaType === 'Number') { -%>
+  <%= col.javaField %>: undefined,
+<% } else { -%>
+  <%= col.javaField %>: '',
+<% } -%>
+<% }); -%>
+});
+
+/** 搜索 */
+function handleSearch() {
+  emit('search', { ...queryParams });
+}
+
+/** 重置 */
+function handleReset() {
+<% queryColumns.forEach(function(col) { -%>
+<% if (col.queryType === 'BETWEEN') { -%>
+  queryParams.<%= col.javaField %> = undefined;
+<% } else if (col.javaType === 'Number') { -%>
+  queryParams.<%= col.javaField %> = undefined;
+<% } else { -%>
+  queryParams.<%= col.javaField %> = '';
+<% } -%>
+<% }); -%>
+  emit('reset');
+}
+</script>

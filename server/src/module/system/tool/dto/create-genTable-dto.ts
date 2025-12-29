@@ -10,10 +10,14 @@ import {
   IsBoolean,
   IsNumber,
   IsNumberString,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PageQueryDto } from 'src/common/dto/index';
 import { genTableCloumnUpdate } from './create-genTableCloumn-dto';
+import { GenOptionsDto } from './gen-options.dto';
+import { Type } from 'class-transformer';
+
 export class CreateGenTableDto {
   @ApiProperty({ type: String, description: '表名称' })
   public tableName: string;
@@ -126,4 +130,22 @@ export class GenTableUpdate {
   columns?: genTableCloumnUpdate[];
   @IsString()
   tplWebType?: string;
+
+  // ========== 主子表配置 ==========
+  @ApiProperty({ required: false, description: '关联子表的表名' })
+  @IsOptional()
+  @IsString()
+  subTableName?: string;
+
+  @ApiProperty({ required: false, description: '子表关联的外键名' })
+  @IsOptional()
+  @IsString()
+  subTableFkName?: string;
+
+  // ========== 企业级功能配置（JSON 格式存储在 options 字段） ==========
+  @ApiProperty({ required: false, description: '企业级功能配置', type: GenOptionsDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => GenOptionsDto)
+  genOptions?: GenOptionsDto;
 }

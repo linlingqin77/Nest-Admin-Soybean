@@ -1,30 +1,30 @@
 /**
  * 数据权限范围枚举
- * - DATA_SCOPE_ALL (1): 全部数据权限
- * - DATA_SCOPE_CUSTOM (2): 自定数据权限
- * - DATA_SCOPE_DEPT (3): 本部门数据权限
- * - DATA_SCOPE_DEPT_AND_CHILD (4): 本部门及以下数据权限
- * - DATA_SCOPE_SELF (5): 仅本人数据权限
+ * - ALL: 全部数据权限
+ * - CUSTOM: 自定数据权限
+ * - DEPT: 本部门数据权限
+ * - DEPT_AND_CHILD: 本部门及以下数据权限
+ * - SELF: 仅本人数据权限
  */
 export enum DataScopeEnum {
   /** 全部数据权限 */
-  DATA_SCOPE_ALL = '1',
+  DATA_SCOPE_ALL = 'ALL',
   /** 自定数据权限 */
-  DATA_SCOPE_CUSTOM = '2',
+  DATA_SCOPE_CUSTOM = 'CUSTOM',
   /** 本部门数据权限 */
-  DATA_SCOPE_DEPT = '3',
+  DATA_SCOPE_DEPT = 'DEPT',
   /** 本部门及以下数据权限 */
-  DATA_SCOPE_DEPT_AND_CHILD = '4',
+  DATA_SCOPE_DEPT_AND_CHILD = 'DEPT_AND_CHILD',
   /** 仅本人数据权限 */
-  DATA_SCOPE_SELF = '5',
+  DATA_SCOPE_SELF = 'SELF',
 }
 
 /** DataScopeEnum Swagger Schema */
 export const DataScopeEnumSchema = {
   description: `数据权限范围枚举
-- DATA_SCOPE_ALL (1): 全部数据权限
-- DATA_SCOPE_CUSTOM (2): 自定数据权限
-- DATA_SCOPE_DEPT (3): 本部门数据权限
-- DATA_SCOPE_DEPT_AND_CHILD (4): 本部门及以下数据权限
-- DATA_SCOPE_SELF (5): 仅本人数据权限`,
+- ALL: 全部数据权限
+- CUSTOM: 自定数据权限
+- DEPT: 本部门数据权限
+- DEPT_AND_CHILD: 本部门及以下数据权限
+- SELF: 仅本人数据权限`,
 };

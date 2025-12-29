@@ -1,0 +1,117 @@
+/**
+ * <%= functionName %> 测试数据工厂
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { faker } from '@faker-js/faker';
+import { <%= className %> } from '@prisma/client';
+
+/**
+ * 生成 <%= functionName %> 测试数据
+ */
+export function create<%= BusinessName %>Factory(overrides: Partial<<%= className %>> = {}): Partial<<%= className %>> {
+  return {
+<% columns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+    <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
+<% } else if (col.javaType === 'Date') { -%>
+    <%= col.javaField %>: faker.date.recent(),
+<% } else if (col.htmlType === 'textarea') { -%>
+    <%= col.javaField %>: faker.lorem.paragraph(),
+<% } else if (col.htmlType === 'select' || col.htmlType === 'radio') { -%>
+    <%= col.javaField %>: faker.helpers.arrayElement(['0', '1']),
+<% } else if (col.columnName.includes('email')) { -%>
+    <%= col.javaField %>: faker.internet.email(),
+<% } else if (col.columnName.includes('phone') || col.columnName.includes('mobile')) { -%>
+    <%= col.javaField %>: faker.phone.number(),
+<% } else if (col.columnName.includes('name')) { -%>
+    <%= col.javaField %>: faker.person.fullName(),
+<% } else if (col.columnName.includes('url') || col.columnName.includes('link')) { -%>
+    <%= col.javaField %>: faker.internet.url(),
+<% } else if (col.columnName.includes('avatar') || col.columnName.includes('image')) { -%>
+    <%= col.javaField %>: faker.image.avatar(),
+<% } else { -%>
+    <%= col.javaField %>: faker.string.alphanumeric(10),
+<% } -%>
+<% }); -%>
+    ...overrides,
+  };
+}
+
+/**
+ * 批量生成 <%= functionName %> 测试数据
+ */
+export function create<%= BusinessName %>FactoryList(count: number, overrides: Partial<<%= className %>> = {}): Partial<<%= className %>>[] {
+  return Array.from({ length: count }, () => create<%= BusinessName %>Factory(overrides));
+}
+
+/**
+ * 生成完整的 <%= functionName %> 实体（包含主键）
+ */
+export function create<%= BusinessName %>Entity(overrides: Partial<<%= className %>> = {}): <%= className %> {
+  return {
+    <%= primaryKey %>: faker.number.int({ min: 1, max: 10000 }),
+    ...create<%= BusinessName %>Factory(),
+    delFlag: '0',
+    createBy: 'admin',
+    createTime: new Date(),
+    updateBy: 'admin',
+    updateTime: new Date(),
+    ...overrides,
+  } as <%= className %>;
+}
+
+/**
+ * 生成创建 DTO 测试数据
+ */
+export function createCreate<%= BusinessName %>DtoFactory(overrides: Partial<any> = {}): any {
+  return {
+<% insertColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+    <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
+<% } else if (col.javaType === 'Date') { -%>
+    <%= col.javaField %>: faker.date.recent(),
+<% } else { -%>
+    <%= col.javaField %>: faker.string.alphanumeric(10),
+<% } -%>
+<% }); -%>
+    ...overrides,
+  };
+}
+
+/**
+ * 生成更新 DTO 测试数据
+ */
+export function createUpdate<%= BusinessName %>DtoFactory(overrides: Partial<any> = {}): any {
+  return {
+    <%= primaryKey %>: faker.number.int({ min: 1, max: 10000 }),
+<% editColumns.filter(col => col.isPk !== '1').forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+    <%= col.javaField %>: faker.number.int({ min: 1, max: 1000 }),
+<% } else if (col.javaType === 'Date') { -%>
+    <%= col.javaField %>: faker.date.recent(),
+<% } else { -%>
+    <%= col.javaField %>: faker.string.alphanumeric(10),
+<% } -%>
+<% }); -%>
+    ...overrides,
+  };
+}
+
+/**
+ * 生成查询 DTO 测试数据
+ */
+export function createQuery<%= BusinessName %>DtoFactory(overrides: Partial<any> = {}): any {
+  return {
+    pageNum: 1,
+    pageSize: 10,
+<% queryColumns.slice(0, 2).forEach(function(col) { -%>
+<% if (col.javaType === 'Number') { -%>
+    <%= col.javaField %>: faker.number.int({ min: 1, max: 100 }),
+<% } else { -%>
+    <%= col.javaField %>: faker.string.alphanumeric(5),
+<% } -%>
+<% }); -%>
+    ...overrides,
+  };
+}

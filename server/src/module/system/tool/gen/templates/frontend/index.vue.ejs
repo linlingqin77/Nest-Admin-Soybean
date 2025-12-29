@@ -1,0 +1,220 @@
+<template>
+  <CommonPage>
+    <template #action>
+      <n-space>
+        <n-button v-permission="'<%= moduleName %>:<%= businessName %>:add'" type="primary" @click="handleAdd">
+          <template #icon><n-icon :component="AddOutline" /></template>
+          新增
+        </n-button>
+<% if (options.enableExport) { -%>
+        <n-button v-permission="'<%= moduleName %>:<%= businessName %>:export'" @click="handleExport">
+          <template #icon><n-icon :component="DownloadOutline" /></template>
+          导出
+        </n-button>
+<% } -%>
+<% if (options.enableImport) { -%>
+        <n-button v-permission="'<%= moduleName %>:<%= businessName %>:import'" @click="handleImport">
+          <template #icon><n-icon :component="CloudUploadOutline" /></template>
+          导入
+        </n-button>
+<% } -%>
+      </n-space>
+    </template>
+
+    <!-- 搜索区域 -->
+    <Search ref="searchRef" @search="handleSearch" @reset="handleReset" />
+
+    <!-- 表格区域 -->
+    <n-data-table
+      ref="tableRef"
+      :columns="columns"
+      :data="tableData"
+      :loading="loading"
+      :pagination="pagination"
+      :row-key="(row) => row.<%= primaryKey %>"
+<% if (options.enableColumnResize) { -%>
+      :resizable="true"
+<% } -%>
+      @update:page="handlePageChange"
+      @update:page-size="handlePageSizeChange"
+    />
+
+    <!-- 编辑抽屉 -->
+    <Drawer ref="drawerRef" @success="handleSuccess" />
+<% if (options.enableImport) { -%>
+
+    <!-- 导入弹窗 -->
+    <ImportModal ref="importModalRef" @success="handleSuccess" />
+<% } -%>
+  </CommonPage>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, h } from 'vue';
+import { NButton, NSpace, NPopconfirm, useMessage } from 'naive-ui';
+import { AddOutline, DownloadOutline, CloudUploadOutline } from '@vicons/ionicons5';
+import CommonPage from '@/components/common/CommonPage.vue';
+import Search from './modules/search.vue';
+import Drawer from './modules/drawer.vue';
+<% if (options.enableImport) { -%>
+import ImportModal from './modules/import-modal.vue';
+<% } -%>
+import { list<%= BusinessName %>, delete<%= BusinessName %><% if (options.enableExport) { %>, export<%= BusinessName %><% } %> } from '@/api/<%= moduleName %>/<%= businessName %>';
+import type { <%= BusinessName %>VO, <%= BusinessName %>Query } from '@/api/<%= moduleName %>/<%= businessName %>/types';
+
+defineOptions({ name: '<%= BusinessName %>' });
+
+const message = useMessage();
+const searchRef = ref();
+const drawerRef = ref();
+const tableRef = ref();
+<% if (options.enableImport) { -%>
+const importModalRef = ref();
+<% } -%>
+
+const loading = ref(false);
+const tableData = ref<<%= BusinessName %>VO[]>([]);
+const queryParams = reactive<<%= BusinessName %>Query>({
+  pageNum: 1,
+  pageSize: 10,
+});
+
+const pagination = reactive({
+  page: 1,
+  pageSize: 10,
+  itemCount: 0,
+  showSizePicker: true,
+  pageSizes: [10, 20, 50, 100],
+});
+
+const columns = [
+<% listColumns.forEach(function(col) { -%>
+<% if (col.dictType) { -%>
+  {
+    title: '<%= col.columnComment %>',
+    key: '<%= col.javaField %>',
+    render: (row: <%= BusinessName %>VO) => {
+      return h('span', {}, getDictLabel('<%= col.dictType %>', row.<%= col.javaField %>));
+    },
+  },
+<% } else { -%>
+  { title: '<%= col.columnComment %>', key: '<%= col.javaField %>' },
+<% } -%>
+<% }); -%>
+  {
+    title: '操作',
+    key: 'actions',
+    width: 200,
+    render: (row: <%= BusinessName %>VO) => {
+      return h(NSpace, {}, () => [
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'primary',
+            text: true,
+            onClick: () => handleEdit(row),
+          },
+          { default: () => '编辑' }
+        ),
+        h(
+          NPopconfirm,
+          {
+            onPositiveClick: () => handleDelete(row.<%= primaryKey %>),
+          },
+          {
+            trigger: () =>
+              h(
+                NButton,
+                { size: 'small', type: 'error', text: true },
+                { default: () => '删除' }
+              ),
+            default: () => '确认删除该记录吗？',
+          }
+        ),
+      ]);
+    },
+  },
+];
+
+/** 获取列表数据 */
+async function getList() {
+  loading.value = true;
+  try {
+    const res = await list<%= BusinessName %>(queryParams);
+    tableData.value = res.data.rows;
+    pagination.itemCount = res.data.total;
+  } finally {
+    loading.value = false;
+  }
+}
+
+/** 搜索 */
+function handleSearch(params: <%= BusinessName %>Query) {
+  Object.assign(queryParams, params);
+  queryParams.pageNum = 1;
+  getList();
+}
+
+/** 重置 */
+function handleReset() {
+  queryParams.pageNum = 1;
+  getList();
+}
+
+/** 分页变化 */
+function handlePageChange(page: number) {
+  queryParams.pageNum = page;
+  pagination.page = page;
+  getList();
+}
+
+/** 每页数量变化 */
+function handlePageSizeChange(pageSize: number) {
+  queryParams.pageSize = pageSize;
+  queryParams.pageNum = 1;
+  pagination.pageSize = pageSize;
+  pagination.page = 1;
+  getList();
+}
+
+/** 新增 */
+function handleAdd() {
+  drawerRef.value?.open();
+}
+
+/** 编辑 */
+function handleEdit(row: <%= BusinessName %>VO) {
+  drawerRef.value?.open(row.<%= primaryKey %>);
+}
+
+/** 删除 */
+async function handleDelete(<%= primaryKey %>: number) {
+  await delete<%= BusinessName %>(<%= primaryKey %>);
+  message.success('删除成功');
+  getList();
+}
+
+/** 操作成功回调 */
+function handleSuccess() {
+  getList();
+}
+<% if (options.enableExport) { -%>
+
+/** 导出 */
+async function handleExport() {
+  await export<%= BusinessName %>(queryParams);
+}
+<% } -%>
+<% if (options.enableImport) { -%>
+
+/** 导入 */
+function handleImport() {
+  importModalRef.value?.open();
+}
+<% } -%>
+
+onMounted(() => {
+  getList();
+});
+</script>

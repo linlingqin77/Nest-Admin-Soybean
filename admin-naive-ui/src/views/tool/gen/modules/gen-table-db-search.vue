@@ -6,12 +6,6 @@ defineOptions({
   name: 'GenTableDbSearch',
 });
 
-interface Props {
-  options: CommonType.Option[];
-}
-
-defineProps<Props>();
-
 interface Emits {
   (e: 'reset'): void;
   (e: 'search'): void;
@@ -35,18 +29,15 @@ async function search() {
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
+  <NForm ref="formRef" :model="model" label-placement="left" :label-width="80" class="mb-16px">
     <NGrid responsive="screen" item-responsive>
-      <NFormItemGi span="24 s:12" label="数据源" path="dataName" class="pr-24px">
-        <NSelect v-model:value="model.dataName" :options="options" placeholder="请选择数据源" />
+      <NFormItemGi span="24 s:8" label="表名称" path="tableName" class="pr-24px">
+        <NInput v-model:value="model.tableName" placeholder="请输入表名称" clearable />
       </NFormItemGi>
-      <NFormItemGi span="24 s:12" label="表名称" path="tableName" class="pr-24px">
-        <NInput v-model:value="model.tableName" placeholder="请输入表名称" />
+      <NFormItemGi span="24 s:8" label="表描述" path="tableComment" class="pr-24px">
+        <NInput v-model:value="model.tableComment" placeholder="请输入表描述" clearable />
       </NFormItemGi>
-      <NFormItemGi span="24 s:12" label="表描述" path="tableComment" class="pr-24px">
-        <NInput v-model:value="model.tableComment" placeholder="请输入表描述" />
-      </NFormItemGi>
-      <NFormItemGi :show-feedback="false" span="24 s:12" class="pb-6px pr-24px">
+      <NFormItemGi :show-feedback="false" span="24 s:8" class="pb-6px pr-24px">
         <NSpace class="w-full" justify="end">
           <NButton @click="reset">
             <template #icon>

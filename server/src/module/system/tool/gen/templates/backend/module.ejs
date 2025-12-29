@@ -1,0 +1,15 @@
+/**
+ * <%= functionName %> 模块
+ * @author <%= functionAuthor %>
+ * @date <%= datetime %>
+ */
+import { Module } from '@nestjs/common';
+import { <%= BusinessName %>Controller } from './<%= businessName %>.controller';
+import { <%= BusinessName %>Service } from './<%= businessName %>.service';
+
+@Module({
+  controllers: [<%= BusinessName %>Controller],
+  providers: [<%= BusinessName %>Service],
+  exports: [<%= BusinessName %>Service],
+})
+export class <%= BusinessName %>Module {}
