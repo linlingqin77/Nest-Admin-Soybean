@@ -3,6 +3,7 @@ import request from 'supertest';
 import { createTestApp, cleanupDatabase, getAuthToken } from './setup-e2e';
 import { AppConfigService } from '../src/config/app-config.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { ConfigType } from '@prisma/client';
 
 /**
  * 配置管理 E2E 测试
@@ -82,7 +83,7 @@ describe('ConfigController (e2e)', () => {
     it('should support filtering by config type', async () => {
       const response = await request(app.getHttpServer())
         .get(`${prefix}/system/config/list`)
-        .query({ configType: 'Y' })
+        .query({ configType: ConfigType.YES })
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
@@ -99,7 +100,7 @@ describe('ConfigController (e2e)', () => {
         configName: `test_e2e_config_${Date.now()}`,
         configKey: `test.e2e.config.${Date.now()}`,
         configValue: 'test_value',
-        configType: 'N',
+        configType: ConfigType.NO,
         remark: 'E2E Test Config',
       };
 
@@ -123,7 +124,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_config1_${Date.now()}`,
           configKey,
           configValue: 'value1',
-          configType: 'N',
+          configType: ConfigType.NO,
         })
         .expect(200);
 
@@ -135,7 +136,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_config2_${Date.now()}`,
           configKey,
           configValue: 'value2',
-          configType: 'N',
+          configType: ConfigType.NO,
         })
         .expect(200);
 
@@ -166,7 +167,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_detail_config_${Date.now()}`,
           configKey: `test.e2e.detail.${Date.now()}`,
           configValue: 'detail_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -206,7 +207,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_bykey_config_${Date.now()}`,
           configKey: testConfigKey,
           configValue: 'bykey_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -244,7 +245,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_update_config_${Date.now()}`,
           configKey: `test.e2e.update.${Date.now()}`,
           configValue: 'original_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -297,7 +298,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_delete_config_${Date.now()}`,
           configKey: `test.e2e.delete.${Date.now()}`,
           configValue: 'delete_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -326,7 +327,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_del1_${Date.now()}`,
           configKey: `test.e2e.del1.${Date.now()}`,
           configValue: 'value1',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -338,7 +339,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_del2_${Date.now()}`,
           configKey: `test.e2e.del2.${Date.now()}`,
           configValue: 'value2',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -368,7 +369,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_system_config_${Date.now()}`,
           configKey: `test.e2e.system.${Date.now()}`,
           configValue: 'system_value',
-          configType: 'Y', // 系统内置配置
+          configType: ConfigType.YES, // 系统内置配置
           createBy: 'test',
           updateBy: 'test',
         },
@@ -402,7 +403,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_cache_config_${Date.now()}`,
           configKey: `test.e2e.cache.${Date.now()}`,
           configValue: 'cache_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -436,7 +437,7 @@ describe('ConfigController (e2e)', () => {
           configName: `test_e2e_cached_config_${Date.now()}`,
           configKey: testConfigKey,
           configValue: 'cached_value',
-          configType: 'N',
+          configType: ConfigType.NO,
           createBy: 'test',
           updateBy: 'test',
         },

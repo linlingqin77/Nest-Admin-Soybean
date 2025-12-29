@@ -3,6 +3,7 @@ import request from 'supertest';
 import { createTestApp, cleanupDatabase, getAuthToken, createTestUser } from './setup-e2e';
 import { AppConfigService } from '../src/config/app-config.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { UserType, Status, DelFlag } from '@prisma/client';
 
 /**
  * 租户管理 E2E 测试
@@ -70,7 +71,7 @@ describe('TenantController (e2e)', () => {
     it('should support filtering by status', async () => {
       const response = await request(app.getHttpServer())
         .get(`${prefix}/system/tenant/list`)
-        .query({ status: 'NORMAL' })
+        .query({ status: Status.NORMAL })
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
@@ -86,9 +87,9 @@ describe('TenantController (e2e)', () => {
       const newTenant = {
         tenantId: `test_${Date.now()}`,
         companyName: `test_e2e_company_${Date.now()}`,
-        contactName: 'Test Contact',
+        contactUserName: 'Test Contact',
         contactPhone: '13800138000',
-        status: 'NORMAL',
+        status: Status.NORMAL,
         packageId: 1,
         expireTime: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1年后
         accountCount: 100,
@@ -114,8 +115,8 @@ describe('TenantController (e2e)', () => {
         .send({
           tenantId,
           companyName: `test_e2e_company1_${Date.now()}`,
-          contactName: 'Test Contact 1',
-          status: 'NORMAL',
+          contactUserName: 'Test Contact 1',
+          status: Status.NORMAL,
           packageId: 1,
         })
         .expect(200);
@@ -127,8 +128,8 @@ describe('TenantController (e2e)', () => {
         .send({
           tenantId,
           companyName: `test_e2e_company2_${Date.now()}`,
-          contactName: 'Test Contact 2',
-          status: 'NORMAL',
+          contactUserName: 'Test Contact 2',
+          status: Status.NORMAL,
           packageId: 1,
         })
         .expect(200);
@@ -159,9 +160,9 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenantId,
           companyName: `test_e2e_detail_company_${Date.now()}`,
-          contactName: 'Detail Contact',
+          contactUserName: 'Detail Contact',
           contactPhone: '13800138000',
-          status: 'NORMAL',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -199,9 +200,9 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenantId,
           companyName: `test_e2e_update_company_${Date.now()}`,
-          contactName: 'Original Contact',
+          contactUserName: 'Original Contact',
           contactPhone: '13800138000',
-          status: 'NORMAL',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -216,7 +217,7 @@ describe('TenantController (e2e)', () => {
         .send({
           tenantId: testTenantId,
           companyName: `test_e2e_updated_company_${Date.now()}`,
-          contactName: 'Updated Contact',
+          contactUserName: 'Updated Contact',
           contactPhone: '13900139000',
         })
         .expect(200);
@@ -229,7 +230,7 @@ describe('TenantController (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      expect(verifyResponse.body.data.contactName).toBe('Updated Contact');
+      expect(verifyResponse.body.data.contactUserName).toBe('Updated Contact');
     });
 
     it('should fail with invalid tenant id', async () => {
@@ -253,8 +254,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenantId,
           companyName: `test_e2e_delete_company_${Date.now()}`,
-          contactName: 'Delete Contact',
-          status: 'NORMAL',
+          contactUserName: 'Delete Contact',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -312,8 +313,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: tenant1Id,
           companyName: `test_e2e_iso_company1_${Date.now()}`,
-          contactName: 'Isolation Contact 1',
-          status: 'NORMAL',
+          contactUserName: 'Isolation Contact 1',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -324,8 +325,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: tenant2Id,
           companyName: `test_e2e_iso_company2_${Date.now()}`,
-          contactName: 'Isolation Contact 2',
-          status: 'NORMAL',
+          contactUserName: 'Isolation Contact 2',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -339,10 +340,10 @@ describe('TenantController (e2e)', () => {
           userName: `test_iso_user1_${Date.now()}`,
           nickName: 'Isolation User 1',
           password: 'hashed_password',
-          userType: '99',
+          userType: UserType.GUEST,
           deptId: 100,
-          status: 'NORMAL',
-          delFlag: 'NORMAL',
+          status: Status.NORMAL,
+          delFlag: DelFlag.NORMAL,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -355,10 +356,10 @@ describe('TenantController (e2e)', () => {
           userName: `test_iso_user2_${Date.now()}`,
           nickName: 'Isolation User 2',
           password: 'hashed_password',
-          userType: '99',
+          userType: UserType.GUEST,
           deptId: 100,
-          status: 'NORMAL',
-          delFlag: 'NORMAL',
+          status: Status.NORMAL,
+          delFlag: DelFlag.NORMAL,
           createBy: 'test',
           updateBy: 'test',
         },
@@ -415,8 +416,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenant1Id,
           companyName: `test_e2e_switch_company1_${Date.now()}`,
-          contactName: 'Switch Contact 1',
-          status: 'NORMAL',
+          contactUserName: 'Switch Contact 1',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -427,8 +428,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenant2Id,
           companyName: `test_e2e_switch_company2_${Date.now()}`,
-          contactName: 'Switch Contact 2',
-          status: 'NORMAL',
+          contactUserName: 'Switch Contact 2',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -478,8 +479,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: testTenantId,
           companyName: `test_e2e_status_company_${Date.now()}`,
-          contactName: 'Status Contact',
-          status: 'NORMAL',
+          contactUserName: 'Status Contact',
+          status: Status.NORMAL,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',
@@ -493,7 +494,7 @@ describe('TenantController (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           tenantId: testTenantId,
-          status: 'DISABLE',
+          status: Status.DISABLED,
         })
         .expect(200);
 
@@ -505,7 +506,7 @@ describe('TenantController (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      expect(verifyResponse.body.data.status).toBe('DISABLE');
+      expect(verifyResponse.body.data.status).toBe('DISABLED');
     });
 
     it('should prevent login for disabled tenant', async () => {
@@ -515,8 +516,8 @@ describe('TenantController (e2e)', () => {
         data: {
           tenantId: disabledTenantId,
           companyName: `test_e2e_disabled_company_${Date.now()}`,
-          contactName: 'Disabled Contact',
-          status: 'DISABLE',
+          contactUserName: 'Disabled Contact',
+          status: Status.DISABLED,
           packageId: 1,
           createBy: 'test',
           updateBy: 'test',

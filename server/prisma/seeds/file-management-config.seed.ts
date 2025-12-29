@@ -1,4 +1,4 @@
-import { PrismaClient, Status, DelFlag } from '@prisma/client';
+import { PrismaClient, Status, DelFlag, ConfigType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -13,28 +13,28 @@ export async function seedFileManagementConfig() {
             configName: '文件版本模式',
             configKey: 'sys.file.versionMode',
             configValue: 'overwrite',
-            configType: 'Y',
+            configType: ConfigType.YES,
             remark: '文件版本控制模式：overwrite-覆盖模式，version-版本模式',
         },
         {
             configName: '文件最大版本数',
             configKey: 'sys.file.maxVersions',
             configValue: '5',
-            configType: 'Y',
+            configType: ConfigType.YES,
             remark: '保留的最大文件版本数，超过后自动删除最旧版本',
         },
         {
             configName: '缩略图功能开关',
             configKey: 'sys.file.thumbnailEnabled',
             configValue: 'true',
-            configType: 'Y',
+            configType: ConfigType.YES,
             remark: '是否启用缩略图自动生成功能',
         },
         {
             configName: '自动清理旧版本',
             configKey: 'sys.file.autoCleanVersions',
             configValue: 'true',
-            configType: 'Y',
+            configType: ConfigType.YES,
             remark: '是否启用定时任务自动清理旧版本文件',
         },
     ];

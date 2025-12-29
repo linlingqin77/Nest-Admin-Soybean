@@ -19,8 +19,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "test:cov:full": "jest --coverage --coverageThreshold='{}'",
+    "test:cov:report": "jest --coverage && ts-node scripts/generate-coverage-report.ts",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:cov": "jest --config ./test/jest-e2e.json --coverage",
+    "test:all": "npm run test:cov && npm run test:e2e",
+    "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
@@ -159,11 +164,37 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     },
+    "collectCoverage": false,
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.service.ts",
+      "**/*.controller.ts",
+      "**/*.repository.ts",
+      "!**/*.spec.ts",
+      "!**/*.e2e-spec.ts",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/test-utils/**"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageReporters": [
+      "text",
+      "text-summary",
+      "html",
+      "json",
+      "lcov",
+      "clover"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 40,
+        "functions": 55,
+        "lines": 60,
+        "statements": 60
+      }
+    },
+    "testEnvironment": "node",
+    "testTimeout": 30000,
+    "maxWorkers": "50%"
   },
   "simple-git-hooks": {
     "commit-msg": "commitlint --edit $1",

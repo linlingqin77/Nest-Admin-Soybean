@@ -501,4 +501,383 @@ describe('UserService', () => {
       expect(result.msg).toContain('注册账号已存在');
     });
   });
+
+  describe('findAll', () => {
+    it('should return paginated user list', async () => {
+      const query = { pageNum: 1, pageSize: 10 };
+      const mockUsers = [mockUser];
+
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue(mockUsers);
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+      (prisma.$transaction as jest.Mock).mockResolvedValue([mockUsers, 1]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should filter by userName', async () => {
+      const query = { pageNum: 1, pageSize: 10, userName: 'admin' };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should filter by phonenumber', async () => {
+      const query = { pageNum: 1, pageSize: 10, phonenumber: '138' };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should filter by status', async () => {
+      const query = { pageNum: 1, pageSize: 10, status: StatusEnum.NORMAL };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should filter by deptId', async () => {
+      const query = { pageNum: 1, pageSize: 10, deptId: 100 };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+      expect(deptService.findDeptIdsByDataScope).toHaveBeenCalled();
+    });
+
+    it('should filter by date range', async () => {
+      const query = { 
+        pageNum: 1, 
+        pageSize: 10, 
+        params: { beginTime: '2024-01-01', endTime: '2024-12-31' }
+      };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      const result = await service.findAll(query as any, mockUser as any);
+
+      expect(result.code).toBe(200);
+    });
+  });
+
+  describe('findPostAndRoleAll', () => {
+    it('should return all posts and roles', async () => {
+      const result = await service.findPostAndRoleAll();
+
+      expect(result.code).toBe(200);
+      expect(result.data.posts).toBeDefined();
+      expect(result.data.roles).toBeDefined();
+    });
+  });
+
+  describe('update', () => {
+    it('should update user successfully', async () => {
+      const updateDto = {
+        userId: 2,
+        nickName: '更新后的昵称',
+        postIds: [1, 2],
+        roleIds: [2],
+      };
+
+      jest.spyOn(userRepo, 'findById').mockResolvedValueOnce({
+        ...mockUser,
+        userId: 2,
+        userType: 'NORMAL' as any,
+      });
+
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue({});
+
+      const result = await service.update(updateDto as any, 1);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should throw error when updating user id 1', async () => {
+      const updateDto = {
+        userId: 1,
+        nickName: '更新后的昵称',
+      };
+
+      await expect(service.update(updateDto as any, 2)).rejects.toThrow();
+    });
+
+    it('should return error when user not found', async () => {
+      const updateDto = {
+        userId: 999,
+        nickName: '更新后的昵称',
+      };
+
+      jest.spyOn(userRepo, 'findById').mockResolvedValueOnce(null);
+
+      const result = await service.update(updateDto as any, 1);
+
+      expect(result.code).not.toBe(200);
+    });
+
+    it('should filter out super admin role', async () => {
+      const updateDto = {
+        userId: 2,
+        nickName: '更新后的昵称',
+        roleIds: [1, 2], // includes super admin role
+      };
+
+      jest.spyOn(userRepo, 'findById').mockResolvedValueOnce({
+        ...mockUser,
+        userId: 2,
+        userType: 'NORMAL' as any,
+      });
+
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue({});
+
+      const result = await service.update(updateDto as any, 1);
+
+      expect(result.code).toBe(200);
+    });
+
+    it('should not update status when updating self', async () => {
+      const updateDto = {
+        userId: 2,
+        nickName: '更新后的昵称',
+        status: StatusEnum.DISABLED,
+      };
+
+      jest.spyOn(userRepo, 'findById').mockResolvedValueOnce({
+        ...mockUser,
+        userId: 2,
+        userType: 'NORMAL' as any,
+      });
+
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue({});
+
+      const result = await service.update(updateDto as any, 2);
+
+      expect(result.code).toBe(200);
+    });
+  });
+
+  describe('deptTree', () => {
+    it('should return department tree', async () => {
+      const result = await service.deptTree();
+
+      expect(result.code).toBe(200);
+      expect(deptService.deptTree).toHaveBeenCalled();
+    });
+  });
+
+  describe('optionselect', () => {
+    it('should return user options', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([
+        { userId: 1, userName: 'admin', nickName: '管理员' },
+      ]);
+
+      const result = await service.optionselect();
+
+      expect(result.code).toBe(200);
+    });
+  });
+
+  describe('findByDeptId', () => {
+    it('should return users by department id', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([mockUser]);
+
+      const result = await service.findByDeptId(100);
+
+      expect(result.code).toBe(200);
+    });
+  });
+
+  describe('createToken', () => {
+    it('should create token', () => {
+      const payload = { uuid: 'test-uuid', userId: 1 };
+
+      const result = service.createToken(payload);
+
+      expect(result).toBe('mock-token');
+      expect(userAuthService.createToken).toHaveBeenCalledWith(payload);
+    });
+  });
+
+  describe('updateRedisToken', () => {
+    it('should update redis token', async () => {
+      await service.updateRedisToken('token', { user: mockUser as any });
+
+      expect(userAuthService.updateRedisToken).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateRedisUserRolesAndPermissions', () => {
+    it('should update redis user roles and permissions', async () => {
+      await service.updateRedisUserRolesAndPermissions('uuid', 1);
+
+      expect(userAuthService.updateRedisUserRolesAndPermissions).toHaveBeenCalledWith('uuid', 1);
+    });
+  });
+
+  describe('getRoleIds', () => {
+    it('should return role ids for users', async () => {
+      const result = await service.getRoleIds([1]);
+
+      expect(result).toBeDefined();
+      expect(userAuthService.getRoleIds).toHaveBeenCalledWith([1]);
+    });
+  });
+
+  describe('getUserinfo', () => {
+    it('should return user info', async () => {
+      const result = await service.getUserinfo(1);
+
+      expect(result).toBeDefined();
+      expect(userAuthService.getUserinfo).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('profile', () => {
+    it('should return user profile', async () => {
+      await service.profile(mockUser);
+
+      expect(userProfileService.profile).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateProfile', () => {
+    it('should update user profile', async () => {
+      const updateDto = { nickName: '新昵称' };
+
+      await service.updateProfile({ user: mockUser } as any, updateDto as any);
+
+      expect(userProfileService.updateProfile).toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePwd', () => {
+    it('should update user password', async () => {
+      const updateDto = { oldPassword: 'old', newPassword: 'new' };
+
+      await service.updatePwd({ user: mockUser } as any, updateDto as any);
+
+      expect(userProfileService.updatePwd).toHaveBeenCalled();
+    });
+  });
+
+  describe('authRole', () => {
+    it('should return auth role info', async () => {
+      await service.authRole(1);
+
+      expect(userRoleService.authRole).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('updateAuthRole', () => {
+    it('should update auth role', async () => {
+      const query = { userId: 1, roleIds: '1,2' };
+
+      await service.updateAuthRole(query);
+
+      expect(userRoleService.updateAuthRole).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('allocatedList', () => {
+    it('should return allocated user list', async () => {
+      const query = { roleId: 1, pageNum: 1, pageSize: 10 };
+
+      await service.allocatedList(query as any);
+
+      expect(userRoleService.allocatedList).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('unallocatedList', () => {
+    it('should return unallocated user list', async () => {
+      const query = { roleId: 1, pageNum: 1, pageSize: 10 };
+
+      await service.unallocatedList(query as any);
+
+      expect(userRoleService.unallocatedList).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('authUserCancel', () => {
+    it('should cancel user auth', async () => {
+      const data = { userId: 1, roleId: 2 };
+
+      await service.authUserCancel(data as any);
+
+      expect(userRoleService.authUserCancel).toHaveBeenCalledWith(data);
+    });
+  });
+
+  describe('authUserCancelAll', () => {
+    it('should cancel all user auth', async () => {
+      const data = { roleId: 1, userIds: '1,2,3' };
+
+      await service.authUserCancelAll(data as any);
+
+      expect(userRoleService.authUserCancelAll).toHaveBeenCalledWith(data);
+    });
+  });
+
+  describe('authUserSelectAll', () => {
+    it('should select all user auth', async () => {
+      const data = { roleId: 1, userIds: '1,2,3' };
+
+      await service.authUserSelectAll(data as any);
+
+      expect(userRoleService.authUserSelectAll).toHaveBeenCalledWith(data);
+    });
+  });
+
+  describe('export', () => {
+    it('should export user data', async () => {
+      const mockRes = {} as any;
+      const body = { pageNum: 1, pageSize: 10 };
+
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[], 0]);
+
+      await service.export(mockRes, body as any, mockUser as any);
+
+      expect(userExportService.export).toHaveBeenCalled();
+    });
+  });
+
+  describe('clearCacheByUserId', () => {
+    it('should be called with userId for cache clearing', () => {
+      // The decorator returns the result of the method, which is the userId
+      // But since we're testing the service method directly, we just verify it's callable
+      const result = service.clearCacheByUserId(1);
+      // The method returns the userId, but the decorator may modify the return value
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('create with existing username', () => {
+    it('should fail when username already exists', async () => {
+      const createDto = {
+        userName: 'admin',
+        nickName: '测试用户',
+        password: 'password123',
+        deptId: 100,
+      };
+
+      // 模拟用户名已存在
+      jest.spyOn(userRepo, 'findByUserName').mockResolvedValueOnce(mockUser);
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).not.toBe(200);
+      expect(result.msg).toContain('已存在');
+    });
+  });
 });

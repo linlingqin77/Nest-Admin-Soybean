@@ -115,6 +115,8 @@ export abstract class SoftDeleteRepository<
       sysnotice: 'noticeId',
       sysjob: 'jobId',
       sysupload: 'uploadId',
+      gentable: 'tableId',
+      gentablecolumn: 'columnId',
     };
 
     return idFieldMap[modelNameStr] || 'id';

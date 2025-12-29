@@ -99,11 +99,18 @@ describe('RoleController', () => {
 
   describe('update', () => {
     it('should update a role', async () => {
-      const updateDto = { roleId: 1, roleName: '更新角色', roleKey: 'updated', dataScope: 'ALL' as any };
+      const updateDto = { 
+        roleId: 1, 
+        roleName: '更新角色', 
+        roleKey: 'updated', 
+        dataScope: 'ALL' as any,
+        roleSort: 1,
+        status: '0'
+      };
       const mockResult = { code: 200, msg: '更新成功' };
       mockRoleService.update.mockResolvedValue(mockResult);
 
-      const result = await controller.update(updateDto);
+      const result = await controller.update(updateDto as any);
 
       expect(result).toEqual(mockResult);
       expect(service.update).toHaveBeenCalledWith(updateDto);
@@ -137,11 +144,19 @@ describe('RoleController', () => {
 
   describe('dataScope', () => {
     it('should update data scope', async () => {
-      const dataScopeDto = { roleId: 1, roleName: '测试角色', roleKey: 'test', dataScope: 'CUSTOM' as any, deptIds: [1, 2] };
+      const dataScopeDto = { 
+        roleId: 1, 
+        roleName: '测试角色', 
+        roleKey: 'test', 
+        dataScope: 'CUSTOM' as any, 
+        deptIds: [1, 2],
+        roleSort: 1,
+        status: '0'
+      };
       const mockResult = { code: 200, msg: '修改成功' };
       mockRoleService.dataScope.mockResolvedValue(mockResult);
 
-      const result = await controller.dataScope(dataScopeDto);
+      const result = await controller.dataScope(dataScopeDto as any);
 
       expect(result).toEqual(mockResult);
       expect(service.dataScope).toHaveBeenCalledWith(dataScopeDto);

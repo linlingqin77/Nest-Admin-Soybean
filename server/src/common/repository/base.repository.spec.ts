@@ -1,343 +1,457 @@
-import * as fc from 'fast-check';
-import { Prisma, SysUser, SysRole, SysMenu } from '@prisma/client';
-import { BaseRepository, PrismaDelegate } from './base.repository';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BaseRepository, SoftDeleteRepository } from './base.repository';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { createPrismaMock } from 'src/test-utils/prisma-mock';
+import { DelFlagEnum } from 'src/common/enum/index';
 
-/**
- * Feature: type-safety-refactor
- *
- * This test suite validates that Repository methods have complete type inference
- * without requiring explicit type assertions.
- *
- * Property 10: Repository 方法类型推导完整
- * Validates: Requirements 6.6
- */
-describe('Feature: type-safety-refactor - Repository Type Inference', () => {
-  describe('Property 10: Repository 方法类型推导完整', () => {
-    it('should infer correct parameter types for create method', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * For any Repository method call, TypeScript compiler should be able to
-       * correctly infer parameter types without explicit type assertions.
-       */
+// Create a concrete implementation for testing
+class TestRepository extends BaseRepository<any, any> {
+  constructor(prisma: PrismaService) {
+    super(prisma, 'sysUser' as any);
+  }
 
-      // This test validates that TypeScript can infer types at compile time.
-      // If this code compiles without errors, the type inference is working correctly.
+  protected getPrimaryKeyName(): string {
+    return 'userId';
+  }
+}
 
-      // Create a mock repository class for testing
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
+class TestSoftDeleteRepository extends SoftDeleteRepository<any, any> {
+  constructor(prisma: PrismaService) {
+    super(prisma, 'sysUser' as any);
+  }
 
-      // Type inference test: The following should compile without type errors
-      type CreateArgs = Parameters<TestUserRepository['create']>[0];
+  protected getPrimaryKeyName(): string {
+    return 'userId';
+  }
+}
 
-      // Verify that CreateArgs can be either:
-      // 1. Prisma.SysUserCreateArgs (new format)
-      // 2. Partial<SysUser> (old format for backward compatibility)
+describe('BaseRepository', () => {
+  let repository: TestRepository;
+  let prisma: ReturnType<typeof createPrismaMock>;
 
-      const validNewFormatArg: CreateArgs = {
-        data: {
-          userName: 'test',
-          nickName: 'Test User',
-          password: 'password',
-          email: 'test@example.com',
-          phonenumber: '1234567890',
-          sex: '0',
-          avatar: '',
-          status: 'NORMAL',
-          delFlag: 'NORMAL',
-          loginIp: '',
-          loginDate: new Date(),
-          createBy: 'admin',
-          createTime: new Date(),
-          updateBy: 'admin',
-          updateTime: new Date(),
-          remark: '',
+  const mockRecord = {
+    userId: 1,
+    userName: 'test',
+    delFlag: DelFlagEnum.NORMAL,
+  };
+
+  beforeEach(async () => {
+    prisma = createPrismaMock();
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {
+          provide: TestRepository,
+          useFactory: () => new TestRepository(prisma as any),
         },
-      };
+        {
+          provide: PrismaService,
+          useValue: prisma,
+        },
+      ],
+    }).compile();
 
-      // The type should be inferred correctly
-      expect(validNewFormatArg).toBeDefined();
-    });
+    repository = module.get<TestRepository>(TestRepository);
+  });
 
-    it('should infer correct parameter types for update method', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * Update method should have correct type inference for both
-       * new Prisma args format and old (id, data) format.
-       */
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
+  describe('findById', () => {
+    it('should find record by id', async () => {
+      (prisma.sysUser.findUnique as jest.Mock).mockResolvedValue(mockRecord);
 
-      // Type inference test for update method with Prisma args format
-      type UpdateWithArgsType = Prisma.Args<Prisma.SysUserDelegate, 'update'>;
+      const result = await repository.findById(1);
 
-      const validNewFormatArg: UpdateWithArgsType = {
+      expect(result).toEqual(mockRecord);
+      expect(prisma.sysUser.findUnique).toHaveBeenCalledWith({
         where: { userId: 1 },
-        data: {
-          nickName: 'Updated Name',
-        },
-      };
-
-      // Type inference test for old format (id, data)
-      const validOldFormatId: number = 1;
-      const validOldFormatData: Partial<SysUser> = {
-        nickName: 'Updated Name',
-      };
-
-      expect(validNewFormatArg).toBeDefined();
-      expect(validOldFormatId).toBeDefined();
-      expect(validOldFormatData).toBeDefined();
+      });
     });
 
-    it('should infer correct return types for query methods', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * Query methods should return correctly typed results based on
-       * Prisma-generated model types.
-       */
+    it('should return null when not found', async () => {
+      (prisma.sysUser.findUnique as jest.Mock).mockResolvedValue(null);
 
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
+      const result = await repository.findById(999);
 
-      // Type inference test for return types
-      type FindByIdReturn = ReturnType<TestUserRepository['findById']>;
-      type FindAllReturn = ReturnType<TestUserRepository['findAll']>;
-      type FindPageReturn = ReturnType<TestUserRepository['findPage']>;
-
-      // These should resolve to Promise<SysUser | null>, Promise<SysUser[]>, etc.
-      // The test passes if TypeScript can infer these types correctly
-
-      const typeCheck: FindByIdReturn extends Promise<SysUser | null> ? true : false = true;
-      expect(typeCheck).toBe(true);
+      expect(result).toBeNull();
     });
 
-    it('Property 10: For any Repository, methods should provide complete type inference', () => {
-      /**
-       * Feature: type-safety-refactor, Property 10: Repository 方法类型推导完整
-       * Validates: Requirements 6.6
-       *
-       * For any Repository method call, TypeScript compiler should be able to
-       * correctly infer parameter types and return types without explicit type assertions.
-       */
+    it('should pass options to findUnique', async () => {
+      (prisma.sysUser.findUnique as jest.Mock).mockResolvedValue(mockRecord);
 
-      // Test with multiple model types to ensure generic type inference works
-      const modelTypes = [
-        { name: 'SysUser', modelName: 'sysUser' as const },
-        { name: 'SysRole', modelName: 'sysRole' as const },
-        { name: 'SysMenu', modelName: 'sysMenu' as const },
-      ];
+      await repository.findById(1, { include: { dept: true } });
 
-      fc.assert(
-        fc.property(fc.constantFrom(...modelTypes), (modelType) => {
-          // For each model type, verify that the repository can be instantiated
-          // with correct type parameters
-
-          switch (modelType.name) {
-            case 'SysUser': {
-              class UserRepo extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-                constructor(prisma: PrismaService) {
-                  super(prisma, 'sysUser');
-                }
-              }
-
-              // Verify type inference for create method
-              type CreateParams = Parameters<UserRepo['create']>[0];
-              const hasCorrectType = true; // If this compiles, type inference works
-              expect(hasCorrectType).toBe(true);
-              break;
-            }
-            case 'SysRole': {
-              class RoleRepo extends BaseRepository<SysRole, Prisma.SysRoleDelegate, 'sysRole'> {
-                constructor(prisma: PrismaService) {
-                  super(prisma, 'sysRole');
-                }
-              }
-
-              type CreateParams = Parameters<RoleRepo['create']>[0];
-              const hasCorrectType = true;
-              expect(hasCorrectType).toBe(true);
-              break;
-            }
-            case 'SysMenu': {
-              class MenuRepo extends BaseRepository<SysMenu, Prisma.SysMenuDelegate, 'sysMenu'> {
-                constructor(prisma: PrismaService) {
-                  super(prisma, 'sysMenu');
-                }
-              }
-
-              type CreateParams = Parameters<MenuRepo['create']>[0];
-              const hasCorrectType = true;
-              expect(hasCorrectType).toBe(true);
-              break;
-            }
-          }
-        }),
-        { numRuns: 100 },
-      );
-    });
-
-    it('should not require type assertions for Prisma delegate methods', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * Repository methods should work with Prisma-generated types
-       * without requiring 'as any' or other type assertions.
-       */
-
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-
-        // Custom method that uses delegate directly
-        async customQuery(userName: string): Promise<SysUser | null> {
-          // This should work without type assertions
-          return this.delegate.findFirst({
-            where: { userName },
-          });
-        }
-      }
-
-      // If this compiles, the delegate type is correctly inferred
-      expect(TestUserRepository).toBeDefined();
-    });
-
-    it('should infer correct types for methods with Prisma.Args', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * Methods using Prisma.Args should have complete type inference
-       * for both parameters and return types.
-       */
-
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
-
-      // Test that Prisma.Args provides correct type inference
-      type CreateArgsType = Prisma.Args<Prisma.SysUserDelegate, 'create'>;
-      type UpdateArgsType = Prisma.Args<Prisma.SysUserDelegate, 'update'>;
-      type FindManyArgsType = Prisma.Args<Prisma.SysUserDelegate, 'findMany'>;
-
-      // Verify these types are defined and not 'any'
-      const createArgsCheck: CreateArgsType extends { data: any } ? true : false = true;
-      const updateArgsCheck: UpdateArgsType extends { where: any; data: any } ? true : false = true;
-      const findManyArgsCheck: FindManyArgsType extends object ? true : false = true;
-
-      expect(createArgsCheck).toBe(true);
-      expect(updateArgsCheck).toBe(true);
-      expect(findManyArgsCheck).toBe(true);
-    });
-
-    it('should infer correct result types with Prisma.Result', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * Return types should be correctly inferred using Prisma.Result
-       * based on the operation and arguments.
-       */
-
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
-
-      // Test Prisma.Result type inference
-      type CreateResult = Prisma.Result<Prisma.SysUserDelegate, { data: Prisma.SysUserCreateInput }, 'create'>;
-
-      type UpdateResult = Prisma.Result<
-        Prisma.SysUserDelegate,
-        { where: { userId: number }; data: Prisma.SysUserUpdateInput },
-        'update'
-      >;
-
-      // Verify result types extend the model type
-      const createResultCheck: CreateResult extends SysUser ? true : false = true;
-      const updateResultCheck: UpdateResult extends SysUser ? true : false = true;
-
-      expect(createResultCheck).toBe(true);
-      expect(updateResultCheck).toBe(true);
+      expect(prisma.sysUser.findUnique).toHaveBeenCalledWith({
+        where: { userId: 1 },
+        include: { dept: true },
+      });
     });
   });
 
-  describe('Type safety validation', () => {
-    it('should prevent incorrect parameter types at compile time', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * TypeScript should catch type errors at compile time,
-       * preventing incorrect usage of repository methods.
-       */
+  describe('findOne', () => {
+    it('should find one record by condition', async () => {
+      (prisma.sysUser.findFirst as jest.Mock).mockResolvedValue(mockRecord);
 
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
+      const result = await repository.findOne({ userName: 'test' });
 
-      // The following would cause compile errors if uncommented:
-      //
-      // repo.create({
-      //   data: {
-      //     userName: 123, // Error: Type 'number' is not assignable to type 'string'
-      //   }
-      // });
-      //
-      // repo.update({
-      //   where: { nonExistentField: 1 }, // Error: Object literal may only specify known properties
-      //   data: {}
-      // });
-
-      // If this test compiles, type safety is working
-      expect(TestUserRepository).toBeDefined();
+      expect(result).toEqual(mockRecord);
     });
 
-    it('should provide autocomplete for model fields', () => {
-      /**
-       * Validates: Requirements 6.6
-       *
-       * IDE should provide autocomplete for model fields
-       * based on Prisma-generated types.
-       */
+    it('should return null when not found', async () => {
+      (prisma.sysUser.findFirst as jest.Mock).mockResolvedValue(null);
 
-      class TestUserRepository extends BaseRepository<SysUser, Prisma.SysUserDelegate, 'sysUser'> {
-        constructor(prisma: PrismaService) {
-          super(prisma, 'sysUser');
-        }
-      }
+      const result = await repository.findOne({ userName: 'nonexistent' });
 
-      // Type test: Verify that SysUser fields are accessible
-      type UserFields = keyof SysUser;
+      expect(result).toBeNull();
+    });
+  });
 
-      const requiredFields: UserFields[] = [
-        'userId',
-        'userName',
-        'nickName',
-        'email',
-        'phonenumber',
-        'status',
-        'delFlag',
-      ];
+  describe('findAll', () => {
+    it('should find all records', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([mockRecord]);
 
-      // If this compiles, field types are correctly inferred
-      expect(requiredFields.length).toBeGreaterThan(0);
+      const result = await repository.findAll();
+
+      expect(result).toHaveLength(1);
+    });
+
+    it('should apply where condition', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([]);
+
+      await repository.findAll({ where: { userName: 'test' } });
+
+      expect(prisma.sysUser.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userName: 'test' },
+        })
+      );
+    });
+
+    it('should apply orderBy', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([]);
+
+      await repository.findAll({ orderBy: 'userName', order: 'desc' });
+
+      expect(prisma.sysUser.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { userName: 'desc' },
+        })
+      );
+    });
+  });
+
+  describe('findPage', () => {
+    it('should return paginated results', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([mockRecord]);
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await repository.findPage({ pageNum: 1, pageSize: 10 });
+
+      expect(result.rows).toHaveLength(1);
+      expect(result.total).toBe(1);
+      expect(result.pageNum).toBe(1);
+      expect(result.pageSize).toBe(10);
+      expect(result.pages).toBe(1);
+    });
+
+    it('should calculate skip correctly', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(0);
+
+      await repository.findPage({ pageNum: 2, pageSize: 10 });
+
+      expect(prisma.sysUser.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skip: 10,
+          take: 10,
+        })
+      );
+    });
+  });
+
+  describe('create', () => {
+    it('should create a record', async () => {
+      (prisma.sysUser.create as jest.Mock).mockResolvedValue(mockRecord);
+
+      const result = await repository.create({ userName: 'test' });
+
+      expect(result).toEqual(mockRecord);
+    });
+
+    it('should handle Prisma args format', async () => {
+      (prisma.sysUser.create as jest.Mock).mockResolvedValue(mockRecord);
+
+      await repository.create({ data: { userName: 'test' } });
+
+      expect(prisma.sysUser.create).toHaveBeenCalledWith({ data: { userName: 'test' } });
+    });
+  });
+
+  describe('createMany', () => {
+    it('should create multiple records', async () => {
+      (prisma.sysUser.createMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      const result = await repository.createMany([
+        { userName: 'test1' },
+        { userName: 'test2' },
+      ]);
+
+      expect(result.count).toBe(2);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a record by id', async () => {
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue({ ...mockRecord, userName: 'updated' });
+
+      const result = await repository.update(1, { userName: 'updated' });
+
+      expect(result.userName).toBe('updated');
+    });
+
+    it('should handle Prisma args format', async () => {
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue(mockRecord);
+
+      await repository.update({ where: { userId: 1 }, data: { userName: 'updated' } });
+
+      expect(prisma.sysUser.update).toHaveBeenCalledWith({
+        where: { userId: 1 },
+        data: { userName: 'updated' },
+      });
+    });
+  });
+
+  describe('updateMany', () => {
+    it('should update multiple records', async () => {
+      (prisma.sysUser.updateMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      const result = await repository.updateMany(
+        { userName: { contains: 'test' } },
+        { status: 'DISABLED' }
+      );
+
+      expect(result.count).toBe(2);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a record', async () => {
+      (prisma.sysUser.delete as jest.Mock).mockResolvedValue(mockRecord);
+
+      const result = await repository.delete(1);
+
+      expect(result).toEqual(mockRecord);
+    });
+  });
+
+  describe('deleteMany', () => {
+    it('should delete multiple records', async () => {
+      (prisma.sysUser.deleteMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      const result = await repository.deleteMany({ userName: { contains: 'test' } });
+
+      expect(result.count).toBe(2);
+    });
+  });
+
+  describe('deleteByIds', () => {
+    it('should delete records by ids', async () => {
+      (prisma.sysUser.deleteMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      const result = await repository.deleteByIds([1, 2]);
+
+      expect(result.count).toBe(2);
+      expect(prisma.sysUser.deleteMany).toHaveBeenCalledWith({
+        where: { userId: { in: [1, 2] } },
+      });
+    });
+  });
+
+  describe('count', () => {
+    it('should count records', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(5);
+
+      const result = await repository.count();
+
+      expect(result).toBe(5);
+    });
+
+    it('should count with condition', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(2);
+
+      const result = await repository.count({ userName: 'test' });
+
+      expect(result).toBe(2);
+    });
+  });
+
+  describe('exists', () => {
+    it('should return true when record exists', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await repository.exists({ userName: 'test' });
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false when record does not exist', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(0);
+
+      const result = await repository.exists({ userName: 'nonexistent' });
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('existsById', () => {
+    it('should check existence by id', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await repository.existsById(1);
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('softDelete', () => {
+    it('should soft delete a record', async () => {
+      (prisma.sysUser.update as jest.Mock).mockResolvedValue({ ...mockRecord, delFlag: DelFlagEnum.DELETED });
+
+      const result = await repository.softDelete(1);
+
+      expect(result.delFlag).toBe(DelFlagEnum.DELETED);
+    });
+  });
+
+  describe('softDeleteMany', () => {
+    it('should soft delete multiple records', async () => {
+      (prisma.sysUser.updateMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      const result = await repository.softDeleteMany([1, 2]);
+
+      expect(result.count).toBe(2);
+    });
+  });
+});
+
+describe('SoftDeleteRepository', () => {
+  let repository: TestSoftDeleteRepository;
+  let prisma: ReturnType<typeof createPrismaMock>;
+
+  const mockRecord = {
+    userId: 1,
+    userName: 'test',
+    delFlag: DelFlagEnum.NORMAL,
+  };
+
+  beforeEach(async () => {
+    prisma = createPrismaMock();
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {
+          provide: TestSoftDeleteRepository,
+          useFactory: () => new TestSoftDeleteRepository(prisma as any),
+        },
+        {
+          provide: PrismaService,
+          useValue: prisma,
+        },
+      ],
+    }).compile();
+
+    repository = module.get<TestSoftDeleteRepository>(TestSoftDeleteRepository);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('findById', () => {
+    it('should return record when not deleted', async () => {
+      (prisma.sysUser.findUnique as jest.Mock).mockResolvedValue(mockRecord);
+
+      const result = await repository.findById(1);
+
+      expect(result).toEqual(mockRecord);
+    });
+
+    it('should return null when record is soft deleted', async () => {
+      (prisma.sysUser.findUnique as jest.Mock).mockResolvedValue({
+        ...mockRecord,
+        delFlag: DelFlagEnum.DELETED,
+      });
+
+      const result = await repository.findById(1);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should automatically add delFlag condition', async () => {
+      (prisma.sysUser.findFirst as jest.Mock).mockResolvedValue(mockRecord);
+
+      await repository.findOne({ userName: 'test' });
+
+      expect(prisma.sysUser.findFirst).toHaveBeenCalledWith({
+        where: { delFlag: DelFlagEnum.NORMAL, userName: 'test' },
+      });
+    });
+  });
+
+  describe('findAll', () => {
+    it('should automatically add delFlag condition', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([mockRecord]);
+
+      await repository.findAll({ where: { userName: 'test' } });
+
+      expect(prisma.sysUser.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { delFlag: DelFlagEnum.NORMAL, userName: 'test' },
+        })
+      );
+    });
+  });
+
+  describe('findPage', () => {
+    it('should automatically add delFlag condition', async () => {
+      (prisma.sysUser.findMany as jest.Mock).mockResolvedValue([mockRecord]);
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      await repository.findPage({ pageNum: 1, pageSize: 10, where: { userName: 'test' } });
+
+      expect(prisma.sysUser.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { delFlag: DelFlagEnum.NORMAL, userName: 'test' },
+        })
+      );
+    });
+  });
+
+  describe('count', () => {
+    it('should automatically add delFlag condition', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      await repository.count({ userName: 'test' });
+
+      expect(prisma.sysUser.count).toHaveBeenCalledWith({
+        where: { delFlag: DelFlagEnum.NORMAL, userName: 'test' },
+      });
+    });
+  });
+
+  describe('exists', () => {
+    it('should automatically add delFlag condition', async () => {
+      (prisma.sysUser.count as jest.Mock).mockResolvedValue(1);
+
+      await repository.exists({ userName: 'test' });
+
+      expect(prisma.sysUser.count).toHaveBeenCalledWith({
+        where: { delFlag: DelFlagEnum.NORMAL, userName: 'test' },
+      });
     });
   });
 });
