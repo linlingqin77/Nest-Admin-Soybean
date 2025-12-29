@@ -1,4 +1,4 @@
-import { SysUser, Status, DelFlag } from '@prisma/client';
+import { SysUser, Status, DelFlag, UserType, Gender } from '@prisma/client';
 import { BaseFactory } from './base.factory';
 import * as bcrypt from 'bcryptjs';
 
@@ -22,10 +22,10 @@ export class UserFactory extends BaseFactory<SysUser> {
       deptId: 100,
       userName: 'testuser',
       nickName: '测试用户',
-      userType: '01',
+      userType: UserType.NORMAL,
       email: 'test@example.com',
       phonenumber: '13800138000',
-      sex: '0',
+      sex: Gender.MALE,
       avatar: '',
       password: bcrypt.hashSync('password123', 10),
       status: Status.NORMAL,
@@ -58,7 +58,7 @@ export class UserFactory extends BaseFactory<SysUser> {
     return factory.create({
       userName: 'admin',
       nickName: '管理员',
-      userType: '00',
+      userType: UserType.SYSTEM,
       email: 'admin@example.com',
       ...overrides,
     });
@@ -70,7 +70,7 @@ export class UserFactory extends BaseFactory<SysUser> {
   static createNormalUser(overrides?: Partial<SysUser>): SysUser {
     const factory = new UserFactory();
     return factory.create({
-      userType: '01',
+      userType: UserType.NORMAL,
       ...overrides,
     });
   }

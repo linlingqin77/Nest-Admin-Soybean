@@ -1,4 +1,4 @@
-import { SysMenu, Status, DelFlag } from '@prisma/client';
+import { SysMenu, Status, DelFlag, YesNo, MenuType } from '@prisma/client';
 import { BaseFactory } from './base.factory';
 
 /**
@@ -24,10 +24,10 @@ export class MenuFactory extends BaseFactory<SysMenu> {
       path: '/test',
       component: 'test/index',
       query: '',
-      isFrame: '1',
-      isCache: '0',
-      menuType: 'C',
-      visible: '0',
+      isFrame: YesNo.NO,
+      isCache: YesNo.YES,
+      menuType: MenuType.MENU,
+      visible: YesNo.YES,
       status: Status.NORMAL,
       perms: 'test:menu:list',
       icon: 'test',
@@ -57,7 +57,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
   static createDirectory(overrides?: Partial<SysMenu>): SysMenu {
     const factory = new MenuFactory();
     return factory.create({
-      menuType: 'M',
+      menuType: MenuType.DIRECTORY,
       component: null,
       perms: '',
       ...overrides,
@@ -70,7 +70,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
   static createMenu(overrides?: Partial<SysMenu>): SysMenu {
     const factory = new MenuFactory();
     return factory.create({
-      menuType: 'C',
+      menuType: MenuType.MENU,
       ...overrides,
     });
   }
@@ -81,7 +81,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
   static createButton(overrides?: Partial<SysMenu>): SysMenu {
     const factory = new MenuFactory();
     return factory.create({
-      menuType: 'F',
+      menuType: MenuType.BUTTON,
       path: '',
       component: null,
       ...overrides,
@@ -94,7 +94,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
   static createExternalLink(overrides?: Partial<SysMenu>): SysMenu {
     const factory = new MenuFactory();
     return factory.create({
-      isFrame: '0',
+      isFrame: YesNo.YES,
       path: 'https://example.com',
       component: null,
       ...overrides,
@@ -117,7 +117,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
       menuId: currentId++,
       parentId: 0,
       menuName: '系统管理',
-      menuType: 'M',
+      menuType: MenuType.DIRECTORY,
       path: '/system',
       component: null,
       perms: '',
@@ -134,7 +134,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
           menuId: currentId++,
           parentId: parent.menuId,
           menuName: `${parent.menuName}-子菜单${i + 1}`,
-          menuType: isLastLevel ? 'C' : 'M',
+          menuType: isLastLevel ? MenuType.MENU : MenuType.DIRECTORY,
           path: `${parent.path}/child${i + 1}`,
           component: isLastLevel ? `${parent.path}/child${i + 1}/index` : null,
           perms: isLastLevel ? `${parent.path}:child${i + 1}:list` : '',
@@ -157,7 +157,7 @@ export class MenuFactory extends BaseFactory<SysMenu> {
   static createHiddenMenu(overrides?: Partial<SysMenu>): SysMenu {
     const factory = new MenuFactory();
     return factory.create({
-      visible: '1',
+      visible: YesNo.NO,
       ...overrides,
     });
   }

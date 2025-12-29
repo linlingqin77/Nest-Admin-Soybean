@@ -1,4 +1,4 @@
-import { SysRole, Status, DelFlag } from '@prisma/client';
+import { SysRole, Status, DelFlag, DataScope } from '@prisma/client';
 import { BaseFactory } from './base.factory';
 
 /**
@@ -21,7 +21,7 @@ export class RoleFactory extends BaseFactory<SysRole> {
       roleName: '测试角色',
       roleKey: 'test_role',
       roleSort: 1,
-      dataScope: '1',
+      dataScope: DataScope.ALL,
       menuCheckStrictly: false,
       deptCheckStrictly: false,
       status: Status.NORMAL,
@@ -52,7 +52,7 @@ export class RoleFactory extends BaseFactory<SysRole> {
       roleName: '管理员',
       roleKey: 'admin',
       roleSort: 1,
-      dataScope: '1', // 全部数据权限
+      dataScope: DataScope.ALL, // 全部数据权限
       ...overrides,
     });
   }
@@ -66,7 +66,7 @@ export class RoleFactory extends BaseFactory<SysRole> {
       roleName: '普通角色',
       roleKey: 'common',
       roleSort: 2,
-      dataScope: '2', // 自定义数据权限
+      dataScope: DataScope.CUSTOM, // 自定义数据权限
       ...overrides,
     });
   }
@@ -80,7 +80,7 @@ export class RoleFactory extends BaseFactory<SysRole> {
       roleName: '部门角色',
       roleKey: 'dept',
       roleSort: 3,
-      dataScope: '3', // 本部门数据权限
+      dataScope: DataScope.DEPT, // 本部门数据权限
       ...overrides,
     });
   }
@@ -91,7 +91,7 @@ export class RoleFactory extends BaseFactory<SysRole> {
   static createCustomDataScopeRole(overrides?: Partial<SysRole>): SysRole {
     const factory = new RoleFactory();
     return factory.create({
-      dataScope: '2',
+      dataScope: DataScope.CUSTOM,
       menuCheckStrictly: true,
       deptCheckStrictly: true,
       ...overrides,

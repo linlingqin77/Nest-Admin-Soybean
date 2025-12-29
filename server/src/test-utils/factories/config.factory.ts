@@ -1,4 +1,4 @@
-import { SysConfig, Status, DelFlag } from '@prisma/client';
+import { SysConfig, Status, DelFlag, ConfigType } from '@prisma/client';
 import { BaseFactory } from './base.factory';
 
 /**
@@ -21,7 +21,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
       configName: '测试配置',
       configKey: 'test.config.key',
       configValue: 'test_value',
-      configType: 'Y',
+      configType: ConfigType.YES,
       createBy: 'admin',
       createTime: new Date(),
       updateBy: 'admin',
@@ -47,7 +47,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
   static createSystemConfig(overrides?: Partial<SysConfig>): SysConfig {
     const factory = new ConfigFactory();
     return factory.create({
-      configType: 'Y',
+      configType: ConfigType.YES,
       ...overrides,
     });
   }
@@ -58,7 +58,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
   static createUserConfig(overrides?: Partial<SysConfig>): SysConfig {
     const factory = new ConfigFactory();
     return factory.create({
-      configType: 'N',
+      configType: ConfigType.NO,
       ...overrides,
     });
   }
@@ -72,7 +72,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
       configName: '验证码开关',
       configKey: 'sys.account.captchaEnabled',
       configValue: 'true',
-      configType: 'Y',
+      configType: ConfigType.YES,
       ...overrides,
     });
   }
@@ -86,7 +86,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
       configName: '用户初始密码',
       configKey: 'sys.user.initPassword',
       configValue: '123456',
-      configType: 'Y',
+      configType: ConfigType.YES,
       ...overrides,
     });
   }
@@ -100,7 +100,7 @@ export class ConfigFactory extends BaseFactory<SysConfig> {
       configName: '文件上传路径',
       configKey: 'sys.upload.path',
       configValue: '/upload',
-      configType: 'Y',
+      configType: ConfigType.YES,
       ...overrides,
     });
   }
