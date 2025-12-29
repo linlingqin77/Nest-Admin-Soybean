@@ -1,22 +1,19 @@
+import { Gender } from '@prisma/client';
+
 /**
  * 性别枚举
- * - MAN (0): 男
- * - WOMAN (1): 女
- * - UNKNOWN (2): 未知
+ * 使用 Prisma 生成的枚举，保持类型安全
+ * - MALE: 男
+ * - FEMALE: 女
+ * - UNKNOWN: 未知
  */
-export enum SexEnum {
-  /** 男 */
-  MAN = '0',
-  /** 女 */
-  WOMAN = '1',
-  /** 未知 */
-  UNKNOWN = '2',
-}
+export const SexEnum = Gender;
+export type SexEnum = Gender;
 
 /** SexEnum Swagger Schema */
 export const SexEnumSchema = {
   description: `性别枚举
-- MAN (0): 男
-- WOMAN (1): 女
-- UNKNOWN (2): 未知`,
+- MALE: 男
+- FEMALE: 女
+- UNKNOWN: 未知`,
 };

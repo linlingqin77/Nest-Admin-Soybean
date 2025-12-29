@@ -14,6 +14,13 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
   }
 
   /**
+   * 覆盖主键字段名
+   */
+  protected getPrimaryKeyName(): string {
+    return 'deptId';
+  }
+
+  /**
    * 根据部门名称查询
    */
   async findByDeptName(deptName: string): Promise<SysDept | null> {

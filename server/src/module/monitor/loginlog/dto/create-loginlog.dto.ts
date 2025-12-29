@@ -33,6 +33,11 @@ export class CreateLoginlogDto {
   @Length(0, 50)
   os?: string;
 
+  @ApiProperty({ required: false, description: '设备类型' })
+  @IsOptional()
+  @IsString()
+  deviceType?: string;
+
   @ApiProperty({ required: false, description: '提示消息' })
   @IsOptional()
   @IsString()

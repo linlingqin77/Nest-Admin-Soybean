@@ -18,6 +18,9 @@ export class LoginlogService {
    * @returns
    */
   async create(createLoginlogDto: CreateLoginlogDto) {
+    // 处理 deviceType 字段，确保它是有效的枚举值
+    const deviceType = createLoginlogDto.deviceType === '1' ? 'MOBILE' : 'PC';
+    
     return await this.prisma.sysLogininfor.create({
       data: {
         ...createLoginlogDto,
@@ -27,6 +30,7 @@ export class LoginlogService {
         browser: createLoginlogDto.browser ?? '',
         os: createLoginlogDto.os ?? '',
         msg: createLoginlogDto.msg ?? '',
+        deviceType: deviceType as any,
         status: (createLoginlogDto.status ?? StatusEnum.NORMAL) as Status,
         delFlag: DelFlagEnum.NORMAL,
       },

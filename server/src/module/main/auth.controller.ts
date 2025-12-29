@@ -216,9 +216,9 @@ export class AuthController {
 
     const tenantId = headerTenantId || registerDto.tenantId || TenantContext.SUPER_TENANT_ID;
 
-    // 转换为原有的注册 DTO 格式
+    // 转换为原有的注册 DTO 格式（userName 而不是 username）
     const registerData = {
-      username: registerDto.username,
+      userName: registerDto.username, // 转换字段名
       password: registerDto.password,
       code: registerDto.code,
       uuid: registerDto.uuid,

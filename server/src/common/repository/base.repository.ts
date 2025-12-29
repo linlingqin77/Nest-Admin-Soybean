@@ -254,14 +254,14 @@ export abstract class BaseRepository<
    * 软删除（设置 delFlag）
    */
   async softDelete(id: number | string): Promise<TModel> {
-    return this.update(id, { delFlag: '1' });
+    return this.update(id, { delFlag: DelFlagEnum.DELETED });
   }
 
   /**
    * 批量软删除
    */
   async softDeleteMany(ids: (number | string)[]): Promise<{ count: number }> {
-    return this.updateMany({ [this.getPrimaryKeyName()]: { in: ids } }, { delFlag: '1' });
+    return this.updateMany({ [this.getPrimaryKeyName()]: { in: ids } }, { delFlag: DelFlagEnum.DELETED });
   }
 
   /**
@@ -305,6 +305,15 @@ export abstract class SoftDeleteRepository<
    */
   protected mergeWhere(where?: Record<string, any>): Record<string, any> {
     return { ...this.getDefaultWhere(), ...where };
+  }
+
+  async findById(id: number | string, options?: { include?: any; select?: any }): Promise<TModel | null> {
+    const result = await super.findById(id, options);
+    // 如果记录存在但已被软删除，返回 null
+    if (result && (result as any).delFlag === DelFlagEnum.DELETED) {
+      return null;
+    }
+    return result;
   }
 
   async findOne(where: any, options?: { include?: any; select?: any }): Promise<TModel | null> {

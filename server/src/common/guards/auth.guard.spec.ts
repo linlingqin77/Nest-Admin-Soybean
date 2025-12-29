@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from './auth.guard';
 import { UserService } from 'src/module/system/user/user.service';
@@ -116,7 +116,7 @@ describe('JwtAuthGuard', () => {
       expect(result).toBe(true);
     });
 
-    it('should throw ForbiddenException when no token provided', async () => {
+    it('should throw UnauthorizedException when no token provided', async () => {
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
 
       const context = createMockContext({
@@ -125,7 +125,7 @@ describe('JwtAuthGuard', () => {
         authorization: '',
       });
 
-      await expect(guard.canActivate(context)).rejects.toThrow(ForbiddenException);
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException when token is invalid', async () => {

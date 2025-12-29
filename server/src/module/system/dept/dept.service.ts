@@ -22,6 +22,15 @@ export class DeptService {
   @CacheEvict(CacheEnum.SYS_DEPT_KEY, '*')
   @Transactional()
   async create(createDeptDto: CreateDeptDto) {
+    // 检查同一父部门下是否存在同名部门
+    const exists = await this.deptRepo.existsByDeptName(
+      createDeptDto.deptName,
+      createDeptDto.parentId || 0,
+    );
+    if (exists) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '同一父部门下已存在同名部门');
+    }
+
     let ancestors = '0';
     if (createDeptDto.parentId) {
       const parent = await this.prisma.sysDept.findUnique({
@@ -89,6 +98,9 @@ export class DeptService {
   @Cacheable(CacheEnum.SYS_DEPT_KEY, 'findOne:{deptId}')
   async findOne(deptId: number) {
     const data = await this.deptRepo.findById(deptId);
+    if (!data) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '部门不存在');
+    }
     const formattedData = FormatDateFields(data);
     return Result.ok(formattedData);
   }
@@ -155,6 +167,37 @@ export class DeptService {
   @CacheEvict(CacheEnum.SYS_DEPT_KEY, '*')
   @Transactional()
   async update(updateDeptDto: UpdateDeptDto) {
+    // 检查部门是否存在
+    const existingDept = await this.deptRepo.findById(updateDeptDto.deptId);
+    if (!existingDept) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '部门不存在');
+    }
+
+    // 检查是否将父部门设置为自己
+    if (updateDeptDto.parentId === updateDeptDto.deptId) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '不能将父部门设置为自己');
+    }
+
+    // 检查是否将父部门设置为子部门
+    if (updateDeptDto.parentId) {
+      const childDeptIds = await this.getChildDeptIds(updateDeptDto.deptId);
+      if (childDeptIds.includes(updateDeptDto.parentId)) {
+        return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '不能将父部门设置为自己的子部门');
+      }
+    }
+
+    // 检查同一父部门下是否存在同名部门（排除自己）
+    if (updateDeptDto.deptName) {
+      const exists = await this.deptRepo.existsByDeptName(
+        updateDeptDto.deptName,
+        updateDeptDto.parentId !== undefined ? updateDeptDto.parentId : existingDept.parentId,
+        updateDeptDto.deptId,
+      );
+      if (exists) {
+        return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '同一父部门下已存在同名部门');
+      }
+    }
+
     if (updateDeptDto.parentId && updateDeptDto.parentId !== 0) {
       const parent = await this.prisma.sysDept.findUnique({
         where: {
@@ -175,9 +218,28 @@ export class DeptService {
   }
 
   @CacheEvict(CacheEnum.SYS_DEPT_KEY, '*')
+  @Transactional()
   async remove(deptId: number) {
-    const data = await this.deptRepo.softDelete(deptId);
-    return Result.ok(data);
+    // 检查部门是否存在
+    const dept = await this.deptRepo.findById(deptId);
+    if (!dept) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '部门不存在');
+    }
+
+    // 检查是否有子部门
+    const childCount = await this.deptRepo.countChildren(deptId);
+    if (childCount > 0) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '该部门存在子部门，无法删除');
+    }
+
+    // 检查是否有用户
+    const userCount = await this.deptRepo.countUsers(deptId);
+    if (userCount > 0) {
+      return Result.fail(ResponseCode.INTERNAL_SERVER_ERROR, '该部门存在用户，无法删除');
+    }
+
+    await this.deptRepo.softDelete(deptId);
+    return Result.ok();
   }
 
   /**

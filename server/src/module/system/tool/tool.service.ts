@@ -141,7 +141,7 @@ export class ToolService {
         createTime: now,
         updateBy: user.userName,
         updateTime: now,
-        genType: '0',
+        genType: 'ZIP' as any,
         genPath: '/',
         options: '',
         status: StatusEnum.NORMAL,
@@ -308,11 +308,11 @@ export class ToolService {
   async genUpdate(genTableUpdate: GenTableUpdate) {
     for (const item of genTableUpdate.columns ?? []) {
       if (item.columnId) {
-        await this.prisma.genTableColumn.update({ where: { columnId: item.columnId }, data: item });
+        await this.prisma.genTableColumn.update({ where: { columnId: item.columnId }, data: item as any });
       }
     }
-    const { columns, ...tableData } = genTableUpdate;
-    await this.prisma.genTable.update({ where: { tableId: +genTableUpdate.tableId }, data: tableData });
+    const { columns, tableId, ...tableData } = genTableUpdate;
+    await this.prisma.genTable.update({ where: { tableId: +tableId }, data: tableData as any });
     return Result.ok({ genTableUpdate });
   }
 

@@ -47,7 +47,7 @@ export class ConfigService {
     }
 
     if (query.configType) {
-      where.configType = query.configType;
+      where.configType = query.configType as any;
     }
 
     if (query.params?.beginTime && query.params?.endTime) {
@@ -165,7 +165,7 @@ export class ConfigService {
         configKey: true,
       },
     });
-    const item = list.find((item) => item.configType === 'Y');
+    const item = list.find((item) => item.configType === 'YES');
     BusinessException.throwIf(
       item !== undefined,
       `内置参数【${item?.configKey}】不能删除`,

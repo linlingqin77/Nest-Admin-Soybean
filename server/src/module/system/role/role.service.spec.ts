@@ -235,7 +235,7 @@ describe('RoleService', () => {
       expect(result.data).toBe(2);
       expect(prisma.sysRole.updateMany).toHaveBeenCalledWith({
         where: { roleId: { in: [1, 2] } },
-        data: { delFlag: '1' },
+        data: { delFlag: DelFlagEnum.DELETED },
       });
     });
   });
@@ -250,6 +250,10 @@ describe('RoleService', () => {
     it('should return specific permissions for normal roles', async () => {
       (prisma.sysRoleMenu.findMany as jest.Mock).mockResolvedValue([{ menuId: 1 }, { menuId: 2 }]);
       (menuService.findMany as jest.Mock).mockResolvedValue([
+        { menuId: 1, perms: 'system:user:list' },
+        { menuId: 2, perms: 'system:user:add' },
+      ]);
+      (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([
         { menuId: 1, perms: 'system:user:list' },
         { menuId: 2, perms: 'system:user:add' },
       ]);

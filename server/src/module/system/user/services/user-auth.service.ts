@@ -136,9 +136,9 @@ export class UserAuthService {
       nickName: user.userName,
       password: user.password,
       loginDate,
-      userType: SYS_USER_TYPE.CUSTOM,
+      userType: 'NORMAL' as any, // 使用 Prisma 枚举值
       phonenumber: '',
-      sex: '0',
+      sex: 'MALE' as any, // 使用 Prisma 枚举值
       avatar: '',
       status: StatusEnum.NORMAL,
       delFlag: DelFlagEnum.NORMAL,

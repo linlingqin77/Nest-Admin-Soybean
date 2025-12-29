@@ -37,7 +37,7 @@ export class NoticeService {
     }
 
     if (query.noticeType) {
-      where.noticeType = query.noticeType;
+      where.noticeType = query.noticeType as any;
     }
 
     if (query.params?.beginTime && query.params?.endTime) {

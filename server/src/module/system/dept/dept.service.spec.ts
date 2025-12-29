@@ -6,10 +6,11 @@ import { RedisService } from 'src/module/common/redis/redis.service';
 import { StatusEnum, DelFlagEnum } from 'src/common/enum/index';
 import { ResponseCode } from 'src/common/response';
 import { Status } from '@prisma/client';
+import { createPrismaMock } from 'src/test-utils/prisma-mock';
 
 describe('DeptService', () => {
   let service: DeptService;
-  let prisma: PrismaService;
+  let prisma: ReturnType<typeof createPrismaMock>;
   let deptRepo: DeptRepository;
 
   const mockDept = {
@@ -31,24 +32,14 @@ describe('DeptService', () => {
   };
 
   beforeEach(async () => {
+    prisma = createPrismaMock();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DeptService,
         {
           provide: PrismaService,
-          useValue: {
-            sysDept: {
-              create: jest.fn(),
-              update: jest.fn(),
-              updateMany: jest.fn(),
-              findMany: jest.fn(),
-              findUnique: jest.fn(),
-              count: jest.fn(),
-            },
-            sysUser: {
-              count: jest.fn(),
-            },
-          },
+          useValue: prisma,
         },
         {
           provide: DeptRepository,
@@ -57,6 +48,9 @@ describe('DeptService', () => {
             create: jest.fn(),
             update: jest.fn(),
             softDelete: jest.fn(),
+            existsByDeptName: jest.fn(),
+            countChildren: jest.fn(),
+            countUsers: jest.fn(),
           },
         },
         {
@@ -77,7 +71,6 @@ describe('DeptService', () => {
     }).compile();
 
     service = module.get<DeptService>(DeptService);
-    prisma = module.get<PrismaService>(PrismaService);
     deptRepo = module.get<DeptRepository>(DeptRepository);
   });
 
@@ -111,8 +104,10 @@ describe('DeptService', () => {
       };
 
       (deptRepo.findById as jest.Mock).mockResolvedValue(mockDept);
+      (deptRepo.existsByDeptName as jest.Mock).mockResolvedValue(false);
       (prisma.sysDept.findUnique as jest.Mock).mockResolvedValue(null);
-      (prisma.sysDept.update as jest.Mock).mockResolvedValue(mockDept);
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([{ deptId: 100 }]);
+      (deptRepo.update as jest.Mock).mockResolvedValue(mockDept);
 
       const result = await service.update(updateDto as any);
 
@@ -139,11 +134,13 @@ describe('DeptService', () => {
       };
 
       (deptRepo.findById as jest.Mock).mockResolvedValue(mockDept);
+      (deptRepo.existsByDeptName as jest.Mock).mockResolvedValue(false);
       (prisma.sysDept.findUnique as jest.Mock).mockResolvedValue({
         ...mockDept,
         deptId: 101,
         ancestors: '0,100',
       });
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([{ deptId: 100 }]);
       (deptRepo.update as jest.Mock).mockResolvedValue(mockDept);
 
       const result = await service.update(updateDto as any);
@@ -155,6 +152,9 @@ describe('DeptService', () => {
 
   describe('remove', () => {
     it('should soft delete a department', async () => {
+      (deptRepo.findById as jest.Mock).mockResolvedValue(mockDept);
+      (deptRepo.countChildren as jest.Mock).mockResolvedValue(0);
+      (deptRepo.countUsers as jest.Mock).mockResolvedValue(0);
       (deptRepo.softDelete as jest.Mock).mockResolvedValue(1);
 
       const result = await service.remove(100);

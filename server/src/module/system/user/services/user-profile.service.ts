@@ -35,7 +35,7 @@ export class UserProfileService {
   async updateProfile(user: UserType, updateProfileDto: UpdateProfileDto) {
     await this.prisma.sysUser.update({
       where: { userId: user.user.userId },
-      data: updateProfileDto,
+      data: updateProfileDto as any,
     });
 
     // 同步更新Redis中的用户信息

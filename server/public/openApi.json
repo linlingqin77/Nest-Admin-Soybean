@@ -25376,11 +25376,11 @@
       },
       "SexEnum": {
         "type": "string",
-        "description": "性别枚举\n- MAN (0): 男\n- WOMAN (1): 女\n- UNKNOWN (2): 未知",
+        "description": "性别枚举\n- MALE: 男\n- FEMALE: 女\n- UNKNOWN: 未知",
         "enum": [
-          "0",
-          "1",
-          "2"
+          "MALE",
+          "FEMALE",
+          "UNKNOWN"
         ]
       },
       "StatusEnum": {
@@ -25892,9 +25892,7 @@
         "required": [
           "username",
           "password",
-          "confirmPassword",
-          "code",
-          "uuid"
+          "confirmPassword"
         ]
       },
       "SocialLoginDto": {

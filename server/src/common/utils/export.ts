@@ -16,8 +16,9 @@ export const commonExportMap = {
     [StatusEnum.DISABLED]: '停用',
   },
   sex: {
-    [SexEnum.MAN]: '男',
-    [SexEnum.WOMAN]: '女',
+    [SexEnum.MALE]: '男',
+    [SexEnum.FEMALE]: '女',
+    [SexEnum.UNKNOWN]: '未知',
   },
   delFlag: {
     [DelFlagEnum.NORMAL]: '正常',

@@ -95,6 +95,7 @@ describe('System module services', () => {
 
     it('should create dept by inheriting parent ancestors', async () => {
       (prisma.sysDept.findUnique as jest.Mock).mockResolvedValue({ ancestors: '0' });
+      (deptRepo as any).existsByDeptName = jest.fn().mockResolvedValue(false);
       await service.create({ parentId: 1, deptName: '研发部', orderNum: 1 } as any);
       expect(deptRepo.create).toHaveBeenCalledWith(expect.objectContaining({ deptName: '研发部' }));
     });
@@ -292,6 +293,7 @@ describe('System module services', () => {
     });
 
     it('should merge permissions from menu service', async () => {
+      (prisma.sysRoleMenu.findMany as jest.Mock).mockResolvedValue([{ menuId: 1 }]);
       (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([{ perms: 'system:user:list' }]);
       const perms = await service.getPermissionsByRoleIds([2]);
       expect(perms).toEqual([{ perms: 'system:user:list' }]);
@@ -308,7 +310,7 @@ describe('System module services', () => {
     });
 
     it('should list generator tables', async () => {
-      prisma.$transaction.mockResolvedValue([[{ tableId: 1 }], 1]);
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[{ tableId: 1 }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
       expect(res.data.total).toBe(1);
     });

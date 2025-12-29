@@ -90,7 +90,7 @@ export class TenantService {
           tenantId,
           userName: createTenantDto.username,
           nickName: '租户管理员',
-          userType: SYS_USER_TYPE.SYS,
+          userType: 'SYSTEM' as any, // 使用 Prisma 枚举值
           password: hashedPassword,
           status: StatusEnum.NORMAL,
           delFlag: DelFlagEnum.NORMAL,

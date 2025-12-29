@@ -121,13 +121,11 @@ export class MainController {
   })
   @Get('/getInfo')
   async getInfo(@User() user: UserDto) {
-    return {
-      msg: getResponseMessage(ResponseCode.SUCCESS),
-      code: 200,
+    return Result.ok({
       permissions: user.permissions,
       roles: user.roles,
       user: user.user,
-    };
+    });
   }
 
   @Api({

@@ -1,11 +1,11 @@
-import { apiTempalte } from './vue/api.js.js';
-import { indexVue } from './vue/indexVue.vue.js';
-import { dialogVue } from './vue/dialogVue.vue.js';
-import { entityTem } from './nestjs/entity.js';
-import { dtoTem } from './nestjs/dto.js';
-import { controllerTem } from './nestjs/controller.js';
-import { moduleTem } from './nestjs/module.js';
-import { serviceTem } from './nestjs/service.js';
+import { apiTempalte } from './vue/api.js';
+import { indexVue } from './vue/indexVue.vue';
+import { dialogVue } from './vue/dialogVue.vue';
+import { entityTem } from './nestjs/entity';
+import { dtoTem } from './nestjs/dto';
+import { controllerTem } from './nestjs/controller';
+import { moduleTem } from './nestjs/module';
+import { serviceTem } from './nestjs/service';
 
 const templates = {
   'tool/template/nestjs/entity.ts.vm': entityTem,

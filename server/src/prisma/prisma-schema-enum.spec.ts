@@ -92,7 +92,7 @@ describe('Feature: type-safety-refactor - Prisma Schema Enum Validation', () => 
 
       // Check that DelFlag enum has @map directives
       expect(schemaContent).toMatch(/NORMAL\s+@map\("0"\)/);
-      expect(schemaContent).toMatch(/DELETED\s+@map\("2"\)/);
+      expect(schemaContent).toMatch(/DELETED\s+@map\("1"\)/);
     });
 
     it('should use DelFlag enum type for all delFlag fields in models', () => {
@@ -156,7 +156,7 @@ describe('Feature: type-safety-refactor - Prisma Schema Enum Validation', () => 
       expect(statusEnumContent).toMatch(/DISABLED\s+@map\("1"\)/);
     });
 
-    it('should map DelFlag.NORMAL to "0" and DelFlag.DELETED to "2"', () => {
+    it('should map DelFlag.NORMAL to "0" and DelFlag.DELETED to "1"', () => {
       // Validates: Requirements 4.2
 
       // Verify the enum values map to the correct database values
@@ -165,7 +165,7 @@ describe('Feature: type-safety-refactor - Prisma Schema Enum Validation', () => 
 
       const delFlagEnumContent = delFlagEnumMatch![1];
       expect(delFlagEnumContent).toMatch(/NORMAL\s+@map\("0"\)/);
-      expect(delFlagEnumContent).toMatch(/DELETED\s+@map\("2"\)/);
+      expect(delFlagEnumContent).toMatch(/DELETED\s+@map\("1"\)/);
     });
   });
 });

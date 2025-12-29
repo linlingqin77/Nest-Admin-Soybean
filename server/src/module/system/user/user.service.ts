@@ -110,17 +110,17 @@ export class UserService {
     // 分类收集，避免在循环内触发多次查询
     for (const role of roles) {
       switch (role.dataScope) {
-        case DataScopeEnum.DATA_SCOPE_ALL:
+        case 'ALL': // 使用 Prisma 枚举值
           dataScopeAll = true;
           break;
-        case DataScopeEnum.DATA_SCOPE_CUSTOM:
+        case 'CUSTOM': // 使用 Prisma 枚举值
           customRoleIds.push(role.roleId);
           break;
-        case DataScopeEnum.DATA_SCOPE_DEPT:
-        case DataScopeEnum.DATA_SCOPE_DEPT_AND_CHILD:
-          deptScopes.add(role.dataScope);
+        case 'DEPT': // 使用 Prisma 枚举值
+        case 'DEPT_AND_CHILD': // 使用 Prisma 枚举值
+          deptScopes.add(role.dataScope as any);
           break;
-        case DataScopeEnum.DATA_SCOPE_SELF:
+        case 'SELF': // 使用 Prisma 枚举值
           dataScopeSelf = true;
           break;
         default:
@@ -185,6 +185,12 @@ export class UserService {
 
   @Transactional()
   async create(createUserDto: CreateUserDto) {
+    // 检查用户名是否已存在
+    const existingUser = await this.userRepo.findByUserName(createUserDto.userName);
+    if (existingUser) {
+      return Result.fail(ResponseCode.BUSINESS_ERROR, `用户名 '${createUserDto.userName}' 已存在`);
+    }
+
     const salt = bcrypt.genSaltSync(10);
     if (createUserDto.password) {
       createUserDto.password = bcrypt.hashSync(createUserDto.password, salt);
@@ -197,9 +203,9 @@ export class UserService {
 
     const user = await this.userRepo.create({
       ...userPayload,
-      userType: SYS_USER_TYPE.CUSTOM,
+      userType: 'NORMAL' as any, // 使用 Prisma 枚举值
       phonenumber: userPayload.phonenumber ?? '',
-      sex: userPayload.sex ?? '0',
+      sex: (userPayload.sex ?? 'MALE') as any, // 使用 Prisma Gender 枚举值
       status: userPayload.status ?? StatusEnum.NORMAL,
       avatar: '',
       delFlag: DelFlagEnum.NORMAL,
@@ -348,7 +354,16 @@ export class UserService {
   async update(updateUserDto: UpdateUserDto, userId: number) {
     if (updateUserDto.userId === 1) throw new BusinessException(ResponseCode.BUSINESS_ERROR, '非法操作！');
 
-    updateUserDto.roleIds = updateUserDto.roleIds.filter((v) => v != 1);
+    // 检查用户是否存在
+    const existingUser = await this.userRepo.findById(updateUserDto.userId);
+    if (!existingUser) {
+      return Result.fail(ResponseCode.BUSINESS_ERROR, '用户不存在');
+    }
+
+    // 过滤掉超级管理员角色
+    if (updateUserDto.roleIds) {
+      updateUserDto.roleIds = updateUserDto.roleIds.filter((v) => v != 1);
+    }
 
     if (updateUserDto.userId === userId) {
       delete updateUserDto.status;
@@ -400,7 +415,7 @@ export class UserService {
 
   async changeStatus(changeStatusDto: ChangeUserStatusDto) {
     const userData = await this.userRepo.findById(changeStatusDto.userId);
-    if (userData?.userType === SYS_USER_TYPE.SYS) {
+    if (userData?.userType === 'SYSTEM') { // 使用 Prisma 枚举值
       return Result.fail(ResponseCode.BUSINESS_ERROR, '系统角色不可停用');
     }
 

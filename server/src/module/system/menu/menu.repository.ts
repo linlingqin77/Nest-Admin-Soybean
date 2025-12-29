@@ -106,7 +106,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
     }
 
     if (query?.menuType) {
-      where.menuType = query.menuType;
+      where.menuType = query.menuType as any;
     }
 
     return this.delegate.findMany({

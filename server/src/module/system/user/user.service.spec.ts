@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Status, DelFlag } from '@prisma/client';
 import { UserService } from './user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from './user.repository';
@@ -35,10 +36,10 @@ describe('UserService', () => {
     deptId: 100,
     userName: 'admin',
     nickName: '管理员',
-    userType: '00',
+    userType: 'SYSTEM' as any,
     email: 'admin@example.com',
     phonenumber: '13800138000',
-    sex: '0',
+    sex: 'MALE' as any,
     avatar: '',
     password: bcrypt.hashSync('admin123', bcrypt.genSaltSync(10)),
     status: StatusEnum.NORMAL,
@@ -276,6 +277,9 @@ describe('UserService', () => {
         roleIds: [2],
       };
 
+      // 模拟用户名不存在
+      jest.spyOn(userRepo, 'findByUserName').mockResolvedValueOnce(null);
+
       const result = await service.create(createDto as any);
 
       expect(result.code).toBe(200);
@@ -284,11 +288,14 @@ describe('UserService', () => {
 
     it('should hash password when creating user', async () => {
       const createDto = {
-        userName: 'testuser',
+        userName: 'newuser',
         nickName: '测试用户',
         password: 'plainPassword',
         deptId: 100,
       };
+
+      // 模拟用户名不存在
+      jest.spyOn(userRepo, 'findByUserName').mockResolvedValueOnce(null);
 
       await service.create(createDto as any);
 
@@ -409,7 +416,7 @@ describe('UserService', () => {
     it('should not allow changing system user status', async () => {
       jest.spyOn(userRepo, 'findById').mockResolvedValueOnce({
         ...mockUser,
-        userType: '00',
+        userType: 'SYSTEM' as any,
       });
 
       const result = await service.changeStatus({ userId: 1, status: StatusEnum.DISABLED });
@@ -421,7 +428,7 @@ describe('UserService', () => {
     it('should change status for normal user', async () => {
       jest.spyOn(userRepo, 'findById').mockResolvedValueOnce({
         ...mockUser,
-        userType: '01',
+        userType: 'NORMAL' as any,
       });
 
       const result = await service.changeStatus({ userId: 2, status: StatusEnum.DISABLED });

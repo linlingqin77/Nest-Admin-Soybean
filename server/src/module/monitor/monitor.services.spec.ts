@@ -73,7 +73,7 @@ describe('Monitor module services', () => {
     });
 
     it('should list job logs with pagination', async () => {
-      prisma.$transaction.mockResolvedValue([[{ jobLogId: 1 }], 1]);
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[{ jobLogId: 1 }], 1]);
       const res = await service.list({ skip: 0, take: 10 } as any);
       expect(prisma.$transaction).toHaveBeenCalled();
       expect(res.data).toEqual({ rows: [{ jobLogId: 1 }], total: 1 });
@@ -105,7 +105,7 @@ describe('Monitor module services', () => {
     });
 
     it('should list jobs via prisma transaction', async () => {
-      prisma.$transaction.mockResolvedValue([[{ jobId: 1 }], 1]);
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[{ jobId: 1 }], 1]);
       const res = await service.list({ pageNum: 1, pageSize: 5 } as any);
       expect(res.data.total).toBe(1);
     });
@@ -215,7 +215,7 @@ describe('Monitor module services', () => {
     });
 
     it('should query login logs via prisma transaction', async () => {
-      prisma.$transaction.mockResolvedValue([[{ infoId: 1 }], 1]);
+      (prisma.$transaction as jest.Mock).mockResolvedValue([[{ infoId: 1 }], 1]);
       const res = await service.findAll({ skip: 0, take: 10 } as any);
       expect(res.data.total).toBe(1);
     });

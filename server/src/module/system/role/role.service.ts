@@ -29,6 +29,7 @@ export class RoleService {
         ...rolePayload,
         roleSort: rolePayload.roleSort ?? 0,
         status: (rolePayload.status ?? StatusEnum.NORMAL) as Status,
+        dataScope: rolePayload.dataScope as any, // 转换为 Prisma 枚举
         delFlag: DelFlagEnum.NORMAL,
       },
     });

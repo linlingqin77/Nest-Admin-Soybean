@@ -315,7 +315,8 @@ export class RedisService {
   async lLeftPop(key: string): Promise<string> {
     if (!key) return null;
     const result = await this.client.blpop(key);
-    return result.length > 0 ? result[0] : null;
+    // blpop 返回 [key, value] 或 null
+    return result && result.length > 1 ? result[1] : null;
   }
 
   /**
@@ -325,7 +326,8 @@ export class RedisService {
   async lRightPop(key: string): Promise<string> {
     if (!key) return null;
     const result = await this.client.brpop(key);
-    return result.length > 0 ? result[0] : null;
+    // brpop 返回 [key, value] 或 null
+    return result && result.length > 1 ? result[1] : null;
   }
 
   /**

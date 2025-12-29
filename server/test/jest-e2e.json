@@ -5,5 +5,27 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1"
+  },
+  "testTimeout": 60000,
+  "maxWorkers": 1,
+  "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"],
+  "globals": {
+    "ts-jest": {
+      "tsconfig": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+      }
+    }
+  },
+  "collectCoverageFrom": [
+    "../src/**/*.{ts,js}",
+    "!../src/**/*.spec.ts",
+    "!../src/**/*.e2e-spec.ts",
+    "!../src/main.ts"
+  ],
+  "coverageDirectory": "../coverage-e2e"
 }

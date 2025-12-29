@@ -19,7 +19,67 @@ enum Status {
 /// 删除标志枚举
 enum DelFlag {
   NORMAL  @map("0")
-  DELETED @map("2")
+  DELETED @map("1")
+}
+
+/// 是/否枚举
+enum YesNo {
+  YES @map("Y")
+  NO  @map("N")
+}
+
+/// 配置类型枚举
+enum ConfigType {
+  YES @map("Y")
+  NO  @map("N")
+}
+
+/// 用户类型枚举
+enum UserType {
+  SYSTEM @map("00")  // 系统用户
+  NORMAL @map("01")  // 普通用户
+  GUEST  @map("02")  // 访客用户
+}
+
+/// 设备类型枚举
+enum DeviceType {
+  PC     @map("0")
+  MOBILE @map("1")
+}
+
+/// 性别枚举
+enum Gender {
+  MALE    @map("0")
+  FEMALE  @map("1")
+  UNKNOWN @map("2")
+}
+
+/// 菜单类型枚举
+enum MenuType {
+  DIRECTORY @map("M")  // 目录
+  MENU      @map("C")  // 菜单
+  BUTTON    @map("F")  // 按钮
+}
+
+/// 通知类型枚举
+enum NoticeType {
+  NOTICE       @map("1")  // 通知
+  ANNOUNCEMENT @map("2")  // 公告
+}
+
+/// 数据范围枚举
+enum DataScope {
+  ALL            @map("1")  // 全部数据权限
+  CUSTOM         @map("2")  // 自定数据权限
+  DEPT           @map("3")  // 部门数据权限
+  DEPT_AND_CHILD @map("4")  // 部门及以下数据权限
+  SELF           @map("5")  // 仅本人数据权限
+}
+
+/// 代码生成类型枚举
+enum GenType {
+  ZIP  @map("0")  // zip压缩包
+  PATH @map("1")  // 自定义路径
 }
 
 // ==================== 租户相关表 ====================
@@ -104,7 +164,7 @@ model GenTable {
   businessName   String    @map("business_name") @db.VarChar(30)
   functionName   String    @map("function_name") @db.VarChar(50)
   functionAuthor String    @map("function_author") @db.VarChar(50)
-  genType        String    @map("gen_type") @db.Char(1)
+  genType        GenType   @default(ZIP) @map("gen_type")
   genPath        String    @map("gen_path") @db.VarChar(200)
   options        String    @db.VarChar(1000)
   status         Status
@@ -157,10 +217,10 @@ model GenTableColumn {
 model SysSystemConfig {
   configId    Int       @id @default(autoincrement()) @map("config_id")
   configName  String    @map("config_name") @db.VarChar(100)
-  configKey   String    @unique @map("config_key") @db.VarChar(100)
-  configValue String    @map("config_value") @db.VarChar(500)
-  configType  String    @map("config_type") @db.Char(1)
-  createBy    String    @default("") @map("create_by") @db.VarChar(64)
+  configKey   String     @unique @map("config_key") @db.VarChar(100)
+  configValue String     @map("config_value") @db.VarChar(500)
+  configType  ConfigType @map("config_type")
+  createBy    String     @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
   updateTime  DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
@@ -179,11 +239,11 @@ model SysSystemConfig {
 model SysConfig {
   configId    Int       @id @default(autoincrement()) @map("config_id")
   tenantId    String    @default("000000") @map("tenant_id") @db.VarChar(20)
-  configName  String    @map("config_name") @db.VarChar(100)
-  configKey   String    @map("config_key") @db.VarChar(100)
-  configValue String    @map("config_value") @db.VarChar(500)
-  configType  String    @map("config_type") @db.Char(1)
-  createBy    String    @default("") @map("create_by") @db.VarChar(64)
+  configName  String     @map("config_name") @db.VarChar(100)
+  configKey   String     @map("config_key") @db.VarChar(100)
+  configValue String     @map("config_value") @db.VarChar(500)
+  configType  ConfigType @map("config_type")
+  createBy    String     @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
   updateTime  DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
@@ -235,7 +295,7 @@ model SysDictData {
   dictType   String    @map("dict_type") @db.VarChar(100)
   cssClass   String    @default("") @map("css_class") @db.VarChar(100)
   listClass  String    @default("") @map("list_class") @db.VarChar(100)
-  isDefault  String    @default("N") @map("is_default") @db.Char(1)
+  isDefault  YesNo     @default(NO) @map("is_default")
   status     Status    @default(NORMAL)
   createBy   String    @default("") @map("create_by") @db.VarChar(64)
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
@@ -309,9 +369,9 @@ model SysLogininfor {
   userName      String    @map("user_name") @db.VarChar(50)
   ipaddr        String    @db.VarChar(128)
   loginLocation String    @default("") @map("login_location") @db.VarChar(255)
-  browser       String    @db.VarChar(50)
-  os            String    @db.VarChar(50)
-  deviceType    String    @default("0") @map("device_type") @db.Char(1)
+  browser       String     @db.VarChar(50)
+  os            String     @db.VarChar(50)
+  deviceType    DeviceType @default(PC) @map("device_type")
   status        Status
   msg           String    @db.VarChar(255)
   delFlag       DelFlag   @default(NORMAL) @map("del_flag")
@@ -335,10 +395,10 @@ model SysMenu {
   path      String    @default("") @db.VarChar(200)
   component String?   @db.VarChar(255)
   query     String    @default("") @db.VarChar(255)
-  isFrame   String    @map("is_frame") @db.Char(1)
-  isCache   String    @map("is_cache") @db.Char(1)
-  menuType  String    @map("menu_type") @db.Char(1)
-  visible   String    @db.Char(1)
+  isFrame   YesNo     @default(NO) @map("is_frame")
+  isCache   YesNo     @default(NO) @map("is_cache")
+  menuType  MenuType  @map("menu_type")
+  visible   YesNo     @default(YES) @map("visible")
   status    Status
   perms     String    @default("") @db.VarChar(100)
   icon      String    @default("") @db.VarChar(100)
@@ -358,11 +418,11 @@ model SysMenu {
 }
 
 model SysNotice {
-  noticeId      Int       @id @default(autoincrement()) @map("notice_id")
-  tenantId      String    @default("000000") @map("tenant_id") @db.VarChar(20)
-  noticeTitle   String    @map("notice_title") @db.VarChar(50)
-  noticeType    String    @map("notice_type") @db.Char(1)
-  noticeContent String?   @map("notice_content") @db.Text
+  noticeId      Int        @id @default(autoincrement()) @map("notice_id")
+  tenantId      String     @default("000000") @map("tenant_id") @db.VarChar(20)
+  noticeTitle   String     @map("notice_title") @db.VarChar(50)
+  noticeType    NoticeType @map("notice_type")
+  noticeContent String?    @map("notice_content") @db.Text
   status        Status    @default(NORMAL)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
@@ -437,7 +497,7 @@ model SysRole {
   roleName         String    @map("role_name") @db.VarChar(30)
   roleKey          String    @map("role_key") @db.VarChar(100)
   roleSort         Int       @map("role_sort")
-  dataScope        String    @default("1") @map("data_scope") @db.Char(1)
+  dataScope        DataScope @default(ALL) @map("data_scope")
   menuCheckStrictly Boolean  @map("menu_check_strictly") @default(false)
   deptCheckStrictly Boolean  @map("dept_check_strictly") @default(false)
   status           Status    @default(NORMAL)
@@ -555,10 +615,10 @@ model SysUser {
   deptId    Int?      @map("dept_id")
   userName  String    @map("user_name") @db.VarChar(30)
   nickName  String    @map("nick_name") @db.VarChar(30)
-  userType  String    @map("user_type") @db.VarChar(2)
+  userType  UserType  @map("user_type")
   email     String    @default("") @db.VarChar(50)
   phonenumber String  @default("") @db.VarChar(11)
-  sex       String    @default("0") @db.Char(1)
+  sex       Gender    @default(MALE)
   avatar    String    @default("") @db.VarChar(255)
   password  String    @db.VarChar(200)
   status    Status    @default(NORMAL)

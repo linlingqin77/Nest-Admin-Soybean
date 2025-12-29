@@ -109,7 +109,7 @@ export class SystemConfigService {
   async getConfigsByType(configType: string): Promise<SysSystemConfig[]> {
     return this.systemPrisma.sysSystemConfig.findMany({
       where: {
-        configType,
+        configType: configType as any,
         delFlag: DelFlagEnum.NORMAL,
         status: StatusEnum.NORMAL,
       },
@@ -136,7 +136,11 @@ export class SystemConfigService {
   }): Promise<SysSystemConfig> {
     return this.systemPrisma.sysSystemConfig.create({
       data: {
-        ...data,
+        configName: data.configName,
+        configKey: data.configKey,
+        configValue: data.configValue,
+        configType: data.configType as any,
+        remark: data.remark,
         status: StatusEnum.NORMAL,
         delFlag: DelFlagEnum.NORMAL,
         createBy: data.createBy || 'system',
