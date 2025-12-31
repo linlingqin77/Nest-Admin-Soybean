@@ -16,6 +16,10 @@ import { CryptoModule, DecryptInterceptor } from './common/crypto';
 import { LoggerModule } from './common/logger';
 import { ClsModule } from './common/cls';
 import { TransactionalInterceptor } from './common/interceptors/transactional.interceptor';
+import { MetricsModule, MetricsInterceptor } from './common/metrics';
+import { AuditModule } from './common/audit';
+import { LoginSecurityModule } from './common/security';
+import { DataLoaderModule } from './common/dataloader';
 
 import { MainModule } from './module/main/main.module';
 import { UploadModule } from './module/upload/upload.module';
@@ -46,6 +50,12 @@ import { PrismaModule } from './prisma/prisma.module';
     LoggerModule,
     // CLS 上下文模块 (Request ID)
     ClsModule,
+    // Prometheus 指标收集模块
+    MetricsModule,
+    // 审计日志模块
+    AuditModule,
+    // DataLoader 模块 (解决 N+1 查询问题)
+    DataLoaderModule,
     // 数据库改为 Prisma + PostgreSQL
     PrismaModule,
     // 多租户模块
@@ -68,6 +78,16 @@ import { PrismaModule } from './prisma/prisma.module';
           port: config.redis.port,
           password: config.redis.password,
           db: config.redis.db,
+          keyPrefix: config.redis.keyPrefix + 'bull:',
+        },
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000,
+          },
+          removeOnComplete: 100, // 保留最近100个已完成任务
+          removeOnFail: 500, // 保留最近500个失败任务
         },
       }),
     }),
@@ -90,6 +110,11 @@ import { PrismaModule } from './prisma/prisma.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: TransactionalInterceptor,
+    },
+    // 指标收集拦截器 (收集 HTTP 请求指标)
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MetricsInterceptor,
     },
     // API 限流守卫 - 最先执行，防止DDoS攻击
     {

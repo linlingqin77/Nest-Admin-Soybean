@@ -17,14 +17,19 @@ import { ResponseCode, getResponseMessage } from '../response/response.interface
  * // 携带额外数据
  * throw new BusinessException(ResponseCode.DATA_IN_USE, '该角色下存在用户', { userCount: 5 });
  */
+/**
+ * 业务异常额外数据类型
+ */
+export type BusinessExceptionData = Record<string, unknown> | null;
+
 export class BusinessException extends HttpException {
   /** 业务错误码 */
   public readonly errorCode: number;
 
   /** 额外数据 */
-  public readonly errorData?: any;
+  public readonly errorData?: BusinessExceptionData;
 
-  constructor(code: ResponseCode | number, message?: string, data?: any) {
+  constructor(code: ResponseCode | number, message?: string, data?: BusinessExceptionData) {
     const msg = message ?? getResponseMessage(code as ResponseCode) ?? '业务处理失败';
 
     super(
@@ -43,14 +48,14 @@ export class BusinessException extends HttpException {
   /**
    * 静态方法抛出异常
    */
-  static throw(code: ResponseCode | number, message?: string, data?: any): never {
+  static throw(code: ResponseCode | number, message?: string, data?: BusinessExceptionData): never {
     throw new BusinessException(code, message, data);
   }
 
   /**
    * 条件抛出异常
    */
-  static throwIf(condition: boolean, message?: string, code?: ResponseCode | number, data?: any): void {
+  static throwIf(condition: boolean, message?: string, code?: ResponseCode | number, data?: BusinessExceptionData): void {
     if (condition) {
       throw new BusinessException(code ?? ResponseCode.BUSINESS_ERROR, message, data);
     }

@@ -97,6 +97,126 @@ describe('MenuService', () => {
     userService = module.get<UserService>(UserService);
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a menu', async () => {
+      const createDto = {
+        menuName: '新菜单',
+        parentId: 0,
+        orderNum: 1,
+        path: '/new',
+        menuType: 'M',
+      };
+
+      (menuRepo.create as jest.Mock).mockResolvedValue({ menuId: 2, ...createDto });
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(menuRepo.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          menuName: '新菜单',
+          path: '/new',
+          delFlag: DelFlagEnum.NORMAL,
+        }),
+      );
+    });
+
+    it('should create a menu with default path and icon', async () => {
+      const createDto = {
+        menuName: '新菜单',
+        parentId: 0,
+        orderNum: 1,
+        menuType: 'M',
+      };
+
+      (menuRepo.create as jest.Mock).mockResolvedValue({ menuId: 2, ...createDto });
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(menuRepo.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          path: '',
+          icon: '',
+        }),
+      );
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return all menus', async () => {
+      (menuRepo.findAllMenus as jest.Mock).mockResolvedValue([mockMenu]);
+
+      const result = await service.findAll({});
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data).toHaveLength(1);
+    });
+
+    it('should pass query to repository', async () => {
+      const query = { menuName: '系统' };
+      (menuRepo.findAllMenus as jest.Mock).mockResolvedValue([mockMenu]);
+
+      await service.findAll(query);
+
+      expect(menuRepo.findAllMenus).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a menu by id', async () => {
+      (menuRepo.findById as jest.Mock).mockResolvedValue(mockMenu);
+
+      const result = await service.findOne(1);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data.menuId).toBe(1);
+    });
+  });
+
+  describe('tenantPackageMenuTreeselect', () => {
+    it('should return menu tree for tenant package', async () => {
+      (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([mockMenu]);
+
+      const result = await service.tenantPackageMenuTreeselect(1);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data.menus).toBeDefined();
+      expect(result.data.checkedKeys).toEqual([]);
+    });
+  });
+
+  describe('cascadeRemove', () => {
+    it('should cascade delete multiple menus', async () => {
+      (prisma.sysMenu.updateMany as jest.Mock).mockResolvedValue({ count: 3 });
+
+      const result = await service.cascadeRemove([1, 2, 3]);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data).toBe(3);
+      expect(prisma.sysMenu.updateMany).toHaveBeenCalledWith({
+        where: { menuId: { in: [1, 2, 3] } },
+        data: { delFlag: '1' },
+      });
+    });
+  });
+
+  describe('findMany', () => {
+    it('should return menus with custom args', async () => {
+      const args = { where: { menuType: 'M' } };
+      (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([mockMenu]);
+
+      const result = await service.findMany(args);
+
+      expect(result).toHaveLength(1);
+      expect(prisma.sysMenu.findMany).toHaveBeenCalledWith(args);
+    });
+  });
+
   describe('update', () => {
     it('should update a menu', async () => {
       const updateDto = {

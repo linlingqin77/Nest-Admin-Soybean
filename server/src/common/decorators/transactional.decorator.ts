@@ -46,9 +46,9 @@ export interface TransactionalOptions {
   /** 只读事务 */
   readOnly?: boolean;
   /** 回滚异常类型 */
-  rollbackFor?: (new (...args: any[]) => Error)[];
+  rollbackFor?: (new (...args: unknown[]) => Error)[];
   /** 不回滚异常类型 */
-  noRollbackFor?: (new (...args: any[]) => Error)[];
+  noRollbackFor?: (new (...args: unknown[]) => Error)[];
 }
 
 /**

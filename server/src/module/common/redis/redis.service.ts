@@ -1,10 +1,39 @@
 import { InjectRedis } from '@songkeys/nestjs-redis';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import Redis from 'ioredis';
 
 @Injectable()
-export class RedisService {
+export class RedisService implements OnModuleDestroy {
+  private readonly logger = new Logger(RedisService.name);
+
   constructor(@InjectRedis() private readonly client: Redis) {}
+
+  /**
+   * 模块销毁时关闭 Redis 连接 (需求 3.8)
+   * 确保优雅关闭时正确清理 Redis 连接
+   */
+  async onModuleDestroy(): Promise<void> {
+    try {
+      // 检查连接状态
+      if (this.client.status === 'ready' || this.client.status === 'connecting') {
+        this.logger.log('Closing Redis connection...');
+        // 使用 quit 命令优雅关闭连接，等待所有命令完成
+        await this.client.quit();
+        this.logger.log('Redis connection closed successfully.');
+      } else {
+        this.logger.log(`Redis connection already closed (status: ${this.client.status})`);
+      }
+    } catch (error) {
+      this.logger.error(`Error closing Redis connection: ${error.message}`);
+      // 如果 quit 失败，强制断开连接
+      try {
+        this.client.disconnect();
+        this.logger.log('Redis connection forcefully disconnected.');
+      } catch (disconnectError) {
+        this.logger.error(`Error forcefully disconnecting Redis: ${disconnectError.message}`);
+      }
+    }
+  }
 
   getClient(): Redis {
     return this.client;

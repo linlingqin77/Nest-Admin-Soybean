@@ -10,3 +10,6 @@ export * from '../interceptor/operlog.interceptor';
 
 // 事务拦截器
 export * from './transactional.interceptor';
+
+// 审计日志拦截器
+export * from './audit.interceptor';

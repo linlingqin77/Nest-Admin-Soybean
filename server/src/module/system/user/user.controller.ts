@@ -26,6 +26,9 @@ import {
   ResetPwdDto,
   UpdateProfileDto,
   UpdatePwdDto,
+  BatchCreateUserDto,
+  BatchDeleteUserDto,
+  BatchResultDto,
 } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Result } from 'src/common/response';
@@ -131,6 +134,32 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto, @UserTool() { injectCreate }: UserToolType) {
     return this.userService.create(injectCreate(createUserDto));
+  }
+
+  @Api({
+    summary: '用户-批量创建',
+    description: '批量创建用户，单次最多100个，返回每个用户的创建结果',
+    body: BatchCreateUserDto,
+    type: BatchResultDto,
+  })
+  @RequirePermission('system:user:add')
+  @Operlog({ businessType: BusinessType.INSERT })
+  @Post('batch')
+  batchCreate(@Body() batchCreateDto: BatchCreateUserDto) {
+    return this.userService.batchCreate(batchCreateDto);
+  }
+
+  @Api({
+    summary: '用户-批量删除',
+    description: '批量删除用户，单次最多100个，返回每个用户的删除结果',
+    body: BatchDeleteUserDto,
+    type: BatchResultDto,
+  })
+  @RequireRole('admin')
+  @Operlog({ businessType: BusinessType.DELETE })
+  @Delete('batch')
+  batchDelete(@Body() batchDeleteDto: BatchDeleteUserDto) {
+    return this.userService.batchDelete(batchDeleteDto);
   }
 
   @Api({

@@ -26,6 +26,7 @@ model SysTenant {
   accountCount    Int       @default(-1) @map("account_count")
   storageQuota    Int       @default(10240) @map("storage_quota") // 存储配额(MB)，默认10GB
   storageUsed     Int       @default(0) @map("storage_used") // 已使用存储(MB)
+  apiQuota        Int       @default(10000) @map("api_quota") // API日调用量配额，默认10000次，-1表示无限制
   status          String    @default("0") @db.Char(1)
   delFlag         String    @default("0") @map("del_flag") @db.Char(1)
   createBy        String    @default("") @map("create_by") @db.VarChar(64)
@@ -587,4 +588,65 @@ model SysUserRole {
   @@id([userId, roleId])
   @@index([roleId])
   @@map("sys_user_role")
+}
+
+/// 审计日志表
+model SysAuditLog {
+  id          Int       @id @default(autoincrement())
+  tenantId    String    @map("tenant_id") @db.VarChar(20)
+  userId      Int?      @map("user_id")
+  userName    String?   @map("user_name") @db.VarChar(50)
+  action      String    @db.VarChar(100)
+  module      String    @db.VarChar(50)
+  targetType  String?   @map("target_type") @db.VarChar(50)
+  targetId    String?   @map("target_id") @db.VarChar(100)
+  oldValue    String?   @map("old_value") @db.Text
+  newValue    String?   @map("new_value") @db.Text
+  ip          String    @db.VarChar(128)
+  userAgent   String?   @map("user_agent") @db.VarChar(500)
+  requestId   String?   @map("request_id") @db.VarChar(64)
+  status      String    @db.Char(1)
+  errorMsg    String?   @map("error_msg") @db.VarChar(2000)
+  duration    Int       @default(0)
+  createTime  DateTime  @map("create_time") @default(now())
+
+  @@index([tenantId, createTime])
+  @@index([userId, createTime])
+  @@index([action])
+  @@index([module])
+  @@index([targetType, targetId])
+  @@map("sys_audit_log")
+}
+
+/// 租户功能开关表 (需求 5.1)
+model SysTenantFeature {
+  id          Int       @id @default(autoincrement())
+  tenantId    String    @map("tenant_id") @db.VarChar(20)
+  featureKey  String    @map("feature_key") @db.VarChar(100)
+  enabled     Boolean   @default(false)
+  config      String?   @db.Text
+  createBy    String    @default("") @map("create_by") @db.VarChar(64)
+  createTime  DateTime  @map("create_time") @default(now())
+  updateBy    String    @default("") @map("update_by") @db.VarChar(64)
+  updateTime  DateTime  @map("update_time") @updatedAt
+
+  @@unique([tenantId, featureKey])
+  @@index([tenantId])
+  @@index([featureKey])
+  @@map("sys_tenant_feature")
+}
+
+/// 租户使用统计表 (需求 5.5, 5.6)
+model SysTenantUsage {
+  id          Int       @id @default(autoincrement())
+  tenantId    String    @map("tenant_id") @db.VarChar(20)
+  date        DateTime  @db.Date
+  apiCalls    Int       @default(0) @map("api_calls")
+  storageUsed Int       @default(0) @map("storage_used")
+  userCount   Int       @default(0) @map("user_count")
+  createTime  DateTime  @map("create_time") @default(now())
+
+  @@unique([tenantId, date])
+  @@index([tenantId, date])
+  @@map("sys_tenant_usage")
 }

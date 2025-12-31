@@ -1,8 +1,9 @@
-import { Process, Processor } from '@nestjs/bull';
+import { Process, Processor, OnQueueCompleted, OnQueueFailed, OnQueueActive } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { AppConfigService } from 'src/config/app-config.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MetricsService } from 'src/common/metrics/metrics.service';
 import sharp from 'sharp';
 import ffmpeg from 'fluent-ffmpeg';
 import * as path from 'path';
@@ -32,6 +33,7 @@ export class ThumbnailProcessor {
   constructor(
     private readonly config: AppConfigService,
     private readonly prisma: PrismaService,
+    private readonly metricsService: MetricsService,
   ) { }
 
   @Process('generate-thumbnail')
@@ -151,5 +153,32 @@ export class ThumbnailProcessor {
           reject(error);
         });
     });
+  }
+
+  /**
+   * 队列任务开始处理时触发
+   */
+  @OnQueueActive()
+  onActive(job: Job<ThumbnailJobData>): void {
+    this.logger.debug(`任务开始处理: ${job.id}, uploadId=${job.data.uploadId}`);
+    this.metricsService.recordQueueJob('thumbnail', 'active');
+  }
+
+  /**
+   * 队列任务完成时触发
+   */
+  @OnQueueCompleted()
+  onCompleted(job: Job<ThumbnailJobData>): void {
+    this.logger.debug(`任务完成: ${job.id}, uploadId=${job.data.uploadId}`);
+    this.metricsService.recordQueueJob('thumbnail', 'completed');
+  }
+
+  /**
+   * 队列任务失败时触发
+   */
+  @OnQueueFailed()
+  onFailed(job: Job<ThumbnailJobData>, error: Error): void {
+    this.logger.error(`任务失败: ${job.id}, uploadId=${job.data.uploadId}, error=${error.message}`);
+    this.metricsService.recordQueueJob('thumbnail', 'failed');
   }
 }

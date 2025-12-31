@@ -11,13 +11,13 @@ export function Captcha(CACHE_KEY: string) {
   const injectConfig = Inject(ConfigService);
   const logger = new Logger('Captcha');
 
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function <T extends object>(target: T, propertyKey: string, descriptor: PropertyDescriptor) {
     injectRedis(target, 'redisService');
     injectConfig(target, 'configService');
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T & { redisService: RedisService; configService: ConfigService }, ...args: unknown[]) {
       // 使用 getSystemConfigValue 而非 getConfigValue
       // 因为登录时租户上下文可能尚未建立，需要使用不依赖租户的配置方法
       const enable = await this.configService.getSystemConfigValue('sys.account.captchaEnabled');

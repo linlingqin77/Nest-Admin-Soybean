@@ -4,12 +4,14 @@ import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from './auth.guard';
 import { UserService } from 'src/module/system/user/user.service';
 import { AppConfigService } from 'src/config/app-config.service';
+import { TokenBlacklistService } from 'src/common/security/token-blacklist.service';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
   let reflector: Reflector;
   let userService: UserService;
   let configService: AppConfigService;
+  let tokenBlacklistService: TokenBlacklistService;
 
   const mockUserService = {
     parseToken: jest.fn(),
@@ -25,6 +27,11 @@ describe('JwtAuthGuard', () => {
         ],
       },
     },
+  };
+
+  const mockTokenBlacklistService = {
+    isBlacklisted: jest.fn(),
+    isTokenVersionValid: jest.fn(),
   };
 
   const createMockContext = (options: {
@@ -54,10 +61,15 @@ describe('JwtAuthGuard', () => {
       providers: [
         {
           provide: JwtAuthGuard,
-          useFactory: (reflector: Reflector, userService: UserService, config: AppConfigService) => {
-            return new JwtAuthGuard(reflector, userService, config);
+          useFactory: (
+            reflector: Reflector,
+            userService: UserService,
+            config: AppConfigService,
+            tokenBlacklistService: TokenBlacklistService,
+          ) => {
+            return new JwtAuthGuard(reflector, userService, config, tokenBlacklistService);
           },
-          inject: [Reflector, UserService, AppConfigService],
+          inject: [Reflector, UserService, AppConfigService, TokenBlacklistService],
         },
         {
           provide: Reflector,
@@ -73,6 +85,10 @@ describe('JwtAuthGuard', () => {
           provide: AppConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: TokenBlacklistService,
+          useValue: mockTokenBlacklistService,
+        },
       ],
     }).compile();
 
@@ -80,6 +96,7 @@ describe('JwtAuthGuard', () => {
     reflector = module.get<Reflector>(Reflector);
     userService = module.get<UserService>(UserService);
     configService = module.get<AppConfigService>(AppConfigService);
+    tokenBlacklistService = module.get<TokenBlacklistService>(TokenBlacklistService);
   });
 
   afterEach(() => {
@@ -143,7 +160,8 @@ describe('JwtAuthGuard', () => {
 
     it('should allow access with valid token', async () => {
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
-      mockUserService.parseToken.mockReturnValue({ userId: 1 });
+      mockUserService.parseToken.mockReturnValue({ userId: 1, uuid: 'test-uuid' });
+      mockTokenBlacklistService.isBlacklisted.mockResolvedValue(false);
 
       const context = createMockContext({
         path: '/protected',
@@ -156,6 +174,57 @@ describe('JwtAuthGuard', () => {
       const result = await guard.canActivate(context);
 
       expect(result).toBe(true);
+    });
+
+    it('should throw UnauthorizedException when token is blacklisted', async () => {
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
+      mockUserService.parseToken.mockReturnValue({ userId: 1, uuid: 'blacklisted-uuid' });
+      mockTokenBlacklistService.isBlacklisted.mockResolvedValue(true);
+
+      const context = createMockContext({
+        path: '/protected',
+        method: 'GET',
+        authorization: 'Bearer blacklisted-token',
+      });
+
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+      expect(mockTokenBlacklistService.isBlacklisted).toHaveBeenCalledWith('blacklisted-uuid');
+    });
+
+    it('should throw UnauthorizedException when token version is invalid', async () => {
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
+      mockUserService.parseToken.mockReturnValue({ userId: 1, uuid: 'test-uuid', tokenVersion: 1 });
+      mockTokenBlacklistService.isBlacklisted.mockResolvedValue(false);
+      mockTokenBlacklistService.isTokenVersionValid.mockResolvedValue(false);
+
+      const context = createMockContext({
+        path: '/protected',
+        method: 'GET',
+        authorization: 'Bearer old-version-token',
+      });
+
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+      expect(mockTokenBlacklistService.isTokenVersionValid).toHaveBeenCalledWith(1, 1);
+    });
+
+    it('should allow access when token version is valid', async () => {
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
+      mockUserService.parseToken.mockReturnValue({ userId: 1, uuid: 'test-uuid', tokenVersion: 2 });
+      mockTokenBlacklistService.isBlacklisted.mockResolvedValue(false);
+      mockTokenBlacklistService.isTokenVersionValid.mockResolvedValue(true);
+
+      const context = createMockContext({
+        path: '/protected',
+        method: 'GET',
+        authorization: 'Bearer valid-version-token',
+      });
+
+      jest.spyOn(guard as any, 'activate').mockResolvedValue(true);
+
+      const result = await guard.canActivate(context);
+
+      expect(result).toBe(true);
+      expect(mockTokenBlacklistService.isTokenVersionValid).toHaveBeenCalledWith(1, 2);
     });
   });
 
@@ -208,7 +277,8 @@ describe('JwtAuthGuard', () => {
   describe('parseToken integration', () => {
     it('should call userService.parseToken with correct token', async () => {
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
-      mockUserService.parseToken.mockReturnValue({ userId: 1 });
+      mockUserService.parseToken.mockReturnValue({ userId: 1, uuid: 'test-uuid' });
+      mockTokenBlacklistService.isBlacklisted.mockResolvedValue(false);
 
       const context = createMockContext({
         path: '/protected',

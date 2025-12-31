@@ -17,6 +17,7 @@ import { Api } from 'src/common/decorators/api.decorator';
 import { TenantContext, IgnoreTenant } from 'src/common/tenant';
 import { SkipDecrypt } from 'src/common/crypto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { TokenBlacklistService } from 'src/common/security/token-blacklist.service';
 
 /**
  * 认证控制器 - 匹配 Soybean 前端 API
@@ -36,6 +37,7 @@ export class AuthController {
     private readonly sysConfigService: SysConfigService,
     private readonly config: AppConfigService,
     private readonly prisma: PrismaService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {}
 
   /**
@@ -232,17 +234,22 @@ export class AuthController {
   /**
    * 退出登录 - POST /auth/logout
    * 对应前端: fetchLogout()
+   * 需求 4.8: 登出后 Token 立即失效
    */
   @Api({
     summary: '退出登录',
-    description: '退出当前登录状态',
+    description: '退出当前登录状态，Token 将被加入黑名单',
   })
   @NotRequireAuth()
   @Post('logout')
   @HttpCode(200)
   async logout(@User() user: UserDto, @ClientInfo() clientInfo: ClientInfoDto): Promise<Result> {
     if (user?.token) {
+      // 删除 Redis 中的登录信息
       await this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
+      // 将 Token 加入黑名单，确保即使 JWT 未过期也无法使用
+      await this.tokenBlacklistService.addToBlacklist(user.token);
+      this.logger.log(`User logged out: userId=${user.userId}, token=${user.token}`);
     }
     return this.mainService.logout(clientInfo);
   }

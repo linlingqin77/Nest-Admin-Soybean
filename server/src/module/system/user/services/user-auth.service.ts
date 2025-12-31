@@ -6,7 +6,7 @@ import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum, DelFlagEnum, StatusEnum } from 'src/common/enum/index';
 import { LOGIN_TOKEN_EXPIRESIN } from 'src/common/constant/index';
 import { ResponseCode, Result } from 'src/common/response';
-import { GenerateUUID, FormatDate } from 'src/common/utils/index';
+import { GenerateUUID } from 'src/common/utils/index';
 import { LoginDto, RegisterDto } from 'src/module/main/dto/index';
 import { UserType } from '../dto/user';
 import { ClientInfoDto } from 'src/common/decorators/common.decorator';
@@ -18,6 +18,8 @@ import { SYS_USER_TYPE } from 'src/common/constant/index';
 import { SysDept, SysPost, SysRole, SysUser } from '@prisma/client';
 import { Uniq } from 'src/common/utils/index';
 import { RoleService } from '../../role/role.service';
+import { LoginSecurityService } from 'src/common/security/login-security.service';
+import { TokenBlacklistService } from 'src/common/security/token-blacklist.service';
 
 type UserWithDept = SysUser & { dept?: SysDept | null };
 type UserWithRelations = UserWithDept & { roles?: SysRole[]; posts?: SysPost[] };
@@ -35,18 +37,40 @@ export class UserAuthService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly roleService: RoleService,
+    private readonly loginSecurityService: LoginSecurityService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {}
 
   /**
    * 用户登录
+   * 需求 4.3: 登录失败 5 次后锁定账户 15 分钟
    */
   @Captcha('user')
   async login(user: LoginDto, clientInfo: ClientInfoDto) {
+    // 检查账户是否被锁定
+    const lockStatus = await this.loginSecurityService.validateBeforeLogin(user.userName);
+    if (lockStatus.locked) {
+      return Result.fail(ResponseCode.ACCOUNT_LOCKED, lockStatus.message);
+    }
+
     const data = await this.userRepo.findByUserName(user.userName);
 
     if (!(data && bcrypt.compareSync(user.password, data.password))) {
-      return Result.fail(ResponseCode.BUSINESS_ERROR, `帐号或密码错误`);
+      // 记录登录失败
+      const securityStatus = await this.loginSecurityService.recordLoginFailure(user.userName);
+      
+      if (securityStatus.isLocked) {
+        return Result.fail(ResponseCode.ACCOUNT_LOCKED, `登录失败次数过多，账户已被锁定 15 分钟`);
+      }
+      
+      return Result.fail(
+        ResponseCode.BUSINESS_ERROR, 
+        `帐号或密码错误，还剩 ${securityStatus.remainingAttempts} 次尝试机会`
+      );
     }
+
+    // 登录成功，清除失败记录
+    await this.loginSecurityService.clearFailedAttempts(user.userName);
 
     // 清除用户缓存
     await this.clearUserCache(data.userId);
@@ -68,7 +92,9 @@ export class UserAuthService {
     });
 
     const uuid = GenerateUUID();
-    const token = this.createToken({ uuid: uuid, userId: userData.userId });
+    // 需求 4.9: 获取当前 token 版本，用于密码修改后失效
+    const tokenVersion = await this.tokenBlacklistService.getUserTokenVersion(userData.userId);
+    const token = this.createToken({ uuid: uuid, userId: userData.userId, tokenVersion });
     const permissions = await this.getUserPermissions(userData.userId);
     const deptData = userData.deptId
       ? await this.prisma.sysDept.findFirst({ where: { deptId: userData.deptId }, select: { deptName: true } })
@@ -76,9 +102,20 @@ export class UserAuthService {
 
     const roles = (userData.roles ?? []).map((item) => item.roleKey);
 
-    const safeDept = (userData.dept as any) ?? ({} as any);
-    const safeRoles = (userData.roles as any) ?? [];
-    const safePosts = (userData.posts as any) ?? [];
+    const safeDept = userData.dept ?? null;
+    const safeRoles = userData.roles ?? [];
+    const safePosts = userData.posts ?? [];
+    
+    // Build user object with deptName
+    const userObj = {
+      ...(userData as unknown as UserType['user']),
+      dept: safeDept,
+      roles: safeRoles,
+      posts: safePosts,
+    };
+    // Add deptName to user object
+    Object.assign(userObj, { deptName: deptData?.deptName || '' });
+    
     const userInfo: Partial<UserType> = {
       browser: clientInfo.browser,
       ipaddr: clientInfo.ipaddr,
@@ -89,19 +126,11 @@ export class UserAuthService {
       permissions: permissions,
       roles: roles,
       token: uuid,
-      user: {
-        ...(userData as unknown as UserType['user']),
-        dept: safeDept,
-        roles: safeRoles,
-        posts: safePosts,
-      },
+      user: userObj,
       userId: userData.userId,
       userName: userData.userName,
       deptId: userData.deptId,
     };
-
-    // 添加额外的用户信息
-    (userInfo.user as any).deptName = deptData?.deptName || '';
 
     await this.updateRedisToken(uuid, userInfo);
 
@@ -144,8 +173,9 @@ export class UserAuthService {
 
   /**
    * 创建JWT Token
+   * 需求 4.9: 包含 token 版本用于密码修改后失效
    */
-  createToken(payload: { uuid: string; userId: number }): string {
+  createToken(payload: { uuid: string; userId: number; tokenVersion?: number }): string {
     const accessToken = this.jwtService.sign(payload);
     return accessToken;
   }

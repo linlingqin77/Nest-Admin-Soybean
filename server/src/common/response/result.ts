@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ResponseCode, ResponseMessage, IResponse, IPaginatedData, getResponseMessage } from './response.interface';
 
 /**
@@ -27,10 +27,18 @@ export class Result<T = any> implements IResponse<T> {
   @ApiProperty({ description: '响应数据' })
   data: T | null;
 
-  constructor(code: number, msg: string, data: T | null = null) {
+  @ApiPropertyOptional({ description: '请求ID，用于追踪', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
+  requestId?: string;
+
+  @ApiPropertyOptional({ description: '时间戳', example: '2025-01-01T00:00:00.000Z' })
+  timestamp?: string;
+
+  constructor(code: number, msg: string, data: T | null = null, requestId?: string, timestamp?: string) {
     this.code = code;
     this.msg = msg;
     this.data = data;
+    this.requestId = requestId;
+    this.timestamp = timestamp;
   }
 
   /**

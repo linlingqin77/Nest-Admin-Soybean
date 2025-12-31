@@ -37,4 +37,10 @@ export enum CacheEnum {
 
   /** 菜单缓存 */
   SYS_MENU_KEY = 'sys_menu:',
+
+  /** Token 黑名单 redis key (需求 4.8) */
+  TOKEN_BLACKLIST_KEY = 'token_blacklist:',
+
+  /** 用户 Token 版本 redis key (需求 4.9) */
+  USER_TOKEN_VERSION_KEY = 'user_token_version:',
 }

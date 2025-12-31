@@ -8,6 +8,7 @@ import { RegisterDto, LoginDto } from './dto/index';
 import { MenuService } from '../system/menu/menu.service';
 import { ClientInfoDto } from 'src/common/decorators/common.decorator';
 import { StatusEnum } from 'src/common/enum/index';
+import { MetricsService } from 'src/common/metrics';
 @Injectable()
 export class MainService {
   constructor(
@@ -15,6 +16,7 @@ export class MainService {
     private readonly loginlogService: LoginlogService,
     private readonly axiosService: AxiosService,
     private readonly menuService: MenuService,
+    private readonly metricsService: MetricsService,
   ) {}
 
   /**
@@ -43,6 +45,11 @@ export class MainService {
     loginLog.status = loginRes.code === SUCCESS_CODE ? StatusEnum.NORMAL : StatusEnum.STOP;
     loginLog.msg = loginRes.msg;
     this.loginlogService.create(loginLog);
+
+    // 记录登录指标
+    const tenantId = loginRes.data?.user?.tenantId || 'unknown';
+    this.metricsService.recordLoginAttempt(tenantId, loginRes.code === SUCCESS_CODE);
+
     return loginRes;
   }
   /**

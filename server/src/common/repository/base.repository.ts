@@ -1,5 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { DelFlagEnum } from 'src/common/enum/index';
+import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { IPaginatedData } from '../response/response.interface';
 
@@ -24,11 +23,11 @@ export interface SortOptions {
  */
 export interface QueryOptions extends PaginationOptions, SortOptions {
   /** 查询条件 */
-  where?: Record<string, any>;
+  where?: Record<string, unknown>;
   /** 关联查询 */
-  include?: Record<string, any>;
+  include?: Record<string, unknown>;
   /** 字段选择 */
-  select?: Record<string, any>;
+  select?: Record<string, unknown>;
 }
 
 /**
@@ -46,6 +45,14 @@ export type PrismaDelegate = {
   updateMany?: Function;
   deleteMany?: Function;
 };
+
+/**
+ * 查询选项接口
+ */
+export interface FindOptions {
+  include?: Record<string, unknown>;
+  select?: Record<string, unknown>;
+}
 
 /**
  * 基础仓储抽象类
@@ -69,13 +76,13 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
     protected readonly prisma: PrismaService,
     protected readonly modelName: keyof PrismaClient,
   ) {
-    this.delegate = (prisma as any)[modelName] as D;
+    this.delegate = (prisma as unknown as Record<string, D>)[modelName as string] as D;
   }
 
   /**
    * 根据主键查询单条记录
    */
-  async findById(id: number | string, options?: { include?: any; select?: any }): Promise<T | null> {
+  async findById(id: number | string, options?: FindOptions): Promise<T | null> {
     return this.delegate.findUnique({
       where: { [this.getPrimaryKeyName()]: id },
       ...options,
@@ -85,7 +92,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 根据条件查询单条记录
    */
-  async findOne(where: any, options?: { include?: any; select?: any }): Promise<T | null> {
+  async findOne(where: Record<string, unknown>, options?: FindOptions): Promise<T | null> {
     return this.delegate.findFirst({
       where,
       ...options,
@@ -137,7 +144,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 创建记录
    */
-  async create(data: any, options?: { include?: any; select?: any }): Promise<T> {
+  async create(data: unknown, options?: FindOptions): Promise<T> {
     return this.delegate.create({
       data,
       ...options,
@@ -147,7 +154,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 批量创建
    */
-  async createMany(data: any[]): Promise<{ count: number }> {
+  async createMany(data: unknown[]): Promise<{ count: number }> {
     if (!this.delegate.createMany) {
       throw new Error('createMany not supported for this model');
     }
@@ -160,7 +167,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 更新记录
    */
-  async update(id: number | string, data: any, options?: { include?: any; select?: any }): Promise<T> {
+  async update(id: number | string, data: unknown, options?: FindOptions): Promise<T> {
     return this.delegate.update({
       where: { [this.getPrimaryKeyName()]: id },
       data,
@@ -171,7 +178,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 根据条件更新
    */
-  async updateMany(where: any, data: any): Promise<{ count: number }> {
+  async updateMany(where: Record<string, unknown>, data: unknown): Promise<{ count: number }> {
     if (!this.delegate.updateMany) {
       throw new Error('updateMany not supported for this model');
     }
@@ -193,7 +200,7 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 批量删除
    */
-  async deleteMany(where: any): Promise<{ count: number }> {
+  async deleteMany(where: Record<string, unknown>): Promise<{ count: number }> {
     if (!this.delegate.deleteMany) {
       throw new Error('deleteMany not supported for this model');
     }
@@ -212,14 +219,14 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
   /**
    * 统计记录数
    */
-  async count(where?: any): Promise<number> {
+  async count(where?: Record<string, unknown>): Promise<number> {
     return this.delegate.count({ where });
   }
 
   /**
    * 检查是否存在
    */
-  async exists(where: any): Promise<boolean> {
+  async exists(where: Record<string, unknown>): Promise<boolean> {
     const count = await this.count(where);
     return count > 0;
   }
@@ -258,52 +265,5 @@ export abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegat
    */
   protected get client(): PrismaService {
     return this.prisma;
-  }
-}
-
-/**
- * 带软删除的仓储基类
- *
- * @description 自动在查询条件中添加 delFlag = '0' 过滤
- */
-export abstract class SoftDeleteRepository<T, D extends PrismaDelegate = PrismaDelegate> extends BaseRepository<T, D> {
-  /**
-   * 获取默认的查询条件（排除已删除）
-   */
-  protected getDefaultWhere(): Record<string, any> {
-    return { delFlag: DelFlagEnum.NORMAL };
-  }
-
-  /**
-   * 合并默认查询条件
-   */
-  protected mergeWhere(where?: Record<string, any>): Record<string, any> {
-    return { ...this.getDefaultWhere(), ...where };
-  }
-
-  async findOne(where: any, options?: { include?: any; select?: any }): Promise<T | null> {
-    return super.findOne(this.mergeWhere(where), options);
-  }
-
-  async findAll(options?: Omit<QueryOptions, 'pageNum' | 'pageSize'>): Promise<T[]> {
-    return super.findAll({
-      ...options,
-      where: this.mergeWhere(options?.where),
-    });
-  }
-
-  async findPage(options: QueryOptions): Promise<IPaginatedData<T>> {
-    return super.findPage({
-      ...options,
-      where: this.mergeWhere(options.where),
-    });
-  }
-
-  async count(where?: any): Promise<number> {
-    return super.count(this.mergeWhere(where));
-  }
-
-  async exists(where: any): Promise<boolean> {
-    return super.exists(this.mergeWhere(where));
   }
 }

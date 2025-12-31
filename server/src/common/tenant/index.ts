@@ -5,3 +5,7 @@ export * from './tenant.decorator';
 export * from './tenant.guard';
 export * from './tenant.helper';
 export * from './tenant.module';
+export * from './feature-toggle.service';
+export * from './require-feature.decorator';
+export * from './require-feature.guard';
+export * from './tenant-export.service';

@@ -146,13 +146,33 @@ export function Uniq<T extends number | string>(list: Array<T>): Array<T> {
 }
 
 /**
+ * 分页数据接口
+ */
+interface PaginateData<T> {
+  list: Array<T>;
+  pageSize: number;
+  pageNum: number;
+}
+
+/**
+ * 分页过滤参数接口
+ */
+interface PaginateFilterParam {
+  ipaddr?: string;
+  userName?: string;
+}
+
+/**
  * 分页
  * @param data
  * @param pageSize
  * @param pageNum
  * @returns
  */
-export function Paginate(data: { list: Array<any>; pageSize: number; pageNum: number }, filterParam: any) {
+export function Paginate<T extends { ipaddr?: string; userName?: string }>(
+  data: PaginateData<T>,
+  filterParam: PaginateFilterParam,
+): T[] {
   // 检查 pageSize 和 pageNumber 的合法性
   if (data.pageSize <= 0 || data.pageNum < 0) {
     return [];
@@ -190,7 +210,7 @@ export function Paginate(data: { list: Array<any>; pageSize: number; pageNum: nu
  * @param userAlias 用户别名
  * @param permission 权限字符
  */
-export async function DataScopeFilter<T>(entity: any, dataScope: DataScopeEnum): Promise<T> {
+export async function DataScopeFilter<T>(entity: T, dataScope: DataScopeEnum): Promise<T> {
   switch (dataScope) {
     case DataScopeEnum.DATA_SCOPE_CUSTOM:
       // entity.andWhere((qb) => {
@@ -239,6 +259,13 @@ export function mergeDeep(target, ...sources) {
 /**
  * 判断值是否为null undefined 空字符串 NaN
  */
-export function isEmpty(value: any) {
+export function isEmpty(value: unknown): boolean {
   return value === null || value === undefined || value === '' || value === 'NaN';
 }
+
+// 导出辅助工具类
+export { QueryBuilder, createWhereWithDelFlag, buildListQuery } from './query-builder.helper';
+export { BatchOperationHelper, type BatchResult, type BatchResultItem, type BatchValidator, type BatchProcessor } from './batch-operation.helper';
+export { CacheRefreshHelper, GroupedCacheRefreshHelper } from './cache-refresh.helper';
+export { ExportHelper, ExportConfigFactory, type ExportConfig, type ExportColumn } from './export.helper';
+export { PaginationHelper } from './pagination.helper';

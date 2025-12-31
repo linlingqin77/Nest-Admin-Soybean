@@ -4,6 +4,19 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * 文件版本信息类型
+ */
+interface FileVersion {
+    uploadId: string;
+    version: number;
+    storageType: string;
+    url: string;
+    newFileName: string;
+    thumbnail?: string | null;
+    fileName?: string;
+}
+
 @Injectable()
 export class VersionService {
     private readonly logger = new Logger(VersionService.name);
@@ -57,7 +70,7 @@ export class VersionService {
     /**
      * 删除单个版本（物理文件和数据库记录）
      */
-    private async deleteVersion(version: any): Promise<void> {
+    private async deleteVersion(version: FileVersion): Promise<void> {
         try {
             // 删除物理文件
             await this.deletePhysicalFile(version);
@@ -76,7 +89,7 @@ export class VersionService {
     /**
      * 删除物理文件
      */
-    async deletePhysicalFile(file: any): Promise<void> {
+    async deletePhysicalFile(file: FileVersion): Promise<void> {
         try {
             if (file.storageType === 'local') {
                 // 删除本地文件

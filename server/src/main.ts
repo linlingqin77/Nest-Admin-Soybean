@@ -1,3 +1,4 @@
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -8,9 +9,11 @@ import { mw as requestIpMw } from 'request-ip';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
 import { GlobalExceptionFilter } from 'src/common/filters/global-exception.filter';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ResponseInterceptor } from 'src/common/interceptors/response.interceptor';
+import { ValidationPipe, Logger, ShutdownSignal, VersioningType } from '@nestjs/common';
 import { AppConfigService } from 'src/config/app-config.service';
 import { Logger as PinoLogger } from 'nestjs-pino';
+import { ClsService } from 'nestjs-cls';
 import path from 'path';
 import { writeFileSync } from 'fs';
 
@@ -21,12 +24,18 @@ const API_INFO = {
 ## Nest-Admin-Soybean 后台管理系统 API 文档
 
 ### 接口说明
-- 所有接口返回统一格式: \`{ code: number, msg: string, data: any }\`
+- 所有接口返回统一格式: \`{ code: number, msg: string, data: any, requestId: string, timestamp: string }\`
 - code=200 表示成功，其他表示失败
+- requestId 用于请求追踪，可在日志中查找对应请求
 - 需要认证的接口请在请求头携带 \`Authorization: Bearer <token>\`
 
+### API 版本控制
+- 支持 URI 版本控制: \`/api/v1/...\`, \`/api/v2/...\`
+- 默认版本: v1 (未指定版本的请求将路由到 v1)
+- 版本前缀: \`v\` (例如: v1, v2)
+
 ### 版本历史
-- v2.0.0 (2024-01) - 重构优化，Enum 统一管理，DTO/VO 文件拆分
+- v2.0.0 (2024-01) - 重构优化，Enum 统一管理，DTO/VO 文件拆分，API 版本控制
 - v1.0.0 (2023-01) - 初始版本
   `,
   version: '2.0.0',
@@ -65,6 +74,27 @@ async function bootstrap() {
     }),
   );
 
+  // 响应压缩中间件 (需求 8.3)
+  // 启用 gzip 压缩以减少响应体大小，提升传输效率
+  // 默认压缩阈值为 1KB，小于此大小的响应不会被压缩
+  app.use(
+    compression({
+      // 压缩级别 (1-9)，6 是默认值，平衡压缩率和 CPU 使用
+      level: 6,
+      // 压缩阈值，小于 1KB 的响应不压缩
+      threshold: 1024,
+      // 根据请求的 Accept-Encoding 头决定是否压缩
+      filter: (req, res) => {
+        // 如果请求头包含 x-no-compression，则不压缩
+        if (req.headers['x-no-compression']) {
+          return false;
+        }
+        // 使用默认的 filter 函数
+        return compression.filter(req, res);
+      },
+    }),
+  );
+
   // CSRF 保护 (如需启用,取消注释)
   // const csrf = require('csurf');
   // app.use(csrf({
@@ -91,6 +121,15 @@ async function bootstrap() {
 
   app.setGlobalPrefix(prefix);
 
+  // API 版本控制 (需求 6.2)
+  // 支持 URI 版本控制 (/api/v1/...) 和 Header 版本控制 (X-API-Version)
+  // 默认使用 v1 版本，未指定版本的请求将路由到默认版本
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+    prefix: 'v',
+  });
+
   // 全局验证
   app.useGlobalPipes(
     new ValidationPipe({
@@ -102,7 +141,10 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new GlobalExceptionFilter(app.get(ClsService)));
+
+  // 统一响应拦截器 - 为所有响应添加 requestId 和 timestamp
+  app.useGlobalInterceptors(new ResponseInterceptor(app.get(ClsService)));
 
   // web 安全，防常见漏洞
   // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
@@ -184,6 +226,11 @@ async function bootstrap() {
 
   // 获取真实 ip
   app.use(requestIpMw({ attributeName: 'ip' }));
+
+  // 启用优雅关闭钩子 (需求 3.8)
+  // 监听 SIGTERM 和 SIGINT 信号，确保在关闭前完成进行中的请求
+  app.enableShutdownHooks([ShutdownSignal.SIGTERM, ShutdownSignal.SIGINT]);
+
   //服务端口
   const port = config.app.port || 8080;
   await app.listen(port);
@@ -192,8 +239,11 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   logger.log(`Nest-Admin-Soybean 服务启动成功`);
   logger.log(`服务地址: http://localhost:${port}${prefix}/`);
+  logger.log(`API 版本控制已启用 (默认版本: v1)`);
   logger.log(`Swagger 文档: http://localhost:${port}${prefix}/swagger-ui/`);
   logger.log(`健康检查: http://localhost:${port}${prefix}/health`);
   logger.log(`Prometheus 指标: http://localhost:${port}${prefix}/metrics`);
+  logger.log(`响应压缩已启用 (gzip, 阈值: 1KB)`);
+  logger.log(`优雅关闭已启用，监听信号: SIGTERM, SIGINT`);
 }
 bootstrap();

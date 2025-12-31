@@ -30,6 +30,17 @@ import { ResponseCode } from '../response/response.interface';
  * 5. HttpException - 其他 HTTP 异常
  * 6. Error - 未知异常，返回 HTTP 500
  */
+
+/**
+ * 异常响应体类型
+ */
+interface ExceptionResponseBody {
+  code?: number;
+  msg?: string;
+  message?: string | string[];
+  data?: unknown;
+}
+
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -47,30 +58,30 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let code: number = ResponseCode.INTERNAL_SERVER_ERROR;
     let message = '服务器内部错误';
-    let data: any = null;
+    let data: unknown = null;
 
     // 1. 业务异常处理
     if (exception instanceof BusinessException) {
-      const resp = exception.getResponse() as any;
+      const resp = exception.getResponse() as ExceptionResponseBody;
       httpStatus = HttpStatus.OK; // 业务异常返回 200
       code = resp.code ?? ResponseCode.BUSINESS_ERROR;
-      message = resp.msg ?? resp.message ?? message;
+      message = resp.msg ?? (typeof resp.message === 'string' ? resp.message : message);
       data = resp.data ?? null;
     }
     // 2. 认证异常处理
     else if (exception instanceof AuthenticationException) {
-      const resp = exception.getResponse() as any;
+      const resp = exception.getResponse() as ExceptionResponseBody;
       httpStatus = HttpStatus.UNAUTHORIZED;
       code = resp.code ?? ResponseCode.UNAUTHORIZED;
-      message = resp.msg ?? resp.message ?? '认证失败';
+      message = resp.msg ?? (typeof resp.message === 'string' ? resp.message : '认证失败');
       data = resp.data ?? null;
     }
     // 3. 授权异常处理
     else if (exception instanceof AuthorizationException) {
-      const resp = exception.getResponse() as any;
+      const resp = exception.getResponse() as ExceptionResponseBody;
       httpStatus = HttpStatus.FORBIDDEN;
       code = resp.code ?? ResponseCode.FORBIDDEN;
-      message = resp.msg ?? resp.message ?? '权限不足';
+      message = resp.msg ?? (typeof resp.message === 'string' ? resp.message : '权限不足');
       data = resp.data ?? null;
     }
     // 4. 参数验证异常处理
@@ -79,13 +90,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       code = ResponseCode.PARAM_INVALID;
       const resp = exception.getResponse();
       if (typeof resp === 'object' && resp !== null) {
-        const body = resp as any;
+        const body = resp as ExceptionResponseBody;
         // class-validator 返回的错误消息数组
         if (Array.isArray(body.message)) {
           message = body.message[0];
           data = body.message.length > 1 ? { errors: body.message } : null;
         } else {
-          message = body.message ?? body.msg ?? '参数验证失败';
+          message = (typeof body.message === 'string' ? body.message : body.msg) ?? '参数验证失败';
           data = body.data ?? null;
         }
       } else if (typeof resp === 'string') {
@@ -98,8 +109,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       code = httpStatus;
       const resp = exception.getResponse();
       if (typeof resp === 'object' && resp !== null) {
-        const body = resp as any;
-        message = Array.isArray(body.message) ? body.message[0] : (body.message ?? body.msg ?? message);
+        const body = resp as ExceptionResponseBody;
+        message = Array.isArray(body.message) ? body.message[0] : ((typeof body.message === 'string' ? body.message : body.msg) ?? message);
         data = body.data ?? null;
         // 如果响应中有 code，使用它
         if (body.code !== undefined) {
@@ -126,19 +137,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       );
     }
 
-    // 构建响应体
-    const payload: Record<string, any> = {
+    // 构建响应体 - 始终包含 requestId 用于追踪
+    const payload: Record<string, unknown> = {
       code,
       msg: message,
       data,
+      requestId,
+      timestamp: new Date().toISOString(),
     };
 
-    // 开发环境添加调试信息
+    // 开发环境添加额外调试信息
     if (process.env.NODE_ENV === 'development') {
-      payload.timestamp = new Date().toISOString();
       payload.path = request.url;
       payload.method = request.method;
-      payload.requestId = requestId;
       if (exception instanceof Error) {
         payload.stack = exception.stack?.split('\n').slice(0, 5);
       }
@@ -173,7 +184,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   /**
    * 清理请求体中的敏感信息
    */
-  private sanitizeBody(body: any): any {
+  private sanitizeBody(body: unknown): unknown {
     if (!body || typeof body !== 'object') {
       return body;
     }
@@ -190,7 +201,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       'apiKey',
     ];
 
-    const sanitized = { ...body };
+    const sanitized = { ...(body as Record<string, unknown>) };
     for (const field of sensitiveFields) {
       if (field in sanitized) {
         sanitized[field] = '***';

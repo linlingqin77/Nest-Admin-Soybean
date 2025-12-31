@@ -16,6 +16,20 @@ import { RedisService } from 'src/module/common/redis/redis.service';
 import { CacheEnum } from 'src/common/enum/cache.enum';
 import { hashSync } from 'bcryptjs';
 
+/**
+ * 租户管理服务
+ *
+ * 提供多租户SaaS平台的租户管理功能，包括：
+ * - 租户CRUD操作（创建、查询、更新、删除）
+ * - 租户管理员账号创建
+ * - 租户字典数据同步
+ * - 租户套餐管理
+ * - 租户配置同步
+ * - 租户数据导出
+ *
+ * @class TenantService
+ * @description 多租户架构的核心服务类，实现租户隔离和管理功能
+ */
 @Injectable()
 export class TenantService {
   private readonly logger = new Logger(TenantService.name);
@@ -26,7 +40,27 @@ export class TenantService {
   ) {}
 
   /**
-   * 创建租户
+   * 创建新租户
+   *
+   * 创建租户记录并自动创建租户管理员账号。
+   * 租户ID会自动生成（6位数字，从100001开始）。
+   *
+   * @param createTenantDto - 创建租户的数据传输对象
+   * @returns 操作结果
+   * @throws {BusinessException} 当租户ID或企业名称已存在时抛出异常
+   * @throws {HttpException} 当创建过程发生错误时抛出异常
+   *
+   * @example
+   * ```typescript
+   * await tenantService.create({
+   *   companyName: '示例公司',
+   *   contactUserName: '张三',
+   *   contactPhone: '13800138000',
+   *   username: 'admin',
+   *   password: '123456',
+   *   packageId: 1
+   * });
+   * ```
    */
   @IgnoreTenant()
   @Transactional()
@@ -106,6 +140,22 @@ export class TenantService {
 
   /**
    * 分页查询租户列表
+   *
+   * 支持按租户ID、联系人、联系电话、企业名称、状态等条件筛选。
+   * 返回结果包含关联的套餐名称。
+   *
+   * @param query - 查询参数，包含分页信息和筛选条件
+   * @returns 分页租户列表，包含rows和total
+   *
+   * @example
+   * ```typescript
+   * const result = await tenantService.findAll({
+   *   pageNum: 1,
+   *   pageSize: 10,
+   *   companyName: '示例',
+   *   status: '0'
+   * });
+   * ```
    */
   @IgnoreTenant()
   async findAll(query: ListTenantDto) {
@@ -183,6 +233,10 @@ export class TenantService {
 
   /**
    * 根据ID查询租户详情
+   *
+   * @param id - 租户记录ID（非tenantId）
+   * @returns 租户详情信息
+   * @throws {BusinessException} 当租户不存在时抛出异常
    */
   @IgnoreTenant()
   async findOne(id: number) {
@@ -198,7 +252,14 @@ export class TenantService {
   }
 
   /**
-   * 更新租户
+   * 更新租户信息
+   *
+   * 更新租户基本信息，如企业名称、联系人、套餐等。
+   * 会检查企业名称是否与其他租户重复。
+   *
+   * @param updateTenantDto - 更新租户的数据传输对象
+   * @returns 操作结果
+   * @throws {BusinessException} 当租户不存在或企业名称重复时抛出异常
    */
   @IgnoreTenant()
   async update(updateTenantDto: UpdateTenantDto) {
@@ -237,7 +298,10 @@ export class TenantService {
   }
 
   /**
-   * 批量删除租户
+   * 批量删除租户（软删除）
+   *
+   * @param ids - 要删除的租户记录ID数组
+   * @returns 操作结果
    */
   @IgnoreTenant()
   async remove(ids: number[]) {
@@ -254,7 +318,19 @@ export class TenantService {
   }
 
   /**
-   * 同步租户字典
+   * 同步租户字典数据
+   *
+   * 将超级管理员租户的字典类型和字典数据同步到所有普通租户。
+   * 已存在的字典类型会被跳过，不会覆盖。
+   *
+   * @returns 同步结果，包含同步的租户数、新增数和跳过数
+   * @throws {HttpException} 当同步过程发生错误时抛出异常
+   *
+   * @example
+   * ```typescript
+   * const result = await tenantService.syncTenantDict();
+   * console.log(result.data.detail.synced); // 新增的字典数
+   * ```
    */
   @IgnoreTenant()
   @Transactional()
@@ -372,6 +448,13 @@ export class TenantService {
 
   /**
    * 同步租户套餐
+   *
+   * 为指定租户更新套餐，并同步套餐中包含的菜单权限。
+   *
+   * @param params - 包含tenantId和packageId
+   * @returns 操作结果
+   * @throws {BusinessException} 当租户或套餐不存在时抛出异常
+   * @throws {HttpException} 当同步过程发生错误时抛出异常
    */
   @IgnoreTenant()
   async syncTenantPackage(params: SyncTenantPackageDto) {
@@ -417,6 +500,13 @@ export class TenantService {
 
   /**
    * 同步租户参数配置
+   *
+   * 将超级管理员租户的系统配置同步到所有普通租户。
+   * 使用批量创建并跳过已存在的配置项。
+   * 同步完成后会清除各租户的配置缓存。
+   *
+   * @returns 同步结果，包含同步的租户数和新增配置数
+   * @throws {HttpException} 当同步过程发生错误时抛出异常
    */
   @IgnoreTenant()
   async syncTenantConfig() {
@@ -492,7 +582,11 @@ export class TenantService {
   }
 
   /**
-   * 导出租户数据
+   * 导出租户数据为Excel文件
+   *
+   * @param res - Express Response对象
+   * @param body - 查询条件
+   * @returns Excel文件流
    */
   @IgnoreTenant()
   async export(res: Response, body: ListTenantDto) {

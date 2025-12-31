@@ -66,6 +66,24 @@ export class LoginTenantVo {
 }
 
 /**
+ * 部门信息类型
+ */
+interface DeptInfo {
+  deptId?: number;
+  deptName?: string;
+  leader?: string;
+}
+
+/**
+ * 角色信息类型
+ */
+interface RoleInfo {
+  roleId?: number;
+  roleKey?: string;
+  roleName?: string;
+}
+
+/**
  * 用户信息响应 VO - 匹配 Soybean 前端
  */
 export class UserInfoVo {
@@ -81,8 +99,8 @@ export class UserInfoVo {
     status: string;
     deptId?: number;
     tenantId?: string;
-    dept?: any;
-    roles?: any[];
+    dept?: DeptInfo;
+    roles?: RoleInfo[];
   };
 
   @ApiProperty({ description: '角色标识列表' })

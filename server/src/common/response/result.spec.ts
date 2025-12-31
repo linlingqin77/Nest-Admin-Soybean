@@ -109,4 +109,34 @@ describe('Result', () => {
       expect(result.msg).toBe('Test error');
     });
   });
+
+  describe('requestId and timestamp', () => {
+    it('should support requestId and timestamp in constructor', () => {
+      const requestId = 'test-request-id-123';
+      const timestamp = '2025-01-01T00:00:00.000Z';
+      const result = new Result(200, '操作成功', { id: 1 }, requestId, timestamp);
+
+      expect(result.requestId).toBe(requestId);
+      expect(result.timestamp).toBe(timestamp);
+    });
+
+    it('should allow setting requestId and timestamp after creation', () => {
+      const result = Result.ok({ id: 1 });
+      const requestId = 'test-request-id-456';
+      const timestamp = '2025-01-01T12:00:00.000Z';
+
+      result.requestId = requestId;
+      result.timestamp = timestamp;
+
+      expect(result.requestId).toBe(requestId);
+      expect(result.timestamp).toBe(timestamp);
+    });
+
+    it('should have undefined requestId and timestamp by default', () => {
+      const result = Result.ok({ id: 1 });
+
+      expect(result.requestId).toBeUndefined();
+      expect(result.timestamp).toBeUndefined();
+    });
+  });
 });

@@ -4,6 +4,17 @@ import os, { networkInterfaces } from 'os';
 import path from 'path';
 import * as nodeDiskInfo from 'node-disk-info';
 
+/**
+ * CPU 统计信息类型
+ */
+interface CpuStats {
+  user: number;
+  sys: number;
+  idle: number;
+  total: number;
+  cpuNum: number;
+}
+
 @Injectable()
 export class ServerService {
   async getInfo() {
@@ -29,14 +40,14 @@ export class ServerService {
 
   async getDiskStatus() {
     const disks = await nodeDiskInfo.getDiskInfoSync();
-    const sysFiles = disks.map((disk: any) => {
+    const sysFiles = disks.map((disk) => {
       return {
-        dirName: disk._mounted,
-        typeName: disk._filesystem,
-        total: this.bytesToGB(disk._blocks) + 'GB',
-        used: this.bytesToGB(disk._used) + 'GB',
-        free: this.bytesToGB(disk._available) + 'GB',
-        usage: ((disk._used / disk._blocks || 0) * 100).toFixed(2),
+        dirName: disk.mounted,
+        typeName: disk.filesystem,
+        total: this.bytesToGB(disk.blocks) + 'GB',
+        used: this.bytesToGB(disk.used) + 'GB',
+        free: this.bytesToGB(disk.available) + 'GB',
+        usage: ((disk.used / disk.blocks || 0) * 100).toFixed(2),
       };
     });
     return sysFiles;
@@ -46,7 +57,7 @@ export class ServerService {
   getServerIP() {
     const nets = networkInterfaces();
     for (const name of Object.keys(nets)) {
-      for (const net of nets[name]) {
+      for (const net of nets[name] ?? []) {
         // 选择外部可访问的IPv4地址
         if (net.family === 'IPv4' && !net.internal) {
           return net.address;
@@ -57,8 +68,8 @@ export class ServerService {
 
   getCpuInfo() {
     const cpus = os.cpus();
-    const cpuInfo = cpus.reduce(
-      (info: any, cpu) => {
+    const cpuInfo = cpus.reduce<CpuStats>(
+      (info, cpu) => {
         info.cpuNum += 1;
         info.user += cpu.times.user;
         info.sys += cpu.times.sys;
@@ -102,7 +113,7 @@ export class ServerService {
    * @param bytes {number} 要转换的字节数。
    * @returns {string} 返回转换后的GB数，保留两位小数。
    */
-  bytesToGB(bytes) {
+  bytesToGB(bytes: number): string {
     // 计算字节到GB的转换率
     const gb = bytes / (1024 * 1024 * 1024);
     // 将结果四舍五入到小数点后两位

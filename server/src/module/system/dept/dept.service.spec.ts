@@ -3,7 +3,7 @@ import { DeptService } from './dept.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DeptRepository } from './dept.repository';
 import { RedisService } from 'src/module/common/redis/redis.service';
-import { StatusEnum, DelFlagEnum } from 'src/common/enum/index';
+import { StatusEnum, DelFlagEnum, DataScopeEnum } from 'src/common/enum/index';
 import { ResponseCode } from 'src/common/response';
 
 describe('DeptService', () => {
@@ -80,6 +80,126 @@ describe('DeptService', () => {
     deptRepo = module.get<DeptRepository>(DeptRepository);
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a department with parent', async () => {
+      const createDto = {
+        parentId: 100,
+        deptName: '新部门',
+        orderNum: 1,
+        leader: '张三',
+        phone: '13800138000',
+        email: 'test@example.com',
+        status: '0',
+      };
+
+      (prisma.sysDept.findUnique as jest.Mock).mockResolvedValue({
+        deptId: 100,
+        ancestors: '0',
+      });
+      (deptRepo.create as jest.Mock).mockResolvedValue({ deptId: 101 });
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(deptRepo.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          parentId: 100,
+          ancestors: '0,100',
+          deptName: '新部门',
+        }),
+      );
+    });
+
+    it('should create a root department without parent', async () => {
+      const createDto = {
+        parentId: null,
+        deptName: '根部门',
+        orderNum: 0,
+      };
+
+      (deptRepo.create as jest.Mock).mockResolvedValue({ deptId: 1 });
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(deptRepo.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ancestors: '0',
+        }),
+      );
+    });
+
+    it('should return error when parent department not found', async () => {
+      const createDto = {
+        parentId: 999,
+        deptName: '新部门',
+        orderNum: 1,
+      };
+
+      (prisma.sysDept.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const result = await service.create(createDto as any);
+
+      expect(result.code).toBe(ResponseCode.INTERNAL_SERVER_ERROR);
+      expect(result.msg).toBe('父级部门不存在');
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a department by id', async () => {
+      (deptRepo.findById as jest.Mock).mockResolvedValue(mockDept);
+
+      const result = await service.findOne(100);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data.deptId).toBe(100);
+    });
+  });
+
+  describe('findDeptIdsByDataScope', () => {
+    it('should return empty array for DATA_SCOPE_SELF', async () => {
+      const result = await service.findDeptIdsByDataScope(100, DataScopeEnum.DATA_SCOPE_SELF);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return only current dept for DATA_SCOPE_DEPT', async () => {
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([{ deptId: 100 }]);
+
+      const result = await service.findDeptIdsByDataScope(100, DataScopeEnum.DATA_SCOPE_DEPT);
+
+      expect(result).toEqual([100]);
+    });
+
+    it('should return dept and children for DATA_SCOPE_DEPT_AND_CHILD', async () => {
+      const mockDepts = [{ deptId: 100 }, { deptId: 101 }, { deptId: 102 }];
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue(mockDepts);
+
+      const result = await service.findDeptIdsByDataScope(100, DataScopeEnum.DATA_SCOPE_DEPT_AND_CHILD);
+
+      expect(result).toEqual([100, 101, 102]);
+    });
+  });
+
+  describe('findListExclude', () => {
+    it('should return departments excluding specified dept and its children', async () => {
+      const mockDepts = [
+        { deptId: 200, parentId: 0, ancestors: '0' },
+        { deptId: 201, parentId: 200, ancestors: '0,200' },
+      ];
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue(mockDepts);
+
+      const result = await service.findListExclude(100);
+
+      expect(result.code).toBe(ResponseCode.SUCCESS);
+      expect(result.data).toHaveLength(2);
+    });
+  });
+
   describe('findAll', () => {
     it('should return all departments', async () => {
       (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([mockDept]);
@@ -98,6 +218,16 @@ describe('DeptService', () => {
 
       const callArgs = (prisma.sysDept.findMany as jest.Mock).mock.calls[0][0];
       expect(callArgs.where.status).toBe('0');
+    });
+
+    it('should filter departments by deptName', async () => {
+      const query = { deptName: '总部' };
+      (prisma.sysDept.findMany as jest.Mock).mockResolvedValue([mockDept]);
+
+      await service.findAll(query);
+
+      const callArgs = (prisma.sysDept.findMany as jest.Mock).mock.calls[0][0];
+      expect(callArgs.where.deptName).toEqual({ contains: '总部' });
     });
   });
 

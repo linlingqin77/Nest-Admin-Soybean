@@ -29,12 +29,12 @@ function addJitter(baseTtl: number): number {
 export function CacheEvict(CACHE_NAME: string, CACHE_KEY: string) {
   const injectRedis = Inject(RedisService);
 
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function <T extends object>(target: T, propertyKey: string, descriptor: PropertyDescriptor) {
     injectRedis(target, 'redis');
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T & { redis: RedisService }, ...args: unknown[]) {
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);
 
       if (key === '*') {
@@ -71,12 +71,12 @@ export function CacheEvict(CACHE_NAME: string, CACHE_KEY: string) {
 export function CacheEvictMultiple(configs: Array<{ name: string; key: string }>) {
   const injectRedis = Inject(RedisService);
 
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function <T extends object>(target: T, propertyKey: string, descriptor: PropertyDescriptor) {
     injectRedis(target, 'redis');
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T & { redis: RedisService }, ...args: unknown[]) {
       for (const config of configs) {
         const key = paramsKeyFormat(originMethod, config.key, args);
 
@@ -96,7 +96,7 @@ export function CacheEvictMultiple(configs: Array<{ name: string; key: string }>
 }
 
 /**
- * 缓存装饰器（带防雪崩机制）
+ * 缓存装饰器（带防雪崩机制和指标收集）
  *
  * @param CACHE_NAME - 缓存键前缀
  * @param CACHE_KEY - 缓存键模板，支持 {param} 占位符
@@ -108,12 +108,12 @@ export function CacheEvictMultiple(configs: Array<{ name: string; key: string }>
 export function Cacheable(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN: number = 3600) {
   const injectRedis = Inject(RedisService);
 
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function <T extends object>(target: T, propertyKey: string, descriptor: PropertyDescriptor) {
     injectRedis(target, 'redis');
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T & { redis: RedisService; metricsService?: { recordCacheHit: (name: string) => void; recordCacheMiss: (name: string) => void } }, ...args: unknown[]) {
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);
 
       if (key === null) {
@@ -125,6 +125,17 @@ export function Cacheable(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN
       const fullKey = tenantId ? `${CACHE_NAME}${tenantId}:${key}` : `${CACHE_NAME}${key}`;
 
       const cacheResult = await this.redis.get(fullKey);
+
+      // 记录缓存指标（如果 MetricsService 可用）
+      // MetricsService 通过全局模块注入，可能在某些测试场景下不可用
+      const cacheName = CACHE_NAME.replace(/:/g, '_').replace(/^sys_/, '');
+      if (this.metricsService && typeof this.metricsService.recordCacheHit === 'function') {
+        if (cacheResult) {
+          this.metricsService.recordCacheHit(cacheName);
+        } else {
+          this.metricsService.recordCacheMiss(cacheName);
+        }
+      }
 
       if (!cacheResult) {
         const result = await originMethod.apply(this, args);
@@ -151,12 +162,12 @@ export function Cacheable(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN
 export function CachePut(CACHE_NAME: string, CACHE_KEY: string, CACHE_EXPIRESIN: number = 3600) {
   const injectRedis = Inject(RedisService);
 
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function <T extends object>(target: T, propertyKey: string, descriptor: PropertyDescriptor) {
     injectRedis(target, 'redis');
 
     const originMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T & { redis: RedisService }, ...args: unknown[]) {
       const result = await originMethod.apply(this, args);
 
       const key = paramsKeyFormat(originMethod, CACHE_KEY, args);

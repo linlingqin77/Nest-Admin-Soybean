@@ -242,7 +242,7 @@ export class CryptoService implements OnModuleInit {
    * 2. Base64 解码得到原始 AES 密钥
    * 3. 使用 AES 密钥解密数据
    */
-  decryptRequest(encryptedKey: string, encryptedData: string): any {
+  decryptRequest(encryptedKey: string, encryptedData: string): unknown {
     // 1. 使用 RSA 私钥解密 AES 密钥 (得到 Base64 编码的密钥)
     const aesKeyBase64 = this.rsaDecrypt(encryptedKey);
 
@@ -262,7 +262,7 @@ export class CryptoService implements OnModuleInit {
    * 加密响应数据
    * 返回格式: { encryptedKey: string, encryptedData: string }
    */
-  encryptResponse(data: any, clientAesKey?: string): { encryptedKey: string; encryptedData: string } {
+  encryptResponse(data: unknown, clientAesKey?: string): { encryptedKey: string; encryptedData: string } {
     // 如果客户端提供了 AES 密钥，使用它；否则生成新的
     const aesKey = clientAesKey || this.generateAesKey();
 

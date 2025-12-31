@@ -7,6 +7,7 @@ describe('MainService', () => {
   const loginlogService = { create: jest.fn() };
   const axiosService = { getIpAddress: jest.fn() };
   const menuService = { getMenuListByUserId: jest.fn() };
+  const metricsService = { recordLoginAttempt: jest.fn() };
   const clientInfo = {
     ipaddr: '127.0.0.1',
     browser: 'chrome',
@@ -17,12 +18,18 @@ describe('MainService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     axiosService.getIpAddress.mockResolvedValue('Guangzhou');
-    service = new MainService(userService as any, loginlogService as any, axiosService as any, menuService as any);
+    service = new MainService(
+      userService as any,
+      loginlogService as any,
+      axiosService as any,
+      menuService as any,
+      metricsService as any,
+    );
   });
 
   it('should record successful login attempts', async () => {
     const loginDto = { userName: 'admin', password: 'admin123' };
-    const loginResult = Result.ok({ token: 'jwt-token' }, '登录成功');
+    const loginResult = Result.ok({ token: 'jwt-token', user: { tenantId: 'tenant001' } }, '登录成功');
     userService.login.mockResolvedValue(loginResult);
 
     const res = await service.login(loginDto as any, clientInfo as any);
@@ -30,6 +37,7 @@ describe('MainService', () => {
     expect(res).toEqual(loginResult);
     expect(axiosService.getIpAddress).toHaveBeenCalledWith('127.0.0.1');
     expect(loginlogService.create).toHaveBeenCalledWith(expect.objectContaining({ status: '0', msg: '登录成功' }));
+    expect(metricsService.recordLoginAttempt).toHaveBeenCalledWith('tenant001', true);
   });
 
   it('should record failed login attempts', async () => {
@@ -42,6 +50,7 @@ describe('MainService', () => {
     expect(loginlogService.create).toHaveBeenCalledWith(
       expect.objectContaining({ status: '1', msg: '帐号或密码错误' }),
     );
+    expect(metricsService.recordLoginAttempt).toHaveBeenCalledWith('unknown', false);
   });
 
   it('should log logout operation', async () => {

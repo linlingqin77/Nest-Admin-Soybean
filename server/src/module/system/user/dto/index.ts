@@ -18,5 +18,14 @@ export { ResetPwdDto } from './reset-pwd.dto';
 // 个人资料
 export { UpdateProfileDto, UpdatePwdDto } from './profile.dto';
 
+// 批量操作
+export {
+  BatchCreateUserDto,
+  BatchCreateUserItemDto,
+  BatchDeleteUserDto,
+  BatchResultDto,
+  BatchResultItem,
+} from './batch-user.dto';
+
 // 类型定义
 export { UserType } from './user';

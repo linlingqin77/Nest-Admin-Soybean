@@ -123,7 +123,7 @@ export class TaskService implements OnModuleInit {
    * - 数组: [1, 'text', true]
    * - 对象: {a: 1, b: 'text'}
    */
-  private parseParams(paramsStr: string): any[] {
+  private parseParams(paramsStr: string): unknown[] {
     if (!paramsStr.trim()) {
       return [];
     }

@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum } from 'src/common/enum/index';
-import { Prisma, SysUser } from '@prisma/client';
-import { SoftDeleteRepository } from '../../../common/repository/base.repository';
+import { Prisma, SysUser, SysDept } from '@prisma/client';
+import { SoftDeleteRepository } from '../../../common/repository';
 import { PrismaService } from '../../../prisma/prisma.service';
+
+/**
+ * 用户带部门信息类型
+ */
+type UserWithDept = SysUser & {
+  dept?: Pick<SysDept, 'deptId' | 'deptName'> | null;
+};
 
 /**
  * 用户仓储层
@@ -99,24 +106,32 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
     skip: number,
     take: number,
     orderBy?: Prisma.SysUserOrderByWithRelationInput,
-  ): Promise<{ list: any[]; total: number }> {
-    const [list, total] = await this.prisma.$transaction([
-      (this.prisma.sysUser.findMany as any)({
-        where,
-        skip,
-        take,
-        orderBy: orderBy || { createTime: 'desc' },
-        include: {
-          dept: {
-            select: {
-              deptId: true,
-              deptName: true,
-            },
-          },
-        },
-      }),
-      this.prisma.sysUser.count({ where }),
-    ]);
+  ): Promise<{ list: UserWithDept[]; total: number }> {
+    // Use raw query to get users with dept info
+    const users = await this.prisma.sysUser.findMany({
+      where,
+      skip,
+      take,
+      orderBy: orderBy || { createTime: 'desc' },
+    });
+
+    const total = await this.prisma.sysUser.count({ where });
+
+    // Get dept info for users that have deptId
+    const deptIds = users.filter(u => u.deptId).map(u => u.deptId as number);
+    const depts = deptIds.length > 0 
+      ? await this.prisma.sysDept.findMany({
+          where: { deptId: { in: deptIds } },
+          select: { deptId: true, deptName: true },
+        })
+      : [];
+
+    const deptMap = new Map(depts.map(d => [d.deptId, d]));
+
+    const list: UserWithDept[] = users.map(user => ({
+      ...user,
+      dept: user.deptId ? deptMap.get(user.deptId) ?? null : null,
+    }));
 
     return { list, total };
   }

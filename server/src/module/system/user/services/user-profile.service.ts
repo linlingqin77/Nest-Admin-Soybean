@@ -8,6 +8,7 @@ import { UserType } from '../dto/user';
 import { UpdateProfileDto, UpdatePwdDto, ResetPwdDto } from '../dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from '../user.repository';
+import { TokenBlacklistService } from 'src/common/security/token-blacklist.service';
 
 /**
  * 用户个人资料服务
@@ -20,6 +21,7 @@ export class UserProfileService {
     private readonly prisma: PrismaService,
     private readonly userRepo: UserRepository,
     private readonly redisService: RedisService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {}
 
   /**
@@ -50,6 +52,7 @@ export class UserProfileService {
 
   /**
    * 用户修改密码
+   * 需求 4.9: 密码修改后使所有 Token 失效
    */
   async updatePwd(user: UserType, updatePwdDto: UpdatePwdDto) {
     if (updatePwdDto.oldPassword === updatePwdDto.newPassword) {
@@ -63,11 +66,16 @@ export class UserProfileService {
 
     const password = bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10));
     await this.userRepo.resetPassword(user.user.userId, password);
+
+    // 需求 4.9: 使该用户所有 Token 失效
+    await this.tokenBlacklistService.invalidateAllUserTokens(user.user.userId, 'password_change');
+
     return Result.ok();
   }
 
   /**
    * 重置用户密码（管理员操作）
+   * 需求 4.9: 密码修改后使所有 Token 失效
    */
   async resetPwd(body: ResetPwdDto) {
     if (body.userId === 1) {
@@ -77,6 +85,10 @@ export class UserProfileService {
       body.password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(10));
     }
     await this.userRepo.resetPassword(body.userId, body.password);
+
+    // 需求 4.9: 使该用户所有 Token 失效
+    await this.tokenBlacklistService.invalidateAllUserTokens(body.userId, 'admin_password_reset');
+
     return Result.ok();
   }
 

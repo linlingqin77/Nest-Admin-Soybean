@@ -94,6 +94,9 @@ describe('GlobalExceptionFilter (e2e)', () => {
         expect(res.body.code).toBe(ResponseCode.USER_NOT_FOUND);
         expect(res.body.msg).toBe('用户不存在');
         expect(res.body.data).toBeNull();
+        // 验证统一响应格式包含 requestId 和 timestamp
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -103,6 +106,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect(HttpStatus.UNAUTHORIZED)
       .expect((res) => {
         expect(res.body.code).toBe(ResponseCode.TOKEN_EXPIRED);
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -112,6 +117,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect(HttpStatus.FORBIDDEN)
       .expect((res) => {
         expect(res.body.code).toBe(ResponseCode.PERMISSION_DENIED);
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -123,6 +130,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
         expect(res.body.code).toBe(ResponseCode.PARAM_INVALID);
         expect(res.body.msg).toBe('用户名不能为空');
         expect(res.body.data).toEqual({ errors: ['用户名不能为空', '密码不能为空'] });
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -133,6 +142,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect((res) => {
         expect(res.body.code).toBe(ResponseCode.PARAM_INVALID);
         expect(res.body.msg).toBe('请求参数错误');
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -143,6 +154,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect((res) => {
         expect(res.body.code).toBe(HttpStatus.SERVICE_UNAVAILABLE);
         expect(res.body.msg).toBe('服务不可用');
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -152,6 +165,8 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)
       .expect((res) => {
         expect(res.body.code).toBe(ResponseCode.INTERNAL_SERVER_ERROR);
+        expect(res.body.requestId).toBeDefined();
+        expect(res.body.timestamp).toBeDefined();
       });
   });
 
@@ -161,6 +176,19 @@ describe('GlobalExceptionFilter (e2e)', () => {
       .expect(HttpStatus.OK)
       .expect((res) => {
         expect(res.body.message).toBe('ok');
+      });
+  });
+
+  it('should include valid ISO timestamp in error responses', () => {
+    return request(app.getHttpServer())
+      .get('/test/business')
+      .expect(HttpStatus.OK)
+      .expect((res) => {
+        const timestamp = res.body.timestamp;
+        expect(timestamp).toBeDefined();
+        // 验证是有效的 ISO 8601 格式
+        const date = new Date(timestamp);
+        expect(date.toISOString()).toBe(timestamp);
       });
   });
 });

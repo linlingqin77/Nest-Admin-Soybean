@@ -40,11 +40,14 @@ describe('System module services', () => {
       create: jest.fn(),
       update: jest.fn(),
     };
+    const systemConfigService = {
+      getConfigValue: jest.fn(),
+    };
     let service: ConfigService;
 
     beforeEach(() => {
       prisma = createPrismaMock();
-      service = new ConfigService(prisma, redisService as any, configRepo as any);
+      service = new ConfigService(prisma, redisService as any, configRepo as any, systemConfigService as any);
       jest.clearAllMocks();
     });
 
@@ -287,6 +290,7 @@ describe('System module services', () => {
     });
 
     it('should merge permissions from menu service', async () => {
+      (prisma.sysRoleMenu.findMany as jest.Mock).mockResolvedValue([{ menuId: 1 }]);
       (prisma.sysMenu.findMany as jest.Mock).mockResolvedValue([{ perms: 'system:user:list' }]);
       const perms = await service.getPermissionsByRoleIds([2]);
       expect(perms).toEqual([{ perms: 'system:user:list' }]);

@@ -11,11 +11,29 @@ import { DictService } from 'src/module/system/dict/dict.service';
 import { isEmpty } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+/**
+ * 登录用户信息类型
+ */
+interface LoginUser {
+  user?: {
+    nickName?: string;
+    userName?: string;
+    deptName?: string;
+  };
+}
+
+/**
+ * 请求用户类型
+ */
+interface RequestUser {
+  user?: LoginUser;
+}
+
 @Injectable({ scope: Scope.REQUEST })
 export class OperlogService {
   constructor(
     @Inject(REQUEST)
-    private readonly request: Request & { user: any },
+    private readonly request: Request & RequestUser,
     private readonly prisma: PrismaService,
     private readonly axiosService: AxiosService,
     @Inject(DictService)
@@ -139,7 +157,7 @@ export class OperlogService {
     errorMsg,
     businessType,
   }: {
-    resultData?: any;
+    resultData?: unknown;
     costTime: number;
     title: string;
     handlerName: string;
@@ -150,7 +168,7 @@ export class OperlogService {
     const loginUser = this.request.user?.user ?? {};
     const operLocation = await this.axiosService.getIpAddress(ip);
 
-    const safeStringify = (payload: any) => {
+    const safeStringify = (payload: unknown): string => {
       try {
         const result = JSON.stringify(payload);
         return result ?? '';

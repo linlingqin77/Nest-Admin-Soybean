@@ -5,6 +5,7 @@ import { pathToRegexp } from 'path-to-regexp';
 import { ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { UserService } from 'src/module/system/user/user.service';
+import { TokenBlacklistService } from 'src/common/security/token-blacklist.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -14,6 +15,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     @Inject(UserService)
     private readonly userService: UserService,
     private readonly config: AppConfigService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {
     super();
     this.globalWhiteList = [].concat(this.config.perm.router.whitelist || []);
@@ -37,8 +39,28 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const accessToken = req.get('Authorization');
 
     if (!accessToken) throw new ForbiddenException('请重新登录');
-    const atUserId = await this.userService.parseToken(accessToken);
-    if (!atUserId) throw new UnauthorizedException('当前登录已过期，请重新登录');
+    const tokenPayload = await this.userService.parseToken(accessToken);
+    if (!tokenPayload) throw new UnauthorizedException('当前登录已过期，请重新登录');
+
+    // 需求 4.8: 检查 Token 是否在黑名单中
+    if (tokenPayload.uuid) {
+      const isBlacklisted = await this.tokenBlacklistService.isBlacklisted(tokenPayload.uuid);
+      if (isBlacklisted) {
+        throw new UnauthorizedException('Token 已失效，请重新登录');
+      }
+    }
+
+    // 需求 4.9: 检查 Token 版本是否有效
+    if (tokenPayload.userId && tokenPayload.tokenVersion !== undefined) {
+      const isVersionValid = await this.tokenBlacklistService.isTokenVersionValid(
+        tokenPayload.userId,
+        tokenPayload.tokenVersion,
+      );
+      if (!isVersionValid) {
+        throw new UnauthorizedException('密码已修改，请重新登录');
+      }
+    }
+
     return await this.activate(ctx);
   }
 

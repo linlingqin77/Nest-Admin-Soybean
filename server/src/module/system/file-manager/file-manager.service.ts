@@ -15,7 +15,7 @@ import {
 } from './dto';
 import { TenantContext } from 'src/common/tenant/tenant.context';
 import { PaginationHelper } from 'src/common/utils/pagination.helper';
-import { Prisma } from '@prisma/client';
+import { Prisma, SysFileFolder } from '@prisma/client';
 import { GenerateUUID } from 'src/common/utils';
 import * as crypto from 'crypto';
 import * as path from 'path';
@@ -26,6 +26,13 @@ import { FileAccessService } from './services/file-access.service';
 import { VersionService } from '../../upload/services/version.service';
 import { AppConfigService } from 'src/config/app-config.service';
 import { Transactional } from 'src/common/decorators/transactional.decorator';
+
+/**
+ * 文件夹树节点类型
+ */
+export interface FolderTreeNode extends SysFileFolder {
+  children: FolderTreeNode[];
+}
 
 @Injectable()
 export class FileManagerService {
@@ -237,7 +244,7 @@ export class FileManagerService {
     });
 
     // 构建树形结构
-    const buildTree = (parentId: number = 0): any[] => {
+    const buildTree = (parentId: number = 0): FolderTreeNode[] => {
       return folders
         .filter((f) => f.parentId === parentId)
         .map((folder) => ({

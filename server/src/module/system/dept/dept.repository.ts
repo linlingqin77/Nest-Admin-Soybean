@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum } from 'src/common/enum/index';
 import { Prisma, SysDept } from '@prisma/client';
-import { SoftDeleteRepository } from '../../../common/repository/base.repository';
+import { SoftDeleteRepository } from '../../../common/repository';
 import { PrismaService } from '../../../prisma/prisma.service';
 
 /**

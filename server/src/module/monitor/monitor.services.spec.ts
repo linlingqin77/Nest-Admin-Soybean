@@ -301,7 +301,7 @@ describe('Monitor module services', () => {
 
     beforeEach(() => {
       (nodeDiskInfo.getDiskInfoSync as jest.Mock).mockReturnValue([
-        { _mounted: '/', _filesystem: 'apfs', _blocks: 1024 * 4, _used: 1024, _available: 1024 * 3 },
+        { mounted: '/', filesystem: 'apfs', blocks: 1024 * 4, used: 1024, available: 1024 * 3 },
       ]);
     });
 
