@@ -113,14 +113,15 @@ export class UserRoleService {
    * 更新用户角色授权
    */
   @Transactional()
-  async updateAuthRole(query: { userId: number; roleIds: string }) {
+  async updateAuthRole(query: { userId: number | string; roleIds: string }) {
+    const userId = typeof query.userId === 'string' ? parseInt(query.userId, 10) : query.userId;
     let roleIds = query.roleIds.split(',');
     roleIds = roleIds.filter((v) => v !== '1'); // 排除超级管理员角色
 
     if (roleIds.length > 0) {
-      await this.prisma.sysUserRole.deleteMany({ where: { userId: query.userId } });
+      await this.prisma.sysUserRole.deleteMany({ where: { userId } });
       await this.prisma.sysUserRole.createMany({
-        data: roleIds.map((id) => ({ userId: query.userId, roleId: +id })),
+        data: roleIds.map((id) => ({ userId, roleId: +id })),
         skipDuplicates: true,
       });
     }

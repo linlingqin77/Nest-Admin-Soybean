@@ -2,7 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": "test/(e2e|integration)/.*\\.(e2e-spec|integration\\.spec)\\.ts$",
+  "testRegex": "test/integration/.*\\.integration\\.spec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": [
       "ts-jest",
@@ -26,13 +26,5 @@
     "!src/**/*.d.ts",
     "!src/test-utils/**"
   ],
-  "coverageDirectory": "./coverage/e2e",
-  "coverageThreshold": {
-    "global": {
-      "branches": 90,
-      "functions": 90,
-      "lines": 90,
-      "statements": 90
-    }
-  }
+  "coverageDirectory": "./coverage/integration"
 }

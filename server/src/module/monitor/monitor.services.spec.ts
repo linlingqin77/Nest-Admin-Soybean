@@ -78,9 +78,52 @@ describe('Monitor module services', () => {
       expect(res.data).toEqual({ rows: [{ jobLogId: 1 }], total: 1 });
     });
 
+    it('should filter job logs by jobName', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, jobName: 'test' }], 1]);
+      const res = await service.list({ skip: 0, take: 10, jobName: 'test' } as any);
+      expect(res.data.total).toBe(1);
+    });
+
+    it('should filter job logs by jobGroup', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, jobGroup: 'SYSTEM' }], 1]);
+      const res = await service.list({ skip: 0, take: 10, jobGroup: 'SYSTEM' } as any);
+      expect(res.data.total).toBe(1);
+    });
+
+    it('should filter job logs by status', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, status: '0' }], 1]);
+      const res = await service.list({ skip: 0, take: 10, status: '0' } as any);
+      expect(res.data.total).toBe(1);
+    });
+
     it('should add a job log record', async () => {
       await service.addJobLog({ jobName: 'demo' });
       expect(prisma.sysJobLog.create).toHaveBeenCalled();
+    });
+
+    it('should add job log with all fields', async () => {
+      const logData = {
+        jobName: 'demo',
+        jobGroup: 'DEFAULT',
+        invokeTarget: 'task.demo',
+        status: '0',
+        jobMessage: '执行成功',
+        exceptionInfo: '',
+        createTime: new Date(),
+      };
+      await service.addJobLog(logData);
+      expect(prisma.sysJobLog.create).toHaveBeenCalledWith({ data: logData });
+    });
+
+    it('should clean all job logs', async () => {
+      await service.clean();
+      expect(prisma.sysJobLog.deleteMany).toHaveBeenCalled();
+    });
+
+    it('should export job logs to excel', async () => {
+      jest.spyOn(service, 'list').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
+      await service.export({} as any, {} as any);
+      expect(ExportTable).toHaveBeenCalled();
     });
   });
 
@@ -109,6 +152,41 @@ describe('Monitor module services', () => {
       expect(res.data.total).toBe(1);
     });
 
+    it('should filter jobs by jobName', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobId: 1, jobName: 'test' }], 1]);
+      const res = await service.list({ pageNum: 1, pageSize: 5, jobName: 'test' } as any);
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(res.data.total).toBe(1);
+    });
+
+    it('should filter jobs by jobGroup', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobId: 1, jobGroup: 'SYSTEM' }], 1]);
+      const res = await service.list({ pageNum: 1, pageSize: 5, jobGroup: 'SYSTEM' } as any);
+      expect(res.data.total).toBe(1);
+    });
+
+    it('should filter jobs by status', async () => {
+      prisma.$transaction.mockResolvedValue([[{ jobId: 1, status: '0' }], 1]);
+      const res = await service.list({ pageNum: 1, pageSize: 5, status: '0' } as any);
+      expect(res.data.total).toBe(1);
+    });
+
+    it('should get single job by id', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '* * * * * *',
+      });
+      const res = await service.getJob(1);
+      expect(res.data.jobId).toBe(1);
+      expect(prisma.sysJob.findUnique).toHaveBeenCalledWith({ where: { jobId: 1 } });
+    });
+
+    it('should throw error when job not found', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.getJob(999)).rejects.toThrow();
+    });
+
     it('should create job and register cron when status is normal', async () => {
       (prisma.sysJob.create as jest.Mock).mockResolvedValue({
         jobName: 'demo',
@@ -122,6 +200,78 @@ describe('Monitor module services', () => {
       );
       expect(prisma.sysJob.create).toHaveBeenCalled();
       expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
+    });
+
+    it('should create job without registering cron when status is stopped', async () => {
+      (prisma.sysJob.create as jest.Mock).mockResolvedValue({
+        jobName: 'demo',
+        status: '1',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'task',
+      });
+      await service.create(
+        { jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '1' } as any,
+        'admin',
+      );
+      expect(prisma.sysJob.create).toHaveBeenCalled();
+      expect(schedulerRegistry.addCronJob).not.toHaveBeenCalled();
+    });
+
+    it('should update job and reschedule when cron expression changes', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '0 * * * * *',
+        invokeTarget: 'task',
+        status: '0',
+      });
+      const cronRef = { start: jest.fn(), stop: jest.fn() };
+      schedulerRegistry.getCronJob.mockReturnValue(cronRef);
+
+      await service.update(1, { cronExpression: '*/5 * * * * *' }, 'admin');
+
+      expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledWith('demo');
+      expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
+      expect(prisma.sysJob.update).toHaveBeenCalled();
+    });
+
+    it('should update job and reschedule when invokeTarget changes', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'oldTask',
+        status: '0',
+      });
+      const cronRef = { start: jest.fn(), stop: jest.fn() };
+      schedulerRegistry.getCronJob.mockReturnValue(cronRef);
+
+      await service.update(1, { invokeTarget: 'newTask' }, 'admin');
+
+      expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledWith('demo');
+      expect(schedulerRegistry.addCronJob).toHaveBeenCalled();
+    });
+
+    it('should throw error when updating non-existent job', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.update(999, { jobName: 'test' }, 'admin')).rejects.toThrow();
+    });
+
+    it('should delete single job and remove from scheduler', async () => {
+      (prisma.sysJob.findMany as jest.Mock).mockResolvedValue([{ jobId: 1, jobName: 'demo' }]);
+      await service.remove(1);
+      expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledWith('demo');
+      expect(prisma.sysJob.deleteMany).toHaveBeenCalledWith({ where: { jobId: { in: [1] } } });
+    });
+
+    it('should delete multiple jobs', async () => {
+      (prisma.sysJob.findMany as jest.Mock).mockResolvedValue([
+        { jobId: 1, jobName: 'demo1' },
+        { jobId: 2, jobName: 'demo2' },
+      ]);
+      await service.remove([1, 2]);
+      expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledTimes(2);
+      expect(prisma.sysJob.deleteMany).toHaveBeenCalledWith({ where: { jobId: { in: [1, 2] } } });
     });
 
     it('should change status by controlling cron job', async () => {
@@ -138,6 +288,38 @@ describe('Monitor module services', () => {
       expect(cronRef.stop).toHaveBeenCalled();
     });
 
+    it('should start cron job when changing status to normal', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'task',
+        status: '1',
+      });
+      const cronRef = { start: jest.fn(), stop: jest.fn() };
+      schedulerRegistry.getCronJob.mockReturnValue(cronRef);
+      await service.changeStatus(1, '0', 'admin');
+      expect(cronRef.start).toHaveBeenCalled();
+    });
+
+    it('should create new cron job when enabling and no existing job', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
+        jobId: 1,
+        jobName: 'demo',
+        cronExpression: '* * * * * *',
+        invokeTarget: 'task',
+        status: '1',
+      });
+      schedulerRegistry.getCronJob.mockReturnValue(null);
+      await service.changeStatus(1, '0', 'admin');
+      expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
+    });
+
+    it('should throw error when changing status of non-existent job', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.changeStatus(999, '0', 'admin')).rejects.toThrow();
+    });
+
     it('should run job immediately via task service', async () => {
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
@@ -147,6 +329,11 @@ describe('Monitor module services', () => {
       });
       await service.run(1);
       expect(taskService.executeTask).toHaveBeenCalledWith('task', 'demo', 'DEFAULT');
+    });
+
+    it('should throw error when running non-existent job', async () => {
+      (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
+      await expect(service.run(999)).rejects.toThrow();
     });
 
     it('should export job list to excel', async () => {
@@ -167,9 +354,11 @@ describe('Monitor module services', () => {
     const prisma = createPrismaMock();
     const noticeService = {
       sendBatchNotice: jest.fn(),
+      create: jest.fn().mockResolvedValue(Result.ok()),
     };
     const versionService = {
       cleanExpiredVersions: jest.fn(),
+      deletePhysicalFile: jest.fn().mockResolvedValue(undefined),
     };
 
     beforeEach(() => {
@@ -182,6 +371,8 @@ describe('Monitor module services', () => {
         versionService as any,
       );
       (service as any).taskMap.set('demoTask', jest.fn());
+      (service as any).taskMap.set('task.noParams', jest.fn());
+      (service as any).taskMap.set('task.params', jest.fn());
     });
 
     it('should execute existing task and record success log', async () => {
@@ -201,6 +392,80 @@ describe('Monitor module services', () => {
     it('should expose registered task keys', () => {
       const tasks = service.getTasks();
       expect(tasks).toContain('demoTask');
+    });
+
+    it('should execute task with parameters', async () => {
+      const handler = (service as any).taskMap.get('task.params');
+      handler.mockResolvedValue(undefined);
+      const result = await service.executeTask("task.params('hello', 123, true)");
+      expect(result).toBe(true);
+      expect(handler).toHaveBeenCalledWith('hello', 123, true);
+    });
+
+    it('should execute task without parameters', async () => {
+      const handler = (service as any).taskMap.get('task.noParams');
+      handler.mockResolvedValue(undefined);
+      const result = await service.executeTask('task.noParams');
+      expect(result).toBe(true);
+      expect(handler).toHaveBeenCalled();
+    });
+
+    it('should handle task execution error and log failure', async () => {
+      const handler = (service as any).taskMap.get('demoTask');
+      handler.mockRejectedValue(new Error('Task execution failed'));
+      const result = await service.executeTask('demoTask');
+      expect(result).toBe(false);
+      expect(jobLogService.addJobLog).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: '1',
+          exceptionInfo: 'Task execution failed',
+        }),
+      );
+    });
+
+    it('should record job name and group in log', async () => {
+      const handler = (service as any).taskMap.get('demoTask');
+      handler.mockResolvedValue(undefined);
+      await service.executeTask('demoTask', 'TestJob', 'SYSTEM');
+      expect(jobLogService.addJobLog).toHaveBeenCalledWith(
+        expect.objectContaining({
+          jobName: 'TestJob',
+          jobGroup: 'SYSTEM',
+        }),
+      );
+    });
+
+    it('should use default values when job name and group not provided', async () => {
+      const handler = (service as any).taskMap.get('demoTask');
+      handler.mockResolvedValue(undefined);
+      await service.executeTask('demoTask');
+      expect(jobLogService.addJobLog).toHaveBeenCalledWith(
+        expect.objectContaining({
+          jobName: '未知任务',
+          jobGroup: 'DEFAULT',
+        }),
+      );
+    });
+
+    it('should fail for invalid invoke target format', async () => {
+      const result = await service.executeTask('');
+      expect(result).toBe(false);
+    });
+
+    it('should parse array parameters correctly', async () => {
+      const handler = jest.fn().mockResolvedValue(undefined);
+      (service as any).taskMap.set('arrayTask', handler);
+      const result = await service.executeTask("arrayTask([1, 2, 3])");
+      expect(result).toBe(true);
+      expect(handler).toHaveBeenCalledWith([1, 2, 3]);
+    });
+
+    it('should parse object parameters correctly', async () => {
+      const handler = jest.fn().mockResolvedValue(undefined);
+      (service as any).taskMap.set('objectTask', handler);
+      const result = await service.executeTask("objectTask({a: 1, b: 'test'})");
+      expect(result).toBe(true);
+      expect(handler).toHaveBeenCalledWith({ a: 1, b: 'test' });
     });
   });
 

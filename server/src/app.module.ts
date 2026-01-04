@@ -56,6 +56,8 @@ import { PrismaModule } from './prisma/prisma.module';
     AuditModule,
     // DataLoader 模块 (解决 N+1 查询问题)
     DataLoaderModule,
+    // 登录安全模块 (登录失败锁定、Token黑名单)
+    LoginSecurityModule,
     // 数据库改为 Prisma + PostgreSQL
     PrismaModule,
     // 多租户模块

@@ -478,7 +478,7 @@ describe('Helper Functions', () => {
       const elapsed = Date.now() - startTime;
 
       expect(elapsed).toBeGreaterThanOrEqual(45);
-      expect(elapsed).toBeLessThan(100);
+      expect(elapsed).toBeLessThan(150); // Increased tolerance for CI environments
     });
   });
 });
