@@ -8,7 +8,6 @@ on:
       - completed
     branches:
       - main
-      - main-refactor
   workflow_dispatch:
 
 concurrency:
@@ -31,8 +30,8 @@ jobs:
   publish-and-deploy:
     name: Publish Images And Deploy
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    environment: ${{ (github.event.workflow_run.head_branch || github.ref_name) == 'main' && 'production' || 'staging' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.ref_name == 'main') || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+    environment: production
 
     steps:
       - name: Checkout
