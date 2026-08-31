@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 
 /**
  * Prisma/PostgreSQL 健康检查指示器

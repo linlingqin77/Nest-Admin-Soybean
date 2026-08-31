@@ -45,7 +45,7 @@ const sqlInjectionArbitrary = fc.oneof(
  */
 const pathTraversalArbitrary = fc.oneof(
   fc.constant('../../../etc/passwd'),
-  fc.constant('..\\..\\..\\windows\\system32\\config\\sam'),
+  fc.constant('..\\..\\..\\windows\\system32\\platform/config\\sam'),
   fc.constant('....//....//....//etc/passwd'),
   fc.constant('%2e%2e%2f%2e%2e%2f%2e%2e%2fetc/passwd'),
   fc.constant('..%252f..%252f..%252fetc/passwd'),

@@ -1,4 +1,4 @@
-/** @file post.service.spec.ts @description Migrated from src/module/system/post/post.service.spec.ts */
+/** @file post.service.spec.ts @description Migrated from src/modules/posts/post.service.spec.ts */
 
 /**
  * 岗位服务单元测试
@@ -15,7 +15,7 @@
  * _Requirements: 14.2, 14.4, 14.5_
  */
 
-import { PostService } from '@/module/system/post/post.service';
+import { PostService } from '@/modules/posts/post.service';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';

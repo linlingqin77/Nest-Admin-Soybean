@@ -5,9 +5,9 @@
  * Requirements: 9.1, 9.2, 9.3, 9.5, 11.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { HistoryService } from '@/module/system/tool/history/history.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { HistoryService } from '@/modules/tools/history/history.service';
+import { PrismaService } from '@/platform/prisma';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { ResponseCode } from '@/shared/response';
 
 describe('HistoryService', () => {
@@ -26,7 +26,7 @@ describe('HistoryService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         HistoryService,
         {
@@ -36,7 +36,7 @@ describe('HistoryService', () => {
       ],
     }).compile();
 
-    service = module.get<HistoryService>(HistoryService);
+    service = modules.get<HistoryService>(HistoryService);
 
     // 设置租户上下文
     jest.spyOn(TenantContext, 'getTenantId').mockReturnValue('000000');

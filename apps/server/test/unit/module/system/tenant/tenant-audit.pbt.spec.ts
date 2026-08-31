@@ -49,7 +49,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
     operatorName: string;
     actionType: AuditActionType;
     actionDesc: string;
-    module: string;
+    modules: string;
     ipAddress: string;
     userAgent?: string;
     requestUrl?: string;
@@ -68,7 +68,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
       operatorName: data.operatorName,
       actionType: data.actionType,
       actionDesc: data.actionDesc,
-      module: data.module,
+      modules: data.modules,
       ipAddress: data.ipAddress,
       userAgent: data.userAgent ?? null,
       requestUrl: data.requestUrl ?? null,
@@ -88,7 +88,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
     tenantId?: string;
     operatorName?: string;
     actionType?: AuditActionType;
-    module?: string;
+    modules?: string;
     beginTime?: Date;
     endTime?: Date;
   }): any[] => {
@@ -112,8 +112,8 @@ describe('TenantAuditLog Property-Based Tests', () => {
         matches = false;
       }
 
-      // Filter by module (contains match)
-      if (filters.module && !log.module.includes(filters.module)) {
+      // Filter by modules (contains match)
+      if (filters.modules && !log.modules.includes(filters.modules)) {
         matches = false;
       }
 
@@ -150,7 +150,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
     operatorId: number,
     operatorName: string,
     actionType: AuditActionType,
-    module: string,
+    modules: string,
     ipAddress: string,
     beforeData?: any,
     afterData?: any,
@@ -175,7 +175,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
       operatorName,
       actionType,
       actionDesc: actionDescMap[actionType],
-      module,
+      modules,
       ipAddress,
       beforeData: beforeData ? JSON.stringify(beforeData) : undefined,
       afterData: afterData ? JSON.stringify(afterData) : undefined,
@@ -198,7 +198,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
   /**
    * Property 15: 审计日志自动记录
    *
-   * For any login, data CRUD, permission change, or config modification operation,
+   * For any login, data CRUD, permission change, or platform/config modification operation,
    * after the operation completes, there should be a corresponding record in the audit log table.
    *
    * **Validates: Requirements 6.4**
@@ -234,7 +234,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
               log.operatorId === operatorId &&
               log.operatorName === operatorName &&
               log.actionType === 'login' &&
-              log.module === 'auth' &&
+              log.modules === 'auth' &&
               log.ipAddress === ipAddress &&
               log.operateTime instanceof Date
             );
@@ -255,11 +255,11 @@ describe('TenantAuditLog Property-Based Tests', () => {
           fc.string({ minLength: 1, maxLength: 50 }),
           // Generate random action type (CRUD only)
           fc.constantFrom('create', 'update', 'delete') as fc.Arbitrary<AuditActionType>,
-          // Generate random module name
+          // Generate random modules name
           fc.stringMatching(/^[a-z]{3,20}$/),
           // Generate random IP address
           fc.ipV4(),
-          async (tenantId, operatorId, operatorName, actionType, module, ipAddress) => {
+          async (tenantId, operatorId, operatorName, actionType, modules, ipAddress) => {
             // Reset state
             auditLogs.clear();
             auditLogIdCounter = BigInt(1);
@@ -273,7 +273,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
               operatorId,
               operatorName,
               actionType,
-              module,
+              modules,
               ipAddress,
               beforeData,
               afterData,
@@ -283,7 +283,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
             const log = findAuditLogById(result.auditLogId);
 
             // Property: Audit log should exist with correct action type
-            return result.success && log !== null && log.actionType === actionType && log.module === module;
+            return result.success && log !== null && log.actionType === actionType && log.modules === modules;
           },
         ),
         { numRuns: 100 },
@@ -349,30 +349,30 @@ describe('TenantAuditLog Property-Based Tests', () => {
           fc.string({ minLength: 1, maxLength: 50 }),
           // Generate random IP address
           fc.ipV4(),
-          // Generate config key-value pairs
+          // Generate platform/config key-value pairs
           fc.dictionary(fc.string({ minLength: 1, maxLength: 20 }), fc.string({ minLength: 1, maxLength: 50 })),
           async (tenantId, operatorId, operatorName, ipAddress, configData) => {
             // Reset state
             auditLogs.clear();
             auditLogIdCounter = BigInt(1);
 
-            // Perform config change operation
+            // Perform platform/config change operation
             const result = performAuditedOperation(
               tenantId,
               operatorId,
               operatorName,
               'config_change',
-              'config',
+              'platform/config',
               ipAddress,
-              { config: {} },
-              { config: configData },
+              { platform/config: {} },
+              { platform/config: configData },
             );
 
             // Verify audit log was created
             const log = findAuditLogById(result.auditLogId);
 
-            // Property: Audit log should exist with config change type
-            return result.success && log !== null && log.actionType === 'config_change' && log.module === 'config';
+            // Property: Audit log should exist with platform/config change type
+            return result.success && log !== null && log.actionType === 'config_change' && log.modules === 'platform/config';
           },
         ),
         { numRuns: 100 },
@@ -403,7 +403,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
               operatorId,
               operatorName,
               actionType,
-              'test-module',
+              'test-modules',
               ipAddress,
             );
 
@@ -455,7 +455,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                   operatorName: 'Test User',
                   actionType: 'login',
                   actionDesc: '用户登录',
-                  module: 'auth',
+                  modules: 'auth',
                   ipAddress: '127.0.0.1',
                 });
               }
@@ -498,7 +498,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                 operatorName: 'Test User',
                 actionType,
                 actionDesc: `操作 ${i}`,
-                module: 'test',
+                modules: 'test',
                 ipAddress: '127.0.0.1',
               });
             }
@@ -543,7 +543,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                 operatorName: 'Test User',
                 actionType: 'login',
                 actionDesc: '用户登录',
-                module: 'auth',
+                modules: 'auth',
                 ipAddress: '127.0.0.1',
                 operateTime,
               });
@@ -598,7 +598,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                   operatorName: uniqueOperators[i],
                   actionType: 'login',
                   actionDesc: '用户登录',
-                  module: 'auth',
+                  modules: 'auth',
                   ipAddress: '127.0.0.1',
                 });
               }
@@ -618,25 +618,25 @@ describe('TenantAuditLog Property-Based Tests', () => {
       );
     });
 
-    it('Property 2e: Filter by module should return only matching logs', async () => {
+    it('Property 2e: Filter by modules should return only matching logs', async () => {
       await fc.assert(
         fc.asyncProperty(
           // Generate random tenant ID
           fc.stringMatching(/^[0-9]{6}$/),
-          // Generate multiple module names
+          // Generate multiple modules names
           fc.array(fc.stringMatching(/^[a-z]{3,15}$/), { minLength: 2, maxLength: 5 }),
-          // Generate number of logs per module
+          // Generate number of logs per modules
           fc.integer({ min: 1, max: 5 }),
           async (tenantId, moduleNames, logsPerModule) => {
             // Reset state
             auditLogs.clear();
             auditLogIdCounter = BigInt(1);
 
-            // Ensure unique module names
+            // Ensure unique modules names
             const uniqueModules = [...new Set(moduleNames)];
             if (uniqueModules.length < 2) return true;
 
-            // Create logs for each module
+            // Create logs for each modules
             for (const moduleName of uniqueModules) {
               for (let j = 0; j < logsPerModule; j++) {
                 createAuditLog({
@@ -645,20 +645,20 @@ describe('TenantAuditLog Property-Based Tests', () => {
                   operatorName: 'Test User',
                   actionType: 'create',
                   actionDesc: '创建数据',
-                  module: moduleName,
+                  modules: moduleName,
                   ipAddress: '127.0.0.1',
                 });
               }
             }
 
-            // Select target module
+            // Select target modules
             const targetModule = uniqueModules[0];
 
-            // Filter by module
-            const results = findAuditLogs({ module: targetModule });
+            // Filter by modules
+            const results = findAuditLogs({ modules: targetModule });
 
-            // Property: All results should have matching module
-            return results.every((log) => log.module.includes(targetModule));
+            // Property: All results should have matching modules
+            return results.every((log) => log.modules.includes(targetModule));
           },
         ),
         { numRuns: 100 },
@@ -690,7 +690,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                 operatorName: 'Test User',
                 actionType,
                 actionDesc: `操作 ${i}`,
-                module: 'test',
+                modules: 'test',
                 ipAddress: '127.0.0.1',
               });
             }
@@ -729,7 +729,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                 operatorName: 'Test User',
                 actionType: AUDIT_ACTION_TYPES[i % AUDIT_ACTION_TYPES.length],
                 actionDesc: `操作 ${i}`,
-                module: 'test',
+                modules: 'test',
                 ipAddress: '127.0.0.1',
               });
             }
@@ -770,7 +770,7 @@ describe('TenantAuditLog Property-Based Tests', () => {
                 operatorName: 'Test User',
                 actionType: 'login',
                 actionDesc: '用户登录',
-                module: 'auth',
+                modules: 'auth',
                 ipAddress: '127.0.0.1',
                 operateTime,
               });

@@ -5,9 +5,9 @@ import {
   RequireQuotaGuard,
   RequireQuotaOptions,
   REQUIRE_QUOTA_KEY,
-} from '@/tenant/guards/require-quota.guard';
-import { TenantQuotaService, QuotaResource } from '@/tenant/services/quota.service';
-import { TenantContext } from '@/tenant/context/tenant.context';
+} from '@/core/tenancy/guards/require-quota.guard';
+import { TenantQuotaService, QuotaResource } from '@/core/tenancy/services/quota.service';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 
 describe('RequireQuotaGuard', () => {
   let guard: RequireQuotaGuard;
@@ -25,7 +25,7 @@ describe('RequireQuotaGuard', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RequireQuotaGuard,
         {
@@ -43,9 +43,9 @@ describe('RequireQuotaGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<RequireQuotaGuard>(RequireQuotaGuard);
-    reflector = module.get<Reflector>(Reflector);
-    quotaService = module.get(TenantQuotaService);
+    guard = modules.get<RequireQuotaGuard>(RequireQuotaGuard);
+    reflector = modules.get<Reflector>(Reflector);
+    quotaService = modules.get(TenantQuotaService);
   });
 
   afterEach(() => {

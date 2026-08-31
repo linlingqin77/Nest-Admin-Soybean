@@ -4,9 +4,9 @@ import {
   RelationValidationService,
   RelationValidationResult,
   DependencyCheckResult,
-} from '@/tenant/services/relation-validation.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { TenantContext } from '@/tenant/context/tenant.context';
+} from '@/core/tenancy/services/relation-validation.service';
+import { PrismaService } from '@/platform/prisma';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 
 describe('RelationValidationService', () => {
   let service: RelationValidationService;
@@ -36,7 +36,7 @@ describe('RelationValidationService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RelationValidationService,
         {
@@ -46,7 +46,7 @@ describe('RelationValidationService', () => {
       ],
     }).compile();
 
-    service = module.get<RelationValidationService>(RelationValidationService);
+    service = modules.get<RelationValidationService>(RelationValidationService);
   });
 
   afterEach(() => {

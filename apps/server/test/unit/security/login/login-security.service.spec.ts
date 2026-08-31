@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoginSecurityService, LoginSecurityConfig } from '@/security/login/login-security.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { LoginSecurityService, LoginSecurityConfig } from '@/core/auth/login-core.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import { CacheEnum } from '@/shared/enums/index';
 
 describe('LoginSecurityService', () => {
@@ -17,7 +17,7 @@ describe('LoginSecurityService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         LoginSecurityService,
         {
@@ -27,8 +27,8 @@ describe('LoginSecurityService', () => {
       ],
     }).compile();
 
-    service = module.get<LoginSecurityService>(LoginSecurityService);
-    redisService = module.get(RedisService);
+    service = modules.get<LoginSecurityService>(LoginSecurityService);
+    redisService = modules.get(RedisService);
   });
 
   describe('isAccountLocked', () => {
@@ -96,7 +96,7 @@ describe('LoginSecurityService', () => {
   });
 
   describe('getSecurityStatus', () => {
-    it('should return complete security status', async () => {
+    it('should return complete core status', async () => {
       mockRedisService.get
         .mockResolvedValueOnce('1234567890') // lock check
         .mockResolvedValueOnce('3'); // failed attempts
@@ -168,7 +168,7 @@ describe('LoginSecurityService', () => {
       expect(result.isLocked).toBe(true);
     });
 
-    it('should use custom config when provided', async () => {
+    it('should use custom platform/config when provided', async () => {
       const customConfig: Partial<LoginSecurityConfig> = {
         maxFailedAttempts: 3,
         lockDurationMs: 5 * 60 * 1000,

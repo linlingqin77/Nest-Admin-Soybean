@@ -10,9 +10,9 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { DeptService } from 'src/module/system/dept/dept.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { DeptService } from 'src/modules/depts/dept.service';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 
 describe('Dept Integration Tests', () => {

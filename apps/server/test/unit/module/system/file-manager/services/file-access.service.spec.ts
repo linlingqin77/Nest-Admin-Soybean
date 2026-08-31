@@ -1,10 +1,10 @@
-/** @file file-access.service.spec.ts @description Migrated from src/module/system/file-manager/services/file-access.service.spec.ts */
+/** @file file-access.service.spec.ts @description Migrated from src/modules/files/services/file-access.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { FileAccessService } from '@/module/system/file-manager/services/file-access.service';
-import { AppConfigService } from '@/config/app-config.service';
+import { FileAccessService } from '@/modules/files/services/file-access.service';
+import { AppConfigService } from '@/config/app-platform/config.service';
 import { createConfigMock, ConfigMock } from 'test/mocks/config-mock';
 
 describe('FileAccessService', () => {
@@ -20,7 +20,7 @@ describe('FileAccessService', () => {
 
     configMock = createConfigMock();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         FileAccessService,
         { provide: JwtService, useValue: jwtServiceMock },
@@ -28,7 +28,7 @@ describe('FileAccessService', () => {
       ],
     }).compile();
 
-    service = module.get<FileAccessService>(FileAccessService);
+    service = modules.get<FileAccessService>(FileAccessService);
   });
 
   afterEach(() => {

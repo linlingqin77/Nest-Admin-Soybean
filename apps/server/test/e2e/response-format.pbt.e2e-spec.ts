@@ -17,8 +17,8 @@
 
 import * as fc from 'fast-check';
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Property 1: Response Structure Consistency', () => {
@@ -41,7 +41,7 @@ describe('Property 1: Response Structure Consistency', () => {
     { method: 'GET', path: '/getInfo', needsAuth: true, description: 'Get user info' },
     { method: 'GET', path: '/getRouters', needsAuth: true, description: 'Get routers' },
 
-    // System module endpoints
+    // System modules endpoints
     { method: 'GET', path: '/system/user/list?pageNum=1&pageSize=10', needsAuth: true, description: 'User list' },
     { method: 'GET', path: '/system/role/list?pageNum=1&pageSize=10', needsAuth: true, description: 'Role list' },
     { method: 'GET', path: '/system/dept/list', needsAuth: true, description: 'Dept list' },
@@ -65,7 +65,7 @@ describe('Property 1: Response Structure Consistency', () => {
     // Tenant management endpoints
     { method: 'GET', path: '/system/tenant/list?pageNum=1&pageSize=10', needsAuth: true, description: 'Tenant list' },
 
-    // Monitor module endpoints
+    // Monitor modules endpoints
     {
       method: 'GET',
       path: '/monitor/online/list?pageNum=1&pageSize=10',
@@ -129,7 +129,7 @@ describe('Property 1: Response Structure Consistency', () => {
     {
       method: 'GET',
       path: '/system/config/999999999',
-      description: 'Get non-existent config',
+      description: 'Get non-existent platform/config',
     },
     {
       method: 'GET',

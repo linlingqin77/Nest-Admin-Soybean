@@ -1,4 +1,4 @@
-/** @file dict.service.spec.ts @description Migrated from src/module/system/dict/dict.service.spec.ts */
+/** @file dict.service.spec.ts @description Migrated from src/modules/dicts/dict.service.spec.ts */
 
 /**
  * 字典服务单元测试
@@ -12,7 +12,7 @@
  * _Requirements: 6.2, 6.4, 6.5, 6.7, 6.8, 6.9_
  */
 
-import { DictService } from '@/module/system/dict/dict.service';
+import { DictService } from '@/modules/dicts/dict.service';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { CacheEnum, DelFlagEnum } from '@/shared/enums/index';
 

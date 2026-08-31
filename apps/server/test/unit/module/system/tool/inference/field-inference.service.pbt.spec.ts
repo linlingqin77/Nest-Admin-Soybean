@@ -7,8 +7,8 @@
  * **Validates: Requirements 3.1-3.9**
  */
 import * as fc from 'fast-check';
-import { FieldInferenceService, IInferredColumn } from '@/module/system/tool/inference/field-inference.service';
-import { DbColumnDto } from '@/module/system/tool/datasource/dto';
+import { FieldInferenceService, IInferredColumn } from '@/modules/tools/inference/field-inference.service';
+import { DbColumnDto } from '@/modules/tools/datasource/dto';
 import { GenConstants } from '@/shared/constants/gen.constant';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -16,11 +16,11 @@ describe('FieldInferenceService - Property Tests', () => {
   let service: FieldInferenceService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [FieldInferenceService],
     }).compile();
 
-    service = module.get<FieldInferenceService>(FieldInferenceService);
+    service = modules.get<FieldInferenceService>(FieldInferenceService);
   });
 
   /**

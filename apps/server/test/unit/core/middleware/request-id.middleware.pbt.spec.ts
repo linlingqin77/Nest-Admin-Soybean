@@ -11,8 +11,8 @@
  */
 
 import * as fc from 'fast-check';
-import { RequestIdMiddleware } from '@/core/middleware/request-id.middleware';
-import { getRequestId } from '@/infrastructure/logging/pino-logger.config';
+import { RequestIdMiddleware } from '@/core/http/middleware/request-id.middleware';
+import { getRequestId } from '@/platform/logger/pino-logger.platform/config';
 import { Request, Response, NextFunction } from 'express';
 import { ClsService } from 'nestjs-cls';
 

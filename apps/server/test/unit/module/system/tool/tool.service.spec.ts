@@ -5,9 +5,9 @@
  * Requirements: 11.1, 15.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ToolService } from '@/module/system/tool/tool.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { PreviewService } from '@/module/system/tool/preview/preview.service';
+import { ToolService } from '@/modules/tools/tool.service';
+import { PrismaService } from '@/platform/prisma';
+import { PreviewService } from '@/modules/tools/preview/preview.service';
 import { BusinessException } from '@/shared/exceptions';
 import { ResponseCode } from '@/shared/response';
 
@@ -46,7 +46,7 @@ describe('ToolService', () => {
       createPreviewResponse: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         ToolService,
         {
@@ -60,7 +60,7 @@ describe('ToolService', () => {
       ],
     }).compile();
 
-    service = module.get<ToolService>(ToolService);
+    service = modules.get<ToolService>(ToolService);
   });
 
   afterEach(() => {

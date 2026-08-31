@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuditService, AuditLogData, AuditLogRecord } from '@/observability/audit/audit.service';
-import { PrismaService } from '@/infrastructure/prisma/prisma.service';
+import { AuditService, AuditLogData, AuditLogRecord } from '@/core/audit/audit.service';
+import { PrismaService } from '@/platform/prisma/prisma.service';
 import { ClsService } from 'nestjs-cls';
 
 /**
@@ -50,7 +50,7 @@ describe('AuditService Property-Based Tests', () => {
       getId: jest.fn().mockReturnValue('test-request-id'),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         AuditService,
         {
@@ -64,7 +64,7 @@ describe('AuditService Property-Based Tests', () => {
       ],
     }).compile();
 
-    service = module.get<AuditService>(AuditService);
+    service = modules.get<AuditService>(AuditService);
   });
 
   afterEach(async () => {
@@ -78,7 +78,7 @@ describe('AuditService Property-Based Tests', () => {
    * Property 6a: Audit Log Contains Required Fields
    *
    * For any audit log operation, the log record should contain all required fields:
-   * action, module, status, tenantId, ip.
+   * action, modules, status, tenantId, ip.
    *
    * **Validates: Requirements 4.4, 4.5**
    */
@@ -90,12 +90,12 @@ describe('AuditService Property-Based Tests', () => {
         fc.constantFrom('0', '1') as fc.Arbitrary<'0' | '1'>,
         fc.stringMatching(/^[0-9]{6}$/),
         fc.ipV4(),
-        async (action, module, status, tenantId, ip) => {
+        async (action, modules, status, tenantId, ip) => {
           clsStore.set('user', { tenantId, userId: 1, userName: 'testuser' });
           clsStore.set('request', { ip, headers: { 'user-agent': 'test-agent' } });
           clsStore.set('requestId', 'test-request-id');
 
-          const auditData: AuditLogData = { action, module, status };
+          const auditData: AuditLogData = { action, modules, status };
           await service.logSync(auditData);
 
           if (capturedLogs.length === 0) return false;
@@ -103,7 +103,7 @@ describe('AuditService Property-Based Tests', () => {
 
           return (
             log.action === action &&
-            log.module === module &&
+            log.modules === modules &&
             log.status === status &&
             log.tenantId === tenantId &&
             log.ip === ip
@@ -131,7 +131,7 @@ describe('AuditService Property-Based Tests', () => {
 
           const auditData: AuditLogData = {
             action: 'UPDATE',
-            module: 'system',
+            modules: 'system',
             targetType,
             targetId,
             status: '0',
@@ -173,7 +173,7 @@ describe('AuditService Property-Based Tests', () => {
 
           const auditData: AuditLogData = {
             action: 'UPDATE',
-            module: 'system',
+            modules: 'system',
             oldValue: oldValueStr,
             newValue: newValueStr,
             status: '0',
@@ -205,7 +205,7 @@ describe('AuditService Property-Based Tests', () => {
 
           const auditData: AuditLogData = {
             action: 'DELETE',
-            module: 'system',
+            modules: 'system',
             status: '1',
             errorMsg,
           };
@@ -234,7 +234,7 @@ describe('AuditService Property-Based Tests', () => {
 
         const auditData: AuditLogData = {
           action: 'QUERY',
-          module: 'system',
+          modules: 'system',
           status: '0',
           duration,
         };
@@ -262,7 +262,7 @@ describe('AuditService Property-Based Tests', () => {
 
         const auditData: AuditLogData = {
           action: 'CREATE',
-          module: 'system',
+          modules: 'system',
           status: '0',
         };
 
@@ -296,7 +296,7 @@ describe('AuditService Property-Based Tests', () => {
 
           const auditData: AuditLogData = {
             action: 'LOGIN',
-            module: 'auth',
+            modules: 'auth',
             status: '0',
           };
 

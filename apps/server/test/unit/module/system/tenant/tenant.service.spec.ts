@@ -1,13 +1,13 @@
 /**
  * @file tenant.service.spec.ts
- * @description Migrated from src/module/system/tenant/tenant.service.spec.ts
+ * @description Migrated from src/modules/tenants/tenant.service.spec.ts
  * Unit tests for TenantService
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException } from '@nestjs/common';
-import { TenantService } from '@/module/system/tenant/tenant.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { TenantService } from '@/modules/tenants/tenant.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
 import { DelFlagEnum, StatusEnum } from '@/shared/enums/index';
 import { ResponseCode } from '@/shared/response';
 import { BusinessException } from '@/shared/exceptions';
@@ -47,7 +47,7 @@ describe('TenantService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantService,
         {
@@ -99,9 +99,9 @@ describe('TenantService', () => {
       ],
     }).compile();
 
-    service = module.get<TenantService>(TenantService);
-    prisma = module.get<PrismaService>(PrismaService);
-    redisService = module.get<RedisService>(RedisService);
+    service = modules.get<TenantService>(TenantService);
+    prisma = modules.get<PrismaService>(PrismaService);
+    redisService = modules.get<RedisService>(RedisService);
   });
 
   afterEach(() => {

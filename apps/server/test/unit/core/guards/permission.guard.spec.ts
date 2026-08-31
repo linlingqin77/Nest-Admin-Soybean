@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { PermissionGuard } from '@/core/guards/permission.guard';
+import { PermissionGuard } from '@/core/permissions/guards/permission.guard';
 
 describe('PermissionGuard', () => {
   let guard: PermissionGuard;
@@ -20,7 +20,7 @@ describe('PermissionGuard', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         PermissionGuard,
         {
@@ -32,8 +32,8 @@ describe('PermissionGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<PermissionGuard>(PermissionGuard);
-    reflector = module.get<Reflector>(Reflector);
+    guard = modules.get<PermissionGuard>(PermissionGuard);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

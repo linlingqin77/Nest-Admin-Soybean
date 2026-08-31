@@ -12,15 +12,15 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { SmsChannelService } from 'src/module/system/sms/channel/sms-channel.service';
-import { SmsTemplateService } from 'src/module/system/sms/template/sms-template.service';
-import { SmsLogService } from 'src/module/system/sms/log/sms-log.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { SmsChannelService } from 'src/modules/sms/channels/sms-channel.service';
+import { SmsTemplateService } from 'src/modules/sms/templates/sms-template.service';
+import { SmsLogService } from 'src/modules/sms/logs/sms-log.service';
 import { StatusEnum } from 'src/shared/enums/index';
-import { ListSmsChannelDto } from 'src/module/system/sms/channel/dto/index';
-import { ListSmsTemplateDto } from 'src/module/system/sms/template/dto/index';
-import { ListSmsLogDto } from 'src/module/system/sms/log/dto/index';
+import { ListSmsChannelDto } from 'src/modules/sms/channels/dto/index';
+import { ListSmsTemplateDto } from 'src/modules/sms/templates/dto/index';
+import { ListSmsLogDto } from 'src/modules/sms/logs/dto/index';
 
 function uniqueId(): string {
   return Math.random().toString(36).substring(2, 8);

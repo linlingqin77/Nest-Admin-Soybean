@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantLifecycleService } from '@/tenant/services/tenant-lifecycle.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { TenantLifecycleService } from '@/core/tenancy/services/tenant-lifecycle.service';
+import { PrismaService } from '@/platform/prisma';
 
 // 属性测试配置
 const PBT_CONFIG = { numRuns: 100 };
@@ -32,7 +32,7 @@ describe('TenantLifecycleService - Property Tests', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantLifecycleService,
         {
@@ -42,7 +42,7 @@ describe('TenantLifecycleService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<TenantLifecycleService>(TenantLifecycleService);
+    service = modules.get<TenantLifecycleService>(TenantLifecycleService);
   });
 
   afterEach(() => {

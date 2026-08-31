@@ -1,4 +1,4 @@
-import { AppConfigService } from 'src/config/app-config.service';
+import { AppConfigService } from 'src/platform/config/app-config.service';
 import {
   AppConfig,
   DatabaseConfig,
@@ -14,7 +14,7 @@ import {
   Configuration,
   LoggerConfig,
   FileConfig,
-} from 'src/config/types';
+} from 'src/platform/config/types';
 
 /**
  * Config Mock 类型

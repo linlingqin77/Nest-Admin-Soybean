@@ -1,4 +1,4 @@
-import { TenantContext, TenantContextData } from '@/tenant/context/tenant.context';
+import { TenantContext, TenantContextData } from '@/core/tenancy/context/tenant.context';
 
 describe('TenantContext', () => {
   describe('run', () => {

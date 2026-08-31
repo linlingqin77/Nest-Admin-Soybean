@@ -5,8 +5,8 @@
  * **Validates: Requirements 1.6**
  */
 import * as fc from 'fast-check';
-import { DataSourceService } from '@/module/system/tool/datasource/datasource.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { DataSourceService } from '@/modules/tools/datasource/datasource.service';
+import { PrismaService } from '@/platform/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('DataSourceService - Property Tests', () => {
@@ -28,7 +28,7 @@ describe('DataSourceService - Property Tests', () => {
       $queryRaw: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         DataSourceService,
         {
@@ -38,7 +38,7 @@ describe('DataSourceService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<DataSourceService>(DataSourceService);
+    service = modules.get<DataSourceService>(DataSourceService);
   });
 
   describe('Property 1: 数据源密码加密往返', () => {

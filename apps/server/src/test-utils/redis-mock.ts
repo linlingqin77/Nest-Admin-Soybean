@@ -1,4 +1,4 @@
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { RedisService } from 'src/platform/redis/redis.service';
 
 /**
  * Redis Mock 类型 - 只包含公共方法

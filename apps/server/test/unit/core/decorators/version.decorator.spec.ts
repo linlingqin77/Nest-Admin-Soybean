@@ -5,7 +5,7 @@ import {
   VersionedControllerWithTag,
   MultiVersionController,
   VersionNeutralController,
-} from '@/core/decorators/version.decorator';
+} from '@/core/http/decorators/version.decorator';
 
 describe('Version Decorators', () => {
   describe('API_VERSIONS', () => {

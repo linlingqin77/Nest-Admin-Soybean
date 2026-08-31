@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import {
   createTenantMiddleware,
   addTenantFilter,

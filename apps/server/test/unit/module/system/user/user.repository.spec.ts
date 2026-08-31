@@ -1,11 +1,11 @@
 /**
  * @file user.repository.spec.ts
- * @description Migrated from src/module/system/user/user.repository.spec.ts
+ * @description Migrated from src/modules/users/user.repository.spec.ts
  * Unit tests for UserRepository
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRepository } from '@/module/system/user/user.repository';
-import { PrismaService } from '@/infrastructure/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
+import { PrismaService } from '@/platform/prisma';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { DelFlagEnum } from '@/shared/enums/index';
 import { SysUser } from '@prisma/client';
@@ -54,7 +54,7 @@ describe('UserRepository', () => {
   beforeEach(async () => {
     prisma = createPrismaMock();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserRepository,
         {
@@ -64,7 +64,7 @@ describe('UserRepository', () => {
       ],
     }).compile();
 
-    repository = module.get<UserRepository>(UserRepository);
+    repository = modules.get<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

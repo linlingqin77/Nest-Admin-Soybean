@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantHelper, SUPER_TENANT_ID, hasTenantField } from '@/tenant/services/tenant.helper';
-import { TenantContext } from '@/tenant/context/tenant.context';
-import { AppConfigService } from '@/config/app-config.service';
+import { TenantHelper, SUPER_TENANT_ID, hasTenantField } from '@/core/tenancy/services/tenant.helper';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
+import { AppConfigService } from '@/config/app-platform/config.service';
 
 describe('TenantHelper', () => {
   let tenantHelper: TenantHelper;
@@ -14,7 +14,7 @@ describe('TenantHelper', () => {
       },
     } as any;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantHelper,
         {
@@ -24,7 +24,7 @@ describe('TenantHelper', () => {
       ],
     }).compile();
 
-    tenantHelper = module.get<TenantHelper>(TenantHelper);
+    tenantHelper = modules.get<TenantHelper>(TenantHelper);
   });
 
   afterEach(() => {
@@ -43,7 +43,7 @@ describe('TenantHelper', () => {
         },
       } as any;
 
-      const module: TestingModule = await Test.createTestingModule({
+      const modules: TestingModule = await Test.createTestingModule({
         providers: [
           TenantHelper,
           {
@@ -53,7 +53,7 @@ describe('TenantHelper', () => {
         ],
       }).compile();
 
-      const disabledHelper = module.get<TenantHelper>(TenantHelper);
+      const disabledHelper = modules.get<TenantHelper>(TenantHelper);
       expect(disabledHelper.isEnabled()).toBe(false);
     });
   });
@@ -66,7 +66,7 @@ describe('TenantHelper', () => {
         },
       } as any;
 
-      const module: TestingModule = await Test.createTestingModule({
+      const modules: TestingModule = await Test.createTestingModule({
         providers: [
           TenantHelper,
           {
@@ -76,7 +76,7 @@ describe('TenantHelper', () => {
         ],
       }).compile();
 
-      const disabledHelper = module.get<TenantHelper>(TenantHelper);
+      const disabledHelper = modules.get<TenantHelper>(TenantHelper);
       expect(disabledHelper.shouldFilter()).toBe(false);
     });
 

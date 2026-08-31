@@ -5,21 +5,21 @@
  * Requirements: 9.3, 9.5, 11.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { HistoryController } from '@/module/system/tool/history/history.controller';
-import { HistoryService } from '@/module/system/tool/history/history.service';
+import { HistoryController } from '@/modules/tools/history/history.controller';
+import { HistoryService } from '@/modules/tools/history/history.service';
 import { Result } from '@/shared/response';
 import { Response } from 'express';
 import { Reflector } from '@nestjs/core';
 
 // Mock guards
-jest.mock('@/core/guards/multi-throttle.guard', () => ({
+jest.mock('@/core/http/guards/multi-throttle.guard', () => ({
   MultiThrottleGuard: jest.fn().mockImplementation(() => ({
     canActivate: jest.fn().mockReturnValue(true),
   })),
 }));
 
 // Mock OperlogInterceptor
-jest.mock('@/core/interceptors/operlog.interceptor', () => ({
+jest.mock('@/core/http/interceptors/operlog.interceptor', () => ({
   OperlogInterceptor: jest.fn().mockImplementation(() => ({
     intercept: jest.fn().mockImplementation((context, next) => next.handle()),
   })),
@@ -46,7 +46,7 @@ describe('HistoryController', () => {
       send: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [HistoryController],
       providers: [
         {
@@ -57,7 +57,7 @@ describe('HistoryController', () => {
       ],
     }).compile();
 
-    controller = module.get<HistoryController>(HistoryController);
+    controller = modules.get<HistoryController>(HistoryController);
   });
 
   afterEach(() => {

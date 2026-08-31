@@ -1,6 +1,6 @@
 /**
  * @file user.service.pbt.spec.ts
- * @description Migrated from src/module/system/user/user.service.pbt.spec.ts
+ * @description Migrated from src/modules/users/user.service.pbt.spec.ts
  * UserService Property-Based Tests
  *
  * Feature: enterprise-app-optimization
@@ -14,21 +14,21 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import * as fc from 'fast-check';
-import { UserService } from '@/module/system/user/user.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { UserRepository } from '@/module/system/user/user.repository';
-import { RoleService } from '@/module/system/role/role.service';
-import { DeptService } from '@/module/system/dept/dept.service';
+import { UserService } from '@/modules/users/user.service';
+import { PrismaService } from '@/platform/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
+import { RoleService } from '@/modules/roles/role.service';
+import { DeptService } from '@/modules/depts/dept.service';
 import { JwtService } from '@nestjs/jwt';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { ConfigService } from '@/module/system/config/config.service';
-import { UserAuthService } from '@/module/system/user/services/user-auth.service';
-import { UserProfileService } from '@/module/system/user/services/user-profile.service';
-import { UserRoleService } from '@/module/system/user/services/user-role.service';
-import { UserExportService } from '@/module/system/user/services/user-export.service';
-import { UserCrudService } from '@/module/system/user/services/user-crud.service';
-import { UserBatchService } from '@/module/system/user/services/user-batch.service';
-import { UserQueryService } from '@/module/system/user/services/user-query.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { ConfigService } from '@/modules/configs/config.service';
+import { UserAuthService } from '@/modules/users/services/user-auth.service';
+import { UserProfileService } from '@/modules/users/services/user-profile.service';
+import { UserRoleService } from '@/modules/users/services/user-role.service';
+import { UserExportService } from '@/modules/users/services/user-export.service';
+import { UserCrudService } from '@/modules/users/services/user-crud.service';
+import { UserBatchService } from '@/modules/users/services/user-batch.service';
+import { UserQueryService } from '@/modules/users/services/user-query.service';
 import { DelFlagEnum, StatusEnum, DataScopeEnum } from '@/shared/enums/index';
 
 describe('UserService Property-Based Tests', () => {
@@ -68,7 +68,7 @@ describe('UserService Property-Based Tests', () => {
     tenantDataStore.clear();
     userIdCounter = 1;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
         {
@@ -263,9 +263,9 @@ describe('UserService Property-Based Tests', () => {
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
-    prisma = module.get<PrismaService>(PrismaService);
-    userRepo = module.get<UserRepository>(UserRepository);
+    service = modules.get<UserService>(UserService);
+    prisma = modules.get<PrismaService>(PrismaService);
+    userRepo = modules.get<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

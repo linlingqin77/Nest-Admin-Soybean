@@ -1,22 +1,22 @@
 /**
  * @file user.controller.spec.ts
- * @description Migrated from src/module/system/user/user.controller.spec.ts
+ * @description Migrated from src/modules/users/user.controller.spec.ts
  * Unit tests for UserController
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from '@/module/system/user/user.controller';
-import { UserService } from '@/module/system/user/user.service';
-import { UploadService } from '@/module/upload/upload.service';
+import { UserController } from '@/modules/users/user.controller';
+import { UserService } from '@/modules/users/user.service';
+import { UploadService } from '@/modules/files/upload.service';
 import { Result } from '@/shared/response';
 
 // Mock decorators
-jest.mock('@/core/decorators/operlog.decorator', () => ({
+jest.mock('@/core/audit/decorators/operlog.decorator', () => ({
   Operlog: () => () => {},
 }));
-jest.mock('@/core/decorators/require-premission.decorator', () => ({
+jest.mock('@/core/http/decorators/require-premission.decorator', () => ({
   RequirePermission: () => () => {},
 }));
-jest.mock('@/core/decorators/require-role.decorator', () => ({
+jest.mock('@/core/http/decorators/require-role.decorator', () => ({
   RequireRole: () => () => {},
 }));
 
@@ -59,7 +59,7 @@ describe('UserController', () => {
       singleFileUpload: jest.fn().mockResolvedValue({ fileName: 'avatar.jpg' }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
         { provide: UserService, useValue: userServiceMock },
@@ -67,7 +67,7 @@ describe('UserController', () => {
       ],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    controller = modules.get<UserController>(UserController);
   });
 
   afterEach(() => {

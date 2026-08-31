@@ -1,10 +1,10 @@
 /**
  * @file Queue Access Guard Unit Tests
- * @description Migrated from src/module/common/bull/guards/queue-access.guard.spec.ts
+ * @description Migrated from src/platform/queue/guards/queue-access.guard.spec.ts
  */
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { QueueAccessGuard } from '@/module/common/bull/guards/queue-access.guard';
+import { QueueAccessGuard } from '@/platform/queue/guards/queue-access.guard';
 
 describe('QueueAccessGuard', () => {
   let guard: QueueAccessGuard;

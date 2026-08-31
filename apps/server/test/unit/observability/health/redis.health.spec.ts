@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisHealthIndicator } from '@/observability/health/redis.health';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { RedisHealthIndicator } from '@/core/core/observability/health/redis.health';
+import { RedisService } from '@/platform/redis/redis.service';
 import { HealthCheckError } from '@nestjs/terminus';
 
 describe('RedisHealthIndicator', () => {
@@ -17,7 +17,7 @@ describe('RedisHealthIndicator', () => {
       getClient: jest.fn().mockReturnValue(mockRedisClient),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RedisHealthIndicator,
         {
@@ -27,8 +27,8 @@ describe('RedisHealthIndicator', () => {
       ],
     }).compile();
 
-    indicator = module.get<RedisHealthIndicator>(RedisHealthIndicator);
-    redisService = module.get(RedisService);
+    indicator = modules.get<RedisHealthIndicator>(RedisHealthIndicator);
+    redisService = modules.get(RedisService);
   });
 
   it('should be defined', () => {

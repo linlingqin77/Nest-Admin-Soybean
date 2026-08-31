@@ -10,11 +10,11 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { FileManagerService } from 'src/module/system/file-manager/file-manager.service';
-import { UploadService } from 'src/module/upload/upload.service';
-import { TenantContext } from 'src/tenant/context/tenant.context';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { FileManagerService } from 'src/modules/files/file-manager.service';
+import { UploadService } from 'src/modules/files/upload.service';
+import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { DelFlagEnum } from 'src/shared/enums/index';
 
 describe('File Integration Tests', () => {
@@ -173,7 +173,7 @@ describe('File Integration Tests', () => {
         expect(dbFile).toBeDefined();
         expect(dbFile?.tenantId).toBe(testTenantId);
       } catch (error) {
-        // File upload may fail in test environment due to storage config
+        // File upload may fail in test environment due to storage platform/config
         // This is acceptable for integration test
         console.log('File upload skipped due to storage configuration');
       }

@@ -1,11 +1,11 @@
-/** @file config.service.spec.ts @description Migrated from src/module/system/config/config.service.spec.ts */
+/** @file platform/config.service.spec.ts @description Migrated from src/modules/configs/config.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@/module/system/config/config.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { ConfigRepository } from '@/module/system/config/config.repository';
-import { SystemConfigService } from '@/module/system/system-config/system-config.service';
+import { ConfigService } from '@/modules/configs/config.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
+import { ConfigRepository } from '@/modules/configs/config.repository';
+import { SystemConfigService } from '@/modules/configs/system-platform/config.service';
 import { DelFlagEnum } from '@/shared/enums/index';
 import { ResponseCode } from '@/shared/response';
 import { BusinessException } from '@/shared/exceptions';
@@ -42,7 +42,7 @@ describe('ConfigService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigService,
         {
@@ -95,11 +95,11 @@ describe('ConfigService', () => {
       ],
     }).compile();
 
-    service = module.get<ConfigService>(ConfigService);
-    prisma = module.get<PrismaService>(PrismaService);
-    redisService = module.get<RedisService>(RedisService);
-    configRepo = module.get<ConfigRepository>(ConfigRepository);
-    systemConfigService = module.get<SystemConfigService>(SystemConfigService);
+    service = modules.get<ConfigService>(ConfigService);
+    prisma = modules.get<PrismaService>(PrismaService);
+    redisService = modules.get<RedisService>(RedisService);
+    configRepo = modules.get<ConfigRepository>(ConfigRepository);
+    systemConfigService = modules.get<SystemConfigService>(SystemConfigService);
   });
 
   afterEach(() => {
@@ -111,10 +111,10 @@ describe('ConfigService', () => {
   });
 
   describe('create', () => {
-    it('should create a config', async () => {
+    it('should create a platform/config', async () => {
       const createDto = {
         configName: '新配置',
-        configKey: 'sys.new.config',
+        configKey: 'sys.new.platform/config',
         configValue: 'value',
         configType: 'N',
       };
@@ -129,7 +129,7 @@ describe('ConfigService', () => {
   });
 
   describe('findAll', () => {
-    it('should return paginated config list', async () => {
+    it('should return paginated platform/config list', async () => {
       const query = {
         pageNum: 1,
         pageSize: 10,
@@ -257,7 +257,7 @@ describe('ConfigService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a config by id', async () => {
+    it('should return a platform/config by id', async () => {
       (configRepo.findById as jest.Mock).mockResolvedValue(mockConfig);
 
       const result = await service.findOne(1);
@@ -278,7 +278,7 @@ describe('ConfigService', () => {
   });
 
   describe('findOneByConfigKey', () => {
-    it('should return config value by key', async () => {
+    it('should return platform/config value by key', async () => {
       (configRepo.findByConfigKey as jest.Mock).mockResolvedValue(mockConfig);
 
       const result = await service.findOneByConfigKey('sys.index.skinName');
@@ -289,7 +289,7 @@ describe('ConfigService', () => {
   });
 
   describe('getConfigValue', () => {
-    it('should return config value', async () => {
+    it('should return platform/config value', async () => {
       (configRepo.findByConfigKey as jest.Mock).mockResolvedValue(mockConfig);
 
       const result = await service.getConfigValue('sys.index.skinName');
@@ -297,7 +297,7 @@ describe('ConfigService', () => {
       expect(result).toBe('skin-blue');
     });
 
-    it('should return null when config not found', async () => {
+    it('should return null when platform/config not found', async () => {
       (configRepo.findByConfigKey as jest.Mock).mockResolvedValue(null);
 
       const result = await service.getConfigValue('non.existent.key');
@@ -307,7 +307,7 @@ describe('ConfigService', () => {
   });
 
   describe('getSystemConfigValue', () => {
-    it('should return value from system config service', async () => {
+    it('should return value from system platform/config service', async () => {
       (systemConfigService.getConfigValue as jest.Mock).mockResolvedValue('true');
 
       const result = await service.getSystemConfigValue('sys.account.captchaEnabled');
@@ -316,7 +316,7 @@ describe('ConfigService', () => {
       expect(systemConfigService.getConfigValue).toHaveBeenCalledWith('sys.account.captchaEnabled');
     });
 
-    it('should fallback to public config when system config not found', async () => {
+    it('should fallback to public platform/config when system platform/config not found', async () => {
       (systemConfigService.getConfigValue as jest.Mock).mockResolvedValue(null);
       (prisma.$queryRaw as jest.Mock).mockResolvedValue([{ config_value: 'fallback' }]);
 
@@ -325,7 +325,7 @@ describe('ConfigService', () => {
       expect(result).toBe('fallback');
     });
 
-    it('should return null when no config found', async () => {
+    it('should return null when no platform/config found', async () => {
       (systemConfigService.getConfigValue as jest.Mock).mockResolvedValue(null);
       (prisma.$queryRaw as jest.Mock).mockResolvedValue([]);
 
@@ -336,7 +336,7 @@ describe('ConfigService', () => {
   });
 
   describe('getPublicConfigValue', () => {
-    it('should return config value from super tenant', async () => {
+    it('should return platform/config value from super tenant', async () => {
       (prisma.$queryRaw as jest.Mock).mockResolvedValue([{ config_value: 'public-value' }]);
 
       const result = await service.getPublicConfigValue('sys.index.skinName');
@@ -344,7 +344,7 @@ describe('ConfigService', () => {
       expect(result).toBe('public-value');
     });
 
-    it('should return null when config not found', async () => {
+    it('should return null when platform/config not found', async () => {
       (prisma.$queryRaw as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getPublicConfigValue('non.existent.key');
@@ -354,7 +354,7 @@ describe('ConfigService', () => {
   });
 
   describe('update', () => {
-    it('should update a config', async () => {
+    it('should update a platform/config', async () => {
       const updateDto = {
         configId: 1,
         configKey: 'sys.index.skinName',
@@ -371,7 +371,7 @@ describe('ConfigService', () => {
   });
 
   describe('updateByKey', () => {
-    it('should update config by key', async () => {
+    it('should update platform/config by key', async () => {
       const updateDto = {
         configKey: 'sys.index.skinName',
         configValue: 'skin-green',
@@ -386,7 +386,7 @@ describe('ConfigService', () => {
       expect(configRepo.update).toHaveBeenCalledWith(1, { configValue: 'skin-green' });
     });
 
-    it('should throw error when config not found', async () => {
+    it('should throw error when platform/config not found', async () => {
       const updateDto = {
         configKey: 'non.existent.key',
         configValue: 'value',
@@ -409,7 +409,7 @@ describe('ConfigService', () => {
       expect(configRepo.softDeleteBatch).toHaveBeenCalledWith([2]);
     });
 
-    it('should throw error when trying to delete built-in config', async () => {
+    it('should throw error when trying to delete built-in platform/config', async () => {
       (configRepo.findMany as jest.Mock).mockResolvedValue([mockConfig]); // configType: 'Y'
 
       await expect(service.remove([1])).rejects.toThrow(BusinessException);
@@ -417,7 +417,7 @@ describe('ConfigService', () => {
   });
 
   describe('resetConfigCache', () => {
-    it('should clear and reload config cache', async () => {
+    it('should clear and reload platform/config cache', async () => {
       (configRepo.findMany as jest.Mock).mockResolvedValue([mockConfig]);
 
       const result = await service.resetConfigCache();

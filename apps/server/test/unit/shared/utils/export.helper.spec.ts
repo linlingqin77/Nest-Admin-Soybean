@@ -45,55 +45,55 @@ describe('ExportHelper', () => {
 
 describe('ExportConfigFactory', () => {
   describe('createUserExportConfig', () => {
-    it('should return user export config', () => {
-      const config = ExportConfigFactory.createUserExportConfig();
-      expect(config.sheetName).toBe('用户数据');
-      expect(config.columns).toHaveLength(8);
-      expect(config.columns[0].dataIndex).toBe('userId');
-      expect(config.dictMap?.status).toBeDefined();
+    it('should return user export platform/config', () => {
+      const platform/config = ExportConfigFactory.createUserExportConfig();
+      expect(platform/config.sheetName).toBe('用户数据');
+      expect(platform/config.columns).toHaveLength(8);
+      expect(platform/config.columns[0].dataIndex).toBe('userId');
+      expect(platform/config.dictMap?.status).toBeDefined();
     });
   });
 
   describe('createRoleExportConfig', () => {
-    it('should return role export config', () => {
-      const config = ExportConfigFactory.createRoleExportConfig();
-      expect(config.sheetName).toBe('角色数据');
-      expect(config.columns).toHaveLength(6);
-      expect(config.columns[0].dataIndex).toBe('roleId');
+    it('should return role export platform/config', () => {
+      const platform/config = ExportConfigFactory.createRoleExportConfig();
+      expect(platform/config.sheetName).toBe('角色数据');
+      expect(platform/config.columns).toHaveLength(6);
+      expect(platform/config.columns[0].dataIndex).toBe('roleId');
     });
   });
 
   describe('createTenantExportConfig', () => {
-    it('should return tenant export config', () => {
-      const config = ExportConfigFactory.createTenantExportConfig();
-      expect(config.sheetName).toBe('租户数据');
-      expect(config.columns).toHaveLength(11);
-      expect(config.columns[0].dataIndex).toBe('tenantId');
+    it('should return tenant export platform/config', () => {
+      const platform/config = ExportConfigFactory.createTenantExportConfig();
+      expect(platform/config.sheetName).toBe('租户数据');
+      expect(platform/config.columns).toHaveLength(11);
+      expect(platform/config.columns[0].dataIndex).toBe('tenantId');
     });
   });
 
   describe('createConfigExportConfig', () => {
-    it('should return config export config', () => {
-      const config = ExportConfigFactory.createConfigExportConfig();
-      expect(config.sheetName).toBe('参数管理');
-      expect(config.columns).toHaveLength(5);
-      expect(config.dictMap?.configType).toBeDefined();
+    it('should return platform/config export platform/config', () => {
+      const platform/config = ExportConfigFactory.createConfigExportConfig();
+      expect(platform/config.sheetName).toBe('参数管理');
+      expect(platform/config.columns).toHaveLength(5);
+      expect(platform/config.dictMap?.configType).toBeDefined();
     });
   });
 
   describe('createDictTypeExportConfig', () => {
-    it('should return dict type export config', () => {
-      const config = ExportConfigFactory.createDictTypeExportConfig();
-      expect(config.sheetName).toBe('字典数据');
-      expect(config.columns).toHaveLength(4);
+    it('should return dict type export platform/config', () => {
+      const platform/config = ExportConfigFactory.createDictTypeExportConfig();
+      expect(platform/config.sheetName).toBe('字典数据');
+      expect(platform/config.columns).toHaveLength(4);
     });
   });
 
   describe('createPostExportConfig', () => {
-    it('should return post export config', () => {
-      const config = ExportConfigFactory.createPostExportConfig();
-      expect(config.sheetName).toBe('岗位数据');
-      expect(config.columns).toHaveLength(5);
+    it('should return post export platform/config', () => {
+      const platform/config = ExportConfigFactory.createPostExportConfig();
+      expect(platform/config.sheetName).toBe('岗位数据');
+      expect(platform/config.columns).toHaveLength(5);
     });
   });
 });

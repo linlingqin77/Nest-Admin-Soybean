@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { ApiThrottle, ApiSkipThrottle, MultiThrottle, SkipMultiThrottle } from '@/core/decorators/throttle.decorator';
-import { THROTTLE_KEY, SKIP_THROTTLE_KEY } from '@/core/guards/multi-throttle.guard';
+import { ApiThrottle, ApiSkipThrottle, MultiThrottle, SkipMultiThrottle } from '@/core/http/decorators/throttle.decorator';
+import { THROTTLE_KEY, SKIP_THROTTLE_KEY } from '@/core/http/guards/multi-throttle.guard';
 
 describe('Throttle Decorators', () => {
   describe('ApiThrottle', () => {

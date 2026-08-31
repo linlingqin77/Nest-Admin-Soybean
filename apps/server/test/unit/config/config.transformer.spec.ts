@@ -33,7 +33,7 @@ describe('ConfigTransformer', () => {
   });
 
   describe('transform', () => {
-    it('should transform raw config to Configuration instance', () => {
+    it('should transform raw platform/config to Configuration instance', () => {
       const rawConfig = { app: { port: 3000 } };
 
       const result = ConfigTransformer.transform(rawConfig);
@@ -75,7 +75,7 @@ describe('ConfigTransformer', () => {
 
   describe('printSafe', () => {
     it('should hide sensitive information', () => {
-      const config = {
+      const platform/config = {
         app: { port: 3000 },
         db: { postgresql: { password: 'secret-password' } },
         redis: { password: 'redis-password' },
@@ -84,7 +84,7 @@ describe('ConfigTransformer', () => {
         cos: { secretKey: 'cos-secret-key' },
       };
 
-      const result = ConfigTransformer.printSafe(config as any);
+      const result = ConfigTransformer.printSafe(platform/config as any);
       const parsed = JSON.parse(result);
 
       expect(parsed.db.postgresql.password).toBe('******');
@@ -95,7 +95,7 @@ describe('ConfigTransformer', () => {
     });
 
     it('should preserve non-sensitive information', () => {
-      const config = {
+      const platform/config = {
         app: { port: 3000, name: 'test-app' },
         db: { postgresql: { host: 'localhost', password: 'secret' } },
         redis: { host: 'localhost', password: 'secret' },
@@ -104,7 +104,7 @@ describe('ConfigTransformer', () => {
         cos: { secretKey: 'key' },
       };
 
-      const result = ConfigTransformer.printSafe(config as any);
+      const result = ConfigTransformer.printSafe(platform/config as any);
       const parsed = JSON.parse(result);
 
       expect(parsed.app.port).toBe(3000);
@@ -113,11 +113,11 @@ describe('ConfigTransformer', () => {
     });
 
     it('should handle missing sensitive fields', () => {
-      const config = {
+      const platform/config = {
         app: { port: 3000 },
       };
 
-      const result = ConfigTransformer.printSafe(config as any);
+      const result = ConfigTransformer.printSafe(platform/config as any);
       const parsed = JSON.parse(result);
 
       expect(parsed.app.port).toBe(3000);

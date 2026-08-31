@@ -14,8 +14,8 @@
 import * as fc from 'fast-check';
 import { TestHelper } from '../helpers/test-helper';
 import { TestFixtures } from '../helpers/test-fixtures';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Property 3: Authorization Enforcement', () => {
@@ -116,24 +116,24 @@ describe('Property 3: Authorization Enforcement', () => {
       description: 'Delete menu',
     },
 
-    // System config management - requires system:config:* permissions
+    // System platform/config management - requires system:platform/config:* permissions
     {
       method: 'POST',
       path: '/system/config',
-      permission: 'system:config:add',
-      description: 'Create config',
+      permission: 'system:platform/config:add',
+      description: 'Create platform/config',
     },
     {
       method: 'PUT',
       path: '/system/config',
-      permission: 'system:config:edit',
-      description: 'Update config',
+      permission: 'system:platform/config:edit',
+      description: 'Update platform/config',
     },
     {
       method: 'DELETE',
       path: '/system/config/999999',
-      permission: 'system:config:remove',
-      description: 'Delete config',
+      permission: 'system:platform/config:remove',
+      description: 'Delete platform/config',
     },
 
     // Monitor management - requires monitor:* permissions

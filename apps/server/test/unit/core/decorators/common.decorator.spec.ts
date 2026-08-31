@@ -1,6 +1,6 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
-import { ClientInfo } from '@/core/decorators/common.decorator';
+import { ClientInfo } from '@/core/auth/decorators/common.decorator';
 
 describe('Common Decorators', () => {
   describe('ClientInfo', () => {

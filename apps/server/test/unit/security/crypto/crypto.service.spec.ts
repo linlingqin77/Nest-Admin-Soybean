@@ -5,9 +5,9 @@
  * _Requirements: 3.3.6_
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { CryptoService } from '@/security/crypto/crypto.service';
-import { AppConfigService } from '@/config/app-config.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { CryptoService } from '@/core/crypto/crypto.service';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import * as crypto from 'crypto';
 
 describe('CryptoService', () => {
@@ -40,7 +40,7 @@ describe('CryptoService', () => {
       exists: jest.fn().mockResolvedValue(false),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         CryptoService,
         { provide: AppConfigService, useValue: configMock },
@@ -48,7 +48,7 @@ describe('CryptoService', () => {
       ],
     }).compile();
 
-    service = module.get<CryptoService>(CryptoService);
+    service = modules.get<CryptoService>(CryptoService);
     service.onModuleInit();
   });
 
@@ -61,17 +61,17 @@ describe('CryptoService', () => {
       expect(service).toBeDefined();
     });
 
-    it('should be enabled when config.crypto.enabled is true', () => {
+    it('should be enabled when platform/config.crypto.enabled is true', () => {
       expect(service.isEnabled()).toBe(true);
     });
 
-    it('should be disabled when config.crypto.enabled is false', async () => {
+    it('should be disabled when platform/config.crypto.enabled is false', async () => {
       configMock.crypto.enabled = false;
-      const module = await Test.createTestingModule({
+      const modules = await Test.createTestingModule({
         providers: [CryptoService, { provide: AppConfigService, useValue: configMock }],
       }).compile();
 
-      const disabledService = module.get<CryptoService>(CryptoService);
+      const disabledService = modules.get<CryptoService>(CryptoService);
       disabledService.onModuleInit();
 
       expect(disabledService.isEnabled()).toBe(false);
@@ -81,11 +81,11 @@ describe('CryptoService', () => {
       configMock.crypto.rsaPublicKey = '';
       configMock.crypto.rsaPrivateKey = '';
 
-      const module = await Test.createTestingModule({
+      const modules = await Test.createTestingModule({
         providers: [CryptoService, { provide: AppConfigService, useValue: configMock }],
       }).compile();
 
-      const newService = module.get<CryptoService>(CryptoService);
+      const newService = modules.get<CryptoService>(CryptoService);
       newService.onModuleInit();
 
       expect(newService.getPublicKey()).toContain('-----BEGIN PUBLIC KEY-----');
@@ -271,11 +271,11 @@ describe('CryptoService', () => {
       configMock.crypto.rsaPublicKey = base64Key;
       configMock.crypto.rsaPrivateKey = privateKey;
 
-      const module = await Test.createTestingModule({
+      const modules = await Test.createTestingModule({
         providers: [CryptoService, { provide: AppConfigService, useValue: configMock }],
       }).compile();
 
-      const newService = module.get<CryptoService>(CryptoService);
+      const newService = modules.get<CryptoService>(CryptoService);
       newService.onModuleInit();
 
       // 应该能正常工作

@@ -10,10 +10,10 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { MenuService } from 'src/module/system/menu/menu.service';
-import { MenuRepository } from 'src/module/system/menu/menu.repository';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { MenuService } from 'src/modules/menus/menu.service';
+import { MenuRepository } from 'src/modules/menus/menu.repository';
 import { DelFlagEnum } from 'src/shared/enums/index';
 
 describe('Menu Integration Tests', () => {

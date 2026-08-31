@@ -1,12 +1,12 @@
 /**
  * @file Main Controller Unit Tests
- * @description Migrated from src/module/main/main.controller.spec.ts
+ * @description Migrated from src/modules/auth/main.controller.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { MainController } from '@/module/main/main.controller';
-import { MainService } from '@/module/main/main.service';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { ConfigService } from '@/module/system/config/config.service';
+import { MainController } from '@/modules/auth/main.controller';
+import { MainService } from '@/modules/auth/main.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { ConfigService } from '@/modules/configs/config.service';
 import { Result } from '@/shared/response';
 
 describe('MainController', () => {
@@ -32,7 +32,7 @@ describe('MainController', () => {
       getSystemConfigValue: jest.fn().mockResolvedValue('false'),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [MainController],
       providers: [
         { provide: MainService, useValue: mainServiceMock },
@@ -41,7 +41,7 @@ describe('MainController', () => {
       ],
     }).compile();
 
-    controller = module.get<MainController>(MainController);
+    controller = modules.get<MainController>(MainController);
   });
 
   afterEach(() => {

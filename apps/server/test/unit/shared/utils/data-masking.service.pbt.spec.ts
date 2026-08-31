@@ -12,11 +12,11 @@ describe('DataMaskingService Property-Based Tests', () => {
   let service: DataMaskingService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [DataMaskingService],
     }).compile();
 
-    service = module.get<DataMaskingService>(DataMaskingService);
+    service = modules.get<DataMaskingService>(DataMaskingService);
   });
 
   // Generator for valid Chinese phone numbers (11 digits starting with 1[3-9])

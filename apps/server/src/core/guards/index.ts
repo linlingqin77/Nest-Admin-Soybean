@@ -1,5 +1,10 @@
-export * from './auth.guard';
-export * from './multi-throttle.guard';
-export * from './permission.guard';
-export * from './roles.guard';
-export * from './throttle.guard';
+// Auth guards
+export * from '../auth/guards/auth.guard';
+
+// Permission guards
+export * from '../permissions/guards/roles.guard';
+export * from '../permissions/guards/permission.guard';
+
+// Throttle guards
+export * from '../http/guards/throttle.guard';
+export * from '../http/guards/multi-throttle.guard';

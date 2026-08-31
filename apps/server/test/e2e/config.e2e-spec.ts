@@ -34,7 +34,7 @@ describe('Config E2E Tests', () => {
   });
 
   describe('GET /system/config/list - 参数列表', () => {
-    it('should return paginated config list', async () => {
+    it('should return paginated platform/config list', async () => {
       const response = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=10`).expect(200);
 
       expect(response.body.code).toBe(200);
@@ -61,8 +61,8 @@ describe('Config E2E Tests', () => {
 
       expect(response.body.code).toBe(200);
       if (response.body.data.rows.length > 0) {
-        response.body.data.rows.forEach((config: any) => {
-          expect(config.configKey.toLowerCase()).toContain('sys.index');
+        response.body.data.rows.forEach((platform/config: any) => {
+          expect(platform/config.configKey.toLowerCase()).toContain('sys.index');
         });
       }
     });
@@ -73,8 +73,8 @@ describe('Config E2E Tests', () => {
         .expect(200);
 
       expect(response.body.code).toBe(200);
-      response.body.data.rows.forEach((config: any) => {
-        expect(config.configType).toBe('Y');
+      response.body.data.rows.forEach((platform/config: any) => {
+        expect(platform/config.configType).toBe('Y');
       });
     });
 
@@ -86,7 +86,7 @@ describe('Config E2E Tests', () => {
   });
 
   describe('POST /system/config - 创建参数', () => {
-    it('should require authentication to create config', async () => {
+    it('should require authentication to create platform/config', async () => {
       const response = await helper.getRequest().post(`${apiPrefix}/system/config`).send({
         configName: 'Test Config',
         configKey: 'test.key',
@@ -97,12 +97,12 @@ describe('Config E2E Tests', () => {
       expect([401, 403]).toContain(response.status);
     });
 
-    it('should accept valid config creation request', async () => {
+    it('should accept valid platform/config creation request', async () => {
       // Note: Due to database sequence issues in test environment,
       // we just verify the endpoint accepts the request format
       const response = await helper.authPost(`${apiPrefix}/system/config`).send({
         configName: 'E2E Test Config',
-        configKey: `test.e2e.config.${Date.now()}`,
+        configKey: `test.e2e.platform/config.${Date.now()}`,
         configValue: 'test-value',
         configType: 'N',
         remark: 'Created by E2E test',
@@ -114,8 +114,8 @@ describe('Config E2E Tests', () => {
   });
 
   describe('GET /system/config/:id - 查询参数', () => {
-    it('should return config by id', async () => {
-      // First get a config from the list
+    it('should return platform/config by id', async () => {
+      // First get a platform/config from the list
       const listResponse = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=1`).expect(200);
 
       expect(listResponse.body.data.rows.length).toBeGreaterThan(0);
@@ -139,7 +139,7 @@ describe('Config E2E Tests', () => {
   });
 
   describe('GET /system/config/configKey/:key - 根据键获取值', () => {
-    it('should return config value by key', async () => {
+    it('should return platform/config value by key', async () => {
       const response = await helper.authGet(`${apiPrefix}/system/config/configKey/sys.index.skinName`).expect(200);
 
       expect(response.body.code).toBe(200);
@@ -161,20 +161,20 @@ describe('Config E2E Tests', () => {
   });
 
   describe('PUT /system/config - 更新参数', () => {
-    it('should update existing config', async () => {
-      // Get any config to update (built-in or not)
+    it('should update existing platform/config', async () => {
+      // Get any platform/config to update (built-in or not)
       const listResponse = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=10`).expect(200);
 
       if (listResponse.body.data.rows.length > 0) {
-        const config = listResponse.body.data.rows[0];
-        const originalValue = config.configValue;
+        const platform/config = listResponse.body.data.rows[0];
+        const originalValue = platform/config.configValue;
 
         const response = await helper.authPut(`${apiPrefix}/system/config`).send({
-          configId: config.configId,
-          configName: config.configName,
-          configKey: config.configKey,
+          configId: platform/config.configId,
+          configName: platform/config.configName,
+          configKey: platform/config.configKey,
           configValue: 'updated-test-value',
-          configType: config.configType,
+          configType: platform/config.configType,
         });
 
         // Either success or validation error (built-in configs may have restrictions)
@@ -183,11 +183,11 @@ describe('Config E2E Tests', () => {
         // If successful, restore original value
         if (response.status === 200 && response.body.code === 200) {
           await helper.authPut(`${apiPrefix}/system/config`).send({
-            configId: config.configId,
-            configName: config.configName,
-            configKey: config.configKey,
+            configId: platform/config.configId,
+            configName: platform/config.configName,
+            configKey: platform/config.configKey,
             configValue: originalValue,
-            configType: config.configType,
+            configType: platform/config.configType,
           });
         }
       }
@@ -205,16 +205,16 @@ describe('Config E2E Tests', () => {
   });
 
   describe('PUT /system/config/updateByKey - 根据键更新值', () => {
-    it('should update config by key', async () => {
-      // Get any config to update
+    it('should update platform/config by key', async () => {
+      // Get any platform/config to update
       const listResponse = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=10`).expect(200);
 
       if (listResponse.body.data.rows.length > 0) {
-        const config = listResponse.body.data.rows[0];
-        const originalValue = config.configValue;
+        const platform/config = listResponse.body.data.rows[0];
+        const originalValue = platform/config.configValue;
 
         const response = await helper.authPut(`${apiPrefix}/system/config/updateByKey`).send({
-          configKey: config.configKey,
+          configKey: platform/config.configKey,
           configValue: 'updated-by-key-value',
         });
 
@@ -224,7 +224,7 @@ describe('Config E2E Tests', () => {
         // If successful, restore original value
         if (response.status === 200 && response.body.code === 200) {
           await helper.authPut(`${apiPrefix}/system/config/updateByKey`).send({
-            configKey: config.configKey,
+            configKey: platform/config.configKey,
             configValue: originalValue,
           });
         }
@@ -252,7 +252,7 @@ describe('Config E2E Tests', () => {
   });
 
   describe('DELETE /system/config/refreshCache - 刷新缓存', () => {
-    it('should refresh config cache', async () => {
+    it('should refresh platform/config cache', async () => {
       const response = await helper.authDelete(`${apiPrefix}/system/config/refreshCache`).expect(200);
 
       expect(response.body.code).toBe(200);
@@ -266,8 +266,8 @@ describe('Config E2E Tests', () => {
   });
 
   describe('DELETE /system/config/:ids - 删除参数', () => {
-    it('should not delete built-in config', async () => {
-      // Get a built-in config (configType = 'Y')
+    it('should not delete built-in platform/config', async () => {
+      // Get a built-in platform/config (configType = 'Y')
       const listResponse = await helper
         .authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=1&configType=Y`)
         .expect(200);

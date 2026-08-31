@@ -5,8 +5,8 @@ import {
   CircuitBreakerOpenError,
   CIRCUIT_BREAKER_KEY,
   CircuitBreakerMeta,
-} from '@/core/decorators/circuit-breaker.decorator';
-import { CircuitBreakerService } from '@/resilience/circuit-breaker/circuit-breaker.service';
+} from '@/core/http/decorators/circuit-breaker.decorator';
+import { CircuitBreakerService } from '@/platform/platform/resilience/circuit-breaker/circuit-breaker.service';
 import { Reflector } from '@nestjs/core';
 
 // Test service using the decorator
@@ -81,12 +81,12 @@ describe('CircuitBreaker Decorator', () => {
   let circuitBreakerService: CircuitBreakerService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [CircuitBreakerService, TestService],
     }).compile();
 
-    testService = module.get<TestService>(TestService);
-    circuitBreakerService = module.get<CircuitBreakerService>(CircuitBreakerService);
+    testService = modules.get<TestService>(TestService);
+    circuitBreakerService = modules.get<CircuitBreakerService>(CircuitBreakerService);
   });
 
   afterEach(() => {
@@ -193,11 +193,11 @@ describe('CircuitBreakerMeta Decorator', () => {
   let reflector: Reflector;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [MetadataTestService, Reflector],
     }).compile();
 
-    reflector = module.get<Reflector>(Reflector);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   it('should set metadata on the method', () => {

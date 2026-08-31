@@ -6,11 +6,11 @@
  * **Validates: Requirements 13.3, 13.4, 15.1, 15.10**
  */
 import * as fc from 'fast-check';
-import { controllerTem } from '@/module/system/tool/template/nestjs/controller';
-import { serviceTem } from '@/module/system/tool/template/nestjs/service';
-import { dtoTem } from '@/module/system/tool/template/nestjs/dto';
-import { moduleTem } from '@/module/system/tool/template/nestjs/module';
-import { entityTem } from '@/module/system/tool/template/nestjs/entity';
+import { controllerTem } from '@/modules/tools/template/nestjs/controller';
+import { serviceTem } from '@/modules/tools/template/nestjs/service';
+import { dtoTem } from '@/modules/tools/template/nestjs/dto';
+import { moduleTem } from '@/modules/tools/template/nestjs/modules';
+import { entityTem } from '@/modules/tools/template/nestjs/entity';
 
 describe('NestJS Code Generation - Property Tests', () => {
   /**
@@ -289,7 +289,7 @@ describe('NestJS Code Generation - Property Tests', () => {
           const code = serviceTem(options);
 
           // 验证导入 PrismaService
-          expect(code).toContain("import { PrismaService } from '@/infrastructure/prisma'");
+          expect(code).toContain("import { PrismaService } from '@/platform/prisma'");
 
           // 验证注入 PrismaService
           expect(code).toContain('private readonly prisma: PrismaService');
@@ -431,9 +431,9 @@ describe('NestJS Code Generation - Property Tests', () => {
     /**
      * **Validates: Requirements 13.2**
      *
-     * *For any* generated module, should properly export the service.
+     * *For any* generated modules, should properly export the service.
      */
-    it('should export service from module', () => {
+    it('should export service from modules', () => {
       fc.assert(
         fc.property(validOptionsArbitrary, (options) => {
           const code = moduleTem(options);
@@ -451,9 +451,9 @@ describe('NestJS Code Generation - Property Tests', () => {
     /**
      * **Validates: Requirements 13.2**
      *
-     * *For any* generated module, should register controller and service.
+     * *For any* generated modules, should register controller and service.
      */
-    it('should register controller and service in module', () => {
+    it('should register controller and service in modules', () => {
       fc.assert(
         fc.property(validOptionsArbitrary, (options) => {
           const code = moduleTem(options);

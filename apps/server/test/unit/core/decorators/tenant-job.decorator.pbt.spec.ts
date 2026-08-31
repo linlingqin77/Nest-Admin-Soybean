@@ -6,8 +6,8 @@ import {
   TenantJobOptions,
   TenantJobContext,
   TenantJobResult,
-} from '@/core/decorators/tenant-job.decorator';
-import { PrismaService } from '@/infrastructure/prisma';
+} from '@/core/tenancy/decorators/tenant-job.decorator';
+import { PrismaService } from '@/platform/prisma';
 
 /**
  * Property-Based Tests for TenantJobExecutor
@@ -41,7 +41,7 @@ describe('TenantJobExecutor Property-Based Tests', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantJobExecutor,
         {
@@ -57,7 +57,7 @@ describe('TenantJobExecutor Property-Based Tests', () => {
       ],
     }).compile();
 
-    executor = module.get<TenantJobExecutor>(TenantJobExecutor);
+    executor = modules.get<TenantJobExecutor>(TenantJobExecutor);
   });
 
   afterEach(() => {

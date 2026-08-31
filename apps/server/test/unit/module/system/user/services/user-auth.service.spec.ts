@@ -1,18 +1,18 @@
 /**
  * @file user-auth.service.spec.ts
- * @description Migrated from src/module/system/user/services/user-auth.service.spec.ts
+ * @description Migrated from src/modules/users/services/user-auth.service.spec.ts
  * Unit tests for UserAuthService
  */
 import { BusinessException } from '@/shared/exceptions';
 import * as bcrypt from 'bcryptjs';
 
 // Mock 装饰器 - 必须在导入 UserAuthService 之前
-jest.mock('@/core/decorators/redis.decorator', () => ({
+jest.mock('@/core/auth/decorators/redis.decorator', () => ({
   CacheEvict: () => () => {},
   Cacheable: () => () => {},
 }));
 
-jest.mock('@/core/decorators/captcha.decorator', () => ({
+jest.mock('@/core/auth/decorators/captcha.decorator', () => ({
   Captcha: () => () => {},
 }));
 
@@ -31,14 +31,14 @@ jest.mock('@/shared/utils/index', () => ({
 
 // 现在导入服务
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserAuthService } from '@/module/system/user/services/user-auth.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { UserRepository } from '@/module/system/user/user.repository';
+import { UserAuthService } from '@/modules/users/services/user-auth.service';
+import { PrismaService } from '@/platform/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
 import { JwtService } from '@nestjs/jwt';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { RoleService } from '@/module/system/role/role.service';
-import { LoginSecurityService } from '@/security/login/login-security.service';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { RoleService } from '@/modules/roles/role.service';
+import { LoginSecurityService } from '@/core/auth/login-core.service';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 
 describe('UserAuthService', () => {
   let service: UserAuthService;
@@ -105,7 +105,7 @@ describe('UserAuthService', () => {
       isTokenVersionValid: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserAuthService,
         { provide: PrismaService, useValue: prismaMock },
@@ -118,7 +118,7 @@ describe('UserAuthService', () => {
       ],
     }).compile();
 
-    service = module.get<UserAuthService>(UserAuthService);
+    service = modules.get<UserAuthService>(UserAuthService);
   });
 
   afterEach(() => {

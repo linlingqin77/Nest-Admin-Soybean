@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 import { Uniq } from 'src/shared/utils/index';
 
 /**

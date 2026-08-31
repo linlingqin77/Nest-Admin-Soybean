@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { TenantGuard } from '@/tenant/guards/tenant.guard';
-import { TenantContext } from '@/tenant/context/tenant.context';
-import { AppConfigService } from '@/config/app-config.service';
-import { IGNORE_TENANT_KEY } from '@/tenant/decorators/tenant.decorator';
+import { TenantGuard } from '@/core/tenancy/guards/tenant.guard';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { IGNORE_TENANT_KEY } from '@/core/tenancy/decorators/tenant.decorator';
 
 describe('TenantGuard', () => {
   let guard: TenantGuard;
@@ -33,7 +33,7 @@ describe('TenantGuard', () => {
     // 重置配置
     mockConfigService.tenant.enabled = true;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantGuard,
         {
@@ -49,9 +49,9 @@ describe('TenantGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<TenantGuard>(TenantGuard);
-    reflector = module.get<Reflector>(Reflector);
-    configService = module.get<AppConfigService>(AppConfigService);
+    guard = modules.get<TenantGuard>(TenantGuard);
+    reflector = modules.get<Reflector>(Reflector);
+    configService = modules.get<AppConfigService>(AppConfigService);
   });
 
   afterEach(() => {

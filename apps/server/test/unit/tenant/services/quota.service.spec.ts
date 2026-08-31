@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantQuotaService, QuotaResource, QuotaCheckResult } from '@/tenant/services/quota.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { TenantQuotaService, QuotaResource, QuotaCheckResult } from '@/core/tenancy/services/quota.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
 import { BusinessException } from '@/shared/exceptions';
 
 describe('TenantQuotaService', () => {
@@ -35,7 +35,7 @@ describe('TenantQuotaService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantQuotaService,
         {
@@ -49,7 +49,7 @@ describe('TenantQuotaService', () => {
       ],
     }).compile();
 
-    service = module.get<TenantQuotaService>(TenantQuotaService);
+    service = modules.get<TenantQuotaService>(TenantQuotaService);
   });
 
   afterEach(() => {

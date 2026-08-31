@@ -1,4 +1,4 @@
-/** @file notice.service.spec.ts @description Migrated from src/module/system/notice/notice.service.spec.ts */
+/** @file notice.service.spec.ts @description Migrated from src/modules/notices/notice.service.spec.ts */
 
 /**
  * 公告服务单元测试
@@ -14,7 +14,7 @@
  * _Requirements: 13.2, 13.4, 13.5_
  */
 
-import { NoticeService } from '@/module/system/notice/notice.service';
+import { NoticeService } from '@/modules/notices/notice.service';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { Result } from '@/shared/response';
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FeatureToggleService, FeatureConfig } from '@/tenant/services/feature-toggle.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { FeatureToggleService, FeatureConfig } from '@/core/tenancy/services/feature-toggle.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
 
 describe('FeatureToggleService', () => {
   let service: FeatureToggleService;
@@ -36,7 +36,7 @@ describe('FeatureToggleService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         FeatureToggleService,
         {
@@ -50,9 +50,9 @@ describe('FeatureToggleService', () => {
       ],
     }).compile();
 
-    service = module.get<FeatureToggleService>(FeatureToggleService);
-    prisma = module.get(PrismaService);
-    redis = module.get(RedisService);
+    service = modules.get<FeatureToggleService>(FeatureToggleService);
+    prisma = modules.get(PrismaService);
+    redis = modules.get(RedisService);
   });
 
   afterEach(() => {
@@ -159,14 +159,14 @@ describe('FeatureToggleService', () => {
         },
         update: {
           enabled: true,
-          config: null,
+          platform/config: null,
           updateTime: expect.any(Date),
         },
         create: {
           tenantId,
           featureKey: feature,
           enabled: true,
-          config: null,
+          platform/config: null,
         },
       });
       expect(mockRedisService.hset).toHaveBeenCalledWith(`tenant:feature:${tenantId}`, feature, '1');
@@ -182,9 +182,9 @@ describe('FeatureToggleService', () => {
 
     it('应该支持设置功能配置', async () => {
       mockPrismaService.sysTenantFeature.upsert.mockResolvedValue({});
-      const config = { maxUsers: 100, theme: 'dark' };
+      const platform/config = { maxUsers: 100, theme: 'dark' };
 
-      await service.setFeature(tenantId, feature, true, config);
+      await service.setFeature(tenantId, feature, true, platform/config);
 
       expect(mockPrismaService.sysTenantFeature.upsert).toHaveBeenCalledWith({
         where: {
@@ -195,14 +195,14 @@ describe('FeatureToggleService', () => {
         },
         update: {
           enabled: true,
-          config: JSON.stringify(config),
+          platform/config: JSON.stringify(platform/config),
           updateTime: expect.any(Date),
         },
         create: {
           tenantId,
           featureKey: feature,
           enabled: true,
-          config: JSON.stringify(config),
+          platform/config: JSON.stringify(platform/config),
         },
       });
     });
@@ -279,19 +279,19 @@ describe('FeatureToggleService', () => {
     });
 
     it('应该返回功能配置（带配置）', async () => {
-      const config = { maxUsers: 100, theme: 'dark' };
+      const platform/config = { maxUsers: 100, theme: 'dark' };
       mockPrismaService.sysTenantFeature.findUnique.mockResolvedValue({
         tenantId,
         featureKey: feature,
         enabled: true,
-        config: JSON.stringify(config),
+        platform/config: JSON.stringify(platform/config),
       });
 
       const result = await service.getFeatureConfig(tenantId, feature);
 
       expect(result).toEqual({
         enabled: true,
-        config,
+        platform/config,
       });
     });
 
@@ -300,14 +300,14 @@ describe('FeatureToggleService', () => {
         tenantId,
         featureKey: feature,
         enabled: false,
-        config: null,
+        platform/config: null,
       });
 
       const result = await service.getFeatureConfig(tenantId, feature);
 
       expect(result).toEqual({
         enabled: false,
-        config: undefined,
+        platform/config: undefined,
       });
     });
 

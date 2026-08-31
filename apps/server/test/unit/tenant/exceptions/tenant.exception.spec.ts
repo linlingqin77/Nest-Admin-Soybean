@@ -17,7 +17,7 @@ import {
   TenantQuotaExceededException,
   TenantFeatureDisabledException,
   CrossTenantAccessException,
-} from '@/tenant/exceptions/tenant.exception';
+} from '@/core/tenancy/exceptions/tenant.exception';
 
 describe('TenantException', () => {
   describe('TenantException (base class)', () => {

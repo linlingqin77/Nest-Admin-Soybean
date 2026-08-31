@@ -28,7 +28,7 @@
  * ```
  */
 
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 import * as bcrypt from 'bcryptjs';
 
 /**
@@ -335,11 +335,11 @@ export class TestFixtures {
    * 创建测试配置
    */
   async createTestConfig(data: Partial<CreateConfigDto> = {}): Promise<any> {
-    const config = await this.prisma.sysConfig.create({
+    const platform/config = await this.prisma.sysConfig.create({
       data: {
         tenantId: data.tenantId || this.defaultTenantId,
         configName: data.configName || `测试配置_${Date.now()}`,
-        configKey: data.configKey || `test.config.${Date.now()}`,
+        configKey: data.configKey || `test.platform/config.${Date.now()}`,
         configValue: data.configValue || 'test_value',
         configType: data.configType || 'N',
         createBy: 'test',
@@ -347,8 +347,8 @@ export class TestFixtures {
       },
     });
 
-    this.createdConfigs.push(config.configId);
-    return config;
+    this.createdConfigs.push(platform/config.configId);
+    return platform/config;
   }
 
   /**

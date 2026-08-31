@@ -1,10 +1,10 @@
-/** @file role.service.spec.ts @description Migrated from src/module/system/role/role.service.spec.ts */
+/** @file role.service.spec.ts @description Migrated from src/modules/roles/role.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleService } from '@/module/system/role/role.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RoleRepository } from '@/module/system/role/role.repository';
-import { MenuService } from '@/module/system/menu/menu.service';
+import { RoleService } from '@/modules/roles/role.service';
+import { PrismaService } from '@/platform/prisma';
+import { RoleRepository } from '@/modules/roles/role.repository';
+import { MenuService } from '@/modules/menus/menu.service';
 
 describe('RoleService', () => {
   let service: RoleService;
@@ -49,7 +49,7 @@ describe('RoleService', () => {
 
     menuServiceMock = {};
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RoleService,
         { provide: PrismaService, useValue: prismaMock },
@@ -58,7 +58,7 @@ describe('RoleService', () => {
       ],
     }).compile();
 
-    service = module.get<RoleService>(RoleService);
+    service = modules.get<RoleService>(RoleService);
   });
 
   afterEach(() => {

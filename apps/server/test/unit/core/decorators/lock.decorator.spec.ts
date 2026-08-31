@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, throwError } from 'rxjs';
-import { LockInterceptor, LOCK_KEY, LockOptions, Lock, LockAcquireException } from '@/core/decorators/lock.decorator';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { LockInterceptor, LOCK_KEY, LockOptions, Lock, LockAcquireException } from '@/core/http/decorators/lock.decorator';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Unit Tests for LockInterceptor
@@ -75,7 +75,7 @@ describe('LockInterceptor Unit Tests', () => {
       getClient: jest.fn().mockReturnValue(mockRedisClient),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         LockInterceptor,
         {
@@ -91,8 +91,8 @@ describe('LockInterceptor Unit Tests', () => {
       ],
     }).compile();
 
-    interceptor = module.get<LockInterceptor>(LockInterceptor);
-    reflector = module.get<Reflector>(Reflector);
+    interceptor = modules.get<LockInterceptor>(LockInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

@@ -35,12 +35,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
 import { ClsService } from 'nestjs-cls';
-import { GlobalExceptionFilter } from 'src/core/filters/global-exception.filter';
-import { ResponseInterceptor } from 'src/core/interceptors/response.interceptor';
-import { LoginSecurityService } from 'src/security/login/login-security.service';
+import { GlobalExceptionFilter } from 'src/core/http/filters/global-exception.filter';
+import { ResponseInterceptor } from 'src/core/http/interceptors/response.interceptor';
+import { LoginSecurityService } from 'src/core/auth/login-core.service';
 
 /**
  * 测试配置接口
@@ -100,7 +100,7 @@ export interface TestContext {
 export class TestHelper {
   private app: INestApplication | null = null;
   private token: string = '';
-  private config: TestConfig;
+  private platform/config: TestConfig;
   private prisma: PrismaService | null = null;
   private loginSecurityService: LoginSecurityService | null = null;
   private createdIds: TestContext['createdIds'] = {
@@ -118,8 +118,8 @@ export class TestHelper {
     files: [],
   };
 
-  constructor(config: Partial<TestConfig> = {}) {
-    this.config = { ...defaultTestConfig, ...config };
+  constructor(platform/config: Partial<TestConfig> = {}) {
+    this.platform/config = { ...defaultTestConfig, ...platform/config };
   }
 
   /**
@@ -135,7 +135,7 @@ export class TestHelper {
     this.app = moduleFixture.createNestApplication();
 
     // 设置全局前缀
-    this.app.setGlobalPrefix(this.config.apiPrefix.replace('/v1', ''));
+    this.app.setGlobalPrefix(this.platform/config.apiPrefix.replace('/v1', ''));
 
     // 启用版本控制
     this.app.enableVersioning({
@@ -209,7 +209,7 @@ export class TestHelper {
    *
    * @param username 用户名
    */
-  async unlockAccount(username: string = this.config.adminUsername): Promise<void> {
+  async unlockAccount(username: string = this.platform/config.adminUsername): Promise<void> {
     if (!this.loginSecurityService) {
       throw new Error('TestHelper not initialized. Call init() first.');
     }
@@ -225,16 +225,16 @@ export class TestHelper {
    * @returns 访问Token
    */
   async login(
-    username: string = this.config.adminUsername,
-    password: string = this.config.adminPassword,
-    tenantId: string = this.config.tenantId,
+    username: string = this.platform/config.adminUsername,
+    password: string = this.platform/config.adminPassword,
+    tenantId: string = this.platform/config.tenantId,
   ): Promise<string> {
     if (!this.app) {
       throw new Error('TestHelper not initialized. Call init() first.');
     }
 
     const response = await request(this.app.getHttpServer())
-      .post(`${this.config.apiPrefix}/auth/login`)
+      .post(`${this.platform/config.apiPrefix}/auth/login`)
       .set('x-tenant-id', tenantId)
       .send({
         username,
@@ -298,7 +298,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .get(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.config.tenantId);
+      .set('x-tenant-id', this.platform/config.tenantId);
   }
 
   /**
@@ -311,7 +311,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .post(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.config.tenantId);
+      .set('x-tenant-id', this.platform/config.tenantId);
   }
 
   /**
@@ -324,7 +324,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .put(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.config.tenantId);
+      .set('x-tenant-id', this.platform/config.tenantId);
   }
 
   /**
@@ -337,7 +337,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .delete(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.config.tenantId);
+      .set('x-tenant-id', this.platform/config.tenantId);
   }
 
   /**
@@ -506,25 +506,25 @@ export class TestHelper {
    * 获取测试配置
    */
   getConfig(): TestConfig {
-    return this.config;
+    return this.platform/config;
   }
 
   /**
    * 获取API前缀
    */
   getApiPrefix(): string {
-    return this.config.apiPrefix;
+    return this.platform/config.apiPrefix;
   }
 }
 
 /**
  * 创建测试辅助实例
  *
- * @param config 测试配置
+ * @param platform/config 测试配置
  * @returns TestHelper 实例
  */
-export function createTestHelper(config: Partial<TestConfig> = {}): TestHelper {
-  return new TestHelper(config);
+export function createTestHelper(platform/config: Partial<TestConfig> = {}): TestHelper {
+  return new TestHelper(platform/config);
 }
 
 export default TestHelper;

@@ -1,10 +1,10 @@
 /**
  * @file Operlog Repository Unit Tests
- * @description Migrated from src/module/monitor/operlog/operlog.repository.spec.ts
+ * @description Migrated from src/modules/oper-logs/operlog.repository.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { OperlogRepository } from '@/module/monitor/operlog/operlog.repository';
-import { PrismaService } from '@/infrastructure/prisma';
+import { OperlogRepository } from '@/modules/oper-logs/operlog.repository';
+import { PrismaService } from '@/platform/prisma';
 
 describe('OperlogRepository', () => {
   let repository: OperlogRepository;
@@ -29,11 +29,11 @@ describe('OperlogRepository', () => {
       $executeRawUnsafe: jest.fn().mockResolvedValue(0),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [OperlogRepository, { provide: PrismaService, useValue: prismaMock }],
     }).compile();
 
-    repository = module.get<OperlogRepository>(OperlogRepository);
+    repository = modules.get<OperlogRepository>(OperlogRepository);
   });
 
   afterEach(() => {

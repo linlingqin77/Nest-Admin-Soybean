@@ -9,10 +9,10 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
-import { DictService } from 'src/module/system/dict/dict.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
+import { DictService } from 'src/modules/dicts/dict.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Dict Integration Tests', () => {

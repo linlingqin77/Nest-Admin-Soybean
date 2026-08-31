@@ -1,10 +1,10 @@
 /**
  * @file Info Controller Unit Tests
- * @description Migrated from src/module/monitor/health/info.controller.spec.ts
+ * @description Migrated from src/modules/health/info.controller.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { InfoController } from '@/module/monitor/health/info.controller';
-import { InfoService } from '@/module/monitor/health/info.service';
+import { InfoController } from '@/modules/health/info.controller';
+import { InfoService } from '@/modules/health/info.service';
 
 describe('InfoController', () => {
   let controller: InfoController;
@@ -22,12 +22,12 @@ describe('InfoController', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [InfoController],
       providers: [{ provide: InfoService, useValue: infoServiceMock }],
     }).compile();
 
-    controller = module.get<InfoController>(InfoController);
+    controller = modules.get<InfoController>(InfoController);
   });
 
   afterEach(() => {

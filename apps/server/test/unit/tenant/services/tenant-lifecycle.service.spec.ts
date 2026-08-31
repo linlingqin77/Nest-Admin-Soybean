@@ -3,8 +3,8 @@ import {
   TenantLifecycleService,
   CreateTenantParams,
   TenantInitData,
-} from '@/tenant/services/tenant-lifecycle.service';
-import { PrismaService } from '@/infrastructure/prisma';
+} from '@/core/tenancy/services/tenant-lifecycle.service';
+import { PrismaService } from '@/platform/prisma';
 import { TenantStatus } from '@/shared/enums';
 import { BusinessException } from '@/shared/exceptions';
 import { ResponseCode } from '@/shared/response';
@@ -35,7 +35,7 @@ describe('TenantLifecycleService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantLifecycleService,
         {
@@ -45,8 +45,8 @@ describe('TenantLifecycleService', () => {
       ],
     }).compile();
 
-    service = module.get<TenantLifecycleService>(TenantLifecycleService);
-    prisma = module.get(PrismaService);
+    service = modules.get<TenantLifecycleService>(TenantLifecycleService);
+    prisma = modules.get(PrismaService);
   });
 
   afterEach(() => {

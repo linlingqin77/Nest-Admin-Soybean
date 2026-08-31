@@ -20,8 +20,8 @@
  */
 
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Monitor E2E Tests', () => {

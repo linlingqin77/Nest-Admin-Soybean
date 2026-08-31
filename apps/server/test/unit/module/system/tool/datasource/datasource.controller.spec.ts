@@ -5,20 +5,20 @@
  * Requirements: 1.1, 1.2, 1.3, 11.1, 15.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { DataSourceController } from '@/module/system/tool/datasource/datasource.controller';
-import { DataSourceService } from '@/module/system/tool/datasource/datasource.service';
+import { DataSourceController } from '@/modules/tools/datasource/datasource.controller';
+import { DataSourceService } from '@/modules/tools/datasource/datasource.service';
 import { Result } from '@/shared/response';
 import { Reflector } from '@nestjs/core';
 
 // Mock MultiThrottleGuard
-jest.mock('@/core/guards/multi-throttle.guard', () => ({
+jest.mock('@/core/http/guards/multi-throttle.guard', () => ({
   MultiThrottleGuard: jest.fn().mockImplementation(() => ({
     canActivate: jest.fn().mockReturnValue(true),
   })),
 }));
 
 // Mock OperlogInterceptor
-jest.mock('@/core/interceptors/operlog.interceptor', () => ({
+jest.mock('@/core/http/interceptors/operlog.interceptor', () => ({
   OperlogInterceptor: jest.fn().mockImplementation(() => ({
     intercept: jest.fn().mockImplementation((context, next) => next.handle()),
   })),
@@ -43,7 +43,7 @@ describe('DataSourceController', () => {
       getColumns: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [DataSourceController],
       providers: [
         {
@@ -54,7 +54,7 @@ describe('DataSourceController', () => {
       ],
     }).compile();
 
-    controller = module.get<DataSourceController>(DataSourceController);
+    controller = modules.get<DataSourceController>(DataSourceController);
   });
 
   afterEach(() => {

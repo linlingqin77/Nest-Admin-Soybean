@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, delay } from 'rxjs';
-import { LockInterceptor, LOCK_KEY, LockOptions, LockAcquireException } from '@/core/decorators/lock.decorator';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { LockInterceptor, LOCK_KEY, LockOptions, LockAcquireException } from '@/core/http/decorators/lock.decorator';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Property-Based Tests for LockInterceptor
@@ -81,7 +81,7 @@ describe('LockInterceptor Property-Based Tests', () => {
       getClient: jest.fn().mockReturnValue(mockRedisClient),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         LockInterceptor,
         {
@@ -97,8 +97,8 @@ describe('LockInterceptor Property-Based Tests', () => {
       ],
     }).compile();
 
-    interceptor = module.get<LockInterceptor>(LockInterceptor);
-    reflector = module.get<Reflector>(Reflector);
+    interceptor = modules.get<LockInterceptor>(LockInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

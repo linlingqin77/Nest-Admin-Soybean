@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of } from 'rxjs';
-import { DecryptInterceptor } from '@/security/crypto/crypto.interceptor';
-import { CryptoService } from '@/security/crypto/crypto.service';
-import { SKIP_DECRYPT_KEY } from '@/security/crypto/crypto.decorator';
+import { DecryptInterceptor } from '@/core/crypto/crypto.interceptor';
+import { CryptoService } from '@/core/crypto/crypto.service';
+import { SKIP_DECRYPT_KEY } from '@/core/crypto/crypto.decorator';
 
 describe('DecryptInterceptor', () => {
   let interceptor: DecryptInterceptor;
@@ -40,7 +40,7 @@ describe('DecryptInterceptor', () => {
   });
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         DecryptInterceptor,
         {
@@ -56,9 +56,9 @@ describe('DecryptInterceptor', () => {
       ],
     }).compile();
 
-    interceptor = module.get<DecryptInterceptor>(DecryptInterceptor);
-    reflector = module.get<Reflector>(Reflector);
-    cryptoService = module.get<CryptoService>(CryptoService);
+    interceptor = modules.get<DecryptInterceptor>(DecryptInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
+    cryptoService = modules.get<CryptoService>(CryptoService);
   });
 
   afterEach(() => {

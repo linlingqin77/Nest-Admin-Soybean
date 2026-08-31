@@ -7,8 +7,8 @@
  * @requirements 1.1, 2.1, 3.1
  */
 
-import { TenantContext } from '@/tenant/context/tenant.context';
-import { SUPER_TENANT_ID } from '@/tenant/constants/tenant-models';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
+import { SUPER_TENANT_ID } from '@/core/tenancy/constants/tenant-models';
 import {
   TenantTestHelper,
   runWithTenant,

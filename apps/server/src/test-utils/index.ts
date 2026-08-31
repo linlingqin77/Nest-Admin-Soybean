@@ -14,7 +14,7 @@
  * } from 'src/test-utils';
  *
  * // 使用 TestModuleBuilder 创建测试模块
- * const { module, prisma, redis, config } = await TestModuleBuilder.create({
+ * const { modules, prisma, redis, config } = await TestModuleBuilder.create({
  *   providers: [UserService],
  * }).compile();
  *
@@ -24,10 +24,6 @@
  * const configMock = createConfigMock();
  * ```
  */
-
-// 测试模块构建器
-export { TestModuleBuilder } from './test-module';
-export type { TestModuleResult } from './test-module';
 
 // Prisma Mock
 export { createPrismaMock } from './prisma-mock';

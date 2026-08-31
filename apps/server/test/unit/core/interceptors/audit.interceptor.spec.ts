@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, throwError } from 'rxjs';
-import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
-import { AuditService } from '@/observability/audit/audit.service';
+import { AuditInterceptor } from '@/core/http/interceptors/audit.interceptor';
+import { AuditService } from '@/core/audit/audit.service';
 import { ClsService } from 'nestjs-cls';
-import { AUDIT_KEY, AuditConfig, AuditAction } from '@/core/decorators/audit.decorator';
+import { AUDIT_KEY, AuditConfig, AuditAction } from '@/core/audit/decorators/audit.decorator';
 
 describe('AuditInterceptor', () => {
   let interceptor: AuditInterceptor;
@@ -57,7 +57,7 @@ describe('AuditInterceptor', () => {
       set: jest.fn(),
     } as unknown as jest.Mocked<ClsService>;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         AuditInterceptor,
         { provide: Reflector, useValue: mockReflector },
@@ -66,7 +66,7 @@ describe('AuditInterceptor', () => {
       ],
     }).compile();
 
-    interceptor = module.get<AuditInterceptor>(AuditInterceptor);
+    interceptor = modules.get<AuditInterceptor>(AuditInterceptor);
   });
 
   afterEach(() => {
@@ -74,7 +74,7 @@ describe('AuditInterceptor', () => {
   });
 
   describe('intercept', () => {
-    it('should pass through when no audit config', (done) => {
+    it('should pass through when no audit platform/config', (done) => {
       mockReflector.get.mockReturnValue(undefined);
 
       const context = createMockExecutionContext();
@@ -92,7 +92,7 @@ describe('AuditInterceptor', () => {
     it('should log audit on successful operation', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         recordNewValue: true,
         recordOldValue: false,
@@ -110,7 +110,7 @@ describe('AuditInterceptor', () => {
           expect(mockAuditService.log).toHaveBeenCalledWith(
             expect.objectContaining({
               action: AuditAction.CREATE,
-              module: 'system',
+              modules: 'system',
               targetType: 'User',
               status: '0',
             }),
@@ -123,7 +123,7 @@ describe('AuditInterceptor', () => {
     it('should log audit on failed operation', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.DELETE,
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         recordNewValue: false,
         recordOldValue: false,
@@ -139,7 +139,7 @@ describe('AuditInterceptor', () => {
           expect(mockAuditService.log).toHaveBeenCalledWith(
             expect.objectContaining({
               action: AuditAction.DELETE,
-              module: 'system',
+              modules: 'system',
               status: '1',
               errorMsg: 'Delete failed',
             }),
@@ -152,7 +152,7 @@ describe('AuditInterceptor', () => {
     it('should extract target ID from params', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.UPDATE,
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         targetIdParam: 'userId',
         recordNewValue: false,
@@ -180,7 +180,7 @@ describe('AuditInterceptor', () => {
     it('should extract target ID from body', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         targetIdBody: 'id',
         recordNewValue: false,
@@ -208,7 +208,7 @@ describe('AuditInterceptor', () => {
     it('should sanitize sensitive fields in request body', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        module: 'auth',
+        modules: 'auth',
         targetType: 'User',
         recordNewValue: true,
         recordOldValue: false,
@@ -233,7 +233,7 @@ describe('AuditInterceptor', () => {
     it('should get client IP from x-forwarded-for header', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.LOGIN,
-        module: 'auth',
+        modules: 'auth',
         recordNewValue: false,
         recordOldValue: false,
       };
@@ -263,7 +263,7 @@ describe('AuditInterceptor', () => {
     it('should record old value when configured', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.UPDATE,
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         recordOldValue: true,
         recordNewValue: false,

@@ -1,13 +1,13 @@
-/** @file file-manager.service.spec.ts @description Migrated from src/module/system/file-manager/file-manager.service.spec.ts */
+/** @file file-manager.service.spec.ts @description Migrated from src/modules/files/file-manager.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { FileManagerService } from '@/module/system/file-manager/file-manager.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { AppConfigService } from '@/config/app-config.service';
-import { FileAccessService } from '@/module/system/file-manager/services/file-access.service';
-import { VersionService } from '@/module/upload/services/version.service';
+import { FileManagerService } from '@/modules/files/file-manager.service';
+import { PrismaService } from '@/platform/prisma';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { FileAccessService } from '@/modules/files/services/file-access.service';
+import { VersionService } from '@/modules/files/services/version.service';
 import { createConfigMock, ConfigMock } from 'test/mocks/config-mock';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { BusinessException } from '@/shared/exceptions';
 
 // 创建简单的 Prisma Mock
@@ -49,7 +49,7 @@ const createSimplePrismaMock = () => ({
 });
 
 // Mock TenantContext
-jest.mock('@/tenant/context/tenant.context', () => ({
+jest.mock('@/core/tenancy/context/tenant.context', () => ({
   TenantContext: {
     getTenantId: jest.fn().mockReturnValue('000001'),
   },
@@ -83,7 +83,7 @@ describe('FileManagerService', () => {
       checkAndCleanOldVersions: jest.fn().mockResolvedValue(undefined),
     } as any;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         FileManagerService,
         { provide: PrismaService, useValue: prismaMock },
@@ -93,7 +93,7 @@ describe('FileManagerService', () => {
       ],
     }).compile();
 
-    service = module.get<FileManagerService>(FileManagerService);
+    service = modules.get<FileManagerService>(FileManagerService);
   });
 
   afterEach(() => {

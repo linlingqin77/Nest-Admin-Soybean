@@ -5,17 +5,17 @@
  * Requirements: 11.1, 15.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { PreviewService } from '@/module/system/tool/preview/preview.service';
+import { PreviewService } from '@/modules/tools/preview/preview.service';
 
 describe('PreviewService', () => {
   let service: PreviewService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [PreviewService],
     }).compile();
 
-    service = module.get<PreviewService>(PreviewService);
+    service = modules.get<PreviewService>(PreviewService);
   });
 
   describe('getLanguageFromPath - 根据文件路径获取编程语言', () => {

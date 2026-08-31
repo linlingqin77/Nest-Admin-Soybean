@@ -1,14 +1,14 @@
 /**
  * @file user-profile.service.spec.ts
- * @description Migrated from src/module/system/user/services/user-profile.service.spec.ts
+ * @description Migrated from src/modules/users/services/user-profile.service.spec.ts
  * Unit tests for UserProfileService
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserProfileService } from '@/module/system/user/services/user-profile.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { UserRepository } from '@/module/system/user/user.repository';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
+import { UserProfileService } from '@/modules/users/services/user-profile.service';
+import { PrismaService } from '@/platform/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
+import { RedisService } from '@/platform/redis/redis.service';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 import { ResponseCode } from '@/shared/response';
 import * as bcrypt from 'bcryptjs';
 
@@ -52,7 +52,7 @@ describe('UserProfileService', () => {
       invalidateAllUserTokens: jest.fn().mockResolvedValue(undefined),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserProfileService,
         { provide: PrismaService, useValue: prismaMock },
@@ -62,7 +62,7 @@ describe('UserProfileService', () => {
       ],
     }).compile();
 
-    service = module.get<UserProfileService>(UserProfileService);
+    service = modules.get<UserProfileService>(UserProfileService);
   });
 
   afterEach(() => {

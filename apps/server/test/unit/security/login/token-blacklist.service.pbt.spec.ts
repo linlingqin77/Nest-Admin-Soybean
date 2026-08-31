@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Token 黑名单服务属性测试
@@ -48,7 +48,7 @@ describe('TokenBlacklistService Property-Based Tests', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TokenBlacklistService,
         {
@@ -58,8 +58,8 @@ describe('TokenBlacklistService Property-Based Tests', () => {
       ],
     }).compile();
 
-    service = module.get<TokenBlacklistService>(TokenBlacklistService);
-    redisService = module.get(RedisService);
+    service = modules.get<TokenBlacklistService>(TokenBlacklistService);
+    redisService = modules.get(RedisService);
   });
 
   afterEach(() => {

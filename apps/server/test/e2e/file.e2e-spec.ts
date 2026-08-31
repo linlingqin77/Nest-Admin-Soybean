@@ -20,7 +20,7 @@
  */
 
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 import { DelFlagEnum } from 'src/shared/enums/index';
 
 describe('File Manager E2E Tests', () => {

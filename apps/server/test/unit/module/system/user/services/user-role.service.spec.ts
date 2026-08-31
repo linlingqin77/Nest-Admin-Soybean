@@ -1,13 +1,13 @@
 /**
  * @file user-role.service.spec.ts
- * @description Migrated from src/module/system/user/services/user-role.service.spec.ts
+ * @description Migrated from src/modules/users/services/user-role.service.spec.ts
  * Unit tests for UserRoleService
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRoleService } from '@/module/system/user/services/user-role.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { UserRepository } from '@/module/system/user/user.repository';
-import { RoleService } from '@/module/system/role/role.service';
+import { UserRoleService } from '@/modules/users/services/user-role.service';
+import { PrismaService } from '@/platform/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
+import { RoleService } from '@/modules/roles/role.service';
 import { BusinessException } from '@/shared/exceptions';
 
 describe('UserRoleService', () => {
@@ -45,7 +45,7 @@ describe('UserRoleService', () => {
       findRoles: jest.fn().mockResolvedValue([]),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserRoleService,
         { provide: PrismaService, useValue: prismaMock },
@@ -54,7 +54,7 @@ describe('UserRoleService', () => {
       ],
     }).compile();
 
-    service = module.get<UserRoleService>(UserRoleService);
+    service = modules.get<UserRoleService>(UserRoleService);
   });
 
   afterEach(() => {

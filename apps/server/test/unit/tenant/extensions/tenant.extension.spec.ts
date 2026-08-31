@@ -1,6 +1,6 @@
-import { TenantContext } from '@/tenant/context/tenant.context';
-import { tenantExtensionHelpers } from '@/tenant/extensions/tenant.extension';
-import { SUPER_TENANT_ID } from '@/tenant/constants/tenant-models';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
+import { tenantExtensionHelpers } from '@/core/tenancy/extensions/tenant.extension';
+import { SUPER_TENANT_ID } from '@/core/tenancy/constants/tenant-models';
 
 const { shouldApplyFilter, addTenantFilter, setTenantId, setTenantIdForMany, validateTenantOwnership } =
   tenantExtensionHelpers;

@@ -12,15 +12,15 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { MailAccountService } from 'src/module/system/mail/account/mail-account.service';
-import { MailTemplateService } from 'src/module/system/mail/template/mail-template.service';
-import { MailLogService } from 'src/module/system/mail/log/mail-log.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { MailAccountService } from 'src/modules/mails/accounts/mail-account.service';
+import { MailTemplateService } from 'src/modules/mails/templates/mail-template.service';
+import { MailLogService } from 'src/modules/mails/logs/mail-log.service';
 import { StatusEnum } from 'src/shared/enums/index';
-import { ListMailAccountDto } from 'src/module/system/mail/account/dto/index';
-import { ListMailTemplateDto } from 'src/module/system/mail/template/dto/index';
-import { ListMailLogDto } from 'src/module/system/mail/log/dto/index';
+import { ListMailAccountDto } from 'src/modules/mails/accounts/dto/index';
+import { ListMailTemplateDto } from 'src/modules/mails/templates/dto/index';
+import { ListMailLogDto } from 'src/modules/mails/logs/dto/index';
 
 function uniqueId(): string {
   return Math.random().toString(36).substring(2, 8);

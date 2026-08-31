@@ -1,11 +1,11 @@
 /**
  * @file Cache Manager Service Unit Tests
- * @description Migrated from src/module/common/redis/cache-manager.service.spec.ts
+ * @description Migrated from src/platform/redis/cache-manager.service.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { CacheManagerService } from '@/module/common/redis/cache-manager.service';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { CacheManagerService } from '@/platform/redis/cache-manager.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { PrismaService } from '@/platform/prisma';
 
 describe('CacheManagerService', () => {
   let service: CacheManagerService;
@@ -32,7 +32,7 @@ describe('CacheManagerService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         CacheManagerService,
         { provide: RedisService, useValue: redisMock },
@@ -40,7 +40,7 @@ describe('CacheManagerService', () => {
       ],
     }).compile();
 
-    service = module.get<CacheManagerService>(CacheManagerService);
+    service = modules.get<CacheManagerService>(CacheManagerService);
   });
 
   afterEach(() => {
@@ -93,13 +93,13 @@ describe('CacheManagerService', () => {
       expect(redisMock.set).toHaveBeenCalledTimes(2);
     });
 
-    it('should warmup config cache', async () => {
+    it('should warmup platform/config cache', async () => {
       prismaMock.sysConfig.findMany.mockResolvedValue([
         { configKey: 'sys.index.title', configValue: 'Admin' },
         { configKey: 'sys.index.skinName', configValue: 'skin-blue' },
       ]);
 
-      await service.warmup('config');
+      await service.warmup('platform/config');
 
       expect(redisMock.set).toHaveBeenCalledTimes(2);
     });
@@ -191,14 +191,14 @@ describe('CacheManagerService', () => {
 
   describe('getStats', () => {
     it('should return cache statistics', async () => {
-      redisMock.keys.mockResolvedValueOnce(['dict:key1', 'dict:key2']).mockResolvedValueOnce(['config:key1']);
+      redisMock.keys.mockResolvedValueOnce(['dict:key1', 'dict:key2']).mockResolvedValueOnce(['platform/config:key1']);
 
       const stats = await service.getStats();
 
       expect(stats).toHaveProperty('dict');
-      expect(stats).toHaveProperty('config');
+      expect(stats).toHaveProperty('platform/config');
       expect(stats.dict.count).toBe(2);
-      expect(stats.config.count).toBe(1);
+      expect(stats.platform/config.count).toBe(1);
     });
   });
 });

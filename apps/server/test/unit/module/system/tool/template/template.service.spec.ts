@@ -5,9 +5,9 @@
  * Requirements: 6.2, 6.4, 6.5, 6.6, 11.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { TemplateService } from '@/module/system/tool/template/template.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { TemplateService } from '@/modules/tools/template/template.service';
+import { PrismaService } from '@/platform/prisma';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { ResponseCode } from '@/shared/response';
 
 describe('TemplateService', () => {
@@ -44,7 +44,7 @@ describe('TemplateService', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TemplateService,
         {
@@ -54,7 +54,7 @@ describe('TemplateService', () => {
       ],
     }).compile();
 
-    service = module.get<TemplateService>(TemplateService);
+    service = modules.get<TemplateService>(TemplateService);
 
     // 设置租户上下文
     jest.spyOn(TenantContext, 'getTenantId').mockReturnValue('000000');
@@ -434,12 +434,12 @@ describe('TemplateService', () => {
     });
 
     it('应该处理对象类型的值', () => {
-      const template = 'config: ${config}';
-      const context = { config: { key: 'value' } };
+      const template = 'platform/config: ${platform/config}';
+      const context = { platform/config: { key: 'value' } };
 
       const result = service.render(template, context);
 
-      expect(result).toBe('config: {"key":"value"}');
+      expect(result).toBe('platform/config: {"key":"value"}');
     });
   });
 

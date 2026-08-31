@@ -10,7 +10,7 @@ import {
   calculateBackoffDelay,
   shouldRetryError,
   sleep,
-} from '@/core/decorators/retry.decorator';
+} from '@/core/http/decorators/retry.decorator';
 
 // Custom error types for testing
 class NetworkError extends Error {
@@ -171,11 +171,11 @@ describe('Retry Decorator', () => {
   let testService: TestService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [TestService],
     }).compile();
 
-    testService = module.get<TestService>(TestService);
+    testService = modules.get<TestService>(TestService);
   });
 
   afterEach(() => {
@@ -344,11 +344,11 @@ describe('RetryMeta Decorator', () => {
   let reflector: Reflector;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [MetadataTestService, Reflector],
     }).compile();
 
-    reflector = module.get<Reflector>(Reflector);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   it('should set metadata on the method', () => {

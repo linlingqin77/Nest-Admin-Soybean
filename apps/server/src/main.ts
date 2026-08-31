@@ -8,7 +8,7 @@ import { mw as requestIpMw } from 'request-ip';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
 import { ValidationPipe, Logger, ShutdownSignal, VersioningType } from '@nestjs/common';
-import { AppConfigService } from 'src/config/app-config.service';
+import { AppConfigService } from 'src/platform/config/app-config.service';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import path from 'path';
 import { writeFile } from 'fs/promises';
@@ -138,7 +138,7 @@ async function bootstrap() {
   // 在 AppModule 中注册，享受完整的 DI 注入能力
 
   // web 安全，防常见漏洞
-  // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
+  // 注意： 开发环境如果开启 nest static modules 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
   app.use(
     helmet({
       crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },

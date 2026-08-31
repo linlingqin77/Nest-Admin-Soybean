@@ -5,10 +5,10 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
-import { ConfigService } from 'src/module/system/config/config.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
+import { ConfigService } from 'src/modules/configs/config.service';
 import { CacheEnum, DelFlagEnum } from 'src/shared/enums/index';
 
 describe('Config Integration Tests', () => {
@@ -45,7 +45,7 @@ describe('Config Integration Tests', () => {
   });
 
   describe('Config Cache Integration', () => {
-    it('should cache config value after first retrieval', async () => {
+    it('should cache platform/config value after first retrieval', async () => {
       await redisService.del(`${CacheEnum.SYS_CONFIG_KEY}${existingConfigKey}`);
       const value1 = await configService.getConfigValue(existingConfigKey);
       expect(value1).toBeDefined();
@@ -74,7 +74,7 @@ describe('Config Integration Tests', () => {
   });
 
   describe('Get Config By Key Integration', () => {
-    it('should return config value by key', async () => {
+    it('should return platform/config value by key', async () => {
       const result = await configService.findOneByConfigKey(existingConfigKey);
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
@@ -86,14 +86,14 @@ describe('Config Integration Tests', () => {
       expect(result.data).toBeNull();
     });
 
-    it('should return system config value', async () => {
+    it('should return system platform/config value', async () => {
       const result = await configService.getSystemConfigValue('sys.account.captchaEnabled');
       expect(['true', 'false', null]).toContain(result);
     });
   });
 
   describe('Config List with Filters Integration', () => {
-    it('should return paginated config list', async () => {
+    it('should return paginated platform/config list', async () => {
       const result = await configService.findAll({ pageNum: 1, pageSize: 10, skip: 0, take: 10 } as any);
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
@@ -109,8 +109,8 @@ describe('Config Integration Tests', () => {
         configKey: 'sys.index',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((config: any) => {
-        expect(config.configKey.toLowerCase()).toContain('sys.index');
+      result.data.rows.forEach((platform/config: any) => {
+        expect(platform/config.configKey.toLowerCase()).toContain('sys.index');
       });
     });
 
@@ -123,14 +123,14 @@ describe('Config Integration Tests', () => {
         configType: 'Y',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((config: any) => {
-        expect(config.configType).toBe('Y');
+      result.data.rows.forEach((platform/config: any) => {
+        expect(platform/config.configType).toBe('Y');
       });
     });
   });
 
   describe('Config findOne Integration', () => {
-    it('should return config by id', async () => {
+    it('should return platform/config by id', async () => {
       const listResult = await configService.findAll({ pageNum: 1, pageSize: 1, skip: 0, take: 1 } as any);
       expect(listResult.data.rows.length).toBeGreaterThan(0);
       const configId = listResult.data.rows[0].configId;

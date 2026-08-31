@@ -4,7 +4,7 @@
  */
 
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 
 describe('Role E2E Tests', () => {
   let helper: TestHelper;

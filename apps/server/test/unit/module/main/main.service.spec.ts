@@ -1,8 +1,8 @@
 /**
  * @file Main Service Unit Tests
- * @description Migrated from src/module/main/main.service.spec.ts
+ * @description Migrated from src/modules/auth/main.service.spec.ts
  */
-import { MainService } from '@/module/main/main.service';
+import { MainService } from '@/modules/auth/main.service';
 import { Result } from '@/shared/response';
 
 describe('MainService', () => {

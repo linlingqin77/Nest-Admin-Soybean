@@ -1,8 +1,8 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FeatureToggleService } from '@/tenant/services/feature-toggle.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { FeatureToggleService } from '@/core/tenancy/services/feature-toggle.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * FeatureToggleService 属性测试
@@ -14,7 +14,7 @@ describe('FeatureToggleService - Property Tests', () => {
   let service: FeatureToggleService;
 
   // 内存存储模拟
-  const featureStore = new Map<string, Map<string, { enabled: boolean; config?: string }>>();
+  const featureStore = new Map<string, Map<string, { enabled: boolean; platform/config?: string }>>();
   const cacheStore = new Map<string, Map<string, string>>();
 
   const mockRedisClient = {
@@ -33,7 +33,7 @@ describe('FeatureToggleService - Property Tests', () => {
           tenantId,
           featureKey,
           enabled: feature.enabled,
-          config: feature.config,
+          platform/config: feature.platform/config,
         });
       }),
       findMany: jest.fn().mockImplementation(({ where }) => {
@@ -44,7 +44,7 @@ describe('FeatureToggleService - Property Tests', () => {
             tenantId: where.tenantId,
             featureKey,
             enabled: data.enabled,
-            config: data.config,
+            platform/config: data.platform/config,
           })),
         );
       }),
@@ -56,7 +56,7 @@ describe('FeatureToggleService - Property Tests', () => {
         const tenantFeatures = featureStore.get(tenantId)!;
         tenantFeatures.set(featureKey, {
           enabled: update.enabled ?? create.enabled,
-          config: update.config ?? create.config,
+          platform/config: update.platform/config ?? create.platform/config,
         });
         return Promise.resolve({ tenantId, featureKey });
       }),
@@ -126,7 +126,7 @@ describe('FeatureToggleService - Property Tests', () => {
     featureStore.clear();
     cacheStore.clear();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         FeatureToggleService,
         {
@@ -140,7 +140,7 @@ describe('FeatureToggleService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<FeatureToggleService>(FeatureToggleService);
+    service = modules.get<FeatureToggleService>(FeatureToggleService);
   });
 
   // 生成有效的租户ID
@@ -348,13 +348,13 @@ describe('FeatureToggleService - Property Tests', () => {
             minKeys: 0,
             maxKeys: 5,
           }),
-          async (tenantId, feature, enabled, config) => {
+          async (tenantId, feature, enabled, platform/config) => {
             // 清空存储
             featureStore.clear();
             cacheStore.clear();
 
             // 设置功能开关和配置
-            await service.setFeature(tenantId, feature, enabled, config);
+            await service.setFeature(tenantId, feature, enabled, platform/config);
 
             // 获取功能配置
             const result = await service.getFeatureConfig(tenantId, feature);

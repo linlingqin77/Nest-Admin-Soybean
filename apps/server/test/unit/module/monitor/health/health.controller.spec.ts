@@ -1,13 +1,13 @@
 /**
  * @file Health Controller Unit Tests
- * @description Migrated from src/module/monitor/health/health.controller.spec.ts
+ * @description Migrated from src/modules/health/health.controller.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { HealthController } from '@/module/monitor/health/health.controller';
+import { HealthController } from '@/modules/health/health.controller';
 import { HealthCheckService, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
-import { PrismaHealthIndicator } from '@/observability/health/prisma.health';
-import { RedisHealthIndicator } from '@/observability/health/redis.health';
-import { InfoService } from '@/module/monitor/health/info.service';
+import { PrismaHealthIndicator } from '@/core/core/observability/health/prisma.health';
+import { RedisHealthIndicator } from '@/core/core/observability/health/redis.health';
+import { InfoService } from '@/modules/health/info.service';
 
 describe('HealthController', () => {
   let controller: HealthController;
@@ -51,7 +51,7 @@ describe('HealthController', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [HealthController],
       providers: [
         { provide: HealthCheckService, useValue: healthCheckServiceMock },
@@ -63,7 +63,7 @@ describe('HealthController', () => {
       ],
     }).compile();
 
-    controller = module.get<HealthController>(HealthController);
+    controller = modules.get<HealthController>(HealthController);
   });
 
   afterEach(() => {

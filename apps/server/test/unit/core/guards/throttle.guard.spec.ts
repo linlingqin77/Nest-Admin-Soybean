@@ -1,6 +1,6 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
-import { CustomThrottlerGuard } from '@/core/guards/throttle.guard';
+import { CustomThrottlerGuard } from '@/core/http/guards/throttle.guard';
 
 describe('CustomThrottlerGuard', () => {
   let guard: CustomThrottlerGuard;

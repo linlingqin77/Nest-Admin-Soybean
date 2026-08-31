@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 
 // 属性测试配置
 const PBT_CONFIG = { numRuns: 100 };

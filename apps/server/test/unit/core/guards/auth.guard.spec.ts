@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtAuthGuard } from '@/core/guards/auth.guard';
-import { UserService } from '@/module/system/user/user.service';
-import { AppConfigService } from '@/config/app-config.service';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
+import { JwtAuthGuard } from '@/core/auth/guards/auth.guard';
+import { UserService } from '@/modules/users/user.service';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
@@ -57,17 +57,17 @@ describe('JwtAuthGuard', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         {
           provide: JwtAuthGuard,
           useFactory: (
             reflector: Reflector,
             userService: UserService,
-            config: AppConfigService,
+            platform/config: AppConfigService,
             tokenBlacklistService: TokenBlacklistService,
           ) => {
-            return new JwtAuthGuard(reflector, userService, config, tokenBlacklistService);
+            return new JwtAuthGuard(reflector, userService, platform/config, tokenBlacklistService);
           },
           inject: [Reflector, UserService, AppConfigService, TokenBlacklistService],
         },
@@ -92,11 +92,11 @@ describe('JwtAuthGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<JwtAuthGuard>(JwtAuthGuard);
-    reflector = module.get<Reflector>(Reflector);
-    userService = module.get<UserService>(UserService);
-    configService = module.get<AppConfigService>(AppConfigService);
-    tokenBlacklistService = module.get<TokenBlacklistService>(TokenBlacklistService);
+    guard = modules.get<JwtAuthGuard>(JwtAuthGuard);
+    reflector = modules.get<Reflector>(Reflector);
+    userService = modules.get<UserService>(UserService);
+    configService = modules.get<AppConfigService>(AppConfigService);
+    tokenBlacklistService = modules.get<TokenBlacklistService>(TokenBlacklistService);
   });
 
   afterEach(() => {

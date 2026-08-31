@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "禁止手改的 generated 文件列表（仅可由脚本更新）",
+  "patterns": [
+    "apps/web/src/api/generated/**/*.ts",
+    "apps/server/src/api-client.ts",
+    "apps/server/dist/**",
+    "node_modules/**",
+    "dist/**",
+    ".turbo/**",
+    "prisma/migrations/**",
+    "*.generated.ts"
+  ],
+  "rule": "以上路径的文件禁止手动修改。所有修改必须通过对应的 generator 脚本进行。",
+  "generators": {
+    "openapi-typescript": "pnpm openapi-typescript",
+    "prisma-client": "pnpm prisma generate",
+    "contract-types": "pnpm generate:contracts"
+  }
+}

@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RequireFeatureGuard } from '@/tenant/guards/require-feature.guard';
-import { FeatureToggleService } from '@/tenant/services/feature-toggle.service';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { RequireFeatureGuard } from '@/core/tenancy/guards/require-feature.guard';
+import { FeatureToggleService } from '@/core/tenancy/services/feature-toggle.service';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import {
   REQUIRE_FEATURE_KEY,
   RequireFeatureOptions,
-} from '@/tenant/decorators/require-feature.decorator';
+} from '@/core/tenancy/decorators/require-feature.decorator';
 
 describe('RequireFeatureGuard', () => {
   let guard: RequireFeatureGuard;
@@ -25,7 +25,7 @@ describe('RequireFeatureGuard', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RequireFeatureGuard,
         {
@@ -43,9 +43,9 @@ describe('RequireFeatureGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<RequireFeatureGuard>(RequireFeatureGuard);
-    reflector = module.get<Reflector>(Reflector);
-    featureToggleService = module.get(FeatureToggleService);
+    guard = modules.get<RequireFeatureGuard>(RequireFeatureGuard);
+    reflector = modules.get<Reflector>(Reflector);
+    featureToggleService = modules.get(FeatureToggleService);
   });
 
   afterEach(() => {

@@ -13,8 +13,8 @@
 
 import * as fc from 'fast-check';
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Property 2: Authentication Enforcement', () => {
@@ -63,7 +63,7 @@ describe('Property 2: Authentication Enforcement', () => {
     { method: 'GET', path: '/system/dict/type/list' },
     { method: 'GET', path: '/system/dict/data/list' },
 
-    // System config endpoints
+    // System platform/config endpoints
     { method: 'GET', path: '/system/config/list' },
 
     // Monitor endpoints
@@ -91,7 +91,7 @@ describe('Property 2: Authentication Enforcement', () => {
         where: { configId: captchaConfig.configId },
         data: { configValue: 'false' },
       });
-      // Clear config cache
+      // Clear platform/config cache
       await redisService.del(`${CacheEnum.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     }
   }, 60000);

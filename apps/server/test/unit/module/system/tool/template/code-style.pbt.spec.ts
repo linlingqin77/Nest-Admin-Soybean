@@ -20,7 +20,7 @@ import {
   isUpperSnakeCase,
   generateFileName,
   generateClassName,
-} from '@/module/system/tool/template/utils';
+} from '@/modules/tools/template/utils';
 
 describe('Code Style - Property Tests', () => {
   /**

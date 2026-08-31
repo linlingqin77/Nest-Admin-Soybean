@@ -5,9 +5,9 @@
  * Requirements: 1.1, 1.2, 1.3, 1.5, 1.6, 11.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { DataSourceService } from '@/module/system/tool/datasource/datasource.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { DataSourceService } from '@/modules/tools/datasource/datasource.service';
+import { PrismaService } from '@/platform/prisma';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { ResponseCode } from '@/shared/response';
 
 describe('DataSourceService', () => {
@@ -29,7 +29,7 @@ describe('DataSourceService', () => {
       $queryRaw: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         DataSourceService,
         {
@@ -39,7 +39,7 @@ describe('DataSourceService', () => {
       ],
     }).compile();
 
-    service = module.get<DataSourceService>(DataSourceService);
+    service = modules.get<DataSourceService>(DataSourceService);
 
     // 设置租户上下文
     jest.spyOn(TenantContext, 'getTenantId').mockReturnValue('000000');

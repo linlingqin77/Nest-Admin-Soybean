@@ -1,15 +1,15 @@
 /**
  * @file Monitor Services Unit Tests
- * @description Migrated from src/module/monitor/monitor.services.spec.ts
+ * @description Migrated from src/modules/monitors/monitor.services.spec.ts
  */
-import { CacheService } from '@/module/monitor/cache/cache.service';
-import { JobLogService } from '@/module/monitor/job/job-log.service';
-import { JobService } from '@/module/monitor/job/job.service';
-import { TaskService } from '@/module/monitor/job/task.service';
-import { LoginlogService } from '@/module/monitor/loginlog/loginlog.service';
-import { OnlineService } from '@/module/monitor/online/online.service';
-import { OperlogService } from '@/module/monitor/operlog/operlog.service';
-import { ServerService } from '@/module/monitor/server/server.service';
+import { CacheService } from '@/modules/monitors/cache/cache.service';
+import { JobLogService } from '@/modules/monitors/jobs/job-log.service';
+import { JobService } from '@/modules/monitors/jobs/job.service';
+import { TaskService } from '@/modules/monitors/jobs/task.service';
+import { LoginlogService } from '@/modules/login-logs/loginlog.service';
+import { OnlineService } from '@/modules/monitors/online/online.service';
+import { OperlogService } from '@/modules/oper-logs/operlog.service';
+import { ServerService } from '@/modules/monitors/server/server.service';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';
@@ -39,7 +39,7 @@ jest.mock('node-disk-info', () => ({
     .mockReturnValue([{ _mounted: '/', _filesystem: 'apfs', _blocks: 1024, _used: 256, _available: 768 }]),
 }));
 
-describe('Monitor module services', () => {
+describe('Monitor modules services', () => {
   describe('CacheService', () => {
     const redisService = {
       keys: jest.fn(),

@@ -11,13 +11,13 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { TenantService } from 'src/module/system/tenant/tenant.service';
-import { TenantPackageService } from 'src/module/system/tenant-package/tenant-package.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { TenantService } from 'src/modules/tenants/tenant.service';
+import { TenantPackageService } from 'src/modules/tenant-packages/tenant-package.service';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
-import { ListTenantRequestDto } from 'src/module/system/tenant/dto/index';
-import { ListTenantPackageRequestDto } from 'src/module/system/tenant-package/dto/index';
+import { ListTenantRequestDto } from 'src/modules/tenants/dto/index';
+import { ListTenantPackageRequestDto } from 'src/modules/tenant-packages/dto/index';
 
 function createListTenantDto(params: Partial<ListTenantRequestDto> = {}): ListTenantRequestDto {
   const dto = new ListTenantRequestDto();

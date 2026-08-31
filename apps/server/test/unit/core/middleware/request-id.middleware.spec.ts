@@ -1,4 +1,4 @@
-import { RequestIdMiddleware } from '@/core/middleware/request-id.middleware';
+import { RequestIdMiddleware } from '@/core/http/middleware/request-id.middleware';
 import { Request, Response, NextFunction } from 'express';
 import { ClsService } from 'nestjs-cls';
 

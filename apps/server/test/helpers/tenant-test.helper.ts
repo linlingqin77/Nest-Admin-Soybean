@@ -8,8 +8,8 @@
  * @requirements 1.1, 2.1, 3.1
  */
 
-import { TenantContext, TenantContextData } from '../../src/tenant/context/tenant.context';
-import { SUPER_TENANT_ID } from '../../src/tenant/constants/tenant-models';
+import { TenantContext, TenantContextData } from '../../src/core/tenancy/context/tenant.context';
+import { SUPER_TENANT_ID } from '../../src/core/tenancy/constants/tenant-models';
 import {
   createTenantMockPrisma,
   createTenantMockRedis,
@@ -30,14 +30,14 @@ import {
  * 提供租户上下文管理和测试数据创建的辅助方法
  */
 export class TenantTestHelper {
-  private config: TenantTestConfig;
+  private platform/config: TenantTestConfig;
 
-  constructor(config: Partial<TenantTestConfig> = {}) {
-    this.config = {
+  constructor(platform/config: Partial<TenantTestConfig> = {}) {
+    this.platform/config = {
       enabled: true,
       superTenantId: SUPER_TENANT_ID,
       defaultTenantId: SUPER_TENANT_ID,
-      ...config,
+      ...platform/config,
     };
   }
 
@@ -227,7 +227,7 @@ export class TenantTestHelper {
    * @returns 租户测试配置
    */
   getConfig(): TenantTestConfig {
-    return this.config;
+    return this.platform/config;
   }
 }
 
@@ -350,11 +350,11 @@ export function createTestQuota(tenantId: string, overrides: Partial<QuotaTestDa
 /**
  * 创建租户测试辅助实例
  *
- * @param config 租户配置
+ * @param platform/config 租户配置
  * @returns TenantTestHelper 实例
  */
-export function createTenantTestHelper(config: Partial<TenantTestConfig> = {}): TenantTestHelper {
-  return new TenantTestHelper(config);
+export function createTenantTestHelper(platform/config: Partial<TenantTestConfig> = {}): TenantTestHelper {
+  return new TenantTestHelper(platform/config);
 }
 
 // 重新导出 Mock 创建函数

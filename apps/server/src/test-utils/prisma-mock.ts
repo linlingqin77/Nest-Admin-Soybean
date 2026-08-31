@@ -1,4 +1,4 @@
-import { PrismaService } from 'src/infrastructure/prisma';
+import { PrismaService } from 'src/platform/prisma';
 
 export type PrismaMock = jest.Mocked<PrismaService>;
 

@@ -1,9 +1,9 @@
 /**
  * @file Redis Service Unit Tests
- * @description Migrated from src/module/common/redis/redis.service.spec.ts
+ * @description Migrated from src/platform/redis/redis.service.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import { getRedisToken } from '@songkeys/nestjs-redis';
 
 describe('RedisService', () => {
@@ -46,11 +46,11 @@ describe('RedisService', () => {
       brpoplpush: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [RedisService, { provide: getRedisToken('default'), useValue: redisMock }],
     }).compile();
 
-    service = module.get<RedisService>(RedisService);
+    service = modules.get<RedisService>(RedisService);
   });
 
   afterEach(() => {

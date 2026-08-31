@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { SmsSendStatus } from '@/module/system/sms/send/sms-send.service';
+import { SmsSendStatus } from '@/modules/sms/send/sms-send.service';
 
 /**
  * Property-Based Tests for SMS Send Log Completeness

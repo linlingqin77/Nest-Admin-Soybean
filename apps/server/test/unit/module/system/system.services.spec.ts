@@ -1,14 +1,14 @@
-/** @file system.services.spec.ts @description Migrated from src/module/system/system.services.spec.ts */
+/** @file system.services.spec.ts @description Migrated from src/modules/system.services.spec.ts */
 
-import { ConfigService } from '@/module/system/config/config.service';
-import { DeptService } from '@/module/system/dept/dept.service';
-import { DictService } from '@/module/system/dict/dict.service';
-import { MenuService } from '@/module/system/menu/menu.service';
-import { NoticeService } from '@/module/system/notice/notice.service';
-import { PostService } from '@/module/system/post/post.service';
-import { RoleService } from '@/module/system/role/role.service';
-import { ToolService } from '@/module/system/tool/tool.service';
-import { UserService } from '@/module/system/user/user.service';
+import { ConfigService } from '@/modules/configs/config.service';
+import { DeptService } from '@/modules/depts/dept.service';
+import { DictService } from '@/modules/dicts/dict.service';
+import { MenuService } from '@/modules/menus/menu.service';
+import { NoticeService } from '@/modules/notices/notice.service';
+import { PostService } from '@/modules/posts/post.service';
+import { RoleService } from '@/modules/roles/role.service';
+import { ToolService } from '@/modules/tools/tool.service';
+import { UserService } from '@/modules/users/user.service';
 import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';
@@ -18,7 +18,7 @@ jest.mock('@/shared/utils/export', () => ({
   ExportTable: jest.fn(),
 }));
 
-jest.mock('@/module/system/tool/template/index', () => ({
+jest.mock('@/modules/tools/template/index', () => ({
   index: () => ({}),
 }));
 
@@ -28,7 +28,7 @@ jest.mock('bcryptjs', () => ({
   compareSync: jest.fn().mockReturnValue(true),
 }));
 
-describe('System module services', () => {
+describe('System modules services', () => {
   describe('ConfigService', () => {
     let prisma: PrismaMock;
     const redisService = {
@@ -52,7 +52,7 @@ describe('System module services', () => {
       jest.clearAllMocks();
     });
 
-    it('should paginate config list', async () => {
+    it('should paginate platform/config list', async () => {
       configRepo.findPageWithFilter.mockResolvedValue({ list: [{ configId: 1 }], total: 1 });
       const res = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
       expect(res.data).toEqual({ rows: [{ configId: 1 }], total: 1 });

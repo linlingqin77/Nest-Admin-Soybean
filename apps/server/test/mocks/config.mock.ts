@@ -42,7 +42,7 @@ export const defaultConfig = {
   },
 
   // 安全配置
-  security: {
+  core: {
     bcryptRounds: 10,
     maxLoginAttempts: 5,
     lockoutDuration: 300, // 5 minutes
@@ -128,37 +128,37 @@ const setNestedValue = (obj: Record<string, any>, path: string, value: any): voi
  */
 export const createMockConfig = (overrides: Record<string, any> = {}): MockConfigService => {
   // 深拷贝默认配置
-  const config = JSON.parse(JSON.stringify(defaultConfig));
+  const platform/config = JSON.parse(JSON.stringify(defaultConfig));
 
   // 应用覆盖值
   Object.entries(overrides).forEach(([path, value]) => {
-    setNestedValue(config, path, value);
+    setNestedValue(platform/config, path, value);
   });
 
   const mock: MockConfigService = {
     get: jest.fn((path: string, defaultValue?: any) => {
-      const value = getNestedValue(config, path);
+      const value = getNestedValue(platform/config, path);
       return value !== undefined ? value : defaultValue;
     }),
 
     getOrThrow: jest.fn((path: string) => {
-      const value = getNestedValue(config, path);
+      const value = getNestedValue(platform/config, path);
       if (value === undefined) {
         throw new Error(`Configuration key "${path}" does not exist`);
       }
       return value;
     }),
 
-    _config: config,
+    _config: platform/config,
 
     _setConfig: (path: string, value: any) => {
-      setNestedValue(config, path, value);
+      setNestedValue(platform/config, path, value);
     },
 
     _resetAll: () => {
       // 重置为默认配置
-      Object.keys(config).forEach((key) => delete config[key]);
-      Object.assign(config, JSON.parse(JSON.stringify(defaultConfig)));
+      Object.keys(platform/config).forEach((key) => delete platform/config[key]);
+      Object.assign(platform/config, JSON.parse(JSON.stringify(defaultConfig)));
       mock.get.mockClear();
       mock.getOrThrow.mockClear();
     },
@@ -191,7 +191,7 @@ export const createProdConfig = (): MockConfigService => {
     'app.env': 'production',
     'database.logging': false,
     'logger.level': 'warn',
-    'security.bcryptRounds': 12,
+    'core.bcryptRounds': 12,
   });
 };
 

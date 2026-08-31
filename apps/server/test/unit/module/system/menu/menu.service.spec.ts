@@ -1,11 +1,11 @@
-/** @file menu.service.spec.ts @description Migrated from src/module/system/menu/menu.service.spec.ts */
+/** @file menu.service.spec.ts @description Migrated from src/modules/menus/menu.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { MenuService } from '@/module/system/menu/menu.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { MenuRepository } from '@/module/system/menu/menu.repository';
-import { UserService } from '@/module/system/user/user.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { MenuService } from '@/modules/menus/menu.service';
+import { PrismaService } from '@/platform/prisma';
+import { MenuRepository } from '@/modules/menus/menu.repository';
+import { UserService } from '@/modules/users/user.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import { StatusEnum, DelFlagEnum } from '@/shared/enums/index';
 import { ResponseCode } from '@/shared/response';
 
@@ -41,7 +41,7 @@ describe('MenuService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         MenuService,
         {
@@ -93,10 +93,10 @@ describe('MenuService', () => {
       ],
     }).compile();
 
-    service = module.get<MenuService>(MenuService);
-    prisma = module.get<PrismaService>(PrismaService);
-    menuRepo = module.get<MenuRepository>(MenuRepository);
-    userService = module.get<UserService>(UserService);
+    service = modules.get<MenuService>(MenuService);
+    prisma = modules.get<PrismaService>(PrismaService);
+    menuRepo = modules.get<MenuRepository>(MenuRepository);
+    userService = modules.get<UserService>(UserService);
   });
 
   it('should be defined', () => {

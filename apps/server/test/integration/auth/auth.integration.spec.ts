@@ -10,11 +10,11 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
-import { UserAuthService } from 'src/module/system/user/services/user-auth.service';
-import { MainService } from 'src/module/main/main.service';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
+import { UserAuthService } from 'src/modules/users/services/user-auth.service';
+import { MainService } from 'src/modules/auth/main.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Auth Integration Tests', () => {
@@ -79,7 +79,7 @@ describe('Auth Integration Tests', () => {
         where: { configId: captchaConfig.configId },
         data: { configValue: 'false' },
       });
-      // Clear config cache
+      // Clear platform/config cache
       await redisService.del(`${CacheEnum.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     }
   }, 60000);
@@ -95,7 +95,7 @@ describe('Auth Integration Tests', () => {
           where: { configId: captchaConfig.configId },
           data: { configValue: originalCaptchaEnabled },
         });
-        // Clear config cache
+        // Clear platform/config cache
         await redisService.del(`${CacheEnum.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
       }
     }

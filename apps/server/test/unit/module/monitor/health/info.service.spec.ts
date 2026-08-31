@@ -1,19 +1,19 @@
 /**
  * @file Info Service Unit Tests
- * @description Migrated from src/module/monitor/health/info.service.spec.ts
+ * @description Migrated from src/modules/health/info.service.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { InfoService, AppInfo } from '@/module/monitor/health/info.service';
+import { InfoService, AppInfo } from '@/modules/health/info.service';
 
 describe('InfoService', () => {
   let service: InfoService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [InfoService],
     }).compile();
 
-    service = module.get<InfoService>(InfoService);
+    service = modules.get<InfoService>(InfoService);
   });
 
   it('should be defined', () => {

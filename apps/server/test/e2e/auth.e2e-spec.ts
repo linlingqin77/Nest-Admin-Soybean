@@ -15,8 +15,8 @@
  */
 
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Auth E2E Tests', () => {
@@ -43,7 +43,7 @@ describe('Auth E2E Tests', () => {
         where: { configId: captchaConfig.configId },
         data: { configValue: 'false' },
       });
-      // Clear config cache
+      // Clear platform/config cache
       await redisService.del(`${CacheEnum.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     }
   }, 60000);

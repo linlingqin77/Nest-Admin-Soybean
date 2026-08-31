@@ -168,7 +168,7 @@ export interface ApiOptions {
   /**
    * 是否需要认证，设为 false 可关闭认证标记
    */
-  security?: boolean;
+  core?: boolean;
 
   /**
    * 方法级别的额外标签
@@ -296,7 +296,7 @@ export const Api = (options: ApiOptions) => {
     headers,
     consumes,
     produces,
-    security,
+    core,
     tags,
     operationId,
     responses,
@@ -438,7 +438,7 @@ export const Api = (options: ApiOptions) => {
   }
 
   // 10. ApiSecurity - 认证配置
-  if (security === false) {
+  if (core === false) {
     // 关闭认证标记（空数组表示不需要认证）
     decorators.push(ApiSecurity({}));
   }

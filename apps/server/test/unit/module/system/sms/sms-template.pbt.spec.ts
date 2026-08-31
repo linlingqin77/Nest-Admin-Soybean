@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { SmsTemplateService } from '@/module/system/sms/template/sms-template.service';
+import { SmsTemplateService } from '@/modules/sms/templates/sms-template.service';
 
 /**
  * Property-Based Tests for SMS Template Variable Parsing

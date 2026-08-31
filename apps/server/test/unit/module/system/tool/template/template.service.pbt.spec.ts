@@ -6,10 +6,10 @@
  * **Validates: Requirements 6.4, 6.6**
  */
 import * as fc from 'fast-check';
-import { TemplateService } from '@/module/system/tool/template/template.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { TemplateService } from '@/modules/tools/template/template.service';
+import { PrismaService } from '@/platform/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TemplateLanguage, ImportTemplateGroupDto, ExportTemplateGroupDto } from '@/module/system/tool/template/dto';
+import { TemplateLanguage, ImportTemplateGroupDto, ExportTemplateGroupDto } from '@/modules/tools/template/dto';
 
 describe('TemplateService - Property Tests', () => {
   let service: TemplateService;
@@ -41,7 +41,7 @@ describe('TemplateService - Property Tests', () => {
       $transaction: jest.fn((fn) => fn(mockPrismaService)),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TemplateService,
         {
@@ -51,7 +51,7 @@ describe('TemplateService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<TemplateService>(TemplateService);
+    service = modules.get<TemplateService>(TemplateService);
   });
 
   describe('Property 7: 模板变量替换完整性', () => {

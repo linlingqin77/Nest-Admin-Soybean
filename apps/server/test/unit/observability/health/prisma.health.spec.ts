@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaHealthIndicator } from '@/observability/health/prisma.health';
-import { PrismaService } from '@/infrastructure/prisma';
+import { PrismaHealthIndicator } from '@/core/core/observability/health/prisma.health';
+import { PrismaService } from '@/platform/prisma';
 import { HealthCheckError } from '@nestjs/terminus';
 
 describe('PrismaHealthIndicator', () => {
@@ -12,7 +12,7 @@ describe('PrismaHealthIndicator', () => {
       $queryRaw: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         PrismaHealthIndicator,
         {
@@ -22,8 +22,8 @@ describe('PrismaHealthIndicator', () => {
       ],
     }).compile();
 
-    indicator = module.get<PrismaHealthIndicator>(PrismaHealthIndicator);
-    prismaService = module.get(PrismaService);
+    indicator = modules.get<PrismaHealthIndicator>(PrismaHealthIndicator);
+    prismaService = modules.get(PrismaService);
   });
 
   it('should be defined', () => {

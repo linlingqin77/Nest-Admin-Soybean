@@ -11,7 +11,7 @@ import {
   DataScope,
   DataPermissionContext,
   DataPermissionSqlBuilder,
-} from '@/core/decorators/data-permission.decorator';
+} from '@/core/permissions/decorators/data-permission.decorator';
 
 /**
  * Property-Based Tests for DataPermissionInterceptor
@@ -57,7 +57,7 @@ describe('DataPermissionInterceptor Property-Based Tests', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         DataPermissionInterceptor,
         {
@@ -69,8 +69,8 @@ describe('DataPermissionInterceptor Property-Based Tests', () => {
       ],
     }).compile();
 
-    interceptor = module.get<DataPermissionInterceptor>(DataPermissionInterceptor);
-    reflector = module.get<Reflector>(Reflector);
+    interceptor = modules.get<DataPermissionInterceptor>(DataPermissionInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

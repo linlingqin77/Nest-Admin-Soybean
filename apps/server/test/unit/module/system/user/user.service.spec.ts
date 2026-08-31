@@ -1,24 +1,24 @@
 /**
  * @file user.service.spec.ts
- * @description Migrated from src/module/system/user/user.service.spec.ts
+ * @description Migrated from src/modules/users/user.service.spec.ts
  * Unit tests for UserService
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from '@/module/system/user/user.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { UserRepository } from '@/module/system/user/user.repository';
-import { RoleService } from '@/module/system/role/role.service';
-import { DeptService } from '@/module/system/dept/dept.service';
+import { UserService } from '@/modules/users/user.service';
+import { PrismaService } from '@/platform/prisma';
+import { UserRepository } from '@/modules/users/user.repository';
+import { RoleService } from '@/modules/roles/role.service';
+import { DeptService } from '@/modules/depts/dept.service';
 import { JwtService } from '@nestjs/jwt';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { ConfigService } from '@/module/system/config/config.service';
-import { UserAuthService } from '@/module/system/user/services/user-auth.service';
-import { UserProfileService } from '@/module/system/user/services/user-profile.service';
-import { UserRoleService } from '@/module/system/user/services/user-role.service';
-import { UserExportService } from '@/module/system/user/services/user-export.service';
-import { UserCrudService } from '@/module/system/user/services/user-crud.service';
-import { UserBatchService } from '@/module/system/user/services/user-batch.service';
-import { UserQueryService } from '@/module/system/user/services/user-query.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { ConfigService } from '@/modules/configs/config.service';
+import { UserAuthService } from '@/modules/users/services/user-auth.service';
+import { UserProfileService } from '@/modules/users/services/user-profile.service';
+import { UserRoleService } from '@/modules/users/services/user-role.service';
+import { UserExportService } from '@/modules/users/services/user-export.service';
+import { UserCrudService } from '@/modules/users/services/user-crud.service';
+import { UserBatchService } from '@/modules/users/services/user-batch.service';
+import { UserQueryService } from '@/modules/users/services/user-query.service';
 import { DelFlagEnum, StatusEnum, DataScopeEnum } from '@/shared/enums/index';
 import * as bcrypt from 'bcryptjs';
 import { BusinessException } from '@/shared/exceptions';
@@ -98,7 +98,7 @@ describe('UserService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
         {
@@ -275,18 +275,18 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
-    prisma = module.get<PrismaService>(PrismaService);
-    userRepo = module.get<UserRepository>(UserRepository);
-    roleService = module.get<RoleService>(RoleService);
-    deptService = module.get<DeptService>(DeptService);
-    configService = module.get<ConfigService>(ConfigService);
-    userAuthService = module.get(UserAuthService);
-    userProfileService = module.get(UserProfileService);
-    userRoleService = module.get(UserRoleService);
-    userCrudService = module.get(UserCrudService);
-    userBatchService = module.get(UserBatchService);
-    userQueryService = module.get(UserQueryService);
+    service = modules.get<UserService>(UserService);
+    prisma = modules.get<PrismaService>(PrismaService);
+    userRepo = modules.get<UserRepository>(UserRepository);
+    roleService = modules.get<RoleService>(RoleService);
+    deptService = modules.get<DeptService>(DeptService);
+    configService = modules.get<ConfigService>(ConfigService);
+    userAuthService = modules.get(UserAuthService);
+    userProfileService = modules.get(UserProfileService);
+    userRoleService = modules.get(UserRoleService);
+    userCrudService = modules.get(UserCrudService);
+    userBatchService = modules.get(UserBatchService);
+    userQueryService = modules.get(UserQueryService);
   });
 
   afterEach(() => {

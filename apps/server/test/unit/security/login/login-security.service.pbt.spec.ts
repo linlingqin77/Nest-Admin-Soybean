@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoginSecurityService } from '@/security/login/login-security.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { LoginSecurityService } from '@/core/auth/login-core.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import { CacheEnum } from '@/shared/enums/index';
 
 /**
@@ -60,7 +60,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         LoginSecurityService,
         {
@@ -70,8 +70,8 @@ describe('LoginSecurityService Property-Based Tests', () => {
       ],
     }).compile();
 
-    service = module.get<LoginSecurityService>(LoginSecurityService);
-    redisService = module.get(RedisService);
+    service = modules.get<LoginSecurityService>(LoginSecurityService);
+    redisService = modules.get(RedisService);
   });
 
   afterEach(() => {
@@ -95,7 +95,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
             // Clear any existing state
             await service.unlockAccount(username);
 
-            const config = {
+            const platform/config = {
               maxFailedAttempts,
               lockDurationMs: 15 * 60 * 1000,
               failedCountTtlMs: 15 * 60 * 1000,
@@ -103,14 +103,14 @@ describe('LoginSecurityService Property-Based Tests', () => {
 
             // Record failures up to maxFailedAttempts - 1
             for (let i = 0; i < maxFailedAttempts - 1; i++) {
-              const status = await service.recordLoginFailure(username, config);
+              const status = await service.recordLoginFailure(username, platform/config);
               // Should NOT be locked yet
               expect(status.isLocked).toBe(false);
               expect(status.failedAttempts).toBe(i + 1);
             }
 
             // Record the final failure that triggers lock
-            const finalStatus = await service.recordLoginFailure(username, config);
+            const finalStatus = await service.recordLoginFailure(username, platform/config);
 
             // Property: Account should be locked after exactly maxFailedAttempts
             expect(finalStatus.isLocked).toBe(true);
@@ -236,7 +236,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
             // Clear any existing state
             await service.unlockAccount(username);
 
-            const config = {
+            const platform/config = {
               maxFailedAttempts,
               lockDurationMs: 15 * 60 * 1000,
               failedCountTtlMs: 15 * 60 * 1000,
@@ -248,7 +248,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
               await redisService.set(countKey, currentFailures.toString(), 15 * 60 * 1000);
             }
 
-            const status = await service.getSecurityStatus(username, config);
+            const status = await service.getSecurityStatus(username, platform/config);
 
             // Property: remainingAttempts = max(0, maxFailedAttempts - currentFailures)
             const expectedRemaining = Math.max(0, maxFailedAttempts - currentFailures);

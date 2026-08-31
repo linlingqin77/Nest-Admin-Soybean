@@ -1,8 +1,8 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantQuotaService, QuotaResource } from '@/tenant/services/quota.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { TenantQuotaService, QuotaResource } from '@/core/tenancy/services/quota.service';
+import { PrismaService } from '@/platform/prisma';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * TenantQuotaService 属性测试
@@ -68,7 +68,7 @@ describe('TenantQuotaService - Property Tests', () => {
     tenantQuotas = new Map();
     tenantUsage = new Map();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TenantQuotaService,
         {
@@ -82,7 +82,7 @@ describe('TenantQuotaService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<TenantQuotaService>(TenantQuotaService);
+    service = modules.get<TenantQuotaService>(TenantQuotaService);
   });
 
   // 生成有效的租户ID

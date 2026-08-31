@@ -12,10 +12,10 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { TenantService } from 'src/module/system/tenant/tenant.service';
-import { TenantContext } from 'src/tenant/context/tenant.context';
+import { AppModule } from 'src/app.modules';
+import { PrismaService } from 'src/platform/prisma';
+import { TenantService } from 'src/modules/tenants/tenant.service';
+import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { StatusEnum } from 'src/shared/enums/index';
 
 function uniqueId(): string {
@@ -186,9 +186,9 @@ describe('Tenant Isolation Integration Tests', () => {
       expect(userAInB).toBeUndefined();
     });
 
-    it('should isolate config data between tenants', async () => {
-      const configKeyA = `test.config.a.${uniqueId()}`;
-      const configKeyB = `test.config.b.${uniqueId()}`;
+    it('should isolate platform/config data between tenants', async () => {
+      const configKeyA = `test.platform/config.a.${uniqueId()}`;
+      const configKeyB = `test.platform/config.b.${uniqueId()}`;
 
       // 在租户A上下文中创建配置
       const configA = await TenantContext.run({ tenantId: tenantA.tenantId }, async () => {

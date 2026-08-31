@@ -245,7 +245,7 @@ describe('Mock 服务 - 属性测试', () => {
     describe('Config Mock 配置访问', () => {
       it('get 应该返回正确的配置值', () => {
         fc.assert(
-          fc.property(fc.constantFrom('app.name', 'jwt.secret', 'security.bcryptRounds'), (configPath) => {
+          fc.property(fc.constantFrom('app.name', 'jwt.secret', 'core.bcryptRounds'), (configPath) => {
             const mockConfig = createMockConfig();
             const value = mockConfig.get(configPath);
 

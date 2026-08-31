@@ -5,8 +5,8 @@
  * **Validates: Requirements 8.2, 8.4**
  */
 import * as fc from 'fast-check';
-import { PreviewService } from '@/module/system/tool/preview/preview.service';
-import { PreviewFileDto, FileTreeNodeDto } from '@/module/system/tool/dto/responses/preview.response.dto';
+import { PreviewService } from '@/modules/tools/preview/preview.service';
+import { PreviewFileDto, FileTreeNodeDto } from '@/modules/tools/dto/responses/preview.response.dto';
 
 describe('PreviewService - Property Tests', () => {
   let service: PreviewService;
@@ -260,7 +260,7 @@ describe('PreviewService - Property Tests', () => {
             'tool/template/nestjs/dto.ts.vm': fc.string({ minLength: 10, maxLength: 200 }),
             'tool/template/nestjs/controller.ts.vm': fc.string({ minLength: 10, maxLength: 200 }),
             'tool/template/nestjs/service.ts.vm': fc.string({ minLength: 10, maxLength: 200 }),
-            'tool/template/nestjs/module.ts.vm': fc.string({ minLength: 10, maxLength: 200 }),
+            'tool/template/nestjs/modules.ts.vm': fc.string({ minLength: 10, maxLength: 200 }),
           }),
           fc.string({ minLength: 1, maxLength: 20 }).filter((s) => /^[A-Z][a-zA-Z0-9]*$/.test(s)),
           (templateOutput, businessName) => {

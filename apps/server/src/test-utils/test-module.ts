@@ -1,8 +1,8 @@
 import { ModuleMetadata, Type } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { AppConfigService } from 'src/config/app-config.service';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { AppConfigService } from 'src/platform/config/app-config.service';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { createPrismaMock, PrismaMock } from './prisma-mock';
 import { createRedisMock, RedisMock } from './redis-mock';
 import { createConfigMock, ConfigMock } from './config-mock';
@@ -15,11 +15,11 @@ import { createConfigMock, ConfigMock } from './config-mock';
  *
  * @example
  * ```typescript
- * const { module, prisma, redis, config } = await TestModuleBuilder.create({
+ * const { modules, prisma, redis, config } = await TestModuleBuilder.create({
  *   providers: [UserService],
  * }).compile();
  *
- * const userService = module.get<UserService>(UserService);
+ * const userService = modules.get<UserService>(UserService);
  * prisma.sysUser.findMany.mockResolvedValue([...]);
  * ```
  */
@@ -100,10 +100,10 @@ export class TestModuleBuilder {
    * @returns 编译后的测试模块和 Mock 对象
    */
   async compile(): Promise<TestModuleResult> {
-    const module = await this.moduleBuilder.compile();
+    const modules = await this.moduleBuilder.compile();
 
     return {
-      module,
+      modules,
       prisma: this.prismaMock,
       redis: this.redisMock,
       config: this.configMock,
@@ -137,7 +137,7 @@ export class TestModuleBuilder {
  */
 export interface TestModuleResult {
   /** 编译后的测试模块 */
-  module: TestingModule;
+  modules: TestingModule;
   /** Prisma Mock 实例 */
   prisma: PrismaMock;
   /** Redis Mock 实例 */

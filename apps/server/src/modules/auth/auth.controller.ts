@@ -1,0 +1,345 @@
+import { Controller, Get, Post, Body, HttpCode, Logger, Headers } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiHeader } from '@nestjs/swagger';
+import { AppConfigService } from 'src/platform/config/app-config.service';
+import { MainService } from './main.service';
+import { AuthLoginRequestDto, AuthRegisterRequestDto, SocialLoginRequestDto } from './dto/requests';
+import {
+  LoginTokenResponseDto,
+  CaptchaCodeResponseDto,
+  LoginTenantResponseDto,
+  UserInfoResponseDto,
+  PublicKeyResponseDto,
+  AuthRegisterResultResponseDto,
+  AuthLogoutResponseDto,
+  SocialCallbackResponseDto,
+} from './dto/responses';
+import { createMath } from 'src/shared/utils/captcha';
+import { Result, ResponseCode } from 'src/shared/response';
+import { BusinessException } from 'src/shared/exceptions/business.exception';
+import { GenerateUUID } from 'src/shared/utils/index';
+import { RedisService } from 'src/platform/redis/redis.service';
+import { StatusEnum } from 'src/shared/enums/index';
+import { CacheEnum } from 'src/shared/enums/index';
+import { ConfigService as SysConfigService } from 'src/modules/configs/config.service';
+import { ClientInfo, ClientInfoDto } from 'src/core/auth/decorators/common.decorator';
+import { NotRequireAuth, User, UserDto } from 'src/modules/users/user.decorator';
+import { Api } from 'src/core/decorators/api.decorator';
+import { TenantContext, IgnoreTenant } from 'src/core/tenancy';
+import { SkipDecrypt, CryptoService } from 'src/core/crypto';
+import { PrismaService } from 'src/platform/prisma';
+import { TokenBlacklistService } from 'src/core/auth/token-blacklist.service';
+import { ApiThrottle, ApiSkipThrottle } from 'src/core/decorators/throttle.decorator';
+
+/**
+ * 认证控制器 - 匹配 Soybean 前端 API
+ *
+ * 路由前缀: /auth
+ * 对应前端: src/service/api/auth.ts
+ */
+@ApiTags('认证模块')
+@Controller('auth')
+@ApiBearerAuth('Authorization')
+export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
+  constructor(
+    private readonly mainService: MainService,
+    private readonly redisService: RedisService,
+    private readonly sysConfigService: SysConfigService,
+    private readonly config: AppConfigService,
+    private readonly prisma: PrismaService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
+    private readonly cryptoService: CryptoService,
+  ) {}
+
+  /**
+   * 获取租户列表 - GET /auth/tenant/list
+   * 对应前端: fetchTenantList()
+   *
+   * 限流配置：跳过限流，因为这是公开的高频接口
+   */
+  @Api({
+    summary: '获取租户列表',
+    description: '获取系统中所有可用的租户列表，用于登录时选择租户',
+    core: false,
+    type: LoginTenantResponseDto,
+  })
+  @Get('tenant/list')
+  @NotRequireAuth()
+  @IgnoreTenant()
+  @ApiSkipThrottle() // 跳过限流，公开高频接口
+  async getTenantList(): Promise<Result> {
+    const tenantEnabled = this.config.tenant.enabled;
+
+    const result: LoginTenantResponseDto = {
+      tenantEnabled,
+      voList: [],
+    };
+
+    if (tenantEnabled) {
+      try {
+        // 查询所有正常状态的租户
+        const tenants = await this.prisma.sysTenant.findMany({
+          where: { status: StatusEnum.NORMAL },
+          select: {
+            tenantId: true,
+            companyName: true,
+            domain: true,
+          },
+          orderBy: { createTime: 'asc' },
+        });
+
+        result.voList = tenants.map((t) => ({
+          tenantId: t.tenantId,
+          companyName: t.companyName,
+          domain: t.domain || '',
+        }));
+      } catch (error) {
+        // 如果表不存在，返回默认租户
+        this.logger.warn('SysTenant table may not exist yet:', error.message);
+        result.voList = [
+          {
+            tenantId: TenantContext.SUPER_TENANT_ID,
+            companyName: '默认租户',
+            domain: '',
+          },
+        ];
+      }
+    }
+
+    return Result.ok(result);
+  }
+
+  /**
+   * 获取验证码 - GET /auth/code
+   * 对应前端: fetchCaptchaCode()
+   */
+  @Api({
+    summary: '获取验证码',
+    description: '获取登录/注册所需的图形验证码',
+    core: false,
+    type: CaptchaCodeResponseDto,
+  })
+  @Get('code')
+  @NotRequireAuth()
+  async getCaptchaCode(): Promise<Result> {
+    // 使用公共配置方法，不依赖租户上下文（登录前没有租户信息）
+    const enable = await this.sysConfigService.getSystemConfigValue('sys.account.captchaEnabled');
+    const captchaEnabled: boolean = enable === 'true';
+
+    const result: CaptchaCodeResponseDto = {
+      captchaEnabled,
+      uuid: '',
+      img: '',
+    };
+
+    if (captchaEnabled) {
+      try {
+        const captchaInfo = createMath();
+        result.img = captchaInfo.data;
+        result.uuid = GenerateUUID();
+        await this.redisService.set(
+          CacheEnum.CAPTCHA_CODE_KEY + result.uuid,
+          captchaInfo.text.toLowerCase(),
+          1000 * 60 * 5,
+        );
+      } catch (err) {
+        this.logger.error('生成验证码错误:', err);
+        throw new BusinessException(ResponseCode.INTERNAL_SERVER_ERROR, '生成验证码错误，请重试');
+      }
+    }
+
+    return Result.ok(result);
+  }
+
+  /**
+   * 用户登录 - POST /auth/login
+   * 对应前端: fetchLogin()
+   *
+   * 限流配置：每分钟最多 10 次登录尝试，防止暴力破解
+   */
+  @Api({
+    summary: '用户登录',
+    description: '用户登录接口，支持租户、验证码验证',
+    body: AuthLoginRequestDto,
+    core: false,
+    type: LoginTokenResponseDto,
+  })
+  @Post('login')
+  @HttpCode(200)
+  @NotRequireAuth()
+  @ApiThrottle({ ttl: 60000, limit: 10 }) // 每分钟最多 10 次登录尝试
+  @ApiHeader({ name: 'tenant-id', description: '租户ID', required: false })
+  async login(
+    @Body() loginDto: AuthLoginRequestDto,
+    @ClientInfo() clientInfo: ClientInfoDto,
+    @Headers('tenant-id') headerTenantId?: string,
+  ): Promise<Result> {
+    // 优先使用 header 中的租户ID，其次使用 body 中的
+    const tenantId = headerTenantId || loginDto.tenantId || TenantContext.SUPER_TENANT_ID;
+
+    this.logger.log(`用户登录: ${loginDto.username}, 租户: ${tenantId}`);
+
+    // 转换为原有的登录 DTO 格式调用服务（注意：原服务使用 userName 而非 username）
+    const loginData = {
+      userName: loginDto.username, // Soybean 前端用 username，后端用 userName
+      password: loginDto.password,
+      code: loginDto.code,
+      uuid: loginDto.uuid,
+    };
+
+    // 设置租户上下文后执行登录
+    return TenantContext.run({ tenantId }, async () => {
+      const result = await this.mainService.login(loginData as any, clientInfo);
+
+      // 转换响应格式为 Soybean 前端期望的格式
+      if (result.code === 200 && result.data?.token) {
+        const jwtExpires = this.config.jwt.expiresin;
+        const refreshExpires = this.config.jwt.refreshExpiresIn;
+
+        const loginToken: LoginTokenResponseDto = {
+          access_token: result.data.token,
+          refresh_token: result.data.token, // 暂时使用同一个 token
+          expire_in: this.parseExpiresIn(jwtExpires),
+          refresh_expire_in: this.parseExpiresIn(refreshExpires),
+          client_id: loginDto.clientId || 'pc',
+          scope: '',
+          openid: '',
+        };
+
+        return Result.ok(loginToken);
+      }
+
+      return result;
+    });
+  }
+
+  /**
+   * 用户注册 - POST /auth/register
+   * 对应前端: fetchRegister()
+   *
+   * 限流配置：每分钟最多 5 次注册尝试，防止恶意注册
+   */
+  @Api({
+    summary: '用户注册',
+    description: '新用户注册接口',
+    body: AuthRegisterRequestDto,
+    core: false,
+    type: AuthRegisterResultResponseDto,
+  })
+  @Post('register')
+  @HttpCode(200)
+  @NotRequireAuth()
+  @ApiThrottle({ ttl: 60000, limit: 5 }) // 每分钟最多 5 次注册尝试
+  @ApiHeader({ name: 'tenant-id', description: '租户ID', required: false })
+  async register(
+    @Body() registerDto: AuthRegisterRequestDto,
+    @Headers('tenant-id') headerTenantId?: string,
+  ): Promise<Result> {
+    // 验证密码一致性
+    BusinessException.throwIf(
+      registerDto.password !== registerDto.confirmPassword,
+      '两次输入的密码不一致',
+      ResponseCode.BAD_REQUEST,
+    );
+
+    const tenantId = headerTenantId || registerDto.tenantId || TenantContext.SUPER_TENANT_ID;
+
+    // 转换为原有的注册 DTO 格式
+    const registerData = {
+      username: registerDto.username,
+      password: registerDto.password,
+      code: registerDto.code,
+      uuid: registerDto.uuid,
+    };
+
+    return TenantContext.run({ tenantId }, async () => {
+      return this.mainService.register(registerData as any);
+    });
+  }
+
+  /**
+   * 退出登录 - POST /auth/logout
+   * 对应前端: fetchLogout()
+   * 需求 4.8: 登出后 Token 立即失效
+   */
+  @Api({
+    summary: '退出登录',
+    description: '退出当前登录状态，Token 将被加入黑名单',
+    type: AuthLogoutResponseDto,
+  })
+  @NotRequireAuth()
+  @Post('logout')
+  @HttpCode(200)
+  async logout(@User() user: UserDto, @ClientInfo() clientInfo: ClientInfoDto): Promise<Result> {
+    if (user?.token) {
+      // 删除 Redis 中的登录信息
+      await this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
+      // 将 Token 加入黑名单，确保即使 JWT 未过期也无法使用
+      await this.tokenBlacklistService.addToBlacklist(user.token);
+      this.logger.log(`User logged out: userId=${user.userId}, token=${user.token}`);
+    }
+    return this.mainService.logout(clientInfo);
+  }
+
+  /**
+   * 社交登录回调 - POST /auth/social/callback
+   * 对应前端: fetchSocialLoginCallback()
+   */
+  @Api({
+    summary: '社交登录回调',
+    description: '第三方社交平台登录回调处理',
+    body: SocialLoginRequestDto,
+    core: false,
+    type: SocialCallbackResponseDto,
+  })
+  @Post('social/callback')
+  @HttpCode(200)
+  @NotRequireAuth()
+  async socialCallback(@Body() socialDto: SocialLoginRequestDto): Promise<Result> {
+    // TODO: 实现社交登录逻辑
+    throw new BusinessException(ResponseCode.NOT_IMPLEMENTED, '社交登录功能暂未实现');
+  }
+
+  /**
+   * 获取加密公钥 - GET /auth/publicKey
+   * 用于前端加密数据
+   */
+  @Api({
+    summary: '获取加密公钥',
+    description: '获取RSA公钥用于数据加密',
+    core: false,
+    type: PublicKeyResponseDto,
+  })
+  @Get('publicKey')
+  @NotRequireAuth()
+  @SkipDecrypt()
+  async getPublicKey(): Promise<Result> {
+    const publicKey = this.cryptoService.getPublicKey();
+    return Result.ok({ publicKey });
+  }
+
+  /**
+   * 解析过期时间字符串为秒数
+   */
+  private parseExpiresIn(expires: string): number {
+    const match = expires.match(/^(\d+)(h|m|s|d)?$/);
+    if (!match) return 3600;
+
+    const value = parseInt(match[1], 10);
+    const unit = match[2] || 's';
+
+    switch (unit) {
+      case 'd':
+        return value * 86400;
+      case 'h':
+        return value * 3600;
+      case 'm':
+        return value * 60;
+      case 's':
+        return value;
+      default:
+        return value;
+    }
+  }
+}

@@ -7,10 +7,10 @@
  */
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { GenTableService } from '@/module/system/tool/gen-table.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { FieldInferenceService } from '@/module/system/tool/inference/field-inference.service';
-import { DataSourceService } from '@/module/system/tool/datasource/datasource.service';
+import { GenTableService } from '@/modules/tools/gen-table.service';
+import { PrismaService } from '@/platform/prisma';
+import { FieldInferenceService } from '@/modules/tools/inference/field-inference.service';
+import { DataSourceService } from '@/modules/tools/datasource/datasource.service';
 import { TenantContext } from '@/tenant';
 import { DelFlagEnum, StatusEnum } from '@/shared/enums';
 import { GenConstants } from '@/shared/constants/gen.constant';
@@ -51,7 +51,7 @@ describe('GenTableService - Property Tests', () => {
       getColumns: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         GenTableService,
         { provide: PrismaService, useValue: mockPrismaService },
@@ -60,7 +60,7 @@ describe('GenTableService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<GenTableService>(GenTableService);
+    service = modules.get<GenTableService>(GenTableService);
   });
 
   afterEach(() => {

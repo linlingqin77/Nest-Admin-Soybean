@@ -1,0 +1,101 @@
+import { Injectable } from '@nestjs/common';
+import { Result } from 'src/shared/response';
+import { SUCCESS_CODE } from 'src/shared/response';
+import { UserService } from '../users/user.service';
+import { LoginlogService } from '../login-logs/loginlog.service';
+import { AxiosService } from 'src/modules/axios/axios.service';
+import { LoginRequestDto, RegisterRequestDto } from './dto/requests';
+import { MenuService } from '../menus/menu.service';
+import { ClientInfoDto } from 'src/core/auth/decorators/common.decorator';
+import { StatusEnum } from 'src/shared/enums/index';
+import { MetricsService } from 'src/core/observability/metrics';
+@Injectable()
+export class MainService {
+  constructor(
+    private readonly userService: UserService,
+    private readonly loginlogService: LoginlogService,
+    private readonly axiosService: AxiosService,
+    private readonly menuService: MenuService,
+    private readonly metricsService: MetricsService,
+  ) {}
+
+  /**
+   * 登陆
+   * @param user
+   * @returns
+   */
+  async login(user: LoginRequestDto, clientInfo: ClientInfoDto) {
+    const loginLog = {
+      ...clientInfo,
+      status: StatusEnum.NORMAL,
+      msg: '',
+    };
+
+    // 异步获取登录位置，不阻塞登录流程
+    this.axiosService
+      .getIpAddress(clientInfo.ipaddr)
+      .then((loginLocation) => {
+        loginLog.loginLocation = loginLocation;
+      })
+      .catch(() => {
+        loginLog.loginLocation = '未知';
+      });
+
+    const loginRes = await this.userService.login(user, loginLog);
+    loginLog.status = loginRes.code === SUCCESS_CODE ? StatusEnum.NORMAL : StatusEnum.STOP;
+    loginLog.msg = loginRes.msg;
+    this.loginlogService.create(loginLog);
+
+    // 记录登录指标（登录成功时 data 仅有 token，无 user；tenantId 从上下文或默认值获取）
+    const tenantId =
+      (loginRes.data as { token?: string; user?: { tenantId?: string } } | undefined)?.user?.tenantId || 'unknown';
+    this.metricsService.recordLoginAttempt(tenantId, loginRes.code === SUCCESS_CODE);
+
+    return loginRes;
+  }
+  /**
+   * 退出登陆
+   * @param clientInfo
+   */
+  async logout(clientInfo: ClientInfoDto) {
+    const loginLog = {
+      ...clientInfo,
+      status: StatusEnum.NORMAL,
+      msg: '退出成功',
+    };
+
+    // 异步获取登录位置，不阻塞退出流程
+    this.axiosService
+      .getIpAddress(clientInfo.ipaddr)
+      .then((loginLocation) => {
+        loginLog.loginLocation = loginLocation;
+      })
+      .catch(() => {
+        loginLog.loginLocation = '未知';
+      });
+
+    this.loginlogService.create(loginLog);
+    return Result.ok();
+  }
+  /**
+   * 注册
+   * @param user
+   * @returns
+   */
+  async register(user: RegisterRequestDto) {
+    return await this.userService.register(user);
+  }
+
+  /**
+   * 登陆记录
+   */
+  loginRecord() {}
+
+  /**
+   * 获取路由菜单
+   */
+  async getRouters(userId: number) {
+    const menus = await this.menuService.getMenuListByUserId(userId);
+    return Result.ok(menus);
+  }
+}

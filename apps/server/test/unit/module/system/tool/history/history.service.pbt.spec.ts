@@ -5,10 +5,10 @@
  * **Validates: Requirements 9.2**
  */
 import * as fc from 'fast-check';
-import { HistoryService } from '@/module/system/tool/history/history.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { HistoryService } from '@/modules/tools/history/history.service';
+import { PrismaService } from '@/platform/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantContext } from '@/tenant/context/tenant.context';
+import { TenantContext } from '@/core/tenancy/context/tenant.context';
 
 describe('HistoryService - Property Tests', () => {
   let service: HistoryService;
@@ -107,7 +107,7 @@ describe('HistoryService - Property Tests', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         HistoryService,
         {
@@ -117,7 +117,7 @@ describe('HistoryService - Property Tests', () => {
       ],
     }).compile();
 
-    service = module.get<HistoryService>(HistoryService);
+    service = modules.get<HistoryService>(HistoryService);
 
     // 设置租户上下文
     jest.spyOn(TenantContext, 'getTenantId').mockReturnValue('000000');

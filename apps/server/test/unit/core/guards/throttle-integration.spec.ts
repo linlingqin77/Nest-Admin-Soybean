@@ -4,8 +4,8 @@ import { Controller, Get, INestApplication } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import request from 'supertest';
-import { ApiThrottle, ApiSkipThrottle } from '@/core/decorators/throttle.decorator';
-import { CustomThrottlerGuard } from '@/core/guards/throttle.guard';
+import { ApiThrottle, ApiSkipThrottle } from '@/core/http/decorators/throttle.decorator';
+import { CustomThrottlerGuard } from '@/core/http/guards/throttle.guard';
 
 /**
  * 测试控制器 - 用于验证限流功能

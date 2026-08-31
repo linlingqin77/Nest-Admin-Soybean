@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
-import { GlobalExceptionFilter } from '@/core/filters/global-exception.filter';
+import { GlobalExceptionFilter } from '@/core/http/filters/global-exception.filter';
 import {
   BusinessException,
   AuthenticationException,

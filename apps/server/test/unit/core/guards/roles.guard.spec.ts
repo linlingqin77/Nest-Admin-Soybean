@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RolesGuard } from '@/core/guards/roles.guard';
+import { RolesGuard } from '@/core/permissions/guards/roles.guard';
 
 describe('RolesGuard', () => {
   let guard: RolesGuard;
@@ -20,7 +20,7 @@ describe('RolesGuard', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         RolesGuard,
         {
@@ -32,8 +32,8 @@ describe('RolesGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<RolesGuard>(RolesGuard);
-    reflector = module.get<Reflector>(Reflector);
+    guard = modules.get<RolesGuard>(RolesGuard);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

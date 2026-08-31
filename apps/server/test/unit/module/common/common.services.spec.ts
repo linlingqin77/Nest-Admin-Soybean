@@ -1,9 +1,9 @@
 /**
  * @file Common Services Unit Tests
- * @description Migrated from src/module/common/common.services.spec.ts
+ * @description Migrated from src/modules/common.services.spec.ts
  */
-import { AxiosService } from '@/module/common/axios/axios.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { AxiosService } from '@/modules/axios/axios.service';
+import { RedisService } from '@/platform/redis/redis.service';
 import type { HttpService } from '@nestjs/axios';
 
 const createRedisClientMock = () => ({

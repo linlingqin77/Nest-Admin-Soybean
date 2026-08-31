@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuditService, AuditLogData } from '@/observability/audit/audit.service';
-import { PrismaService } from '@/infrastructure/prisma/prisma.service';
+import { AuditService, AuditLogData } from '@/core/audit/audit.service';
+import { PrismaService } from '@/platform/prisma/prisma.service';
 import { ClsService } from 'nestjs-cls';
 
 describe('AuditService', () => {
@@ -37,7 +37,7 @@ describe('AuditService', () => {
       getId: jest.fn().mockReturnValue('test-request-id'),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         AuditService,
         {
@@ -51,7 +51,7 @@ describe('AuditService', () => {
       ],
     }).compile();
 
-    service = module.get<AuditService>(AuditService);
+    service = modules.get<AuditService>(AuditService);
   });
 
   afterEach(async () => {
@@ -69,7 +69,7 @@ describe('AuditService', () => {
 
       const auditData: AuditLogData = {
         action: 'CREATE',
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         targetId: '100',
         status: '0',
@@ -82,7 +82,7 @@ describe('AuditService', () => {
       expect(capturedLogs).toHaveLength(1);
       expect(capturedLogs[0]).toMatchObject({
         action: 'CREATE',
-        module: 'system',
+        modules: 'system',
         targetType: 'User',
         targetId: '100',
         status: '0',
@@ -99,7 +99,7 @@ describe('AuditService', () => {
     it('should use default values when CLS context is empty', async () => {
       const auditData: AuditLogData = {
         action: 'QUERY',
-        module: 'monitor',
+        modules: 'monitor',
         status: '0',
       };
 
@@ -107,7 +107,7 @@ describe('AuditService', () => {
 
       expect(capturedLogs[0]).toMatchObject({
         action: 'QUERY',
-        module: 'monitor',
+        modules: 'monitor',
         status: '0',
         tenantId: '000000',
         ip: '0.0.0.0',
@@ -120,7 +120,7 @@ describe('AuditService', () => {
 
       const auditData: AuditLogData = {
         action: 'DELETE',
-        module: 'system',
+        modules: 'system',
         status: '1',
         errorMsg: 'Permission denied',
       };
@@ -141,7 +141,7 @@ describe('AuditService', () => {
 
       const auditData: AuditLogData = {
         action: 'UPDATE',
-        module: 'system',
+        modules: 'system',
         status: '0',
       };
 
@@ -157,9 +157,9 @@ describe('AuditService', () => {
       clsStore.set('request', { ip: '127.0.0.1', headers: {} });
 
       // Add multiple logs
-      await service.log({ action: 'CREATE', module: 'system', status: '0' });
-      await service.log({ action: 'UPDATE', module: 'system', status: '0' });
-      await service.log({ action: 'DELETE', module: 'system', status: '0' });
+      await service.log({ action: 'CREATE', modules: 'system', status: '0' });
+      await service.log({ action: 'UPDATE', modules: 'system', status: '0' });
+      await service.log({ action: 'DELETE', modules: 'system', status: '0' });
 
       expect(service.getQueueLength()).toBe(3);
 
@@ -178,7 +178,7 @@ describe('AuditService', () => {
 
   describe('findAll', () => {
     it('should query audit logs with filters', async () => {
-      mockPrismaService.sysAuditLog.findMany.mockResolvedValue([{ id: 1, action: 'CREATE', module: 'system' }]);
+      mockPrismaService.sysAuditLog.findMany.mockResolvedValue([{ id: 1, action: 'CREATE', modules: 'system' }]);
       mockPrismaService.sysAuditLog.count.mockResolvedValue(1);
 
       const result = await service.findAll({
@@ -189,7 +189,7 @@ describe('AuditService', () => {
       });
 
       expect(result).toEqual({
-        rows: [{ id: 1, action: 'CREATE', module: 'system' }],
+        rows: [{ id: 1, action: 'CREATE', modules: 'system' }],
         total: 1,
       });
       expect(mockPrismaService.sysAuditLog.findMany).toHaveBeenCalled();
@@ -222,8 +222,8 @@ describe('AuditService', () => {
       clsStore.set('user', { tenantId: '000000', userId: 1, userName: 'admin' });
       clsStore.set('request', { ip: '127.0.0.1', headers: {} });
 
-      await service.log({ action: 'CREATE', module: 'system', status: '0' });
-      await service.log({ action: 'UPDATE', module: 'system', status: '0' });
+      await service.log({ action: 'CREATE', modules: 'system', status: '0' });
+      await service.log({ action: 'UPDATE', modules: 'system', status: '0' });
 
       expect(service.getQueueLength()).toBe(2);
 

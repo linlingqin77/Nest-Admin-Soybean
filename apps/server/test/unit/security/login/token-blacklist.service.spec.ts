@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
+import { RedisService } from '@/platform/redis/redis.service';
 
 describe('TokenBlacklistService', () => {
   let service: TokenBlacklistService;
@@ -13,7 +13,7 @@ describe('TokenBlacklistService', () => {
       del: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         TokenBlacklistService,
         {
@@ -23,8 +23,8 @@ describe('TokenBlacklistService', () => {
       ],
     }).compile();
 
-    service = module.get<TokenBlacklistService>(TokenBlacklistService);
-    redisService = module.get(RedisService);
+    service = modules.get<TokenBlacklistService>(TokenBlacklistService);
+    redisService = modules.get(RedisService);
   });
 
   afterEach(() => {

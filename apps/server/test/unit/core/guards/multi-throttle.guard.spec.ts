@@ -7,8 +7,8 @@ import {
   DEFAULT_THROTTLE_CONFIG,
   THROTTLE_KEY,
   SKIP_THROTTLE_KEY,
-} from '@/core/guards/multi-throttle.guard';
-import { RedisService } from '@/module/common/redis/redis.service';
+} from '@/core/http/guards/multi-throttle.guard';
+import { RedisService } from '@/platform/redis/redis.service';
 import { createRedisMock, RedisMock } from 'test/mocks/redis-mock';
 
 describe('MultiThrottleGuard', () => {
@@ -42,7 +42,7 @@ describe('MultiThrottleGuard', () => {
   beforeEach(async () => {
     redisMock = createRedisMock();
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         MultiThrottleGuard,
         {
@@ -58,8 +58,8 @@ describe('MultiThrottleGuard', () => {
       ],
     }).compile();
 
-    guard = module.get<MultiThrottleGuard>(MultiThrottleGuard);
-    reflector = module.get<Reflector>(Reflector);
+    guard = modules.get<MultiThrottleGuard>(MultiThrottleGuard);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {
@@ -157,7 +157,7 @@ describe('MultiThrottleGuard', () => {
       await expect(guard.canActivate(context)).rejects.toThrow(ThrottleException);
     });
 
-    it('should use custom throttle config from decorator', async () => {
+    it('should use custom throttle platform/config from decorator', async () => {
       const customConfig = {
         ip: { ttl: 30000, limit: 5 },
       };

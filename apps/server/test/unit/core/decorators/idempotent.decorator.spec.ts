@@ -7,8 +7,8 @@ import {
   IDEMPOTENT_KEY,
   IdempotentOptions,
   Idempotent,
-} from '@/core/decorators/idempotent.decorator';
-import { RedisService } from '@/module/common/redis/redis.service';
+} from '@/core/http/decorators/idempotent.decorator';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Unit Tests for IdempotentInterceptor
@@ -84,7 +84,7 @@ describe('IdempotentInterceptor Unit Tests', () => {
       getClient: jest.fn().mockReturnValue(mockRedisClient),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         IdempotentInterceptor,
         {
@@ -100,8 +100,8 @@ describe('IdempotentInterceptor Unit Tests', () => {
       ],
     }).compile();
 
-    interceptor = module.get<IdempotentInterceptor>(IdempotentInterceptor);
-    reflector = module.get<Reflector>(Reflector);
+    interceptor = modules.get<IdempotentInterceptor>(IdempotentInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

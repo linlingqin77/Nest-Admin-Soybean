@@ -15,8 +15,8 @@
 
 import * as fc from 'fast-check';
 import { TestHelper } from '../helpers/test-helper';
-import { PrismaService } from 'src/infrastructure/prisma';
-import { RedisService } from 'src/module/common/redis/redis.service';
+import { PrismaService } from 'src/platform/prisma';
+import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 
 describe('Property 4: Pagination Structure Consistency', () => {
@@ -32,7 +32,7 @@ describe('Property 4: Pagination Structure Consistency', () => {
     path: string;
     description: string;
   }> = [
-    // System module endpoints
+    // System modules endpoints
     { path: '/system/user/list', description: 'User list' },
     { path: '/system/role/list', description: 'Role list' },
     { path: '/system/dict/type/list', description: 'Dict type list' },
@@ -42,7 +42,7 @@ describe('Property 4: Pagination Structure Consistency', () => {
     { path: '/system/post/list', description: 'Post list' },
     { path: '/system/tenant/list', description: 'Tenant list' },
 
-    // Monitor module endpoints
+    // Monitor modules endpoints
     { path: '/monitor/online/list', description: 'Online user list' },
     { path: '/monitor/operlog/list', description: 'Operation log list' },
     { path: '/monitor/logininfor/list', description: 'Login log list' },

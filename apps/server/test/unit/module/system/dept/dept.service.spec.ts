@@ -1,17 +1,17 @@
-/** @file dept.service.spec.ts @description Migrated from src/module/system/dept/dept.service.spec.ts */
+/** @file dept.service.spec.ts @description Migrated from src/modules/depts/dept.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { DeptService } from '@/module/system/dept/dept.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { DeptRepository } from '@/module/system/dept/dept.repository';
+import { DeptService } from '@/modules/depts/dept.service';
+import { PrismaService } from '@/platform/prisma';
+import { DeptRepository } from '@/modules/depts/dept.repository';
 import { DataScopeEnum } from '@/shared/enums';
 
 // Mock decorators
-jest.mock('@/core/decorators/redis.decorator', () => ({
+jest.mock('@/core/auth/decorators/redis.decorator', () => ({
   Cacheable: () => () => {},
   CacheEvict: () => () => {},
 }));
-jest.mock('@/core/decorators/transactional.decorator', () => ({
+jest.mock('@/core/http/decorators/transactional.decorator', () => ({
   Transactional: () => () => {},
 }));
 
@@ -41,7 +41,7 @@ describe('DeptService', () => {
       softDelete: jest.fn().mockResolvedValue({ deptId: 1 }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         DeptService,
         { provide: PrismaService, useValue: prismaMock },
@@ -49,7 +49,7 @@ describe('DeptService', () => {
       ],
     }).compile();
 
-    service = module.get<DeptService>(DeptService);
+    service = modules.get<DeptService>(DeptService);
   });
 
   afterEach(() => {

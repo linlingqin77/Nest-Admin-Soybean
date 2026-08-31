@@ -1,15 +1,15 @@
 /**
  * @file Cache Controller Unit Tests
- * @description Migrated from src/module/monitor/cache/cache.controller.spec.ts
+ * @description Migrated from src/modules/monitors/cache/cache.controller.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { CacheController } from '@/module/monitor/cache/cache.controller';
-import { CacheService } from '@/module/monitor/cache/cache.service';
+import { CacheController } from '@/modules/monitors/cache/cache.controller';
+import { CacheService } from '@/modules/monitors/cache/cache.service';
 import { Result } from '@/shared/response';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 // Mock the Operlog decorator
-jest.mock('@/core/decorators/operlog.decorator', () => ({
+jest.mock('@/core/audit/decorators/operlog.decorator', () => ({
   Operlog: () => () => {},
 }));
 
@@ -34,12 +34,12 @@ describe('CacheController', () => {
       clearCacheAll: jest.fn().mockResolvedValue(Result.ok()),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [CacheController],
       providers: [{ provide: CacheService, useValue: cacheServiceMock }],
     }).compile();
 
-    controller = module.get<CacheController>(CacheController);
+    controller = modules.get<CacheController>(CacheController);
   });
 
   afterEach(() => {

@@ -5,22 +5,22 @@
  * Requirements: 11.1, 15.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ToolController } from '@/module/system/tool/tool.controller';
-import { ToolService } from '@/module/system/tool/tool.service';
+import { ToolController } from '@/modules/tools/tool.controller';
+import { ToolService } from '@/modules/tools/tool.service';
 import { Response } from 'express';
 import { Result } from '@/shared/response';
 import { Reflector } from '@nestjs/core';
 import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 
 // Mock MultiThrottleGuard
-jest.mock('@/core/guards/multi-throttle.guard', () => ({
+jest.mock('@/core/http/guards/multi-throttle.guard', () => ({
   MultiThrottleGuard: jest.fn().mockImplementation(() => ({
     canActivate: jest.fn().mockReturnValue(true),
   })),
 }));
 
 // Mock OperlogInterceptor
-jest.mock('@/core/interceptors/operlog.interceptor', () => ({
+jest.mock('@/core/http/interceptors/operlog.interceptor', () => ({
   OperlogInterceptor: jest.fn().mockImplementation(() => ({
     intercept: jest.fn().mockImplementation((context, next) => next.handle()),
   })),
@@ -52,7 +52,7 @@ describe('ToolController', () => {
       send: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [ToolController],
       providers: [
         {
@@ -63,7 +63,7 @@ describe('ToolController', () => {
       ],
     }).compile();
 
-    controller = module.get<ToolController>(ToolController);
+    controller = modules.get<ToolController>(ToolController);
   });
 
   afterEach(() => {

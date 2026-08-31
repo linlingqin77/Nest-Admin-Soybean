@@ -5,21 +5,21 @@
  * Requirements: 6.2, 6.5, 6.6, 11.1, 15.1
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { TemplateController } from '@/module/system/tool/template/template.controller';
-import { TemplateService } from '@/module/system/tool/template/template.service';
+import { TemplateController } from '@/modules/tools/template/template.controller';
+import { TemplateService } from '@/modules/tools/template/template.service';
 import { Result } from '@/shared/response';
 import { Response } from 'express';
 import { Reflector } from '@nestjs/core';
 
 // Mock guards
-jest.mock('@/core/guards/multi-throttle.guard', () => ({
+jest.mock('@/core/http/guards/multi-throttle.guard', () => ({
   MultiThrottleGuard: jest.fn().mockImplementation(() => ({
     canActivate: jest.fn().mockReturnValue(true),
   })),
 }));
 
 // Mock OperlogInterceptor
-jest.mock('@/core/interceptors/operlog.interceptor', () => ({
+jest.mock('@/core/http/interceptors/operlog.interceptor', () => ({
   OperlogInterceptor: jest.fn().mockImplementation(() => ({
     intercept: jest.fn().mockImplementation((context, next) => next.handle()),
   })),
@@ -58,7 +58,7 @@ describe('TemplateController', () => {
       json: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [TemplateController],
       providers: [
         {
@@ -69,7 +69,7 @@ describe('TemplateController', () => {
       ],
     }).compile();
 
-    controller = module.get<TemplateController>(TemplateController);
+    controller = modules.get<TemplateController>(TemplateController);
   });
 
   afterEach(() => {

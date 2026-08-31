@@ -1,10 +1,10 @@
 /**
  * @file user.decorator.spec.ts
- * @description Migrated from src/module/system/user/user.decorator.spec.ts
+ * @description Migrated from src/modules/users/user.decorator.spec.ts
  * Unit tests for User decorators
  */
 import { ExecutionContext } from '@nestjs/common';
-import { User, NotRequireAuth, UserTool } from '@/module/system/user/user.decorator';
+import { User, NotRequireAuth, UserTool } from '@/modules/users/user.decorator';
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 
 describe('User Decorators', () => {

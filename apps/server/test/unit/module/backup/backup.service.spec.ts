@@ -1,8 +1,8 @@
 /**
  * @file Backup Service Unit Tests
- * @description Migrated from src/module/backup/backup.service.spec.ts
+ * @description Migrated from src/modules/backup/backup.service.spec.ts
  */
-import { BackupService } from '@/module/backup/backup.service';
+import { BackupService } from '@/modules/backup/backup.service';
 import { Logger } from '@nestjs/common';
 
 describe('BackupService', () => {

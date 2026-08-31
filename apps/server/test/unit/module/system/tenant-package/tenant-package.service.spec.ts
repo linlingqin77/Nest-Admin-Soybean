@@ -1,10 +1,10 @@
-/** @file tenant-package.service.spec.ts @description Migrated from src/module/system/tenant-package/tenant-package.service.spec.ts */
+/** @file tenant-package.service.spec.ts @description Migrated from src/modules/tenant-packages/tenant-package.service.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantPackageService } from '@/module/system/tenant-package/tenant-package.service';
-import { PrismaService } from '@/infrastructure/prisma';
+import { TenantPackageService } from '@/modules/tenant-packages/tenant-package.service';
+import { PrismaService } from '@/platform/prisma';
 import { BusinessException } from '@/shared/exceptions';
-import { ListTenantPackageRequestDto } from '@/module/system/tenant-package/dto/index';
+import { ListTenantPackageRequestDto } from '@/modules/tenant-packages/dto/index';
 
 // Helper to create DTO instance
 function createListDto(params: Partial<ListTenantPackageRequestDto> = {}): ListTenantPackageRequestDto {
@@ -37,11 +37,11 @@ describe('TenantPackageService', () => {
       }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [TenantPackageService, { provide: PrismaService, useValue: prismaMock }],
     }).compile();
 
-    service = module.get<TenantPackageService>(TenantPackageService);
+    service = modules.get<TenantPackageService>(TenantPackageService);
   });
 
   afterEach(() => {

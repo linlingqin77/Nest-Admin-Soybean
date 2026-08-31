@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
-import { OperlogInterceptor } from '@/core/interceptors/operlog.interceptor';
-import { OperlogService } from '@/module/monitor/operlog/operlog.service';
+import { OperlogInterceptor } from '@/core/http/interceptors/operlog.interceptor';
+import { OperlogService } from '@/modules/oper-logs/operlog.service';
 import { Reflector } from '@nestjs/core';
 
 describe('OperlogInterceptor', () => {
@@ -14,11 +14,11 @@ describe('OperlogInterceptor', () => {
       logAction: jest.fn(),
     } as any;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [OperlogInterceptor, { provide: OperlogService, useValue: operlogServiceMock }],
     }).compile();
 
-    interceptor = module.get<OperlogInterceptor>(OperlogInterceptor);
+    interceptor = modules.get<OperlogInterceptor>(OperlogInterceptor);
   });
 
   afterEach(() => {

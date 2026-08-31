@@ -37,24 +37,24 @@ describe('PasswordValidator', () => {
       });
 
       it('应该接受自定义最小长度', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           minLength: 4,
           requireUppercase: false,
           requireLowercase: false,
           requireNumber: false,
         };
-        const result = PasswordValidator.validate('abcd', config);
+        const result = PasswordValidator.validate('abcd', platform/config);
         expect(result.valid).toBe(true);
       });
 
       it('应该接受自定义最大长度', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           maxLength: 10,
           requireUppercase: false,
           requireLowercase: false,
           requireNumber: false,
         };
-        const result = PasswordValidator.validate('abcdefghijk', config);
+        const result = PasswordValidator.validate('abcdefghijk', platform/config);
         expect(result.valid).toBe(false);
         expect(result.errors).toContain('密码长度最多10位');
       });
@@ -80,75 +80,75 @@ describe('PasswordValidator', () => {
       });
 
       it('应该可选要求特殊字符', () => {
-        const config: PasswordValidationConfig = { requireSpecial: true };
-        const result = PasswordValidator.validate('Abcdefgh1', config);
+        const platform/config: PasswordValidationConfig = { requireSpecial: true };
+        const result = PasswordValidator.validate('Abcdefgh1', platform/config);
         expect(result.valid).toBe(false);
         expect(result.errors).toContain('密码必须包含特殊字符');
       });
 
       it('应该接受包含特殊字符的密码', () => {
-        const config: PasswordValidationConfig = { requireSpecial: true };
-        const result = PasswordValidator.validate('Abcdefgh1!', config);
+        const platform/config: PasswordValidationConfig = { requireSpecial: true };
+        const result = PasswordValidator.validate('Abcdefgh1!', platform/config);
         expect(result.valid).toBe(true);
       });
 
       it('应该可以禁用大写字母要求', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           requireUppercase: false,
           requireLowercase: true,
           requireNumber: true,
         };
-        const result = PasswordValidator.validate('abcdefgh1', config);
+        const result = PasswordValidator.validate('abcdefgh1', platform/config);
         expect(result.valid).toBe(true);
       });
 
       it('应该可以禁用小写字母要求', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           requireLowercase: false,
           requireUppercase: true,
           requireNumber: true,
         };
-        const result = PasswordValidator.validate('ABCDEFGH1', config);
+        const result = PasswordValidator.validate('ABCDEFGH1', platform/config);
         expect(result.valid).toBe(true);
       });
 
       it('应该可以禁用数字要求', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           requireNumber: false,
           requireUppercase: true,
           requireLowercase: true,
         };
-        const result = PasswordValidator.validate('Abcdefgh', config);
+        const result = PasswordValidator.validate('Abcdefgh', platform/config);
         expect(result.valid).toBe(true);
       });
     });
 
     describe('禁止模式验证', () => {
       it('应该拒绝包含禁止模式的密码', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           forbiddenPatterns: [/password/i, /123456/],
           requireUppercase: false,
           requireLowercase: false,
           requireNumber: false,
         };
-        const result = PasswordValidator.validate('myPassword123', config);
+        const result = PasswordValidator.validate('myPassword123', platform/config);
         expect(result.valid).toBe(false);
         expect(result.errors).toContain('密码包含不允许的模式');
       });
 
       it('应该拒绝包含连续数字的密码', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           forbiddenPatterns: [/123456/],
           requireUppercase: false,
           requireLowercase: false,
           requireNumber: false,
         };
-        const result = PasswordValidator.validate('abc123456def', config);
+        const result = PasswordValidator.validate('abc123456def', platform/config);
         expect(result.valid).toBe(false);
       });
 
       it('应该接受不包含禁止模式的密码', () => {
-        const config: PasswordValidationConfig = {
+        const platform/config: PasswordValidationConfig = {
           forbiddenPatterns: [/password/i],
         };
         const result = PasswordValidator.validate('Abcdefgh1');

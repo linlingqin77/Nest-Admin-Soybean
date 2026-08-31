@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, CallHandler, HttpException, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, throwError } from 'rxjs';
-import { IdempotentInterceptor, IDEMPOTENT_KEY, IdempotentOptions } from '@/core/decorators/idempotent.decorator';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { IdempotentInterceptor, IDEMPOTENT_KEY, IdempotentOptions } from '@/core/http/decorators/idempotent.decorator';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Property-Based Tests for IdempotentInterceptor
@@ -87,7 +87,7 @@ describe('IdempotentInterceptor Property-Based Tests', () => {
       getClient: jest.fn().mockReturnValue(mockRedisClient),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         IdempotentInterceptor,
         {
@@ -103,8 +103,8 @@ describe('IdempotentInterceptor Property-Based Tests', () => {
       ],
     }).compile();
 
-    interceptor = module.get<IdempotentInterceptor>(IdempotentInterceptor);
-    reflector = module.get<Reflector>(Reflector);
+    interceptor = modules.get<IdempotentInterceptor>(IdempotentInterceptor);
+    reflector = modules.get<Reflector>(Reflector);
   });
 
   afterEach(() => {

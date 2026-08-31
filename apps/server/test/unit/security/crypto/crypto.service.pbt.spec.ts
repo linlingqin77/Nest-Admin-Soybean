@@ -1,8 +1,8 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CryptoService } from '@/security/crypto/crypto.service';
-import { AppConfigService } from '@/config/app-config.service';
-import { RedisService } from '@/module/common/redis/redis.service';
+import { CryptoService } from '@/core/crypto/crypto.service';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { RedisService } from '@/platform/redis/redis.service';
 
 /**
  * Property-Based Tests for CryptoService
@@ -27,7 +27,7 @@ describe('CryptoService Property-Based Tests', () => {
 
   // Initialize once for all tests to avoid repeated key generation
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [
         CryptoService,
         {
@@ -46,7 +46,7 @@ describe('CryptoService Property-Based Tests', () => {
       ],
     }).compile();
 
-    service = module.get<CryptoService>(CryptoService);
+    service = modules.get<CryptoService>(CryptoService);
     // Trigger key generation once
     service.onModuleInit();
   });
@@ -194,7 +194,7 @@ describe('CryptoService Property-Based Tests', () => {
    * Property 4: Encryption Determinism
    *
    * AES encryption with same key should produce different ciphertexts
-   * due to random IV (semantic security).
+   * due to random IV (semantic core).
    *
    * **Validates: Requirements 3.3.6**
    */

@@ -1,10 +1,10 @@
 /**
  * @file Loginlog Repository Unit Tests
- * @description Migrated from src/module/monitor/loginlog/loginlog.repository.spec.ts
+ * @description Migrated from src/modules/login-logs/loginlog.repository.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoginlogRepository } from '@/module/monitor/loginlog/loginlog.repository';
-import { PrismaService } from '@/infrastructure/prisma';
+import { LoginlogRepository } from '@/modules/login-logs/loginlog.repository';
+import { PrismaService } from '@/platform/prisma';
 
 describe('LoginlogRepository', () => {
   let repository: LoginlogRepository;
@@ -29,11 +29,11 @@ describe('LoginlogRepository', () => {
       $executeRawUnsafe: jest.fn().mockResolvedValue(0),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [LoginlogRepository, { provide: PrismaService, useValue: prismaMock }],
     }).compile();
 
-    repository = module.get<LoginlogRepository>(LoginlogRepository);
+    repository = modules.get<LoginlogRepository>(LoginlogRepository);
   });
 
   afterEach(() => {

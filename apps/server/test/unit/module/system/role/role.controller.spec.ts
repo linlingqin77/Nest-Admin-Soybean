@@ -1,16 +1,16 @@
-/** @file role.controller.spec.ts @description Migrated from src/module/system/role/role.controller.spec.ts */
+/** @file role.controller.spec.ts @description Migrated from src/modules/roles/role.controller.spec.ts */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleController } from '@/module/system/role/role.controller';
-import { RoleService } from '@/module/system/role/role.service';
-import { UserService } from '@/module/system/user/user.service';
+import { RoleController } from '@/modules/roles/role.controller';
+import { RoleService } from '@/modules/roles/role.service';
+import { UserService } from '@/modules/users/user.service';
 import { Result } from '@/shared/response';
 
 // Mock decorators
-jest.mock('@/core/decorators/operlog.decorator', () => ({
+jest.mock('@/core/audit/decorators/operlog.decorator', () => ({
   Operlog: () => () => {},
 }));
-jest.mock('@/core/decorators/require-premission.decorator', () => ({
+jest.mock('@/core/http/decorators/require-premission.decorator', () => ({
   RequirePermission: () => () => {},
 }));
 
@@ -48,7 +48,7 @@ describe('RoleController', () => {
       authUserSelectAll: jest.fn().mockResolvedValue(Result.ok()),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [RoleController],
       providers: [
         { provide: RoleService, useValue: roleServiceMock },
@@ -56,7 +56,7 @@ describe('RoleController', () => {
       ],
     }).compile();
 
-    controller = module.get<RoleController>(RoleController);
+    controller = modules.get<RoleController>(RoleController);
   });
 
   afterEach(() => {

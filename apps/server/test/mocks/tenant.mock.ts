@@ -10,9 +10,9 @@
 
 import { createMockPrisma, MockPrismaService, createModelMock } from './prisma.mock';
 import { createMockRedis, MockRedisService } from './redis.mock';
-import { createMockConfig, MockConfigService } from './config.mock';
-import { TenantContext, TenantContextData } from '../../src/tenant/context/tenant.context';
-import { SUPER_TENANT_ID, TENANT_MODELS } from '../../src/tenant/constants/tenant-models';
+import { createMockConfig, MockConfigService } from './platform/config.mock';
+import { TenantContext, TenantContextData } from '../../src/core/tenancy/context/tenant.context';
+import { SUPER_TENANT_ID, TENANT_MODELS } from '../../src/core/tenancy/constants/tenant-models';
 
 /**
  * 租户测试配置
@@ -72,10 +72,10 @@ export interface QuotaTestData {
 /**
  * 创建租户专用的 Prisma Mock
  *
- * @param config 租户配置
+ * @param platform/config 租户配置
  * @returns 配置好的 MockPrismaService
  */
-export function createTenantMockPrisma(config: Partial<TenantTestConfig> = {}): MockPrismaService {
+export function createTenantMockPrisma(platform/config: Partial<TenantTestConfig> = {}): MockPrismaService {
   const mock = createMockPrisma();
 
   // 添加租户相关的默认行为
@@ -138,11 +138,11 @@ export function createTenantMockRedis(): MockRedisService {
 /**
  * 创建租户专用的 Config Mock
  *
- * @param config 租户配置覆盖
+ * @param platform/config 租户配置覆盖
  * @returns 配置好的 MockConfigService
  */
-export function createTenantMockConfig(config: Partial<TenantTestConfig> = {}): MockConfigService {
-  const tenantConfig = { ...defaultTenantTestConfig, ...config };
+export function createTenantMockConfig(platform/config: Partial<TenantTestConfig> = {}): MockConfigService {
+  const tenantConfig = { ...defaultTenantTestConfig, ...platform/config };
 
   return createMockConfig({
     'tenant.enabled': tenantConfig.enabled,
@@ -153,11 +153,11 @@ export function createTenantMockConfig(config: Partial<TenantTestConfig> = {}): 
 /**
  * 创建 AppConfigService Mock
  *
- * @param config 租户配置覆盖
+ * @param platform/config 租户配置覆盖
  * @returns AppConfigService Mock 对象
  */
-export function createMockAppConfigService(config: Partial<TenantTestConfig> = {}) {
-  const tenantConfig = { ...defaultTenantTestConfig, ...config };
+export function createMockAppConfigService(platform/config: Partial<TenantTestConfig> = {}) {
+  const tenantConfig = { ...defaultTenantTestConfig, ...platform/config };
 
   return {
     tenant: {

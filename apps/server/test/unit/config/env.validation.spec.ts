@@ -8,7 +8,7 @@ describe('env.validation', () => {
       DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
     };
 
-    it('should validate valid config', () => {
+    it('should validate valid platform/config', () => {
       const result = validate(validConfig);
 
       expect(result).toBeDefined();

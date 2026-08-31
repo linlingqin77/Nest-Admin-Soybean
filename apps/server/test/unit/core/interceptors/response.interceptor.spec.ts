@@ -1,6 +1,6 @@
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of } from 'rxjs';
-import { ResponseInterceptor } from '@/core/interceptors/response.interceptor';
+import { ResponseInterceptor } from '@/core/http/interceptors/response.interceptor';
 import { Result } from '@/shared/response/result';
 import { ClsService } from 'nestjs-cls';
 

@@ -7,9 +7,9 @@
  * - 100 列表处理性能
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { PreviewService } from '@/module/system/tool/preview/preview.service';
-import { FieldInferenceService } from '@/module/system/tool/inference/field-inference.service';
-import { index as templateIndex } from '@/module/system/tool/template/index';
+import { PreviewService } from '@/modules/tools/preview/preview.service';
+import { FieldInferenceService } from '@/modules/tools/inference/field-inference.service';
+import { index as templateIndex } from '@/modules/tools/template/index';
 import { GenTable, GenTableColumn } from '@prisma/client';
 
 describe('Code Generator Performance Tests', () => {
@@ -17,12 +17,12 @@ describe('Code Generator Performance Tests', () => {
   let fieldInferenceService: FieldInferenceService;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       providers: [PreviewService, FieldInferenceService],
     }).compile();
 
-    previewService = module.get<PreviewService>(PreviewService);
-    fieldInferenceService = module.get<FieldInferenceService>(FieldInferenceService);
+    previewService = modules.get<PreviewService>(PreviewService);
+    fieldInferenceService = modules.get<FieldInferenceService>(FieldInferenceService);
   });
 
   /**
@@ -283,7 +283,7 @@ describe('Code Generator Performance Tests', () => {
       // 创建大量文件用于测试文件树构建
       const files = Array.from({ length: 100 }, (_, i) => ({
         name: `file_${i + 1}.ts`,
-        path: `src/module/table_${Math.floor(i / 10)}/file_${i + 1}.ts`,
+        path: `src/modules/table_${Math.floor(i / 10)}/file_${i + 1}.ts`,
         content: `// File ${i + 1}\nexport const value = ${i};`,
         language: 'typescript',
         size: 50,

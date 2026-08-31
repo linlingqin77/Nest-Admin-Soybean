@@ -1,15 +1,15 @@
 /**
  * @file Auth Controller Unit Tests
- * @description Migrated from src/module/main/auth.controller.spec.ts
+ * @description Migrated from src/modules/auth/auth.controller.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from '@/module/main/auth.controller';
-import { MainService } from '@/module/main/main.service';
-import { RedisService } from '@/module/common/redis/redis.service';
-import { ConfigService as SysConfigService } from '@/module/system/config/config.service';
-import { AppConfigService } from '@/config/app-config.service';
-import { PrismaService } from '@/infrastructure/prisma';
-import { TokenBlacklistService } from '@/security/login/token-blacklist.service';
+import { AuthController } from '@/modules/auth/auth.controller';
+import { MainService } from '@/modules/auth/main.service';
+import { RedisService } from '@/platform/redis/redis.service';
+import { ConfigService as SysConfigService } from '@/modules/configs/config.service';
+import { AppConfigService } from '@/config/app-platform/config.service';
+import { PrismaService } from '@/platform/prisma';
+import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 import { Result, ResponseCode } from '@/shared/response';
 
 describe('AuthController', () => {
@@ -52,7 +52,7 @@ describe('AuthController', () => {
       addToBlacklist: jest.fn().mockResolvedValue(undefined),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const modules: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         { provide: MainService, useValue: mainServiceMock },
@@ -64,7 +64,7 @@ describe('AuthController', () => {
       ],
     }).compile();
 
-    controller = module.get<AuthController>(AuthController);
+    controller = modules.get<AuthController>(AuthController);
   });
 
   afterEach(() => {
@@ -111,7 +111,7 @@ describe('AuthController', () => {
   });
 
   describe('getCaptchaCode', () => {
-    it('should return disabled captcha when config is false', async () => {
+    it('should return disabled captcha when platform/config is false', async () => {
       sysConfigServiceMock.getSystemConfigValue.mockResolvedValue('false');
 
       const result = await controller.getCaptchaCode();
