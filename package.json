@@ -12,7 +12,13 @@
     "build:server": "turbo run build --filter=@nest-admin/server",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "harness:check-boundaries": "tsx harness/scripts/check-boundaries.ts",
+    "harness:check-generated": "tsx harness/scripts/check-generated.ts",
+    "harness:check-spec": "tsx harness/scripts/check-spec.ts",
+    "harness:verify": "pnpm harness:check-boundaries && pnpm harness:check-generated && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "gen:openapi": "cd apps/server && npx tsx scripts/export-openapi.ts",
+    "gen:api": "cd apps/web && npx tsx scripts/gen-api.ts"
   },
   "devDependencies": {
     "turbo": "^2.3.0"
