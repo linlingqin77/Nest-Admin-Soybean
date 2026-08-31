@@ -1,0 +1,23 @@
+{
+  "name": "@nest-admin/contracts",
+  "version": "1.0.0",
+  "description": "Nest-Admin shared contracts including OpenAPI specification",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./openapi": "./openapi/openapi.json"
+  },
+  "files": [
+    "openapi",
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "nest-admin",
+    "openapi",
+    "contracts"
+  ],
+  "license": "MIT"
+}

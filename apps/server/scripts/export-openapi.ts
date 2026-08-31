@@ -1,81 +1,63 @@
 /**
  * Export OpenAPI Specification
  *
- * Bootstraps the NestJS application, generates the OpenAPI document,
- * and writes it to packages/contracts/openapi/openapi.json.
+ * Copies the OpenAPI document from the built app's public directory
+ * to packages/contracts/openapi/openapi.json.
  *
- * Run: npx tsx scripts/export-openapi.ts
+ * This script should be run AFTER building the server:
+ *   pnpm --filter @nest-admin/server build
+ *   pnpm generate:openapi
+ *
+ * Run: pnpm generate:openapi
  */
 
-import { writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-import { AppConfigService } from '../src/platform/config/app-config.service';
+import { copyFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const OUTPUT_PATH = join(
-  __dirname,
-  '../../packages/contracts/openapi/openapi.json',
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-async function bootstrap() {
-  console.log('🚀 Booting NestJS application for OpenAPI export...');
+// Source: built server's public/openApi.json
+// Target: packages/contracts/openapi/openapi.json
+const SOURCE_PATH = join(__dirname, '../public/openApi.json');
+const TARGET_DIR = join(__dirname, '../../../packages/contracts/openapi');
+const TARGET_PATH = join(TARGET_DIR, 'openapi.json');
 
-  const app = await NestFactory.create(AppModule, { logger: false });
+function main() {
+  console.log('🚀 Exporting OpenAPI specification...\n');
 
-  const config = app.get(AppConfigService);
-  const prefix = config.app.prefix || 'api';
+  // Check if source file exists
+  if (!existsSync(SOURCE_PATH)) {
+    console.error(`❌ Source file not found: ${SOURCE_PATH}`);
+    console.error('   Please run "pnpm --filter @nest-admin/server build" first.');
+    process.exit(1);
+  }
 
-  app.setGlobalPrefix(prefix);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
+  // Ensure target directory exists
+  mkdirSync(TARGET_DIR, { recursive: true });
 
-  const swaggerOptions = new DocumentBuilder()
-    .setTitle('Nest-Admin API')
-    .setDescription('Nest-Admin 后台管理系统 API 文档')
-    .setVersion('1.0.0')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        in: 'header',
-        name: 'Authorization',
-      },
-      'Authorization',
-    )
-    .addServer(config.app.file.domain)
-    .build();
+  // Read and parse to validate
+  try {
+    const content = readFileSync(SOURCE_PATH, 'utf-8');
+    const document = JSON.parse(content);
 
-  const document = SwaggerModule.createDocument(app, swaggerOptions);
+    // Copy file
+    copyFileSync(SOURCE_PATH, TARGET_PATH);
 
-  // Ensure directory exists
-  mkdirSync(join(__dirname, '../../packages/contracts/openapi'), { recursive: true });
+    console.log(`✅ OpenAPI spec exported to: ${TARGET_PATH}`);
 
-  // Write to file
-  writeFileSync(OUTPUT_PATH, JSON.stringify(document, null, 2), 'utf-8');
+    // Log stats
+    const pathCount = Object.keys(document.paths || {}).length;
+    const schemaCount = Object.keys(document.components?.schemas || {}).length;
+    console.log(`   - Paths: ${pathCount}`);
+    console.log(`   - Schemas: ${schemaCount}`);
 
-  console.log(`✅ OpenAPI spec exported to: ${OUTPUT_PATH}`);
-
-  // Log stats
-  const pathCount = Object.keys(document.paths || {}).length;
-  const schemaCount = Object.keys(document.components?.schemas || {}).length;
-  console.log(`   - Paths: ${pathCount}`);
-  console.log(`   - Schemas: ${schemaCount}`);
-
-  await app.close();
-  process.exit(0);
+    process.exit(0);
+  } catch (err) {
+    console.error(`❌ Failed to export OpenAPI: ${(err as Error).message}`);
+    process.exit(1);
+  }
 }
 
-bootstrap().catch((err) => {
-  console.error('❌ Failed to export OpenAPI:', err);
-  process.exit(1);
-});
+main();
