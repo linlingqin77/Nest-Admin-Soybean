@@ -471,7 +471,7 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           }
         ]
-      },
+      } as unknown as any,
       {
         name: 'tool_swagger',
         path: '/tool/swagger',
