@@ -18,7 +18,7 @@ interface NodeInfoDto {
   home?: string;
 }
 
-interface ExtendedServerInfo extends Api.Monitor.ServerInfo {
+interface ExtendedServerInfo extends Omit<Api.Monitor.ServerInfo, 'node'> {
   node?: NodeInfoDto;
 }
 
@@ -52,7 +52,7 @@ const diskColumns = [
     key: 'usage',
     align: 'center' as const,
     render: (row: Api.Monitor.SysFile) => {
-      const usage = Number.parseFloat(row.usage) || 0;
+      const usage = (row.usage as unknown as number) || 0;
       const status = usage > 80 ? 'error' : usage > 60 ? 'warning' : 'success';
       return h(NProgress, {
         type: 'line',

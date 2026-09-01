@@ -56,7 +56,7 @@ async function openModal(fileIds: string[]) {
 async function handleCreateShares() {
   loading.value = true;
   try {
-    const params: Partial<Api.System.CreateShareParams> = {};
+    const params: Partial<Api.System.CreateShareParams> & { shareCode?: string; expireHours?: number } = {};
 
     if (formModel.needPassword) {
       params.shareCode = formModel.password;

@@ -143,7 +143,7 @@ const {
               type="info"
               icon="material-symbols:link"
               tooltipContent="测试连接"
-              onClick={() => handleTestConnection(dataRow.id)}
+              onClick={() => handleTestConnection(dataRow.id as number)}
             />
           );
         };
@@ -158,7 +158,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(dataRow.id)}
+              onClick={() => edit(dataRow.id as number)}
             />
           );
         };
@@ -174,7 +174,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(dataRow.id)}
+              onPositiveClick={() => handleDelete(dataRow.id as number)}
             />
           );
         };

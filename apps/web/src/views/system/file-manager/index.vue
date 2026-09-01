@@ -21,13 +21,14 @@ import {
 } from 'naive-ui';
 import type { DataTableColumns, DropdownOption } from 'naive-ui';
 import {
+  fetchBatchDeleteFiles,
   fetchFileManagerDeleteFolder,
   fetchFileManagerGetFolderTree,
   fetchFileManagerListFiles,
   fetchFileManagerMoveFiles,
-  fetchFileManagerRenameFile
+  fetchFileManagerRenameFile,
+  fetchUploadFile
 } from '@/service/api';
-import { fetchBatchDeleteFiles, fetchUploadFile } from '@/service/api';
 import { useThemeStore } from '@/store/modules/theme';
 import DragUploadOverlay from '@/components/drag-upload-overlay/index.vue';
 import UploadPanel from '@/components/upload-panel/index.vue';
@@ -222,7 +223,7 @@ async function loadFileList() {
       type: 'file' as const,
       id: f.uploadId,
       name: f.fileName,
-      size: f.size, // 修改：后端返回的字段是size，不是fileSize
+      size: (f as any).size ?? f.fileSize, // 修改：后端返回的字段是size，不是fileSize
       createTime: f.createTime,
       thumbnail: f.thumbnail,
       ext: f.ext,

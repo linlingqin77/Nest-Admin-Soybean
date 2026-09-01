@@ -216,7 +216,9 @@ async function getGenPreview() {
   if (!props.rowData?.tableId) return;
   startLoading();
   try {
-    const { data } = (await fetchToolPreview(props.rowData?.tableId)) as { data: Api.Tool.GenTablePreview };
+    const { data } = (await fetchToolPreview(props.rowData?.tableId as number)) as unknown as {
+      data: Api.Tool.GenTablePreview;
+    };
     previewData.value = data || {};
     // 默认选中第一个文件
     const keys = Object.keys(previewData.value);

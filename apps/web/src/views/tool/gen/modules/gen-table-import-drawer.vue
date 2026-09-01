@@ -46,6 +46,12 @@ const previewTableName = ref('');
 const previewColumns = ref<Api.Tool.DbColumn[]>([]);
 const { loading: previewLoading, startLoading: startPreviewLoading, endLoading: endPreviewLoading } = useLoading();
 
+const previewApi = {
+  Tool: {
+    TableName: ref('')
+  }
+};
+
 const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams } = useTable({
   apiFn: fetchToolGenDbList as any,
   immediate: false,
@@ -118,7 +124,9 @@ const dataNameOptions = ref<CommonType.Option[]>([]);
 async function getDataSources() {
   startDataSourceLoading();
   try {
-    const { data: result } = (await fetchDataSourceList({ pageSize: 100 })) as { data: { rows: Api.Tool.DataSource[] } };
+    const { data: result } = (await fetchDataSourceList({ pageSize: 100 })) as {
+      data: { rows: Api.Tool.DataSource[] };
+    };
     dataSources.value = result?.rows || [];
 
     // 同时获取数据源名称列表
@@ -159,7 +167,7 @@ async function handlePreviewTable(tableName: string) {
   startPreviewLoading();
 
   try {
-    const { data: cols } = (await fetchDataSourceGetColumns(selectedDataSourceId.value, tableName)) as {
+    const { data: cols } = (await fetchDataSourceGetColumns(selectedDataSourceId.value as number, tableName)) as {
       data: Api.Tool.DbColumn[];
     };
     previewColumns.value = cols || [];
@@ -183,10 +191,10 @@ function closePreview() {
 async function handleSubmit() {
   if (checkedRowKeys.value.length > 0) {
     try {
-      const tableData: Api.Tool.TableName = {
-        tableNames: checkedRowKeys.value.join(',')
+      const tableData: { tables: string; dataName?: string } = {
+        tables: checkedRowKeys.value.join(',')
       };
-      await fetchToolGenImportTable(tableData);
+      await fetchToolGenImportTable(tableData as any);
       window.$message?.success('导入成功');
       emit('submitted');
     } catch {
@@ -201,7 +209,7 @@ async function handleResetSearchParams() {
     (searchParams as any).dataName = dataNameOptions.value[0].value;
     // 同步选择对应的数据源
     const ds = dataSources.value.find(d => d.name === dataNameOptions.value[0].value);
-    selectedDataSourceId.value = ds?.id || null;
+    selectedDataSourceId.value = (ds?.id as number) || null;
   } else {
     (searchParams as any).dataName = null;
     selectedDataSourceId.value = null;

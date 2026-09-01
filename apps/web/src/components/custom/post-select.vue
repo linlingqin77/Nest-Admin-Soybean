@@ -39,7 +39,7 @@ watch(
 async function getPostOptions() {
   startPostLoading();
   try {
-    const { data } = await fetchPostOptionselect({ deptId: props.deptId });
+    const { data } = await fetchPostOptionselect({ deptId: props.deptId ?? undefined });
     if (data) {
       const posts = data as Api.System.Post[];
       postOptions.value = posts.map(item => ({

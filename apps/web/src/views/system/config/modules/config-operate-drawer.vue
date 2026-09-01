@@ -91,7 +91,13 @@ async function handleSubmit() {
   try {
     if (props.operateType === 'add') {
       const { configName, configKey, configValue, configType, remark } = model;
-      const createData: Api.System.ConfigOperateParams = { configName, configKey, configValue, configType, remark };
+      const createData: Api.System.ConfigOperateParams = {
+        configName,
+        configKey,
+        configValue,
+        configType: configType as 'Y' | 'N' | null,
+        remark
+      };
       await fetchConfigCreate(createData);
     } else if (props.operateType === 'edit') {
       const { configId, configName, configKey, configValue, configType, remark } = model;
@@ -100,7 +106,7 @@ async function handleSubmit() {
         configName,
         configKey,
         configValue,
-        configType,
+        configType: configType as Api.Common.YesOrNoStatus | null,
         remark
       };
       await fetchConfigUpdate(updateData);

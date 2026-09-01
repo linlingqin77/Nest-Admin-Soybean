@@ -246,7 +246,7 @@ function extractResponseRef(op: OpenAPIOperation): {
   isArray: boolean;
   baseRef?: string;
 } {
-  const resp = op.responses?.['200'] ?? op.responses?.['default'];
+  const resp = op.responses?.['200'] ?? op.responses?.default;
   if (!resp) return { isArray: false };
 
   const jsonSchema = resp.content?.['application/json']?.schema;
@@ -372,9 +372,7 @@ function generateTypeDefinition(name: string, schema: OpenAPISchema): string {
   }
 
   if (schema.enum) {
-    const values = schema.enum
-      .map(v => (typeof v === 'string' ? `'${escapeString(v)}'` : String(v)))
-      .join(' | ');
+    const values = schema.enum.map(v => (typeof v === 'string' ? `'${escapeString(v)}'` : String(v))).join(' | ');
     lines.push(`export type ${name} = ${values};`);
     return lines.join('\n');
   }
@@ -465,9 +463,7 @@ function generateTagFile(tag: string, ops: ParsedOperation[]): string {
   }
 
   if (usedTypes.size > 0) {
-    lines.push(
-      `// Referenced types: ${Array.from(usedTypes).sort().join(', ')}`
-    );
+    lines.push(`// Referenced types: ${Array.from(usedTypes).sort().join(', ')}`);
     lines.push('');
   }
 
@@ -520,11 +516,7 @@ function generateApiFunction(op: ParsedOperation): string {
   }
   if (op.queryParams.length > 0) {
     lines.push('    params: {');
-    lines.push(
-      op.queryParams
-        .map(p => `      ${p.name}: ${p.name}${p.required ? '' : ' ?? undefined'}`)
-        .join(',\n')
-    );
+    lines.push(op.queryParams.map(p => `      ${p.name}: ${p.name}${p.required ? '' : ' ?? undefined'}`).join(',\n'));
     lines.push('    },');
   }
   lines.push(`    operationId: '${op.operationId}',`);

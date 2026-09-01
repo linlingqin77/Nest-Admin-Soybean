@@ -27,7 +27,6 @@ const tableProps = useTableProps();
 
 const {
   columns,
-  columnChecks,
   data,
   getData,
   loading,
@@ -173,11 +172,15 @@ async function handleAddOperate() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
+    <DeptSearch
+      :model="(searchParams as any)"
+      @update:model="(v: any) => { searchParams = v; }"
+      @reset="resetSearchParams"
+      @search="getData"
+    />
     <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
-          v-model:columns="columnChecks"
           :loading="loading"
           :show-add="hasAuth('system:dept:add')"
           :show-delete="false"
@@ -187,13 +190,13 @@ async function handleAddOperate() {
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-mdi:unfold-more-horizontal />
               </template>
               {{ $t('page.system.dept.expandAll') }}
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-mdi:unfold-less-horizontal />
               </template>
               {{ $t('page.system.dept.collapseAll') }}
             </NButton>

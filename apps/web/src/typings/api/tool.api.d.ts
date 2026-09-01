@@ -211,6 +211,8 @@ declare namespace Api {
       language?: string;
       /** 文件大小 */
       size?: number;
+      /** 行数 */
+      lineCount?: number;
     };
 
     // ==================== 数据源 ====================
@@ -251,7 +253,10 @@ declare namespace Api {
 
     /** 数据源操作参数 */
     type DataSourceOperateParams = CommonType.RecordNullable<
-      Pick<DataSource, 'id' | 'name' | 'type' | 'host' | 'port' | 'database' | 'username' | 'password' | 'params' | 'remark' | 'status'>
+      Pick<
+        DataSource,
+        'id' | 'name' | 'type' | 'host' | 'port' | 'database' | 'username' | 'password' | 'params' | 'remark' | 'status'
+      >
     >;
 
     /** 表名 */
@@ -266,7 +271,9 @@ declare namespace Api {
       columnType: string;
       columnComment?: string;
       isPk?: boolean;
+      isPrimaryKey?: boolean;
       isNullable?: boolean;
+      defaultValue?: string;
     };
 
     // ==================== 模板管理 ====================
@@ -278,21 +285,22 @@ declare namespace Api {
       name: string;
       description?: string;
       isDefault?: boolean;
-      status?: Common.EnableStatus;
+      status?: Common.EnableStatus | string;
       templates?: Template[];
     }>;
 
     /** 模板组搜索参数 */
     type TemplateGroupSearchParams = CommonType.RecordNullable<{
       name?: string;
-    }> & Common.CommonSearchParams;
+    }> &
+      Common.CommonSearchParams;
 
     /** 模板组列表 */
     type TemplateGroupList = Common.PaginatingQueryRecord<TemplateGroup>;
 
     /** 模板组操作参数 */
     type TemplateGroupOperateParams = CommonType.RecordNullable<
-      Pick<TemplateGroup, 'id' | 'name' | 'description' | 'isDefault'>
+      Pick<TemplateGroup, 'id' | 'name' | 'description' | 'isDefault' | 'status'>
     >;
 
     /** 导入模板组参数 */
@@ -321,14 +329,18 @@ declare namespace Api {
     type TemplateSearchParams = CommonType.RecordNullable<{
       groupId?: CommonType.IdType;
       name?: string;
-    }> & Common.CommonSearchParams;
+    }> &
+      Common.CommonSearchParams;
 
     /** 模板列表 */
     type TemplateList = Common.PaginatingQueryRecord<Template>;
 
     /** 模板操作参数 */
     type TemplateOperateParams = CommonType.RecordNullable<
-      Pick<Template, 'id' | 'groupId' | 'name' | 'fileName' | 'filePath' | 'content' | 'language' | 'description' | 'sort'>
+      Pick<
+        Template,
+        'id' | 'groupId' | 'name' | 'fileName' | 'filePath' | 'content' | 'language' | 'description' | 'sort' | 'status'
+      >
     >;
 
     // ==================== 生成历史 ====================
@@ -342,10 +354,25 @@ declare namespace Api {
       version: number;
       genTime: string;
       genBy?: string;
+      generatedAt?: string;
+      generatedBy?: string;
       fileCount?: number;
       remark?: string;
       table?: GenTable;
       snapshotData?: string;
+      templateGroup?: {
+        id: CommonType.IdType;
+        name: string;
+      };
+      /** preview files */
+      files?: Array<{
+        name: string;
+        path: string;
+        content: string;
+        language?: string;
+        size?: number;
+        lineCount?: number;
+      }>;
     }>;
 
     /** 生成历史搜索参数 */
@@ -353,7 +380,8 @@ declare namespace Api {
       tableName?: string;
       beginTime?: string;
       endTime?: string;
-    }> & Common.CommonSearchParams;
+    }> &
+      Common.CommonSearchParams;
 
     /** 生成历史列表 */
     type GenHistoryList = Common.PaginatingQueryRecord<GenHistory>;

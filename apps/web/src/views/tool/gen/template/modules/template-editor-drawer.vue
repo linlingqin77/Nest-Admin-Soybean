@@ -182,8 +182,8 @@ async function handleValidate() {
   validateLoading.value = true;
   try {
     const { data } = await fetchTemplateValidateTemplate({ content: model.content });
-    validateResult.value = data;
-    if (data.valid) {
+    validateResult.value = data as any;
+    if (data?.valid) {
       window.$message?.success('模板语法验证通过');
     } else {
       window.$message?.error('模板语法验证失败');
@@ -218,9 +218,9 @@ async function handleSubmit() {
         content: model.content,
         language: model.language,
         sort: model.sort,
-        status: model.status
+        status: model.status as Api.Common.EnableStatus
       };
-      await fetchTemplateUpdateTemplate(model.id, updateData);
+      await fetchTemplateUpdateTemplate(model.id, updateData as any);
     }
 
     window.$message?.success(props.operateType === 'add' ? $t('common.addSuccess') : $t('common.updateSuccess'));

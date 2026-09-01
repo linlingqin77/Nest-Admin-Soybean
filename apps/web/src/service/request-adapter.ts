@@ -10,7 +10,6 @@
 
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { request } from './request';
-import type { RequestInstanceState } from './request/type';
 
 /** OpenAPI HTTP methods */
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
@@ -59,7 +58,7 @@ export async function apiRequest<T = unknown>(config: ApiRequestConfig): Promise
 
   // Pass T as the inner data type - the wrapped request already extracts
   // response.data.data through transformBackendResponse
-  const { error, data } = await request<T, RequestInstanceState>(axiosConfig);
+  const { error, data } = await request<T>(axiosConfig as any);
   if (error) {
     throw error;
   }

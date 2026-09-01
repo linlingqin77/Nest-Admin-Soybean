@@ -54,16 +54,16 @@ async function handleCreate() {
   loading.value = true;
 
   try {
-    const params: Api.System.CreateShareParams = {
+    const params: Api.System.CreateShareParams & { shareCode?: string; expireHours?: number } = {
       uploadId: formModel.uploadId
     };
 
     if (formModel.needPassword && formModel.shareCode) {
-      params.shareCode = formModel.shareCode;
+      params.password = formModel.shareCode;
     }
 
     if (formModel.expireHours !== -1) {
-      params.expireHours = formModel.expireHours;
+      params.expireTime = new Date(Date.now() + formModel.expireHours * 3600 * 1000).toISOString();
     }
 
     if (formModel.maxDownload !== -1) {

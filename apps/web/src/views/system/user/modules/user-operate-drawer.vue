@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchUserCreate, fetchUserFindOne, fetchUserFindPostAndRoleAll, fetchUserUpdate } from '@/service/api';
+import type { CreateUserDto, UpdateUserDto, UserDetailResponseDto } from '@/service/api-gen';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -81,17 +82,29 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
 async function getUserInfo(id?: CommonType.IdType) {
   startLoading();
   try {
-    // 如果有id，获取用户详情；否则获取角色和岗位列表
-    const { data } = id ? await fetchUserFindOne(id) : await fetchUserFindPostAndRoleAll();
-    if (!data) {
-      return;
+    if (id) {
+      // 有id时获取用户详情
+      const { data } = await fetchUserFindOne(id);
+      if (!data) {
+        return;
+      }
+      model.roleIds = data.roleIds as unknown as number[];
+      model.postIds = data.postIds as unknown as number[];
+      roleOptions.value = data.roles.map(role => ({
+        label: role.roleName,
+        value: role.roleId
+      }));
+    } else {
+      // 无id时获取角色和岗位列表
+      const { data } = await fetchUserFindPostAndRoleAll();
+      if (!data) {
+        return;
+      }
+      roleOptions.value = data.roles.map(role => ({
+        label: role.roleName,
+        value: role.roleId
+      }));
     }
-    model.roleIds = data.roleIds;
-    model.postIds = data.postIds;
-    roleOptions.value = data.roles.map(role => ({
-      label: role.roleName,
-      value: role.roleId
-    }));
   } catch (error) {
     // error handled by request interceptor
   } finally {

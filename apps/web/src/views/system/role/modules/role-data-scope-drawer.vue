@@ -39,7 +39,7 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => '分配数据权限');
 
-type Model = Partial<Api.System.RoleOperateParams> & { roleId?: number };
+type Model = Partial<Api.System.RoleOperateParams> & { roleId?: CommonType.IdType };
 
 const model: Model = reactive(createDefaultModel());
 
@@ -95,14 +95,14 @@ async function handleSubmit() {
 
   try {
     await fetchRoleDataScope({
-      roleId: roleId!,
+      roleId: roleId as CommonType.IdType,
       roleName: roleName!,
       roleKey: roleKey!,
       roleSort: roleSort!,
       dataScope,
       deptIds: dataScope === '2' ? deptIds : [],
       menuIds
-    });
+    } as any);
     window.$message?.success($t('common.updateSuccess'));
     closeDrawer();
     emit('submitted');

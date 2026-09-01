@@ -63,7 +63,7 @@ const columns: DataTableColumns<Api.System.FileInfo> = [
     title: '大小',
     key: 'size',
     width: 120,
-    render: (row: Api.System.FileInfo) => formatFileSize(row.size)
+    render: (row: Api.System.FileInfo) => formatFileSize((row as any).size ?? row.fileSize)
   },
   {
     title: '类型',
@@ -163,7 +163,7 @@ function handleRestore(uploadIds: string[]) {
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       try {
-        await fetchFileManagerRestoreFiles();
+        await fetchFileManagerRestoreFiles(uploadIds);
         message.success($t('page.fileManager.restoreFileSuccess'));
         checkedRowKeys.value = [];
         selectedRows.value = [];

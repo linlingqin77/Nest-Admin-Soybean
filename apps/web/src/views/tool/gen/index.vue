@@ -221,7 +221,7 @@ function edit(id: CommonType.IdType) {
 async function refresh(id: CommonType.IdType) {
   // request
   try {
-    await fetchToolSynchDb(id);
+    await fetchToolSynchDb(id as string);
     window.$message?.success('同步成功');
   } catch {
     // error handled by request interceptor

@@ -95,7 +95,7 @@ async function handleSubmit() {
       await fetchClientCreate({
         clientKey: clientKey!,
         clientSecret: clientSecret!,
-        grantTypeList: grantTypeList as string[] | undefined,
+        grantTypeList: grantTypeList as Api.System.GrantType[] | null,
         deviceType: deviceType as any,
         activeTimeout: activeTimeout ?? undefined,
         timeout: timeout ?? undefined,
@@ -108,7 +108,7 @@ async function handleSubmit() {
         id: id as number,
         clientKey: clientKey ?? undefined,
         clientSecret: clientSecret ?? undefined,
-        grantTypeList: grantTypeList as string[] | undefined,
+        grantTypeList: grantTypeList as Api.System.GrantType[] | null,
         deviceType: deviceType as any,
         activeTimeout: activeTimeout ?? undefined,
         timeout: timeout ?? undefined,

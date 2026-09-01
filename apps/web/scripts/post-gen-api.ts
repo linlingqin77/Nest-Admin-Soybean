@@ -185,7 +185,7 @@ function tagToFileName(tag: string): string {
     tag
       .toLowerCase()
       .replace(/[\s\/]+/g, '-')
-      .replace(/[^a-z0-9-\u4e00-\u9fff]/g, '')
+      .replace(/[^a-z0-9-\u4E00-\u9FFF]/g, '')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '') || 'default'
   );

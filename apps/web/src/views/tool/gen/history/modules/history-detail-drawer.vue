@@ -78,7 +78,7 @@ const fileTree = computed<TreeOption[]>(() => {
       label: file.name,
       isLeaf: true,
       prefix: () => h('span', { class: `${getFileIconClass(ext)} text-16px` }),
-      suffix: () => h(NTag, { size: 'tiny', type: 'info', class: 'ml-8px' }, () => formatFileSize(file.size))
+      suffix: () => h(NTag, { size: 'tiny', type: 'info', class: 'ml-8px' }, () => formatFileSize(file.size || 0))
     };
 
     if (file.language === 'sql' || file.name.endsWith('.sql')) {
@@ -129,11 +129,16 @@ async function getHistoryDetail() {
   startLoading();
   try {
     const { data } = await fetchHistoryFindOne(props.rowData.id);
-    if (data?.snapshotData?.files) {
-      fileList.value = data.snapshotData.files;
-      // 默认选中第一个文件
-      if (fileList.value.length > 0) {
-        selectedKey.value = fileList.value[0].path;
+    if (data?.snapshotData) {
+      const snapshot = JSON.parse(data.snapshotData) as {
+        files?: { name: string; path: string; language?: string; size?: number; lineCount?: number }[];
+      };
+      if (snapshot?.files) {
+        fileList.value = snapshot.files as any;
+        // 默认选中第一个文件
+        if (fileList.value.length > 0) {
+          selectedKey.value = fileList.value[0].path;
+        }
       }
     }
   } catch {
@@ -188,8 +193,8 @@ function handleTreeSelect(keys: string[]) {
 // 统计信息
 const statistics = computed(() => {
   const totalFiles = fileList.value.length;
-  const totalSize = fileList.value.reduce((sum, f) => sum + f.size, 0);
-  const totalLines = fileList.value.reduce((sum, f) => sum + f.lineCount, 0);
+  const totalSize = fileList.value.reduce((sum, f) => sum + (f.size || 0), 0);
+  const totalLines = fileList.value.reduce((sum, f) => sum + (f.lineCount || 0), 0);
   return {
     totalFiles,
     totalSize: formatFileSize(totalSize),
@@ -281,7 +286,7 @@ watch(visible, () => {
                     <span>{{ currentFile?.name || '请选择文件' }}</span>
                     <NTag v-if="currentFile" type="info" size="tiny">{{ currentFile.lineCount }} 行</NTag>
                     <NTag v-if="currentFile" type="success" size="tiny">
-                      {{ formatFileSize(currentFile.size) }}
+                      {{ formatFileSize(currentFile.size || 0) }}
                     </NTag>
                   </div>
                   <NButton v-if="currentFile" text :focusable="false" @click="handleCopyCode">

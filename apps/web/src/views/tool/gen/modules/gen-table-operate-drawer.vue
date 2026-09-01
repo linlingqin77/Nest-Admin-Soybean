@@ -158,7 +158,9 @@ async function getGenTableInfo() {
   if (!props.rowData?.tableId) return;
   startLoading();
   try {
-    const { data } = (await fetchToolGen(props.rowData.tableId)) as { data: Api.Tool.GenTableInfo };
+    const { data } = (await fetchToolGen([props.rowData.tableId as number])) as unknown as {
+      data: Api.Tool.GenTableInfo;
+    };
     genTableInfo.value = data ?? undefined;
     // 确保字段有排序值
     if (genTableInfo.value?.rows) {

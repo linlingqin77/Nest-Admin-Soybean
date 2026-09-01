@@ -40,7 +40,7 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Partial<Api.System.NoticeOperateParams>;
+type Model = Partial<Api.System.NoticeOperateParams> & { remark?: string };
 
 const model: Model = reactive(createDefaultModel());
 
@@ -92,7 +92,7 @@ async function handleSubmit() {
         noticeType: noticeType!,
         noticeContent,
         status,
-        remark: remark || ''
+        ...(remark ? { remark } : {})
       } as Api.System.NoticeOperateParams);
     } else if (props.operateType === 'edit') {
       const { noticeId, noticeTitle, noticeType, noticeContent, status, remark } = model;
@@ -102,7 +102,7 @@ async function handleSubmit() {
         noticeType: noticeType!,
         noticeContent,
         status,
-        remark: remark || ''
+        ...(remark ? { remark } : {})
       } as Api.System.NoticeOperateParams);
     }
 

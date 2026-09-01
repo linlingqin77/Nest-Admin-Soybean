@@ -29,6 +29,9 @@ declare namespace CommonType {
   /** The id type */
   type IdType = string | number;
 
+  /** enable status (alias for Common.EnableStatus) */
+  type EnableStatus = '0' | '1';
+
   /** The res error code */
   type ErrorCode = '401' | '403' | '404' | 'default';
 

@@ -20,7 +20,7 @@ async function getCacheInfo() {
 
   try {
     const { data } = await fetchCacheGetInfo();
-    cacheInfo.value = data;
+    cacheInfo.value = data ?? undefined;
 
     // 确保在数据更新后调用图表更新
     nextTick(() => {

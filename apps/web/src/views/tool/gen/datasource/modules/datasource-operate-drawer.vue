@@ -55,7 +55,7 @@ const defaultPorts: Record<string, number> = {
 type Model = {
   id?: number;
   name: string;
-  type: DatabaseType;
+  type: string;
   host: string;
   port: number;
   database: string;
@@ -129,7 +129,7 @@ function handleUpdateModelWhenEdit() {
 }
 
 // 数据库类型变化时更新默认端口
-function handleTypeChange(type: DatabaseType) {
+function handleTypeChange(type: string) {
   model.port = defaultPorts[type] || 5432;
 }
 
@@ -211,7 +211,7 @@ async function handleSubmit() {
         port: model.port,
         database: model.database,
         username: model.username,
-        status: model.status,
+        status: model.status as CommonType.EnableStatus,
         remark: model.remark || undefined
       };
       // 只有填写了密码才更新

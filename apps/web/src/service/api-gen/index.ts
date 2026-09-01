@@ -5,10 +5,11 @@
  * 如需修改 API 配置，请编辑 api-config.ts
  */
 
-
 // 导出请求适配器
 export * from '../request-adapter';
-export * from '../api-config';
 
 // 导出所有 API
 export * from './api';
+
+// 导出类型定义
+export * from './types';

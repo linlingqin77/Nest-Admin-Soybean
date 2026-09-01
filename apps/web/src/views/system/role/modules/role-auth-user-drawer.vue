@@ -124,7 +124,9 @@ async function handleUpdateModelWhenEdit() {
   checkedRowKeys.value = [];
   getDataByPage();
   const { data: roleUserList } = await fetchRoleAllocatedList({
-    roleId: props.rowData?.roleId
+    pageNum: 1,
+    pageSize: 10,
+    roleId: props.rowData?.roleId as CommonType.IdType
   });
   checkedUserIds.value = roleUserList?.rows.map((item: any) => item.userId) || [];
   checkedRowKeys.value = checkedUserIds.value;
@@ -145,7 +147,7 @@ async function handleSubmit() {
   if (cancelUserIds.length > 0) {
     try {
       const data: { roleId: number; userIds: string } = {
-        roleId: props.rowData!.roleId,
+        roleId: props.rowData!.roleId as number,
         userIds: cancelUserIds.join(',')
       };
       await fetchRoleCancelAuthUserAll(data);
@@ -159,7 +161,7 @@ async function handleSubmit() {
   if (addUserIds.length > 0) {
     try {
       const data: { roleId: number; userIds: string } = {
-        roleId: props.rowData!.roleId,
+        roleId: props.rowData!.roleId as number,
         userIds: addUserIds.join(',')
       };
       await fetchRoleSelectAuthUserAll(data);

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
 import { fetchSmsChannelCreate, fetchSmsChannelUpdate } from '@/service/api';
+import type { CreateSmsChannelRequestDto, UpdateSmsChannelRequestDto } from '@/service/api-gen';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -105,9 +106,9 @@ async function handleSubmit() {
         callbackUrl,
         status,
         remark
-      } as CreateSmsChannelDto);
+      } as Api.System.SmsChannel);
     } else if (props.operateType === 'edit') {
-      await fetchSmsChannelUpdate(model as UpdateSmsChannelDto);
+      await fetchSmsChannelUpdate(model as Api.System.SmsChannel);
     }
 
     window.$message?.success(props.operateType === 'add' ? $t('common.addSuccess') : $t('common.updateSuccess'));

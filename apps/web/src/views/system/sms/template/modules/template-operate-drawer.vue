@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { fetchSmsChannelGetEnabledChannels, fetchSmsTemplateCreate, fetchSmsTemplateUpdate } from '@/service/api';
+import type { CreateSmsTemplateRequestDto, UpdateSmsTemplateRequestDto } from '@/service/api-gen';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -149,10 +150,10 @@ async function handleSubmit() {
         type,
         status,
         remark
-      } as CreateSmsTemplateDto);
+      } as Api.System.SmsTemplate);
     } else if (props.operateType === 'edit') {
       const updateData = { ...model, params: model.params ? JSON.stringify(model.params) : undefined };
-      await fetchSmsTemplateUpdate(updateData as UpdateSmsTemplateDto);
+      await fetchSmsTemplateUpdate(updateData as Api.System.SmsTemplate);
     }
 
     window.$message?.success(props.operateType === 'add' ? $t('common.addSuccess') : $t('common.updateSuccess'));

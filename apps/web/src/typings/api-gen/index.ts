@@ -5,7 +5,6 @@
  * 如需修改 API 配置，请编辑 api-config.ts
  */
 
-
 // OpenAPI Schema 类型定义
 
 export interface Result {
@@ -1777,7 +1776,16 @@ export interface ExportTenantAuditLogRequestDto {
   /** 操作人姓名 */
   operatorName?: string;
   /** 操作类型 */
-  actionType?: 'login' | 'logout' | 'create' | 'update' | 'delete' | 'permission_change' | 'config_change' | 'export' | 'other';
+  actionType?:
+    | 'login'
+    | 'logout'
+    | 'create'
+    | 'update'
+    | 'delete'
+    | 'permission_change'
+    | 'config_change'
+    | 'export'
+    | 'other';
   /** 操作模块 */
   module?: string;
   /** 开始时间 */

@@ -237,7 +237,12 @@ onMounted(() => {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-    <JobLogSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <JobLogSearch
+      :model="(searchParams as any)"
+      @update:model="(v: any) => { searchParams = v; }"
+      @reset="resetSearchParams"
+      @search="getDataByPage"
+    />
     <NCard title="调度日志" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation

@@ -55,7 +55,10 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Partial<Api.System.DeptOperateParams & Api.System.DeptOperateParams> & { deptId?: number; deptCategory?: string };
+type Model = Partial<Api.System.DeptOperateParams & Api.System.DeptOperateParams> & {
+  deptId?: number;
+  deptCategory?: string;
+};
 
 const model: Model = reactive(createDefaultModel());
 
@@ -170,11 +173,11 @@ async function getUserData() {
     if (!data) {
       return;
     }
-    if (data.rows.length === 0) {
+    if (data.length === 0) {
       placeholder.value = $t('page.system.dept.placeholder.deptUserIsEmptyLeaderPlaceHolder');
       disabled.value = true;
     }
-    userOptions.value = data.rows.map(item => ({
+    userOptions.value = data.map((item: Api.System.User) => ({
       label: `${item.userName} | ${item.nickName}`,
       value: item.userId
     }));

@@ -229,7 +229,7 @@ async function handleExport() {
 async function handleStatusChange(row: Api.System.Role, value: string, callback: (flag: boolean) => void) {
   try {
     const data: { roleId: number; status: string } = {
-      roleId: row.roleId,
+      roleId: row.roleId as number,
       status: value as '0' | '1'
     };
     await fetchRoleChangeStatus(data);

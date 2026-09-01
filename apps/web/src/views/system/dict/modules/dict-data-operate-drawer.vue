@@ -115,7 +115,7 @@ async function handleSubmit() {
         dictValue,
         dictType,
         cssClass,
-        listClass: listClass || '',
+        listClass: (listClass as NaiveUI.ThemeColor) || '',
         remark
       });
     }
@@ -129,7 +129,7 @@ async function handleSubmit() {
         dictValue,
         dictType,
         cssClass,
-        listClass: listClass || '',
+        listClass: (listClass as NaiveUI.ThemeColor) || '',
         remark
       });
     }

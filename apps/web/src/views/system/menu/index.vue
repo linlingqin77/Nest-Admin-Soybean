@@ -153,7 +153,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
     return null;
   }
   const renderLocalIcon = iconValue.startsWith('local-icon-');
-  const icon = renderLocalIcon ? undefined : (iconValue || defaultIcon);
+  const icon = renderLocalIcon ? undefined : iconValue || defaultIcon;
   const localIcon = renderLocalIcon ? iconValue.replace('local-icon-', 'menu-') : undefined;
   return <SvgIcon icon={icon} localIcon={localIcon} />;
 }

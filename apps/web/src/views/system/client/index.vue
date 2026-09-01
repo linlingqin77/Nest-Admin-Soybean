@@ -227,7 +227,7 @@ async function handleStatusChange(
 ) {
   try {
     await fetchClientChangeStatus({
-      id: row.id!,
+      id: row.id as number,
       status: value
     });
     callback(true);

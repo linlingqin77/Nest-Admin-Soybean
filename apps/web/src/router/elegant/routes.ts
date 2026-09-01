@@ -455,8 +455,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'tool_gen_history',
               i18nKey: 'route.tool_gen_history',
-              icon: 'mdi:history',
-              order: 3
+              icon: 'material-symbols:history',
+              order: 2
             }
           },
           {
@@ -466,8 +466,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'tool_gen_template',
               i18nKey: 'route.tool_gen_template',
-              icon: 'mdi:file-document-edit-outline',
-              order: 2
+              icon: 'material-symbols:integration-instructions-outline',
+              order: 3
             }
           }
         ]

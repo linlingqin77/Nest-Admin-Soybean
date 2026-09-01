@@ -68,7 +68,7 @@ function toggleSiderCollapse() {
         '!text-white !bg-primary': active && inverted
       }"
     >
-      <component v-if="icon" :is="icon" :class="[isMini ? 'text-icon-small' : 'text-icon-large']" />
+      <component :is="icon" v-if="icon" :class="[isMini ? 'text-icon-small' : 'text-icon-large']" />
       <p
         class="w-full ellipsis-text text-center text-12px transition-height-300"
         :class="[isMini ? 'h-0 pt-0' : 'h-20px pt-4px']"

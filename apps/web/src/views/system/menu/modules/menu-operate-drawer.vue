@@ -421,11 +421,7 @@ function onCreate() {
                 </div>
               </template>
             </NDynamicInput>
-            <NInput
-              v-else
-              v-model:value="model.query"
-              :placeholder="$t('page.system.menu.placeholder.queryIframe')"
-            />
+            <NInput v-else v-model:value="model.query" :placeholder="$t('page.system.menu.placeholder.queryIframe')" />
           </NFormItemGi>
           <NFormItemGi v-if="!isCatalog" :span="24" path="perms">
             <template #label>

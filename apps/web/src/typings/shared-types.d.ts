@@ -58,5 +58,5 @@ export type {
   IJobLog,
   // 工具模块
   IGenTable,
-  IGenTableColumn,
+  IGenTableColumn
 } from '@nest-admin/types';

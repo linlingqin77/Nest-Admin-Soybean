@@ -2,8 +2,8 @@
 import { ref } from 'vue';
 import { NButton, NCollapse, NCollapseItem, NDivider, NEmpty, NSpace, NTag } from 'naive-ui';
 import {
-  fetchTemplateDeleteTemplate,
   fetchTemplateDeleteGroup,
+  fetchTemplateDeleteTemplate,
   fetchTemplateExportGroup,
   fetchTemplateListGroups
 } from '@/service/api';
@@ -135,7 +135,10 @@ const {
       width: 80,
       render: row => {
         const dataRow = row as unknown as Api.Tool.TemplateGroup;
-        const statusInfo = statusMap[dataRow.status] || { label: '未知', type: 'error' as const };
+        const statusInfo = statusMap[dataRow.status as keyof typeof statusMap] || {
+          label: '未知',
+          type: 'error' as const
+        };
         return (
           <NTag size="small" type={statusInfo.type}>
             {statusInfo.label}
@@ -180,7 +183,7 @@ const {
               type="success"
               icon="material-symbols:download"
               tooltipContent="导出"
-              onClick={() => handleExport(dataRow.id)}
+              onClick={() => handleExport(dataRow.id as number)}
             />
           );
         };
@@ -195,7 +198,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(dataRow.id)}
+              onClick={() => edit(dataRow.id as number)}
             />
           );
         };
@@ -211,7 +214,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(dataRow.id)}
+              onPositiveClick={() => handleDelete(dataRow.id as number)}
             />
           );
         };
@@ -280,7 +283,7 @@ async function handleExport(id: number) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `template-group-${exportData.name}.json`;
+    a.download = `template-group-${(exportData as any).name || 'group'}.json`;
     a.click();
     URL.revokeObjectURL(url);
     window.$message?.success('导出成功');
@@ -306,7 +309,7 @@ function handleAddTemplate(groupId: number) {
 }
 
 function handleEditTemplate(template: Api.Tool.Template) {
-  currentGroupId.value = template.groupId;
+  currentGroupId.value = template.groupId as number;
   templateOperateType.value = 'edit';
   editingTemplate.value = template;
   templateEditorVisible.value = true;
@@ -405,7 +408,7 @@ function handleTemplateSubmitted() {
                     v-if="hasAuth('tool:gen:template:add') && currentGroup.tenantId !== null"
                     size="small"
                     type="primary"
-                    @click="handleAddTemplate(currentGroup.id)"
+                    @click="handleAddTemplate(currentGroup.id as number)"
                   >
                     <template #icon>
                       <SvgIcon icon="material-symbols:add" />
@@ -418,15 +421,19 @@ function handleTemplateSubmitted() {
               <NEmpty v-if="!currentGroup.templates?.length" description="暂无模板" />
 
               <NCollapse v-else>
-                <NCollapseItem v-for="template in currentGroup.templates" :key="template.id" :name="template.id">
+                <NCollapseItem
+                  v-for="template in currentGroup.templates"
+                  :key="template.id as number"
+                  :name="String(template.id)"
+                >
                   <template #header>
                     <div class="flex items-center gap-8px">
                       <span>{{ template.name }}</span>
                       <NTag
                         size="small"
-                        :style="{ backgroundColor: languageMap[template.language as string]?.color || '#666', color: '#fff' }"
+                        :style="{ backgroundColor: (languageMap as any)[template.language as string]?.color || '#666', color: '#fff' }"
                       >
-                        {{ languageMap[template.language as string]?.label || template.language }}
+                        {{ (languageMap as any)[template.language as string]?.label || template.language }}
                       </NTag>
                     </div>
                   </template>
@@ -440,7 +447,7 @@ function handleTemplateSubmitted() {
                       >
                         编辑
                       </NButton>
-                      <NPopconfirm @positive-click="handleDeleteTemplate(template.id)">
+                      <NPopconfirm @positive-click="handleDeleteTemplate(template.id as number)">
                         <template #trigger>
                           <NButton v-if="hasAuth('tool:gen:template:remove')" size="tiny" secondary type="error">
                             删除

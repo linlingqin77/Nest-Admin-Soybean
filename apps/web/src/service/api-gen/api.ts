@@ -5,9 +5,247 @@
  * 如需修改 API 配置，请编辑 api-config.ts
  */
 
-
 import { apiRequest, buildUrl } from '../request-adapter';
-import type { LoginRequestDto, LoginResponseDto, LogoutResponseDto, RegisterRequestDto, RegisterResultResponseDto, RegisterEnabledResponseDto, CaptchaResponseDto, GetInfoResponseDto, RouterResponseDto, LoginTenantResponseDto, CaptchaCodeResponseDto, AuthLoginRequestDto, LoginTokenResponseDto, AuthRegisterRequestDto, AuthRegisterResultResponseDto, AuthLogoutResponseDto, SocialLoginRequestDto, SocialCallbackResponseDto, PublicKeyResponseDto, ChunkMergeFileDto, CreateClientRequestDto, UpdateClientRequestDto, ClientListResponseDto, ClientResponseDto, ChangeClientStatusRequestDto, CreateConfigRequestDto, UpdateConfigRequestDto, ConfigListResponseDto, ConfigResponseDto, ConfigValueResponseDto, ListConfigRequestDto, CreateDeptRequestDto, CreateDeptResultResponseDto, UpdateDeptRequestDto, UpdateDeptResultResponseDto, DeptResponseDto, DeleteDeptResultResponseDto, CreateDictTypeRequestDto, CreateDictTypeResultResponseDto, UpdateDictTypeRequestDto, UpdateDictTypeResultResponseDto, RefreshCacheResultResponseDto, DeleteDictTypeResultResponseDto, DictTypeResponseDto, DictTypeListResponseDto, CreateDictDataRequestDto, CreateDictDataResultResponseDto, UpdateDictDataRequestDto, UpdateDictDataResultResponseDto, DeleteDictDataResultResponseDto, DictDataResponseDto, DictDataListResponseDto, ListDictTypeRequestDto, MenuResponseDto, CreateMenuRequestDto, CreateMenuResultResponseDto, UpdateMenuRequestDto, UpdateMenuResultResponseDto, MenuTreeResponseDto, RoleMenuTreeSelectResponseDto, DeleteMenuResultResponseDto, CreateNoticeRequestDto, CreateNoticeResultResponseDto, UpdateNoticeRequestDto, UpdateNoticeResultResponseDto, NoticeListResponseDto, NoticeResponseDto, DeleteNoticeResultResponseDto, CreatePostRequestDto, CreatePostResultResponseDto, UpdatePostRequestDto, UpdatePostResultResponseDto, PostListResponseDto, PostResponseDto, DeptTreeResponseDto, DeletePostResultResponseDto, ListPostRequestDto, CreateRoleRequestDto, CreateRoleResultResponseDto, UpdateRoleRequestDto, UpdateRoleResultResponseDto, RoleListResponseDto, RoleResponseDto, RoleDeptTreeResponseDto, DeleteRoleResultResponseDto, DataScopeResultResponseDto, ChangeRoleStatusRequestDto, ChangeRoleStatusResultResponseDto, AllocatedUserListResponseDto, AuthUserCancelRequestDto, AuthUserResultResponseDto, AuthUserCancelAllRequestDto, AuthUserSelectAllRequestDto, ListRoleRequestDto, CreateTenantRequestDto, CreateTenantResultResponseDto, UpdateTenantRequestDto, UpdateTenantResultResponseDto, TenantListResponseDto, SyncTenantDictResultResponseDto, SyncTenantPackageResultResponseDto, SyncTenantConfigResultResponseDto, TenantSelectListResponseDto, TenantSwitchStatusResponseDto, TenantSwitchResponseDto, TenantRestoreResponseDto, TenantResponseDto, DeleteTenantResultResponseDto, ListTenantRequestDto, TenantStatsResponseDto, TenantTrendDataResponseDto, PackageDistributionResponseDto, ExpiringTenantResponseDto, QuotaTopTenantResponseDto, DashboardDataResponseDto, TenantQuotaResponseDto, UpdateTenantQuotaRequestDto, CheckQuotaRequestDto, TenantAuditLogListVo, TenantAuditLogDetailVo, TenantAuditLogStatsVo, ExportTenantAuditLogRequestDto, CreateTenantPackageRequestDto, UpdateTenantPackageRequestDto, TenantPackageListResponseDto, TenantPackageSelectResponseDto, TenantPackageResponseDto, ListTenantPackageRequestDto, TableName, GenTableUpdate, GenerateCodeDto, CreateDataSourceDto, DataSourceResponseDto, UpdateDataSourceDto, TestConnectionDto, CreateTemplateGroupDto, TemplateGroupResponseDto, UpdateTemplateGroupDto, ExportTemplateGroupDto, ImportTemplateGroupDto, CreateTemplateDto, TemplateResponseDto, UpdateTemplateDto, ValidateTemplateDto, CurrentUserInfoResponseDto, UserResponseDto, UpdateProfileDto, UserAvatarResponseDto, UpdatePwdDto, CreateUserDto, UserDetailResponseDto, UpdateUserDto, BatchCreateUserDto, BatchResultDto, BatchDeleteUserDto, UserListResponseDto, DeptTreeNodeResponseDto, AuthRoleResponseDto, UserOptionSelectResponseDto, ChangeUserStatusDto, ResetPwdDto, ListUserDto, CreateFolderRequestDto, FolderResponseDto, UpdateFolderRequestDto, FolderTreeNodeResponseDto, FileListResponseDto, MoveFileRequestDto, RenameFileRequestDto, FileResponseDto, CreateShareRequestDto, CreateShareResultResponseDto, ShareInfoResponseDto, ShareListResponseDto, FileVersionListResponseDto, RestoreVersionResultResponseDto, AccessTokenResponseDto, StorageStatsResponseDto, CreateSmsChannelRequestDto, UpdateSmsChannelRequestDto, SmsChannelResponseDto, CreateSmsTemplateRequestDto, UpdateSmsTemplateRequestDto, SmsTemplateResponseDto, SendSmsDto, BatchSendSmsDto, SmsLogResponseDto, CreateMailAccountRequestDto, UpdateMailAccountRequestDto, MailAccountResponseDto, CreateMailTemplateRequestDto, UpdateMailTemplateRequestDto, MailTemplateResponseDto, SendMailDto, BatchSendMailDto, TestMailDto, MailLogResponseDto, CreateNotifyTemplateRequestDto, UpdateNotifyTemplateRequestDto, NotifyTemplateResponseDto, SendNotifyMessageRequestDto, SendNotifyAllRequestDto, NotifyMessageResponseDto, UnreadCountResponseDto, JobListResponseDto, JobResponseDto, CreateJobDto, CreateJobResultResponseDto, UpdateJobResultResponseDto, ChangeJobStatusResultResponseDto, DeleteJobResultResponseDto, RunJobResultResponseDto, ListJobDto, JobLogListResponseDto, ClearLogResultResponseDto, ListJobLogDto, ServerInfoResponseDto, CacheInfoResponseDto, CacheNamesResponseDto, CacheKeysResponseDto, CacheKeyResponseDto, ClearCacheResultResponseDto, LoginLogListResponseDto, UnlockUserResultResponseDto, DeleteLogResultResponseDto, ListLoginlogDto, OnlineUserListResponseDto, ForceLogoutResultResponseDto, OperLogListResponseDto, OperLogResponseDto, QueryOperLogDto, CreateOssConfigRequestDto, UpdateOssConfigRequestDto, OssConfigListResponseDto, OssConfigResponseDto, ChangeOssConfigStatusRequestDto, OssListResponseDto, OssResponseDto } from './types';
+import type {
+  AccessTokenResponseDto,
+  AllocatedUserListResponseDto,
+  AuthLoginRequestDto,
+  AuthLogoutResponseDto,
+  AuthRegisterRequestDto,
+  AuthRegisterResultResponseDto,
+  AuthRoleResponseDto,
+  AuthUserCancelAllRequestDto,
+  AuthUserCancelRequestDto,
+  AuthUserResultResponseDto,
+  AuthUserSelectAllRequestDto,
+  BatchCreateUserDto,
+  BatchDeleteUserDto,
+  BatchResultDto,
+  BatchSendMailDto,
+  BatchSendSmsDto,
+  CacheInfoResponseDto,
+  CacheKeyResponseDto,
+  CacheKeysResponseDto,
+  CacheNamesResponseDto,
+  CaptchaCodeResponseDto,
+  CaptchaResponseDto,
+  ChangeClientStatusRequestDto,
+  ChangeJobStatusResultResponseDto,
+  ChangeOssConfigStatusRequestDto,
+  ChangeRoleStatusRequestDto,
+  ChangeRoleStatusResultResponseDto,
+  ChangeUserStatusDto,
+  CheckQuotaRequestDto,
+  ChunkMergeFileDto,
+  ClearCacheResultResponseDto,
+  ClearLogResultResponseDto,
+  ClientListResponseDto,
+  ClientResponseDto,
+  ConfigListResponseDto,
+  ConfigResponseDto,
+  ConfigValueResponseDto,
+  CreateClientRequestDto,
+  CreateConfigRequestDto,
+  CreateDataSourceDto,
+  CreateDeptRequestDto,
+  CreateDeptResultResponseDto,
+  CreateDictDataRequestDto,
+  CreateDictDataResultResponseDto,
+  CreateDictTypeRequestDto,
+  CreateDictTypeResultResponseDto,
+  CreateFolderRequestDto,
+  CreateJobDto,
+  CreateJobResultResponseDto,
+  CreateMailAccountRequestDto,
+  CreateMailTemplateRequestDto,
+  CreateMenuRequestDto,
+  CreateMenuResultResponseDto,
+  CreateNoticeRequestDto,
+  CreateNoticeResultResponseDto,
+  CreateNotifyTemplateRequestDto,
+  CreateOssConfigRequestDto,
+  CreatePostRequestDto,
+  CreatePostResultResponseDto,
+  CreateRoleRequestDto,
+  CreateRoleResultResponseDto,
+  CreateShareRequestDto,
+  CreateShareResultResponseDto,
+  CreateSmsChannelRequestDto,
+  CreateSmsTemplateRequestDto,
+  CreateTemplateDto,
+  CreateTemplateGroupDto,
+  CreateTenantPackageRequestDto,
+  CreateTenantRequestDto,
+  CreateTenantResultResponseDto,
+  CreateUserDto,
+  CurrentUserInfoResponseDto,
+  DashboardDataResponseDto,
+  DataScopeResultResponseDto,
+  DataSourceResponseDto,
+  DeleteDeptResultResponseDto,
+  DeleteDictDataResultResponseDto,
+  DeleteDictTypeResultResponseDto,
+  DeleteJobResultResponseDto,
+  DeleteLogResultResponseDto,
+  DeleteMenuResultResponseDto,
+  DeleteNoticeResultResponseDto,
+  DeletePostResultResponseDto,
+  DeleteRoleResultResponseDto,
+  DeleteTenantResultResponseDto,
+  DeptResponseDto,
+  DeptTreeNodeResponseDto,
+  DeptTreeResponseDto,
+  DictDataListResponseDto,
+  DictDataResponseDto,
+  DictTypeListResponseDto,
+  DictTypeResponseDto,
+  ExpiringTenantResponseDto,
+  ExportTemplateGroupDto,
+  ExportTenantAuditLogRequestDto,
+  FileListResponseDto,
+  FileResponseDto,
+  FileVersionListResponseDto,
+  FolderResponseDto,
+  FolderTreeNodeResponseDto,
+  ForceLogoutResultResponseDto,
+  GenTableUpdate,
+  GenerateCodeDto,
+  GetInfoResponseDto,
+  ImportTemplateGroupDto,
+  JobListResponseDto,
+  JobLogListResponseDto,
+  JobResponseDto,
+  ListConfigRequestDto,
+  ListDictTypeRequestDto,
+  ListJobDto,
+  ListJobLogDto,
+  ListLoginlogDto,
+  ListPostRequestDto,
+  ListRoleRequestDto,
+  ListTenantPackageRequestDto,
+  ListTenantRequestDto,
+  ListUserDto,
+  LoginLogListResponseDto,
+  LoginRequestDto,
+  LoginResponseDto,
+  LoginTenantResponseDto,
+  LoginTokenResponseDto,
+  LogoutResponseDto,
+  MailAccountResponseDto,
+  MailLogResponseDto,
+  MailTemplateResponseDto,
+  MenuResponseDto,
+  MenuTreeResponseDto,
+  MoveFileRequestDto,
+  NoticeListResponseDto,
+  NoticeResponseDto,
+  NotifyMessageResponseDto,
+  NotifyTemplateResponseDto,
+  OnlineUserListResponseDto,
+  OperLogListResponseDto,
+  OperLogResponseDto,
+  OssConfigListResponseDto,
+  OssConfigResponseDto,
+  OssListResponseDto,
+  OssResponseDto,
+  PackageDistributionResponseDto,
+  PostListResponseDto,
+  PostResponseDto,
+  PublicKeyResponseDto,
+  QueryOperLogDto,
+  QuotaTopTenantResponseDto,
+  RefreshCacheResultResponseDto,
+  RegisterEnabledResponseDto,
+  RegisterRequestDto,
+  RegisterResultResponseDto,
+  RenameFileRequestDto,
+  ResetPwdDto,
+  RestoreVersionResultResponseDto,
+  RoleDeptTreeResponseDto,
+  RoleListResponseDto,
+  RoleMenuTreeSelectResponseDto,
+  RoleResponseDto,
+  RouterResponseDto,
+  RunJobResultResponseDto,
+  SendMailDto,
+  SendNotifyAllRequestDto,
+  SendNotifyMessageRequestDto,
+  SendSmsDto,
+  ServerInfoResponseDto,
+  ShareInfoResponseDto,
+  ShareListResponseDto,
+  SmsChannelResponseDto,
+  SmsLogResponseDto,
+  SmsTemplateResponseDto,
+  SocialCallbackResponseDto,
+  SocialLoginRequestDto,
+  StorageStatsResponseDto,
+  SyncTenantConfigResultResponseDto,
+  SyncTenantDictResultResponseDto,
+  SyncTenantPackageResultResponseDto,
+  TableName,
+  TemplateGroupResponseDto,
+  TemplateResponseDto,
+  TenantAuditLogDetailVo,
+  TenantAuditLogListVo,
+  TenantAuditLogStatsVo,
+  TenantListResponseDto,
+  TenantPackageListResponseDto,
+  TenantPackageResponseDto,
+  TenantPackageSelectResponseDto,
+  TenantQuotaResponseDto,
+  TenantResponseDto,
+  TenantRestoreResponseDto,
+  TenantSelectListResponseDto,
+  TenantStatsResponseDto,
+  TenantSwitchResponseDto,
+  TenantSwitchStatusResponseDto,
+  TenantTrendDataResponseDto,
+  TestConnectionDto,
+  TestMailDto,
+  UnlockUserResultResponseDto,
+  UnreadCountResponseDto,
+  UpdateClientRequestDto,
+  UpdateConfigRequestDto,
+  UpdateDataSourceDto,
+  UpdateDeptRequestDto,
+  UpdateDeptResultResponseDto,
+  UpdateDictDataRequestDto,
+  UpdateDictDataResultResponseDto,
+  UpdateDictTypeRequestDto,
+  UpdateDictTypeResultResponseDto,
+  UpdateFolderRequestDto,
+  UpdateJobResultResponseDto,
+  UpdateMailAccountRequestDto,
+  UpdateMailTemplateRequestDto,
+  UpdateMenuRequestDto,
+  UpdateMenuResultResponseDto,
+  UpdateNoticeRequestDto,
+  UpdateNoticeResultResponseDto,
+  UpdateNotifyTemplateRequestDto,
+  UpdateOssConfigRequestDto,
+  UpdatePostRequestDto,
+  UpdatePostResultResponseDto,
+  UpdateProfileDto,
+  UpdatePwdDto,
+  UpdateRoleRequestDto,
+  UpdateRoleResultResponseDto,
+  UpdateSmsChannelRequestDto,
+  UpdateSmsTemplateRequestDto,
+  UpdateTemplateDto,
+  UpdateTemplateGroupDto,
+  UpdateTenantPackageRequestDto,
+  UpdateTenantQuotaRequestDto,
+  UpdateTenantRequestDto,
+  UpdateTenantResultResponseDto,
+  UpdateUserDto,
+  UserAvatarResponseDto,
+  UserDetailResponseDto,
+  UserListResponseDto,
+  UserOptionSelectResponseDto,
+  UserResponseDto,
+  ValidateTemplateDto
+} from './types';
 
 /**
  * 用户登录
@@ -18,7 +256,7 @@ export function fetchMainLogin(data: LoginRequestDto) {
     method: 'POST',
     url: '/api/v1/login',
     data,
-    operationId: 'MainController_login_v1',
+    operationId: 'MainController_login_v1'
   });
 }
 
@@ -30,7 +268,7 @@ export function fetchMainLogout() {
   return apiRequest<LogoutResponseDto>({
     method: 'POST',
     url: '/api/v1/logout',
-    operationId: 'MainController_logout_v1',
+    operationId: 'MainController_logout_v1'
   });
 }
 
@@ -43,7 +281,7 @@ export function fetchMainRegister(data: RegisterRequestDto) {
     method: 'POST',
     url: '/api/v1/register',
     data,
-    operationId: 'MainController_register_v1',
+    operationId: 'MainController_register_v1'
   });
 }
 
@@ -55,7 +293,7 @@ export function fetchMainRegisterUser() {
   return apiRequest<RegisterEnabledResponseDto>({
     method: 'GET',
     url: '/api/v1/registerUser',
-    operationId: 'MainController_registerUser_v1',
+    operationId: 'MainController_registerUser_v1'
   });
 }
 
@@ -67,7 +305,7 @@ export function fetchMainCaptchaImage() {
   return apiRequest<CaptchaResponseDto>({
     method: 'GET',
     url: '/api/v1/captchaImage',
-    operationId: 'MainController_captchaImage_v1',
+    operationId: 'MainController_captchaImage_v1'
   });
 }
 
@@ -79,7 +317,7 @@ export function fetchMainGetInfo() {
   return apiRequest<GetInfoResponseDto>({
     method: 'GET',
     url: '/api/v1/getInfo',
-    operationId: 'MainController_getInfo_v1',
+    operationId: 'MainController_getInfo_v1'
   });
 }
 
@@ -91,7 +329,7 @@ export function fetchMainGetRouters() {
   return apiRequest<RouterResponseDto[]>({
     method: 'GET',
     url: '/api/v1/getRouters',
-    operationId: 'MainController_getRouters_v1',
+    operationId: 'MainController_getRouters_v1'
   });
 }
 
@@ -106,7 +344,7 @@ export function fetchAuthGetTenantList() {
   return apiRequest<LoginTenantResponseDto>({
     method: 'GET',
     url: '/api/v1/auth/tenant/list',
-    operationId: 'AuthController_getTenantList_v1',
+    operationId: 'AuthController_getTenantList_v1'
   });
 }
 
@@ -119,7 +357,7 @@ export function fetchAuthGetCaptchaCode() {
   return apiRequest<CaptchaCodeResponseDto>({
     method: 'GET',
     url: '/api/v1/auth/code',
-    operationId: 'AuthController_getCaptchaCode_v1',
+    operationId: 'AuthController_getCaptchaCode_v1'
   });
 }
 
@@ -135,7 +373,7 @@ export function fetchAuthLogin(data: AuthLoginRequestDto) {
     method: 'POST',
     url: '/api/v1/auth/login',
     data,
-    operationId: 'AuthController_login_v1',
+    operationId: 'AuthController_login_v1'
   });
 }
 
@@ -151,7 +389,7 @@ export function fetchAuthRegister(data: AuthRegisterRequestDto) {
     method: 'POST',
     url: '/api/v1/auth/register',
     data,
-    operationId: 'AuthController_register_v1',
+    operationId: 'AuthController_register_v1'
   });
 }
 
@@ -165,7 +403,7 @@ export function fetchAuthLogout() {
   return apiRequest<AuthLogoutResponseDto>({
     method: 'POST',
     url: '/api/v1/auth/logout',
-    operationId: 'AuthController_logout_v1',
+    operationId: 'AuthController_logout_v1'
   });
 }
 
@@ -179,7 +417,7 @@ export function fetchAuthSocialCallback(data: SocialLoginRequestDto) {
     method: 'POST',
     url: '/api/v1/auth/social/callback',
     data,
-    operationId: 'AuthController_socialCallback_v1',
+    operationId: 'AuthController_socialCallback_v1'
   });
 }
 
@@ -192,7 +430,7 @@ export function fetchAuthGetPublicKey() {
   return apiRequest<PublicKeyResponseDto>({
     method: 'GET',
     url: '/api/v1/auth/publicKey',
-    operationId: 'AuthController_getPublicKey_v1',
+    operationId: 'AuthController_getPublicKey_v1'
   });
 }
 
@@ -204,7 +442,7 @@ export function fetchUploadSingleFileUpload() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/common/upload',
-    operationId: 'UploadController_singleFileUpload_v1',
+    operationId: 'UploadController_singleFileUpload_v1'
   });
 }
 
@@ -216,7 +454,7 @@ export function fetchUploadGetChunkUploadId() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/common/upload/chunk/uploadId',
-    operationId: 'UploadController_getChunkUploadId_v1',
+    operationId: 'UploadController_getChunkUploadId_v1'
   });
 }
 
@@ -228,7 +466,7 @@ export function fetchUploadChunkFileUpload() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/common/upload/chunk',
-    operationId: 'UploadController_chunkFileUpload_v1',
+    operationId: 'UploadController_chunkFileUpload_v1'
   });
 }
 
@@ -241,7 +479,7 @@ export function fetchUploadChunkMergeFile(data: ChunkMergeFileDto) {
     method: 'POST',
     url: '/api/v1/common/upload/chunk/merge',
     data,
-    operationId: 'UploadController_chunkMergeFile_v1',
+    operationId: 'UploadController_chunkMergeFile_v1'
   });
 }
 
@@ -254,7 +492,7 @@ export function fetchUploadGetChunkUploadResult(params?: Record<string, unknown>
     method: 'GET',
     url: '/api/v1/common/upload/chunk/result',
     params,
-    operationId: 'UploadController_getChunkUploadResult_v1',
+    operationId: 'UploadController_getChunkUploadResult_v1'
   });
 }
 
@@ -267,7 +505,7 @@ export function fetchUploadGetAuthorization(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/common/upload/cos/authorization',
     params,
-    operationId: 'UploadController_getAuthorization_v1',
+    operationId: 'UploadController_getAuthorization_v1'
   });
 }
 
@@ -280,7 +518,7 @@ export function fetchClientCreate(data: CreateClientRequestDto) {
     method: 'POST',
     url: '/api/v1/system/client',
     data,
-    operationId: 'ClientController_create_v1',
+    operationId: 'ClientController_create_v1'
   });
 }
 
@@ -293,7 +531,7 @@ export function fetchClientUpdate(data: UpdateClientRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/client',
     data,
-    operationId: 'ClientController_update_v1',
+    operationId: 'ClientController_update_v1'
   });
 }
 
@@ -306,7 +544,7 @@ export function fetchClientFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/client/list',
     params,
-    operationId: 'ClientController_findAll_v1',
+    operationId: 'ClientController_findAll_v1'
   });
 }
 
@@ -318,7 +556,7 @@ export function fetchClientFindOne(id: string | number) {
   return apiRequest<ClientResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/client/{id}', { id }),
-    operationId: 'ClientController_findOne_v1',
+    operationId: 'ClientController_findOne_v1'
   });
 }
 
@@ -331,7 +569,7 @@ export function fetchClientChangeStatus(data: ChangeClientStatusRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/client/changeStatus',
     data,
-    operationId: 'ClientController_changeStatus_v1',
+    operationId: 'ClientController_changeStatus_v1'
   });
 }
 
@@ -343,7 +581,7 @@ export function fetchClientRemove(ids: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/client/{ids}', { ids }),
-    operationId: 'ClientController_remove_v1',
+    operationId: 'ClientController_remove_v1'
   });
 }
 
@@ -356,7 +594,7 @@ export function fetchConfigCreate(data: CreateConfigRequestDto) {
     method: 'POST',
     url: '/api/v1/system/config',
     data,
-    operationId: 'ConfigController_create_v1',
+    operationId: 'ConfigController_create_v1'
   });
 }
 
@@ -369,7 +607,7 @@ export function fetchConfigUpdate(data: UpdateConfigRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/config',
     data,
-    operationId: 'ConfigController_update_v1',
+    operationId: 'ConfigController_update_v1'
   });
 }
 
@@ -382,7 +620,7 @@ export function fetchConfigFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/config/list',
     params,
-    operationId: 'ConfigController_findAll_v1',
+    operationId: 'ConfigController_findAll_v1'
   });
 }
 
@@ -394,7 +632,7 @@ export function fetchConfigFindOne(id: string | number) {
   return apiRequest<ConfigResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/config/{id}', { id }),
-    operationId: 'ConfigController_findOne_v1',
+    operationId: 'ConfigController_findOne_v1'
   });
 }
 
@@ -406,7 +644,7 @@ export function fetchConfigRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/config/{id}', { id }),
-    operationId: 'ConfigController_remove_v1',
+    operationId: 'ConfigController_remove_v1'
   });
 }
 
@@ -418,7 +656,7 @@ export function fetchConfigFindOneByconfigKey(id: string | number) {
   return apiRequest<ConfigValueResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/config/configKey/{id}', { id }),
-    operationId: 'ConfigController_findOneByconfigKey_v1',
+    operationId: 'ConfigController_findOneByconfigKey_v1'
   });
 }
 
@@ -431,7 +669,7 @@ export function fetchConfigUpdateByKey(data: UpdateConfigRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/config/updateByKey',
     data,
-    operationId: 'ConfigController_updateByKey_v1',
+    operationId: 'ConfigController_updateByKey_v1'
   });
 }
 
@@ -443,7 +681,7 @@ export function fetchConfigRefreshCache() {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: '/api/v1/system/config/refreshCache',
-    operationId: 'ConfigController_refreshCache_v1',
+    operationId: 'ConfigController_refreshCache_v1'
   });
 }
 
@@ -456,7 +694,7 @@ export function fetchConfigExport(data: ListConfigRequestDto) {
     method: 'POST',
     url: '/api/v1/system/config/export',
     data,
-    operationId: 'ConfigController_export_v1',
+    operationId: 'ConfigController_export_v1'
   });
 }
 
@@ -469,7 +707,7 @@ export function fetchDeptCreate(data: CreateDeptRequestDto) {
     method: 'POST',
     url: '/api/v1/system/dept',
     data,
-    operationId: 'DeptController_create_v1',
+    operationId: 'DeptController_create_v1'
   });
 }
 
@@ -482,7 +720,7 @@ export function fetchDeptUpdate(data: UpdateDeptRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/dept',
     data,
-    operationId: 'DeptController_update_v1',
+    operationId: 'DeptController_update_v1'
   });
 }
 
@@ -495,7 +733,7 @@ export function fetchDeptFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/dept/list',
     params,
-    operationId: 'DeptController_findAll_v1',
+    operationId: 'DeptController_findAll_v1'
   });
 }
 
@@ -507,7 +745,7 @@ export function fetchDeptOptionselect() {
   return apiRequest<DeptResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/dept/optionselect',
-    operationId: 'DeptController_optionselect_v1',
+    operationId: 'DeptController_optionselect_v1'
   });
 }
 
@@ -519,7 +757,7 @@ export function fetchDeptFindOne(id: string | number) {
   return apiRequest<DeptResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/dept/{id}', { id }),
-    operationId: 'DeptController_findOne_v1',
+    operationId: 'DeptController_findOne_v1'
   });
 }
 
@@ -531,7 +769,7 @@ export function fetchDeptRemove(id: string | number) {
   return apiRequest<DeleteDeptResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/dept/{id}', { id }),
-    operationId: 'DeptController_remove_v1',
+    operationId: 'DeptController_remove_v1'
   });
 }
 
@@ -543,7 +781,7 @@ export function fetchDeptFindListExclude(id: string | number) {
   return apiRequest<DeptResponseDto[]>({
     method: 'GET',
     url: buildUrl('/api/v1/system/dept/list/exclude/{id}', { id }),
-    operationId: 'DeptController_findListExclude_v1',
+    operationId: 'DeptController_findListExclude_v1'
   });
 }
 
@@ -556,7 +794,7 @@ export function fetchDictCreateType(data: CreateDictTypeRequestDto) {
     method: 'POST',
     url: '/api/v1/system/dict/type',
     data,
-    operationId: 'DictController_createType_v1',
+    operationId: 'DictController_createType_v1'
   });
 }
 
@@ -569,7 +807,7 @@ export function fetchDictUpdateType(data: UpdateDictTypeRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/dict/type',
     data,
-    operationId: 'DictController_updateType_v1',
+    operationId: 'DictController_updateType_v1'
   });
 }
 
@@ -581,7 +819,7 @@ export function fetchDictRefreshCache() {
   return apiRequest<RefreshCacheResultResponseDto>({
     method: 'DELETE',
     url: '/api/v1/system/dict/type/refreshCache',
-    operationId: 'DictController_refreshCache_v1',
+    operationId: 'DictController_refreshCache_v1'
   });
 }
 
@@ -593,7 +831,7 @@ export function fetchDictDeleteType(id: string | number) {
   return apiRequest<DeleteDictTypeResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/dict/type/{id}', { id }),
-    operationId: 'DictController_deleteType_v1',
+    operationId: 'DictController_deleteType_v1'
   });
 }
 
@@ -605,7 +843,7 @@ export function fetchDictFindOneType(id: string | number) {
   return apiRequest<DictTypeResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/dict/type/{id}', { id }),
-    operationId: 'DictController_findOneType_v1',
+    operationId: 'DictController_findOneType_v1'
   });
 }
 
@@ -618,7 +856,7 @@ export function fetchDictFindAllType(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/dict/type/list',
     params,
-    operationId: 'DictController_findAllType_v1',
+    operationId: 'DictController_findAllType_v1'
   });
 }
 
@@ -630,7 +868,7 @@ export function fetchDictFindOptionselect() {
   return apiRequest<DictTypeResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/dict/type/optionselect',
-    operationId: 'DictController_findOptionselect_v1',
+    operationId: 'DictController_findOptionselect_v1'
   });
 }
 
@@ -643,7 +881,7 @@ export function fetchDictCreateDictData(data: CreateDictDataRequestDto) {
     method: 'POST',
     url: '/api/v1/system/dict/data',
     data,
-    operationId: 'DictController_createDictData_v1',
+    operationId: 'DictController_createDictData_v1'
   });
 }
 
@@ -656,7 +894,7 @@ export function fetchDictUpdateDictData(data: UpdateDictDataRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/dict/data',
     data,
-    operationId: 'DictController_updateDictData_v1',
+    operationId: 'DictController_updateDictData_v1'
   });
 }
 
@@ -668,7 +906,7 @@ export function fetchDictDeleteDictData(id: string | number) {
   return apiRequest<DeleteDictDataResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/dict/data/{id}', { id }),
-    operationId: 'DictController_deleteDictData_v1',
+    operationId: 'DictController_deleteDictData_v1'
   });
 }
 
@@ -680,7 +918,7 @@ export function fetchDictFindOneDictData(id: string | number) {
   return apiRequest<DictDataResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/dict/data/{id}', { id }),
-    operationId: 'DictController_findOneDictData_v1',
+    operationId: 'DictController_findOneDictData_v1'
   });
 }
 
@@ -693,7 +931,7 @@ export function fetchDictFindAllData(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/dict/data/list',
     params,
-    operationId: 'DictController_findAllData_v1',
+    operationId: 'DictController_findAllData_v1'
   });
 }
 
@@ -705,7 +943,7 @@ export function fetchDictFindOneDataType(id: string | number) {
   return apiRequest<DictDataResponseDto[]>({
     method: 'GET',
     url: buildUrl('/api/v1/system/dict/data/type/{id}', { id }),
-    operationId: 'DictController_findOneDataType_v1',
+    operationId: 'DictController_findOneDataType_v1'
   });
 }
 
@@ -718,7 +956,7 @@ export function fetchDictExport(data: ListDictTypeRequestDto) {
     method: 'POST',
     url: '/api/v1/system/dict/type/export',
     data,
-    operationId: 'DictController_export_v1',
+    operationId: 'DictController_export_v1'
   });
 }
 
@@ -731,7 +969,7 @@ export function fetchDictExportData(data: ListDictTypeRequestDto) {
     method: 'POST',
     url: '/api/v1/system/dict/data/export',
     data,
-    operationId: 'DictController_exportData_v1',
+    operationId: 'DictController_exportData_v1'
   });
 }
 
@@ -743,7 +981,7 @@ export function fetchDocsGetErrorCodes() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/docs/error-codes',
-    operationId: 'DocsController_getErrorCodes_v1',
+    operationId: 'DocsController_getErrorCodes_v1'
   });
 }
 
@@ -755,7 +993,7 @@ export function fetchDocsGetErrorCodesByCategory() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/docs/error-codes/by-category',
-    operationId: 'DocsController_getErrorCodesByCategory_v1',
+    operationId: 'DocsController_getErrorCodesByCategory_v1'
   });
 }
 
@@ -767,7 +1005,7 @@ export function fetchDocsGetErrorCodesMarkdown() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/docs/error-codes/markdown',
-    operationId: 'DocsController_getErrorCodesMarkdown_v1',
+    operationId: 'DocsController_getErrorCodesMarkdown_v1'
   });
 }
 
@@ -779,7 +1017,7 @@ export function fetchDocsGetErrorCodesJson() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/docs/error-codes/json',
-    operationId: 'DocsController_getErrorCodesJson_v1',
+    operationId: 'DocsController_getErrorCodesJson_v1'
   });
 }
 
@@ -791,7 +1029,7 @@ export function fetchMenuGetRouters() {
   return apiRequest<MenuResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/menu/getRouters',
-    operationId: 'MenuController_getRouters_v1',
+    operationId: 'MenuController_getRouters_v1'
   });
 }
 
@@ -804,7 +1042,7 @@ export function fetchMenuCreate(data: CreateMenuRequestDto) {
     method: 'POST',
     url: '/api/v1/system/menu',
     data,
-    operationId: 'MenuController_create_v1',
+    operationId: 'MenuController_create_v1'
   });
 }
 
@@ -817,7 +1055,7 @@ export function fetchMenuUpdate(data: UpdateMenuRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/menu',
     data,
-    operationId: 'MenuController_update_v1',
+    operationId: 'MenuController_update_v1'
   });
 }
 
@@ -830,7 +1068,7 @@ export function fetchMenuFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/menu/list',
     params,
-    operationId: 'MenuController_findAll_v1',
+    operationId: 'MenuController_findAll_v1'
   });
 }
 
@@ -842,7 +1080,7 @@ export function fetchMenuTreeSelect() {
   return apiRequest<MenuTreeResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/menu/treeselect',
-    operationId: 'MenuController_treeSelect_v1',
+    operationId: 'MenuController_treeSelect_v1'
   });
 }
 
@@ -854,7 +1092,7 @@ export function fetchMenuRoleMenuTreeselect(roleId: string | number) {
   return apiRequest<RoleMenuTreeSelectResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/menu/roleMenuTreeselect/{roleId}', { roleId }),
-    operationId: 'MenuController_roleMenuTreeselect_v1',
+    operationId: 'MenuController_roleMenuTreeselect_v1'
   });
 }
 
@@ -866,7 +1104,7 @@ export function fetchMenuTenantPackageMenuTreeselect(packageId: string | number)
   return apiRequest<RoleMenuTreeSelectResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/menu/tenantPackageMenuTreeselect/{packageId}', { packageId }),
-    operationId: 'MenuController_tenantPackageMenuTreeselect_v1',
+    operationId: 'MenuController_tenantPackageMenuTreeselect_v1'
   });
 }
 
@@ -878,7 +1116,7 @@ export function fetchMenuFindOne(menuId: string | number) {
   return apiRequest<MenuResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/menu/{menuId}', { menuId }),
-    operationId: 'MenuController_findOne_v1',
+    operationId: 'MenuController_findOne_v1'
   });
 }
 
@@ -890,7 +1128,7 @@ export function fetchMenuRemove(menuId: string | number) {
   return apiRequest<DeleteMenuResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/menu/{menuId}', { menuId }),
-    operationId: 'MenuController_remove_v1',
+    operationId: 'MenuController_remove_v1'
   });
 }
 
@@ -902,7 +1140,7 @@ export function fetchMenuCascadeRemove(menuIds: string | number) {
   return apiRequest<DeleteMenuResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/menu/cascade/{menuIds}', { menuIds }),
-    operationId: 'MenuController_cascadeRemove_v1',
+    operationId: 'MenuController_cascadeRemove_v1'
   });
 }
 
@@ -915,7 +1153,7 @@ export function fetchNoticeCreate(data: CreateNoticeRequestDto) {
     method: 'POST',
     url: '/api/v1/system/notice',
     data,
-    operationId: 'NoticeController_create_v1',
+    operationId: 'NoticeController_create_v1'
   });
 }
 
@@ -928,7 +1166,7 @@ export function fetchNoticeUpdate(data: UpdateNoticeRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/notice',
     data,
-    operationId: 'NoticeController_update_v1',
+    operationId: 'NoticeController_update_v1'
   });
 }
 
@@ -941,7 +1179,7 @@ export function fetchNoticeFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/notice/list',
     params,
-    operationId: 'NoticeController_findAll_v1',
+    operationId: 'NoticeController_findAll_v1'
   });
 }
 
@@ -953,7 +1191,7 @@ export function fetchNoticeFindOne(id: string | number) {
   return apiRequest<NoticeResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/notice/{id}', { id }),
-    operationId: 'NoticeController_findOne_v1',
+    operationId: 'NoticeController_findOne_v1'
   });
 }
 
@@ -965,7 +1203,7 @@ export function fetchNoticeRemove(id: string | number) {
   return apiRequest<DeleteNoticeResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/notice/{id}', { id }),
-    operationId: 'NoticeController_remove_v1',
+    operationId: 'NoticeController_remove_v1'
   });
 }
 
@@ -978,7 +1216,7 @@ export function fetchPostCreate(data: CreatePostRequestDto) {
     method: 'POST',
     url: '/api/v1/system/post',
     data,
-    operationId: 'PostController_create_v1',
+    operationId: 'PostController_create_v1'
   });
 }
 
@@ -991,7 +1229,7 @@ export function fetchPostUpdate(data: UpdatePostRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/post',
     data,
-    operationId: 'PostController_update_v1',
+    operationId: 'PostController_update_v1'
   });
 }
 
@@ -1004,7 +1242,7 @@ export function fetchPostFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/post/list',
     params,
-    operationId: 'PostController_findAll_v1',
+    operationId: 'PostController_findAll_v1'
   });
 }
 
@@ -1017,7 +1255,7 @@ export function fetchPostOptionselect(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/post/optionselect',
     params,
-    operationId: 'PostController_optionselect_v1',
+    operationId: 'PostController_optionselect_v1'
   });
 }
 
@@ -1029,7 +1267,7 @@ export function fetchPostDeptTree() {
   return apiRequest<DeptTreeResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/post/deptTree',
-    operationId: 'PostController_deptTree_v1',
+    operationId: 'PostController_deptTree_v1'
   });
 }
 
@@ -1041,7 +1279,7 @@ export function fetchPostFindOne(id: string | number) {
   return apiRequest<PostResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/post/{id}', { id }),
-    operationId: 'PostController_findOne_v1',
+    operationId: 'PostController_findOne_v1'
   });
 }
 
@@ -1053,7 +1291,7 @@ export function fetchPostRemove(ids: string | number) {
   return apiRequest<DeletePostResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/post/{ids}', { ids }),
-    operationId: 'PostController_remove_v1',
+    operationId: 'PostController_remove_v1'
   });
 }
 
@@ -1066,7 +1304,7 @@ export function fetchPostExport(data: ListPostRequestDto) {
     method: 'POST',
     url: '/api/v1/system/post/export',
     data,
-    operationId: 'PostController_export_v1',
+    operationId: 'PostController_export_v1'
   });
 }
 
@@ -1079,7 +1317,7 @@ export function fetchRoleCreate(data: CreateRoleRequestDto) {
     method: 'POST',
     url: '/api/v1/system/role',
     data,
-    operationId: 'RoleController_create_v1',
+    operationId: 'RoleController_create_v1'
   });
 }
 
@@ -1092,7 +1330,7 @@ export function fetchRoleUpdate(data: UpdateRoleRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role',
     data,
-    operationId: 'RoleController_update_v1',
+    operationId: 'RoleController_update_v1'
   });
 }
 
@@ -1105,7 +1343,7 @@ export function fetchRoleFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/role/list',
     params,
-    operationId: 'RoleController_findAll_v1',
+    operationId: 'RoleController_findAll_v1'
   });
 }
 
@@ -1118,7 +1356,7 @@ export function fetchRoleOptionselect(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/role/optionselect',
     params,
-    operationId: 'RoleController_optionselect_v1',
+    operationId: 'RoleController_optionselect_v1'
   });
 }
 
@@ -1130,7 +1368,7 @@ export function fetchRoleDeptTree(id: string | number) {
   return apiRequest<RoleDeptTreeResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/role/deptTree/{id}', { id }),
-    operationId: 'RoleController_deptTree_v1',
+    operationId: 'RoleController_deptTree_v1'
   });
 }
 
@@ -1142,7 +1380,7 @@ export function fetchRoleFindOne(id: string | number) {
   return apiRequest<RoleResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/role/{id}', { id }),
-    operationId: 'RoleController_findOne_v1',
+    operationId: 'RoleController_findOne_v1'
   });
 }
 
@@ -1154,7 +1392,7 @@ export function fetchRoleRemove(id: string | number) {
   return apiRequest<DeleteRoleResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/role/{id}', { id }),
-    operationId: 'RoleController_remove_v1',
+    operationId: 'RoleController_remove_v1'
   });
 }
 
@@ -1167,7 +1405,7 @@ export function fetchRoleDataScope(data: UpdateRoleRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role/dataScope',
     data,
-    operationId: 'RoleController_dataScope_v1',
+    operationId: 'RoleController_dataScope_v1'
   });
 }
 
@@ -1180,7 +1418,7 @@ export function fetchRoleChangeStatus(data: ChangeRoleStatusRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role/changeStatus',
     data,
-    operationId: 'RoleController_changeStatus_v1',
+    operationId: 'RoleController_changeStatus_v1'
   });
 }
 
@@ -1193,7 +1431,7 @@ export function fetchRoleAuthUserAllocatedList(params?: Record<string, unknown>)
     method: 'GET',
     url: '/api/v1/system/role/authUser/allocatedList',
     params,
-    operationId: 'RoleController_authUserAllocatedList_v1',
+    operationId: 'RoleController_authUserAllocatedList_v1'
   });
 }
 
@@ -1206,7 +1444,7 @@ export function fetchRoleAuthUserUnAllocatedList(params?: Record<string, unknown
     method: 'GET',
     url: '/api/v1/system/role/authUser/unallocatedList',
     params,
-    operationId: 'RoleController_authUserUnAllocatedList_v1',
+    operationId: 'RoleController_authUserUnAllocatedList_v1'
   });
 }
 
@@ -1219,7 +1457,7 @@ export function fetchRoleAuthUserCancel(data: AuthUserCancelRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role/authUser/cancel',
     data,
-    operationId: 'RoleController_authUserCancel_v1',
+    operationId: 'RoleController_authUserCancel_v1'
   });
 }
 
@@ -1232,7 +1470,7 @@ export function fetchRoleAuthUserCancelAll(data: AuthUserCancelAllRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role/authUser/cancelAll',
     data,
-    operationId: 'RoleController_authUserCancelAll_v1',
+    operationId: 'RoleController_authUserCancelAll_v1'
   });
 }
 
@@ -1245,7 +1483,7 @@ export function fetchRoleAuthUserSelectAll(data: AuthUserSelectAllRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/role/authUser/selectAll',
     data,
-    operationId: 'RoleController_authUserSelectAll_v1',
+    operationId: 'RoleController_authUserSelectAll_v1'
   });
 }
 
@@ -1258,7 +1496,7 @@ export function fetchRoleExport(data: ListRoleRequestDto) {
     method: 'POST',
     url: '/api/v1/system/role/export',
     data,
-    operationId: 'RoleController_export_v1',
+    operationId: 'RoleController_export_v1'
   });
 }
 
@@ -1271,7 +1509,7 @@ export function fetchTenantCreate(data: CreateTenantRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant',
     data,
-    operationId: 'TenantController_create_v1',
+    operationId: 'TenantController_create_v1'
   });
 }
 
@@ -1284,7 +1522,7 @@ export function fetchTenantUpdate(data: UpdateTenantRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/tenant',
     data,
-    operationId: 'TenantController_update_v1',
+    operationId: 'TenantController_update_v1'
   });
 }
 
@@ -1297,7 +1535,7 @@ export function fetchTenantFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/list',
     params,
-    operationId: 'TenantController_findAll_v1',
+    operationId: 'TenantController_findAll_v1'
   });
 }
 
@@ -1309,7 +1547,7 @@ export function fetchTenantSyncTenantDict() {
   return apiRequest<SyncTenantDictResultResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/syncTenantDict',
-    operationId: 'TenantController_syncTenantDict_v1',
+    operationId: 'TenantController_syncTenantDict_v1'
   });
 }
 
@@ -1322,7 +1560,7 @@ export function fetchTenantSyncTenantPackage(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/syncTenantPackage',
     params,
-    operationId: 'TenantController_syncTenantPackage_v1',
+    operationId: 'TenantController_syncTenantPackage_v1'
   });
 }
 
@@ -1334,7 +1572,7 @@ export function fetchTenantSyncTenantConfig() {
   return apiRequest<SyncTenantConfigResultResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/syncTenantConfig',
-    operationId: 'TenantController_syncTenantConfig_v1',
+    operationId: 'TenantController_syncTenantConfig_v1'
   });
 }
 
@@ -1346,7 +1584,7 @@ export function fetchTenantGetSelectList() {
   return apiRequest<TenantSelectListResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/select-list',
-    operationId: 'TenantController_getSelectList_v1',
+    operationId: 'TenantController_getSelectList_v1'
   });
 }
 
@@ -1358,7 +1596,7 @@ export function fetchTenantGetSwitchStatus() {
   return apiRequest<TenantSwitchStatusResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/switch-status',
-    operationId: 'TenantController_getSwitchStatus_v1',
+    operationId: 'TenantController_getSwitchStatus_v1'
   });
 }
 
@@ -1370,7 +1608,7 @@ export function fetchTenantSwitchTenant(tenantId: string | number) {
   return apiRequest<TenantSwitchResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/tenant/dynamic/{tenantId}', { tenantId }),
-    operationId: 'TenantController_switchTenant_v1',
+    operationId: 'TenantController_switchTenant_v1'
   });
 }
 
@@ -1382,7 +1620,7 @@ export function fetchTenantRestoreTenant() {
   return apiRequest<TenantRestoreResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/dynamic/clear',
-    operationId: 'TenantController_restoreTenant_v1',
+    operationId: 'TenantController_restoreTenant_v1'
   });
 }
 
@@ -1394,7 +1632,7 @@ export function fetchTenantFindOne(id: string | number) {
   return apiRequest<TenantResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/tenant/{id}', { id }),
-    operationId: 'TenantController_findOne_v1',
+    operationId: 'TenantController_findOne_v1'
   });
 }
 
@@ -1406,7 +1644,7 @@ export function fetchTenantRemove(ids: string | number) {
   return apiRequest<DeleteTenantResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/tenant/{ids}', { ids }),
-    operationId: 'TenantController_remove_v1',
+    operationId: 'TenantController_remove_v1'
   });
 }
 
@@ -1419,7 +1657,7 @@ export function fetchTenantExport(data: ListTenantRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant/export',
     data,
-    operationId: 'TenantController_export_v1',
+    operationId: 'TenantController_export_v1'
   });
 }
 
@@ -1431,7 +1669,7 @@ export function fetchTenantDashboardGetStats() {
   return apiRequest<TenantStatsResponseDto>({
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard/stats',
-    operationId: 'TenantDashboardController_getStats_v1',
+    operationId: 'TenantDashboardController_getStats_v1'
   });
 }
 
@@ -1444,7 +1682,7 @@ export function fetchTenantDashboardGetTrend(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard/trend',
     params,
-    operationId: 'TenantDashboardController_getTrend_v1',
+    operationId: 'TenantDashboardController_getTrend_v1'
   });
 }
 
@@ -1456,7 +1694,7 @@ export function fetchTenantDashboardGetPackageDistribution() {
   return apiRequest<PackageDistributionResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard/package-distribution',
-    operationId: 'TenantDashboardController_getPackageDistribution_v1',
+    operationId: 'TenantDashboardController_getPackageDistribution_v1'
   });
 }
 
@@ -1469,7 +1707,7 @@ export function fetchTenantDashboardGetExpiringTenants(params?: Record<string, u
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard/expiring-tenants',
     params,
-    operationId: 'TenantDashboardController_getExpiringTenants_v1',
+    operationId: 'TenantDashboardController_getExpiringTenants_v1'
   });
 }
 
@@ -1481,7 +1719,7 @@ export function fetchTenantDashboardGetQuotaTopTenants() {
   return apiRequest<QuotaTopTenantResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard/quota-top',
-    operationId: 'TenantDashboardController_getQuotaTopTenants_v1',
+    operationId: 'TenantDashboardController_getQuotaTopTenants_v1'
   });
 }
 
@@ -1494,7 +1732,7 @@ export function fetchTenantDashboardGetDashboardData(params?: Record<string, unk
     method: 'GET',
     url: '/api/v1/system/tenant/dashboard',
     params,
-    operationId: 'TenantDashboardController_getDashboardData_v1',
+    operationId: 'TenantDashboardController_getDashboardData_v1'
   });
 }
 
@@ -1507,7 +1745,7 @@ export function fetchTenantQuotaFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/quota/list',
     params,
-    operationId: 'TenantQuotaController_findAll_v1',
+    operationId: 'TenantQuotaController_findAll_v1'
   });
 }
 
@@ -1519,7 +1757,7 @@ export function fetchTenantQuotaFindOne(tenantId: string | number) {
   return apiRequest<TenantQuotaResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/tenant/quota/{tenantId}', { tenantId }),
-    operationId: 'TenantQuotaController_findOne_v1',
+    operationId: 'TenantQuotaController_findOne_v1'
   });
 }
 
@@ -1532,7 +1770,7 @@ export function fetchTenantQuotaUpdate(data: UpdateTenantQuotaRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/tenant/quota',
     data,
-    operationId: 'TenantQuotaController_update_v1',
+    operationId: 'TenantQuotaController_update_v1'
   });
 }
 
@@ -1545,7 +1783,7 @@ export function fetchTenantQuotaCheckQuota(data: CheckQuotaRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant/quota/check',
     data,
-    operationId: 'TenantQuotaController_checkQuota_v1',
+    operationId: 'TenantQuotaController_checkQuota_v1'
   });
 }
 
@@ -1558,7 +1796,7 @@ export function fetchTenantAuditFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/audit/list',
     params,
-    operationId: 'TenantAuditController_findAll_v1',
+    operationId: 'TenantAuditController_findAll_v1'
   });
 }
 
@@ -1570,7 +1808,7 @@ export function fetchTenantAuditFindOne(id: string | number) {
   return apiRequest<TenantAuditLogDetailVo>({
     method: 'GET',
     url: buildUrl('/api/v1/system/tenant/audit/{id}', { id }),
-    operationId: 'TenantAuditController_findOne_v1',
+    operationId: 'TenantAuditController_findOne_v1'
   });
 }
 
@@ -1583,7 +1821,7 @@ export function fetchTenantAuditGetStats(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/audit/stats/summary',
     params,
-    operationId: 'TenantAuditController_getStats_v1',
+    operationId: 'TenantAuditController_getStats_v1'
   });
 }
 
@@ -1596,7 +1834,7 @@ export function fetchTenantAuditExport(data: ExportTenantAuditLogRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant/audit/export',
     data,
-    operationId: 'TenantAuditController_export_v1',
+    operationId: 'TenantAuditController_export_v1'
   });
 }
 
@@ -1609,7 +1847,7 @@ export function fetchTenantPackageCreate(data: CreateTenantPackageRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant/package',
     data,
-    operationId: 'TenantPackageController_create_v1',
+    operationId: 'TenantPackageController_create_v1'
   });
 }
 
@@ -1622,7 +1860,7 @@ export function fetchTenantPackageUpdate(data: UpdateTenantPackageRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/tenant/package',
     data,
-    operationId: 'TenantPackageController_update_v1',
+    operationId: 'TenantPackageController_update_v1'
   });
 }
 
@@ -1635,7 +1873,7 @@ export function fetchTenantPackageFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/tenant/package/list',
     params,
-    operationId: 'TenantPackageController_findAll_v1',
+    operationId: 'TenantPackageController_findAll_v1'
   });
 }
 
@@ -1647,7 +1885,7 @@ export function fetchTenantPackageSelectList() {
   return apiRequest<TenantPackageSelectResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/tenant/package/selectList',
-    operationId: 'TenantPackageController_selectList_v1',
+    operationId: 'TenantPackageController_selectList_v1'
   });
 }
 
@@ -1659,7 +1897,7 @@ export function fetchTenantPackageFindOne(id: string | number) {
   return apiRequest<TenantPackageResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/tenant/package/{id}', { id }),
-    operationId: 'TenantPackageController_findOne_v1',
+    operationId: 'TenantPackageController_findOne_v1'
   });
 }
 
@@ -1671,7 +1909,7 @@ export function fetchTenantPackageRemove(ids: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/tenant/package/{ids}', { ids }),
-    operationId: 'TenantPackageController_remove_v1',
+    operationId: 'TenantPackageController_remove_v1'
   });
 }
 
@@ -1684,7 +1922,7 @@ export function fetchTenantPackageExport(data: ListTenantPackageRequestDto) {
     method: 'POST',
     url: '/api/v1/system/tenant/package/export',
     data,
-    operationId: 'TenantPackageController_export_v1',
+    operationId: 'TenantPackageController_export_v1'
   });
 }
 
@@ -1697,7 +1935,7 @@ export function fetchToolFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/list',
     params,
-    operationId: 'ToolController_findAll_v1',
+    operationId: 'ToolController_findAll_v1'
   });
 }
 
@@ -1710,7 +1948,7 @@ export function fetchToolGenDbList(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/db/list',
     params,
-    operationId: 'ToolController_genDbList_v1',
+    operationId: 'ToolController_genDbList_v1'
   });
 }
 
@@ -1722,7 +1960,7 @@ export function fetchToolGetDataNames() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/tool/gen/getDataNames',
-    operationId: 'ToolController_getDataNames_v1',
+    operationId: 'ToolController_getDataNames_v1'
   });
 }
 
@@ -1735,7 +1973,7 @@ export function fetchToolGenImportTable(data: TableName) {
     method: 'POST',
     url: '/api/v1/tool/gen/importTable',
     data,
-    operationId: 'ToolController_genImportTable_v1',
+    operationId: 'ToolController_genImportTable_v1'
   });
 }
 
@@ -1747,7 +1985,7 @@ export function fetchToolSynchDb(tableName: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/synchDb/{tableName}', { tableName }),
-    operationId: 'ToolController_synchDb_v1',
+    operationId: 'ToolController_synchDb_v1'
   });
 }
 
@@ -1759,7 +1997,7 @@ export function fetchToolGen(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/{id}', { id }),
-    operationId: 'ToolController_gen_v1',
+    operationId: 'ToolController_gen_v1'
   });
 }
 
@@ -1771,7 +2009,7 @@ export function fetchToolRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/tool/gen/{id}', { id }),
-    operationId: 'ToolController_remove_v1',
+    operationId: 'ToolController_remove_v1'
   });
 }
 
@@ -1784,7 +2022,7 @@ export function fetchToolGenUpdate(data: GenTableUpdate) {
     method: 'PUT',
     url: '/api/v1/tool/gen',
     data,
-    operationId: 'ToolController_genUpdate_v1',
+    operationId: 'ToolController_genUpdate_v1'
   });
 }
 
@@ -1797,7 +2035,7 @@ export function fetchToolBatchGenCode(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/batchGenCode/zip',
     params,
-    operationId: 'ToolController_batchGenCode_v1',
+    operationId: 'ToolController_batchGenCode_v1'
   });
 }
 
@@ -1810,7 +2048,7 @@ export function fetchToolBatchGenCodeByIds(data: GenerateCodeDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/batchGenCode',
     data,
-    operationId: 'ToolController_batchGenCodeByIds_v1',
+    operationId: 'ToolController_batchGenCodeByIds_v1'
   });
 }
 
@@ -1822,7 +2060,7 @@ export function fetchToolPreview(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/preview/{id}', { id }),
-    operationId: 'ToolController_preview_v1',
+    operationId: 'ToolController_preview_v1'
   });
 }
 
@@ -1835,7 +2073,7 @@ export function fetchDataSourceCreate(data: CreateDataSourceDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/datasource',
     data,
-    operationId: 'DataSourceController_create_v1',
+    operationId: 'DataSourceController_create_v1'
   });
 }
 
@@ -1848,7 +2086,7 @@ export function fetchDataSourceUpdate(id: string | number, data: UpdateDataSourc
     method: 'PUT',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}', { id }),
     data,
-    operationId: 'DataSourceController_update_v1',
+    operationId: 'DataSourceController_update_v1'
   });
 }
 
@@ -1860,7 +2098,7 @@ export function fetchDataSourceDelete(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}', { id }),
-    operationId: 'DataSourceController_delete_v1',
+    operationId: 'DataSourceController_delete_v1'
   });
 }
 
@@ -1872,7 +2110,7 @@ export function fetchDataSourceFindOne(id: string | number) {
   return apiRequest<DataSourceResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}', { id }),
-    operationId: 'DataSourceController_findOne_v1',
+    operationId: 'DataSourceController_findOne_v1'
   });
 }
 
@@ -1885,7 +2123,7 @@ export function fetchDataSourceList(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/datasource/list',
     params,
-    operationId: 'DataSourceController_list_v1',
+    operationId: 'DataSourceController_list_v1'
   });
 }
 
@@ -1898,7 +2136,7 @@ export function fetchDataSourceTestConnection(data: TestConnectionDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/datasource/test',
     data,
-    operationId: 'DataSourceController_testConnection_v1',
+    operationId: 'DataSourceController_testConnection_v1'
   });
 }
 
@@ -1910,7 +2148,7 @@ export function fetchDataSourceTestConnectionById(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}/test', { id }),
-    operationId: 'DataSourceController_testConnectionById_v1',
+    operationId: 'DataSourceController_testConnectionById_v1'
   });
 }
 
@@ -1922,7 +2160,7 @@ export function fetchDataSourceGetTables(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}/tables', { id }),
-    operationId: 'DataSourceController_getTables_v1',
+    operationId: 'DataSourceController_getTables_v1'
   });
 }
 
@@ -1934,7 +2172,7 @@ export function fetchDataSourceGetColumns(id: string | number, tableName: string
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/datasource/{id}/tables/{tableName}/columns', { id, tableName }),
-    operationId: 'DataSourceController_getColumns_v1',
+    operationId: 'DataSourceController_getColumns_v1'
   });
 }
 
@@ -1947,7 +2185,7 @@ export function fetchTemplateCreateGroup(data: CreateTemplateGroupDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/template/group',
     data,
-    operationId: 'TemplateController_createGroup_v1',
+    operationId: 'TemplateController_createGroup_v1'
   });
 }
 
@@ -1960,7 +2198,7 @@ export function fetchTemplateUpdateGroup(id: string | number, data: UpdateTempla
     method: 'PUT',
     url: buildUrl('/api/v1/tool/gen/template/group/{id}', { id }),
     data,
-    operationId: 'TemplateController_updateGroup_v1',
+    operationId: 'TemplateController_updateGroup_v1'
   });
 }
 
@@ -1972,7 +2210,7 @@ export function fetchTemplateDeleteGroup(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/tool/gen/template/group/{id}', { id }),
-    operationId: 'TemplateController_deleteGroup_v1',
+    operationId: 'TemplateController_deleteGroup_v1'
   });
 }
 
@@ -1984,7 +2222,7 @@ export function fetchTemplateFindOneGroup(id: string | number) {
   return apiRequest<TemplateGroupResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/template/group/{id}', { id }),
-    operationId: 'TemplateController_findOneGroup_v1',
+    operationId: 'TemplateController_findOneGroup_v1'
   });
 }
 
@@ -1997,7 +2235,7 @@ export function fetchTemplateListGroups(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/template/group/list',
     params,
-    operationId: 'TemplateController_listGroups_v1',
+    operationId: 'TemplateController_listGroups_v1'
   });
 }
 
@@ -2009,7 +2247,7 @@ export function fetchTemplateGetDefaultGroup() {
   return apiRequest<TemplateGroupResponseDto>({
     method: 'GET',
     url: '/api/v1/tool/gen/template/group/default',
-    operationId: 'TemplateController_getDefaultGroup_v1',
+    operationId: 'TemplateController_getDefaultGroup_v1'
   });
 }
 
@@ -2021,7 +2259,7 @@ export function fetchTemplateExportGroup(id: string | number) {
   return apiRequest<ExportTemplateGroupDto>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/template/group/{id}/export', { id }),
-    operationId: 'TemplateController_exportGroup_v1',
+    operationId: 'TemplateController_exportGroup_v1'
   });
 }
 
@@ -2034,7 +2272,7 @@ export function fetchTemplateImportGroup(data: ImportTemplateGroupDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/template/group/import',
     data,
-    operationId: 'TemplateController_importGroup_v1',
+    operationId: 'TemplateController_importGroup_v1'
   });
 }
 
@@ -2047,7 +2285,7 @@ export function fetchTemplateCreateTemplate(data: CreateTemplateDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/template',
     data,
-    operationId: 'TemplateController_createTemplate_v1',
+    operationId: 'TemplateController_createTemplate_v1'
   });
 }
 
@@ -2060,7 +2298,7 @@ export function fetchTemplateUpdateTemplate(id: string | number, data: UpdateTem
     method: 'PUT',
     url: buildUrl('/api/v1/tool/gen/template/{id}', { id }),
     data,
-    operationId: 'TemplateController_updateTemplate_v1',
+    operationId: 'TemplateController_updateTemplate_v1'
   });
 }
 
@@ -2072,7 +2310,7 @@ export function fetchTemplateDeleteTemplate(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/tool/gen/template/{id}', { id }),
-    operationId: 'TemplateController_deleteTemplate_v1',
+    operationId: 'TemplateController_deleteTemplate_v1'
   });
 }
 
@@ -2084,7 +2322,7 @@ export function fetchTemplateFindOneTemplate(id: string | number) {
   return apiRequest<TemplateResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/template/{id}', { id }),
-    operationId: 'TemplateController_findOneTemplate_v1',
+    operationId: 'TemplateController_findOneTemplate_v1'
   });
 }
 
@@ -2097,7 +2335,7 @@ export function fetchTemplateListTemplates(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/template/list',
     params,
-    operationId: 'TemplateController_listTemplates_v1',
+    operationId: 'TemplateController_listTemplates_v1'
   });
 }
 
@@ -2110,7 +2348,7 @@ export function fetchTemplateValidateTemplate(data: ValidateTemplateDto) {
     method: 'POST',
     url: '/api/v1/tool/gen/template/validate',
     data,
-    operationId: 'TemplateController_validateTemplate_v1',
+    operationId: 'TemplateController_validateTemplate_v1'
   });
 }
 
@@ -2123,7 +2361,7 @@ export function fetchHistoryList(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/tool/gen/history/list',
     params,
-    operationId: 'HistoryController_list_v1',
+    operationId: 'HistoryController_list_v1'
   });
 }
 
@@ -2135,7 +2373,7 @@ export function fetchHistoryFindOne(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/history/{id}', { id }),
-    operationId: 'HistoryController_findOne_v1',
+    operationId: 'HistoryController_findOne_v1'
   });
 }
 
@@ -2147,7 +2385,7 @@ export function fetchHistoryDelete(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/tool/gen/history/{id}', { id }),
-    operationId: 'HistoryController_delete_v1',
+    operationId: 'HistoryController_delete_v1'
   });
 }
 
@@ -2159,7 +2397,7 @@ export function fetchHistoryDownload(id: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/tool/gen/history/{id}/download', { id }),
-    operationId: 'HistoryController_download_v1',
+    operationId: 'HistoryController_download_v1'
   });
 }
 
@@ -2171,7 +2409,7 @@ export function fetchHistoryBatchDelete() {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: '/api/v1/tool/gen/history/batch',
-    operationId: 'HistoryController_batchDelete_v1',
+    operationId: 'HistoryController_batchDelete_v1'
   });
 }
 
@@ -2184,7 +2422,7 @@ export function fetchHistoryCleanup(params?: Record<string, unknown>) {
     method: 'POST',
     url: '/api/v1/tool/gen/history/cleanup',
     params,
-    operationId: 'HistoryController_cleanup_v1',
+    operationId: 'HistoryController_cleanup_v1'
   });
 }
 
@@ -2197,7 +2435,7 @@ export function fetchUserGetInfo() {
   return apiRequest<CurrentUserInfoResponseDto>({
     method: 'GET',
     url: '/api/v1/system/user/getInfo',
-    operationId: 'UserController_getInfo_v1',
+    operationId: 'UserController_getInfo_v1'
   });
 }
 
@@ -2209,7 +2447,7 @@ export function fetchUserProfile() {
   return apiRequest<UserResponseDto>({
     method: 'GET',
     url: '/api/v1/system/user/profile',
-    operationId: 'UserController_profile_v1',
+    operationId: 'UserController_profile_v1'
   });
 }
 
@@ -2222,7 +2460,7 @@ export function fetchUserUpdateProfile(data: UpdateProfileDto) {
     method: 'PUT',
     url: '/api/v1/system/user/profile',
     data,
-    operationId: 'UserController_updateProfile_v1',
+    operationId: 'UserController_updateProfile_v1'
   });
 }
 
@@ -2234,7 +2472,7 @@ export function fetchUserAvatar() {
   return apiRequest<UserAvatarResponseDto>({
     method: 'POST',
     url: '/api/v1/system/user/profile/avatar',
-    operationId: 'UserController_avatar_v1',
+    operationId: 'UserController_avatar_v1'
   });
 }
 
@@ -2247,7 +2485,7 @@ export function fetchUserUpdatePwd(data: UpdatePwdDto) {
     method: 'PUT',
     url: '/api/v1/system/user/profile/updatePwd',
     data,
-    operationId: 'UserController_updatePwd_v1',
+    operationId: 'UserController_updatePwd_v1'
   });
 }
 
@@ -2260,7 +2498,7 @@ export function fetchUserCreate(data: CreateUserDto) {
     method: 'POST',
     url: '/api/v1/system/user',
     data,
-    operationId: 'UserController_create_v1',
+    operationId: 'UserController_create_v1'
   });
 }
 
@@ -2272,7 +2510,7 @@ export function fetchUserFindPostAndRoleAll() {
   return apiRequest<UserDetailResponseDto>({
     method: 'GET',
     url: '/api/v1/system/user',
-    operationId: 'UserController_findPostAndRoleAll_v1',
+    operationId: 'UserController_findPostAndRoleAll_v1'
   });
 }
 
@@ -2285,7 +2523,7 @@ export function fetchUserUpdate(data: UpdateUserDto) {
     method: 'PUT',
     url: '/api/v1/system/user',
     data,
-    operationId: 'UserController_update_v1',
+    operationId: 'UserController_update_v1'
   });
 }
 
@@ -2298,7 +2536,7 @@ export function fetchUserBatchCreate(data: BatchCreateUserDto) {
     method: 'POST',
     url: '/api/v1/system/user/batch',
     data,
-    operationId: 'UserController_batchCreate_v1',
+    operationId: 'UserController_batchCreate_v1'
   });
 }
 
@@ -2311,7 +2549,7 @@ export function fetchUserBatchDelete(data: BatchDeleteUserDto) {
     method: 'DELETE',
     url: '/api/v1/system/user/batch',
     data,
-    operationId: 'UserController_batchDelete_v1',
+    operationId: 'UserController_batchDelete_v1'
   });
 }
 
@@ -2324,7 +2562,7 @@ export function fetchUserFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/user/list',
     params,
-    operationId: 'UserController_findAll_v1',
+    operationId: 'UserController_findAll_v1'
   });
 }
 
@@ -2336,7 +2574,7 @@ export function fetchUserDeptTree() {
   return apiRequest<DeptTreeNodeResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/user/deptTree',
-    operationId: 'UserController_deptTree_v1',
+    operationId: 'UserController_deptTree_v1'
   });
 }
 
@@ -2348,7 +2586,7 @@ export function fetchUserAuthRole(id: string | number) {
   return apiRequest<AuthRoleResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/user/authRole/{id}', { id }),
-    operationId: 'UserController_authRole_v1',
+    operationId: 'UserController_authRole_v1'
   });
 }
 
@@ -2361,7 +2599,7 @@ export function fetchUserUpdateAuthRole(params?: Record<string, unknown>) {
     method: 'PUT',
     url: '/api/v1/system/user/authRole',
     params,
-    operationId: 'UserController_updateAuthRole_v1',
+    operationId: 'UserController_updateAuthRole_v1'
   });
 }
 
@@ -2373,7 +2611,7 @@ export function fetchUserOptionselect() {
   return apiRequest<UserOptionSelectResponseDto>({
     method: 'GET',
     url: '/api/v1/system/user/optionselect',
-    operationId: 'UserController_optionselect_v1',
+    operationId: 'UserController_optionselect_v1'
   });
 }
 
@@ -2385,7 +2623,7 @@ export function fetchUserFindByDeptId(deptId: string | number) {
   return apiRequest<UserListResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/user/list/dept/{deptId}', { deptId }),
-    operationId: 'UserController_findByDeptId_v1',
+    operationId: 'UserController_findByDeptId_v1'
   });
 }
 
@@ -2397,7 +2635,7 @@ export function fetchUserFindOne(userId: string | number) {
   return apiRequest<UserDetailResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/user/{userId}', { userId }),
-    operationId: 'UserController_findOne_v1',
+    operationId: 'UserController_findOne_v1'
   });
 }
 
@@ -2410,7 +2648,7 @@ export function fetchUserChangeStatus(data: ChangeUserStatusDto) {
     method: 'PUT',
     url: '/api/v1/system/user/changeStatus',
     data,
-    operationId: 'UserController_changeStatus_v1',
+    operationId: 'UserController_changeStatus_v1'
   });
 }
 
@@ -2423,7 +2661,7 @@ export function fetchUserResetPwd(data: ResetPwdDto) {
     method: 'PUT',
     url: '/api/v1/system/user/resetPwd',
     data,
-    operationId: 'UserController_resetPwd_v1',
+    operationId: 'UserController_resetPwd_v1'
   });
 }
 
@@ -2435,7 +2673,7 @@ export function fetchUserRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/user/{id}', { id }),
-    operationId: 'UserController_remove_v1',
+    operationId: 'UserController_remove_v1'
   });
 }
 
@@ -2448,7 +2686,7 @@ export function fetchUserExport(data: ListUserDto) {
     method: 'POST',
     url: '/api/v1/system/user/export',
     data,
-    operationId: 'UserController_export_v1',
+    operationId: 'UserController_export_v1'
   });
 }
 
@@ -2460,7 +2698,7 @@ export function fetchFileManagerCreateFolder(data: CreateFolderRequestDto) {
     method: 'POST',
     url: '/api/v1/system/file-manager/folder',
     data,
-    operationId: 'FileManagerController_createFolder_v1',
+    operationId: 'FileManagerController_createFolder_v1'
   });
 }
 
@@ -2472,7 +2710,7 @@ export function fetchFileManagerUpdateFolder(data: UpdateFolderRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/file-manager/folder',
     data,
-    operationId: 'FileManagerController_updateFolder_v1',
+    operationId: 'FileManagerController_updateFolder_v1'
   });
 }
 
@@ -2483,7 +2721,7 @@ export function fetchFileManagerDeleteFolder(folderId: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/file-manager/folder/{folderId}', { folderId }),
-    operationId: 'FileManagerController_deleteFolder_v1',
+    operationId: 'FileManagerController_deleteFolder_v1'
   });
 }
 
@@ -2495,7 +2733,7 @@ export function fetchFileManagerListFolders(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/file-manager/folder/list',
     params,
-    operationId: 'FileManagerController_listFolders_v1',
+    operationId: 'FileManagerController_listFolders_v1'
   });
 }
 
@@ -2506,7 +2744,7 @@ export function fetchFileManagerGetFolderTree() {
   return apiRequest<FolderTreeNodeResponseDto[]>({
     method: 'GET',
     url: '/api/v1/system/file-manager/folder/tree',
-    operationId: 'FileManagerController_getFolderTree_v1',
+    operationId: 'FileManagerController_getFolderTree_v1'
   });
 }
 
@@ -2518,7 +2756,7 @@ export function fetchFileManagerListFiles(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/file-manager/file/list',
     params,
-    operationId: 'FileManagerController_listFiles_v1',
+    operationId: 'FileManagerController_listFiles_v1'
   });
 }
 
@@ -2530,7 +2768,7 @@ export function fetchFileManagerMoveFiles(data: MoveFileRequestDto) {
     method: 'POST',
     url: '/api/v1/system/file-manager/file/move',
     data,
-    operationId: 'FileManagerController_moveFiles_v1',
+    operationId: 'FileManagerController_moveFiles_v1'
   });
 }
 
@@ -2542,7 +2780,7 @@ export function fetchFileManagerRenameFile(data: RenameFileRequestDto) {
     method: 'POST',
     url: '/api/v1/system/file-manager/file/rename',
     data,
-    operationId: 'FileManagerController_renameFile_v1',
+    operationId: 'FileManagerController_renameFile_v1'
   });
 }
 
@@ -2553,7 +2791,7 @@ export function fetchFileManagerDeleteFiles() {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: '/api/v1/system/file-manager/file',
-    operationId: 'FileManagerController_deleteFiles_v1',
+    operationId: 'FileManagerController_deleteFiles_v1'
   });
 }
 
@@ -2564,7 +2802,7 @@ export function fetchFileManagerGetFileDetail(uploadId: string | number) {
   return apiRequest<FileResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/file-manager/file/{uploadId}', { uploadId }),
-    operationId: 'FileManagerController_getFileDetail_v1',
+    operationId: 'FileManagerController_getFileDetail_v1'
   });
 }
 
@@ -2576,7 +2814,7 @@ export function fetchFileManagerCreateShare(data: CreateShareRequestDto) {
     method: 'POST',
     url: '/api/v1/system/file-manager/share',
     data,
-    operationId: 'FileManagerController_createShare_v1',
+    operationId: 'FileManagerController_createShare_v1'
   });
 }
 
@@ -2588,7 +2826,7 @@ export function fetchFileManagerGetShare(shareId: string | number, params?: Reco
     method: 'GET',
     url: buildUrl('/api/v1/system/file-manager/share/{shareId}', { shareId }),
     params,
-    operationId: 'FileManagerController_getShare_v1',
+    operationId: 'FileManagerController_getShare_v1'
   });
 }
 
@@ -2599,7 +2837,7 @@ export function fetchFileManagerCancelShare(shareId: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/file-manager/share/{shareId}', { shareId }),
-    operationId: 'FileManagerController_cancelShare_v1',
+    operationId: 'FileManagerController_cancelShare_v1'
   });
 }
 
@@ -2610,7 +2848,7 @@ export function fetchFileManagerDownloadShare(shareId: string | number) {
   return apiRequest<unknown>({
     method: 'POST',
     url: buildUrl('/api/v1/system/file-manager/share/{shareId}/download', { shareId }),
-    operationId: 'FileManagerController_downloadShare_v1',
+    operationId: 'FileManagerController_downloadShare_v1'
   });
 }
 
@@ -2621,7 +2859,7 @@ export function fetchFileManagerMyShares() {
   return apiRequest<ShareListResponseDto>({
     method: 'GET',
     url: '/api/v1/system/file-manager/share/my/list',
-    operationId: 'FileManagerController_myShares_v1',
+    operationId: 'FileManagerController_myShares_v1'
   });
 }
 
@@ -2633,7 +2871,7 @@ export function fetchFileManagerGetRecycleList(params?: Record<string, unknown>)
     method: 'GET',
     url: '/api/v1/system/file-manager/recycle/list',
     params,
-    operationId: 'FileManagerController_getRecycleList_v1',
+    operationId: 'FileManagerController_getRecycleList_v1'
   });
 }
 
@@ -2644,7 +2882,7 @@ export function fetchFileManagerRestoreFiles() {
   return apiRequest<unknown>({
     method: 'PUT',
     url: '/api/v1/system/file-manager/recycle/restore',
-    operationId: 'FileManagerController_restoreFiles_v1',
+    operationId: 'FileManagerController_restoreFiles_v1'
   });
 }
 
@@ -2655,7 +2893,7 @@ export function fetchFileManagerClearRecycle() {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: '/api/v1/system/file-manager/recycle/clear',
-    operationId: 'FileManagerController_clearRecycle_v1',
+    operationId: 'FileManagerController_clearRecycle_v1'
   });
 }
 
@@ -2666,7 +2904,7 @@ export function fetchFileManagerGetFileVersions(uploadId: string | number) {
   return apiRequest<FileVersionListResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/file-manager/file/{uploadId}/versions', { uploadId }),
-    operationId: 'FileManagerController_getFileVersions_v1',
+    operationId: 'FileManagerController_getFileVersions_v1'
   });
 }
 
@@ -2677,7 +2915,7 @@ export function fetchFileManagerRestoreVersion() {
   return apiRequest<RestoreVersionResultResponseDto>({
     method: 'POST',
     url: '/api/v1/system/file-manager/file/restore-version',
-    operationId: 'FileManagerController_restoreVersion_v1',
+    operationId: 'FileManagerController_restoreVersion_v1'
   });
 }
 
@@ -2688,7 +2926,7 @@ export function fetchFileManagerGetAccessToken(uploadId: string | number) {
   return apiRequest<AccessTokenResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/file-manager/file/{uploadId}/access-token', { uploadId }),
-    operationId: 'FileManagerController_getAccessToken_v1',
+    operationId: 'FileManagerController_getAccessToken_v1'
   });
 }
 
@@ -2700,7 +2938,7 @@ export function fetchFileManagerDownloadFile(uploadId: string | number, params?:
     method: 'GET',
     url: buildUrl('/api/v1/system/file-manager/file/{uploadId}/download', { uploadId }),
     params,
-    operationId: 'FileManagerController_downloadFile_v1',
+    operationId: 'FileManagerController_downloadFile_v1'
   });
 }
 
@@ -2711,7 +2949,7 @@ export function fetchFileManagerBatchDownload() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/system/file-manager/file/batch-download',
-    operationId: 'FileManagerController_batchDownload_v1',
+    operationId: 'FileManagerController_batchDownload_v1'
   });
 }
 
@@ -2722,7 +2960,7 @@ export function fetchFileManagerGetStorageStats() {
   return apiRequest<StorageStatsResponseDto>({
     method: 'GET',
     url: '/api/v1/system/file-manager/storage/stats',
-    operationId: 'FileManagerController_getStorageStats_v1',
+    operationId: 'FileManagerController_getStorageStats_v1'
   });
 }
 
@@ -2735,7 +2973,7 @@ export function fetchSmsChannelCreate(data: CreateSmsChannelRequestDto) {
     method: 'POST',
     url: '/api/v1/system/sms/channel',
     data,
-    operationId: 'SmsChannelController_create_v1',
+    operationId: 'SmsChannelController_create_v1'
   });
 }
 
@@ -2748,7 +2986,7 @@ export function fetchSmsChannelUpdate(data: UpdateSmsChannelRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/sms/channel',
     data,
-    operationId: 'SmsChannelController_update_v1',
+    operationId: 'SmsChannelController_update_v1'
   });
 }
 
@@ -2761,7 +2999,7 @@ export function fetchSmsChannelFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/sms/channel/list',
     params,
-    operationId: 'SmsChannelController_findAll_v1',
+    operationId: 'SmsChannelController_findAll_v1'
   });
 }
 
@@ -2773,7 +3011,7 @@ export function fetchSmsChannelGetEnabledChannels() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/sms/channel/enabled',
-    operationId: 'SmsChannelController_getEnabledChannels_v1',
+    operationId: 'SmsChannelController_getEnabledChannels_v1'
   });
 }
 
@@ -2785,7 +3023,7 @@ export function fetchSmsChannelFindOne(id: string | number) {
   return apiRequest<SmsChannelResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/sms/channel/{id}', { id }),
-    operationId: 'SmsChannelController_findOne_v1',
+    operationId: 'SmsChannelController_findOne_v1'
   });
 }
 
@@ -2797,7 +3035,7 @@ export function fetchSmsChannelRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/sms/channel/{id}', { id }),
-    operationId: 'SmsChannelController_remove_v1',
+    operationId: 'SmsChannelController_remove_v1'
   });
 }
 
@@ -2810,7 +3048,7 @@ export function fetchSmsTemplateCreate(data: CreateSmsTemplateRequestDto) {
     method: 'POST',
     url: '/api/v1/system/sms/template',
     data,
-    operationId: 'SmsTemplateController_create_v1',
+    operationId: 'SmsTemplateController_create_v1'
   });
 }
 
@@ -2823,7 +3061,7 @@ export function fetchSmsTemplateUpdate(data: UpdateSmsTemplateRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/sms/template',
     data,
-    operationId: 'SmsTemplateController_update_v1',
+    operationId: 'SmsTemplateController_update_v1'
   });
 }
 
@@ -2836,7 +3074,7 @@ export function fetchSmsTemplateFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/sms/template/list',
     params,
-    operationId: 'SmsTemplateController_findAll_v1',
+    operationId: 'SmsTemplateController_findAll_v1'
   });
 }
 
@@ -2848,7 +3086,7 @@ export function fetchSmsTemplateFindOne(id: string | number) {
   return apiRequest<SmsTemplateResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/sms/template/{id}', { id }),
-    operationId: 'SmsTemplateController_findOne_v1',
+    operationId: 'SmsTemplateController_findOne_v1'
   });
 }
 
@@ -2860,7 +3098,7 @@ export function fetchSmsTemplateRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/sms/template/{id}', { id }),
-    operationId: 'SmsTemplateController_remove_v1',
+    operationId: 'SmsTemplateController_remove_v1'
   });
 }
 
@@ -2873,7 +3111,7 @@ export function fetchSmsSendSend(data: SendSmsDto) {
     method: 'POST',
     url: '/api/v1/system/sms/send',
     data,
-    operationId: 'SmsSendController_send_v1',
+    operationId: 'SmsSendController_send_v1'
   });
 }
 
@@ -2886,7 +3124,7 @@ export function fetchSmsSendBatchSend(data: BatchSendSmsDto) {
     method: 'POST',
     url: '/api/v1/system/sms/send/batch',
     data,
-    operationId: 'SmsSendController_batchSend_v1',
+    operationId: 'SmsSendController_batchSend_v1'
   });
 }
 
@@ -2898,7 +3136,7 @@ export function fetchSmsSendResend(logId: string | number) {
   return apiRequest<unknown>({
     method: 'POST',
     url: buildUrl('/api/v1/system/sms/send/resend/{logId}', { logId }),
-    operationId: 'SmsSendController_resend_v1',
+    operationId: 'SmsSendController_resend_v1'
   });
 }
 
@@ -2911,7 +3149,7 @@ export function fetchSmsLogFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/sms/log/list',
     params,
-    operationId: 'SmsLogController_findAll_v1',
+    operationId: 'SmsLogController_findAll_v1'
   });
 }
 
@@ -2923,7 +3161,7 @@ export function fetchSmsLogFindOne(id: string | number) {
   return apiRequest<SmsLogResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/sms/log/{id}', { id }),
-    operationId: 'SmsLogController_findOne_v1',
+    operationId: 'SmsLogController_findOne_v1'
   });
 }
 
@@ -2935,7 +3173,7 @@ export function fetchSmsLogFindByMobile(mobile: string | number) {
   return apiRequest<unknown>({
     method: 'GET',
     url: buildUrl('/api/v1/system/sms/log/mobile/{mobile}', { mobile }),
-    operationId: 'SmsLogController_findByMobile_v1',
+    operationId: 'SmsLogController_findByMobile_v1'
   });
 }
 
@@ -2948,7 +3186,7 @@ export function fetchMailAccountCreate(data: CreateMailAccountRequestDto) {
     method: 'POST',
     url: '/api/v1/system/mail/account',
     data,
-    operationId: 'MailAccountController_create_v1',
+    operationId: 'MailAccountController_create_v1'
   });
 }
 
@@ -2961,7 +3199,7 @@ export function fetchMailAccountUpdate(data: UpdateMailAccountRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/mail/account',
     data,
-    operationId: 'MailAccountController_update_v1',
+    operationId: 'MailAccountController_update_v1'
   });
 }
 
@@ -2974,7 +3212,7 @@ export function fetchMailAccountFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/mail/account/list',
     params,
-    operationId: 'MailAccountController_findAll_v1',
+    operationId: 'MailAccountController_findAll_v1'
   });
 }
 
@@ -2986,7 +3224,7 @@ export function fetchMailAccountGetEnabledAccounts() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/mail/account/enabled',
-    operationId: 'MailAccountController_getEnabledAccounts_v1',
+    operationId: 'MailAccountController_getEnabledAccounts_v1'
   });
 }
 
@@ -2998,7 +3236,7 @@ export function fetchMailAccountFindOne(id: string | number) {
   return apiRequest<MailAccountResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/mail/account/{id}', { id }),
-    operationId: 'MailAccountController_findOne_v1',
+    operationId: 'MailAccountController_findOne_v1'
   });
 }
 
@@ -3010,7 +3248,7 @@ export function fetchMailAccountRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/mail/account/{id}', { id }),
-    operationId: 'MailAccountController_remove_v1',
+    operationId: 'MailAccountController_remove_v1'
   });
 }
 
@@ -3023,7 +3261,7 @@ export function fetchMailTemplateCreate(data: CreateMailTemplateRequestDto) {
     method: 'POST',
     url: '/api/v1/system/mail/template',
     data,
-    operationId: 'MailTemplateController_create_v1',
+    operationId: 'MailTemplateController_create_v1'
   });
 }
 
@@ -3036,7 +3274,7 @@ export function fetchMailTemplateUpdate(data: UpdateMailTemplateRequestDto) {
     method: 'PUT',
     url: '/api/v1/system/mail/template',
     data,
-    operationId: 'MailTemplateController_update_v1',
+    operationId: 'MailTemplateController_update_v1'
   });
 }
 
@@ -3049,7 +3287,7 @@ export function fetchMailTemplateFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/mail/template/list',
     params,
-    operationId: 'MailTemplateController_findAll_v1',
+    operationId: 'MailTemplateController_findAll_v1'
   });
 }
 
@@ -3061,7 +3299,7 @@ export function fetchMailTemplateFindOne(id: string | number) {
   return apiRequest<MailTemplateResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/mail/template/{id}', { id }),
-    operationId: 'MailTemplateController_findOne_v1',
+    operationId: 'MailTemplateController_findOne_v1'
   });
 }
 
@@ -3073,7 +3311,7 @@ export function fetchMailTemplateRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/mail/template/{id}', { id }),
-    operationId: 'MailTemplateController_remove_v1',
+    operationId: 'MailTemplateController_remove_v1'
   });
 }
 
@@ -3086,7 +3324,7 @@ export function fetchMailSendSend(data: SendMailDto) {
     method: 'POST',
     url: '/api/v1/system/mail/send',
     data,
-    operationId: 'MailSendController_send_v1',
+    operationId: 'MailSendController_send_v1'
   });
 }
 
@@ -3099,7 +3337,7 @@ export function fetchMailSendBatchSend(data: BatchSendMailDto) {
     method: 'POST',
     url: '/api/v1/system/mail/send/batch',
     data,
-    operationId: 'MailSendController_batchSend_v1',
+    operationId: 'MailSendController_batchSend_v1'
   });
 }
 
@@ -3111,7 +3349,7 @@ export function fetchMailSendResend(logId: string | number) {
   return apiRequest<unknown>({
     method: 'POST',
     url: buildUrl('/api/v1/system/mail/send/resend/{logId}', { logId }),
-    operationId: 'MailSendController_resend_v1',
+    operationId: 'MailSendController_resend_v1'
   });
 }
 
@@ -3124,7 +3362,7 @@ export function fetchMailSendTestSend(data: TestMailDto) {
     method: 'POST',
     url: '/api/v1/system/mail/send/test',
     data,
-    operationId: 'MailSendController_testSend_v1',
+    operationId: 'MailSendController_testSend_v1'
   });
 }
 
@@ -3137,7 +3375,7 @@ export function fetchMailLogFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/mail/log/list',
     params,
-    operationId: 'MailLogController_findAll_v1',
+    operationId: 'MailLogController_findAll_v1'
   });
 }
 
@@ -3149,7 +3387,7 @@ export function fetchMailLogGetStats() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/system/mail/log/stats',
-    operationId: 'MailLogController_getStats_v1',
+    operationId: 'MailLogController_getStats_v1'
   });
 }
 
@@ -3161,7 +3399,7 @@ export function fetchMailLogFindOne(id: string | number) {
   return apiRequest<MailLogResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/mail/log/{id}', { id }),
-    operationId: 'MailLogController_findOne_v1',
+    operationId: 'MailLogController_findOne_v1'
   });
 }
 
@@ -3174,7 +3412,7 @@ export function fetchNotifyTemplateCreate(data: CreateNotifyTemplateRequestDto) 
     method: 'POST',
     url: '/api/v1/system/notify/template',
     data,
-    operationId: 'NotifyTemplateController_create_v1',
+    operationId: 'NotifyTemplateController_create_v1'
   });
 }
 
@@ -3187,7 +3425,7 @@ export function fetchNotifyTemplateUpdate(data: UpdateNotifyTemplateRequestDto) 
     method: 'PUT',
     url: '/api/v1/system/notify/template',
     data,
-    operationId: 'NotifyTemplateController_update_v1',
+    operationId: 'NotifyTemplateController_update_v1'
   });
 }
 
@@ -3200,7 +3438,7 @@ export function fetchNotifyTemplateFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/notify/template/list',
     params,
-    operationId: 'NotifyTemplateController_findAll_v1',
+    operationId: 'NotifyTemplateController_findAll_v1'
   });
 }
 
@@ -3212,7 +3450,7 @@ export function fetchNotifyTemplateGetSelectList() {
   return apiRequest<NotifyTemplateResponseDto>({
     method: 'GET',
     url: '/api/v1/system/notify/template/select',
-    operationId: 'NotifyTemplateController_getSelectList_v1',
+    operationId: 'NotifyTemplateController_getSelectList_v1'
   });
 }
 
@@ -3224,7 +3462,7 @@ export function fetchNotifyTemplateFindOne(id: string | number) {
   return apiRequest<NotifyTemplateResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/notify/template/{id}', { id }),
-    operationId: 'NotifyTemplateController_findOne_v1',
+    operationId: 'NotifyTemplateController_findOne_v1'
   });
 }
 
@@ -3236,7 +3474,7 @@ export function fetchNotifyTemplateRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/notify/template/{id}', { id }),
-    operationId: 'NotifyTemplateController_remove_v1',
+    operationId: 'NotifyTemplateController_remove_v1'
   });
 }
 
@@ -3249,7 +3487,7 @@ export function fetchNotifyMessageSend(data: SendNotifyMessageRequestDto) {
     method: 'POST',
     url: '/api/v1/system/notify/message/send',
     data,
-    operationId: 'NotifyMessageController_send_v1',
+    operationId: 'NotifyMessageController_send_v1'
   });
 }
 
@@ -3262,7 +3500,7 @@ export function fetchNotifyMessageSendAll(data: SendNotifyAllRequestDto) {
     method: 'POST',
     url: '/api/v1/system/notify/message/send-all',
     data,
-    operationId: 'NotifyMessageController_sendAll_v1',
+    operationId: 'NotifyMessageController_sendAll_v1'
   });
 }
 
@@ -3275,7 +3513,7 @@ export function fetchNotifyMessageFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/system/notify/message/list',
     params,
-    operationId: 'NotifyMessageController_findAll_v1',
+    operationId: 'NotifyMessageController_findAll_v1'
   });
 }
 
@@ -3288,7 +3526,7 @@ export function fetchNotifyMessageFindMyMessages(params?: Record<string, unknown
     method: 'GET',
     url: '/api/v1/system/notify/message/my-list',
     params,
-    operationId: 'NotifyMessageController_findMyMessages_v1',
+    operationId: 'NotifyMessageController_findMyMessages_v1'
   });
 }
 
@@ -3300,7 +3538,7 @@ export function fetchNotifyMessageGetUnreadCount() {
   return apiRequest<UnreadCountResponseDto>({
     method: 'GET',
     url: '/api/v1/system/notify/message/unread-count',
-    operationId: 'NotifyMessageController_getUnreadCount_v1',
+    operationId: 'NotifyMessageController_getUnreadCount_v1'
   });
 }
 
@@ -3313,7 +3551,7 @@ export function fetchNotifyMessageGetRecentMessages(params?: Record<string, unkn
     method: 'GET',
     url: '/api/v1/system/notify/message/recent',
     params,
-    operationId: 'NotifyMessageController_getRecentMessages_v1',
+    operationId: 'NotifyMessageController_getRecentMessages_v1'
   });
 }
 
@@ -3325,7 +3563,7 @@ export function fetchNotifyMessageFindOne(id: string | number) {
   return apiRequest<NotifyMessageResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/system/notify/message/{id}', { id }),
-    operationId: 'NotifyMessageController_findOne_v1',
+    operationId: 'NotifyMessageController_findOne_v1'
   });
 }
 
@@ -3337,7 +3575,7 @@ export function fetchNotifyMessageRemove(id: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/notify/message/{id}', { id }),
-    operationId: 'NotifyMessageController_remove_v1',
+    operationId: 'NotifyMessageController_remove_v1'
   });
 }
 
@@ -3349,7 +3587,7 @@ export function fetchNotifyMessageMarkAsRead(id: string | number) {
   return apiRequest<unknown>({
     method: 'PUT',
     url: buildUrl('/api/v1/system/notify/message/read/{id}', { id }),
-    operationId: 'NotifyMessageController_markAsRead_v1',
+    operationId: 'NotifyMessageController_markAsRead_v1'
   });
 }
 
@@ -3361,7 +3599,7 @@ export function fetchNotifyMessageMarkAsReadBatch(ids: string | number) {
   return apiRequest<unknown>({
     method: 'PUT',
     url: buildUrl('/api/v1/system/notify/message/read-batch/{ids}', { ids }),
-    operationId: 'NotifyMessageController_markAsReadBatch_v1',
+    operationId: 'NotifyMessageController_markAsReadBatch_v1'
   });
 }
 
@@ -3373,7 +3611,7 @@ export function fetchNotifyMessageMarkAllAsRead() {
   return apiRequest<unknown>({
     method: 'PUT',
     url: '/api/v1/system/notify/message/read-all',
-    operationId: 'NotifyMessageController_markAllAsRead_v1',
+    operationId: 'NotifyMessageController_markAllAsRead_v1'
   });
 }
 
@@ -3385,7 +3623,7 @@ export function fetchNotifyMessageRemoveBatch(ids: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/system/notify/message/batch/{ids}', { ids }),
-    operationId: 'NotifyMessageController_removeBatch_v1',
+    operationId: 'NotifyMessageController_removeBatch_v1'
   });
 }
 
@@ -3398,7 +3636,7 @@ export function fetchJobList(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/monitor/job/list',
     params,
-    operationId: 'JobController_list_v1',
+    operationId: 'JobController_list_v1'
   });
 }
 
@@ -3410,7 +3648,7 @@ export function fetchJobGetInfo(jobId: string | number) {
   return apiRequest<JobResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/monitor/job/{jobId}', { jobId }),
-    operationId: 'JobController_getInfo_v1',
+    operationId: 'JobController_getInfo_v1'
   });
 }
 
@@ -3423,7 +3661,7 @@ export function fetchJobAdd(data: CreateJobDto) {
     method: 'POST',
     url: '/api/v1/monitor/job',
     data,
-    operationId: 'JobController_add_v1',
+    operationId: 'JobController_add_v1'
   });
 }
 
@@ -3435,7 +3673,7 @@ export function fetchJobUpdate() {
   return apiRequest<UpdateJobResultResponseDto>({
     method: 'PUT',
     url: '/api/v1/monitor/job',
-    operationId: 'JobController_update_v1',
+    operationId: 'JobController_update_v1'
   });
 }
 
@@ -3447,7 +3685,7 @@ export function fetchJobChangeStatus() {
   return apiRequest<ChangeJobStatusResultResponseDto>({
     method: 'PUT',
     url: '/api/v1/monitor/job/changeStatus',
-    operationId: 'JobController_changeStatus_v1',
+    operationId: 'JobController_changeStatus_v1'
   });
 }
 
@@ -3459,7 +3697,7 @@ export function fetchJobRemove(jobIds: string | number) {
   return apiRequest<DeleteJobResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/job/{jobIds}', { jobIds }),
-    operationId: 'JobController_remove_v1',
+    operationId: 'JobController_remove_v1'
   });
 }
 
@@ -3471,7 +3709,7 @@ export function fetchJobRun() {
   return apiRequest<RunJobResultResponseDto>({
     method: 'PUT',
     url: '/api/v1/monitor/job/run',
-    operationId: 'JobController_run_v1',
+    operationId: 'JobController_run_v1'
   });
 }
 
@@ -3484,7 +3722,7 @@ export function fetchJobExport(data: ListJobDto) {
     method: 'POST',
     url: '/api/v1/monitor/job/export',
     data,
-    operationId: 'JobController_export_v1',
+    operationId: 'JobController_export_v1'
   });
 }
 
@@ -3497,7 +3735,7 @@ export function fetchJobLogList(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/monitor/jobLog/list',
     params,
-    operationId: 'JobLogController_list_v1',
+    operationId: 'JobLogController_list_v1'
   });
 }
 
@@ -3509,7 +3747,7 @@ export function fetchJobLogClean() {
   return apiRequest<ClearLogResultResponseDto>({
     method: 'DELETE',
     url: '/api/v1/monitor/jobLog/clean',
-    operationId: 'JobLogController_clean_v1',
+    operationId: 'JobLogController_clean_v1'
   });
 }
 
@@ -3522,7 +3760,7 @@ export function fetchJobLogExport(data: ListJobLogDto) {
     method: 'POST',
     url: '/api/v1/monitor/jobLog/export',
     data,
-    operationId: 'JobLogController_export_v1',
+    operationId: 'JobLogController_export_v1'
   });
 }
 
@@ -3534,7 +3772,7 @@ export function fetchServerGetInfo() {
   return apiRequest<ServerInfoResponseDto>({
     method: 'GET',
     url: '/api/v1/monitor/server',
-    operationId: 'ServerController_getInfo_v1',
+    operationId: 'ServerController_getInfo_v1'
   });
 }
 
@@ -3546,7 +3784,7 @@ export function fetchCacheGetInfo() {
   return apiRequest<CacheInfoResponseDto>({
     method: 'GET',
     url: '/api/v1/monitor/cache',
-    operationId: 'CacheController_getInfo_v1',
+    operationId: 'CacheController_getInfo_v1'
   });
 }
 
@@ -3558,7 +3796,7 @@ export function fetchCacheGetNames() {
   return apiRequest<CacheNamesResponseDto>({
     method: 'GET',
     url: '/api/v1/monitor/cache/getNames',
-    operationId: 'CacheController_getNames_v1',
+    operationId: 'CacheController_getNames_v1'
   });
 }
 
@@ -3570,7 +3808,7 @@ export function fetchCacheGetKeys(id: string | number) {
   return apiRequest<CacheKeysResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/monitor/cache/getKeys/{id}', { id }),
-    operationId: 'CacheController_getKeys_v1',
+    operationId: 'CacheController_getKeys_v1'
   });
 }
 
@@ -3582,7 +3820,7 @@ export function fetchCacheGetValue(cacheName: string | number, cacheKey: string 
   return apiRequest<CacheKeyResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/monitor/cache/getValue/{cacheName}/{cacheKey}', { cacheName, cacheKey }),
-    operationId: 'CacheController_getValue_v1',
+    operationId: 'CacheController_getValue_v1'
   });
 }
 
@@ -3594,7 +3832,7 @@ export function fetchCacheClearCacheName(cacheName: string | number) {
   return apiRequest<ClearCacheResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/cache/clearCacheName/{cacheName}', { cacheName }),
-    operationId: 'CacheController_clearCacheName_v1',
+    operationId: 'CacheController_clearCacheName_v1'
   });
 }
 
@@ -3606,7 +3844,7 @@ export function fetchCacheClearCacheKey(cacheKey: string | number) {
   return apiRequest<ClearCacheResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/cache/clearCacheKey/{cacheKey}', { cacheKey }),
-    operationId: 'CacheController_clearCacheKey_v1',
+    operationId: 'CacheController_clearCacheKey_v1'
   });
 }
 
@@ -3618,7 +3856,7 @@ export function fetchCacheClearCacheAll() {
   return apiRequest<ClearCacheResultResponseDto>({
     method: 'DELETE',
     url: '/api/v1/monitor/cache/clearCacheAll',
-    operationId: 'CacheController_clearCacheAll_v1',
+    operationId: 'CacheController_clearCacheAll_v1'
   });
 }
 
@@ -3631,7 +3869,7 @@ export function fetchLoginlogFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/monitor/logininfor/list',
     params,
-    operationId: 'LoginlogController_findAll_v1',
+    operationId: 'LoginlogController_findAll_v1'
   });
 }
 
@@ -3643,7 +3881,7 @@ export function fetchLoginlogRemoveAll() {
   return apiRequest<ClearLogResultResponseDto>({
     method: 'DELETE',
     url: '/api/v1/monitor/logininfor/clean',
-    operationId: 'LoginlogController_removeAll_v1',
+    operationId: 'LoginlogController_removeAll_v1'
   });
 }
 
@@ -3655,7 +3893,7 @@ export function fetchLoginlogUnlock(username: string | number) {
   return apiRequest<UnlockUserResultResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/monitor/logininfor/unlock/{username}', { username }),
-    operationId: 'LoginlogController_unlock_v1',
+    operationId: 'LoginlogController_unlock_v1'
   });
 }
 
@@ -3667,7 +3905,7 @@ export function fetchLoginlogRemove(id: string | number) {
   return apiRequest<DeleteLogResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/logininfor/{id}', { id }),
-    operationId: 'LoginlogController_remove_v1',
+    operationId: 'LoginlogController_remove_v1'
   });
 }
 
@@ -3680,7 +3918,7 @@ export function fetchLoginlogExport(data: ListLoginlogDto) {
     method: 'POST',
     url: '/api/v1/monitor/logininfor/export',
     data,
-    operationId: 'LoginlogController_export_v1',
+    operationId: 'LoginlogController_export_v1'
   });
 }
 
@@ -3693,7 +3931,7 @@ export function fetchOnlineFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/monitor/online/list',
     params,
-    operationId: 'OnlineController_findAll_v1',
+    operationId: 'OnlineController_findAll_v1'
   });
 }
 
@@ -3705,7 +3943,7 @@ export function fetchOnlineDelete(token: string | number) {
   return apiRequest<ForceLogoutResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/online/{token}', { token }),
-    operationId: 'OnlineController_delete_v1',
+    operationId: 'OnlineController_delete_v1'
   });
 }
 
@@ -3717,7 +3955,7 @@ export function fetchOperlogRemoveAll() {
   return apiRequest<ClearLogResultResponseDto>({
     method: 'DELETE',
     url: '/api/v1/monitor/operlog/clean',
-    operationId: 'OperlogController_removeAll_v1',
+    operationId: 'OperlogController_removeAll_v1'
   });
 }
 
@@ -3730,7 +3968,7 @@ export function fetchOperlogFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/monitor/operlog/list',
     params,
-    operationId: 'OperlogController_findAll_v1',
+    operationId: 'OperlogController_findAll_v1'
   });
 }
 
@@ -3742,7 +3980,7 @@ export function fetchOperlogFindOne(operId: string | number) {
   return apiRequest<OperLogResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/monitor/operlog/{operId}', { operId }),
-    operationId: 'OperlogController_findOne_v1',
+    operationId: 'OperlogController_findOne_v1'
   });
 }
 
@@ -3754,7 +3992,7 @@ export function fetchOperlogRemove(operId: string | number) {
   return apiRequest<DeleteLogResultResponseDto>({
     method: 'DELETE',
     url: buildUrl('/api/v1/monitor/operlog/{operId}', { operId }),
-    operationId: 'OperlogController_remove_v1',
+    operationId: 'OperlogController_remove_v1'
   });
 }
 
@@ -3767,7 +4005,7 @@ export function fetchOperlogExportData(data: QueryOperLogDto) {
     method: 'POST',
     url: '/api/v1/monitor/operlog/export',
     data,
-    operationId: 'OperlogController_exportData_v1',
+    operationId: 'OperlogController_exportData_v1'
   });
 }
 
@@ -3778,7 +4016,7 @@ export function fetchHealthCheck() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health',
-    operationId: 'HealthController_check_v1',
+    operationId: 'HealthController_check_v1'
   });
 }
 
@@ -3789,7 +4027,7 @@ export function fetchHealthCheckLive() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health/live',
-    operationId: 'HealthController_checkLive_v1',
+    operationId: 'HealthController_checkLive_v1'
   });
 }
 
@@ -3800,7 +4038,7 @@ export function fetchHealthCheckLiveness() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health/liveness',
-    operationId: 'HealthController_checkLiveness_v1',
+    operationId: 'HealthController_checkLiveness_v1'
   });
 }
 
@@ -3811,7 +4049,7 @@ export function fetchHealthCheckReady() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health/ready',
-    operationId: 'HealthController_checkReady_v1',
+    operationId: 'HealthController_checkReady_v1'
   });
 }
 
@@ -3822,7 +4060,7 @@ export function fetchHealthCheckReadiness() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health/readiness',
-    operationId: 'HealthController_checkReadiness_v1',
+    operationId: 'HealthController_checkReadiness_v1'
   });
 }
 
@@ -3833,7 +4071,7 @@ export function fetchHealthGetInfo() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/health/info',
-    operationId: 'HealthController_getInfo_v1',
+    operationId: 'HealthController_getInfo_v1'
   });
 }
 
@@ -3844,7 +4082,7 @@ export function fetchInfoGetInfo() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/info',
-    operationId: 'InfoController_getInfo_v1',
+    operationId: 'InfoController_getInfo_v1'
   });
 }
 
@@ -3854,7 +4092,7 @@ export function fetchPrometheusIndex() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/metrics',
-    operationId: 'PrometheusController_index_v1',
+    operationId: 'PrometheusController_index_v1'
   });
 }
 
@@ -3866,7 +4104,7 @@ export function fetchSseSse(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/resource/sse',
     params,
-    operationId: 'SseController_sse_v1',
+    operationId: 'SseController_sse_v1'
   });
 }
 
@@ -3877,7 +4115,7 @@ export function fetchSseCloseSse() {
   return apiRequest<unknown>({
     method: 'GET',
     url: '/api/v1/resource/sse/close',
-    operationId: 'SseController_closeSse_v1',
+    operationId: 'SseController_closeSse_v1'
   });
 }
 
@@ -3888,7 +4126,7 @@ export function fetchSseSendMessage() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/resource/sse/send',
-    operationId: 'SseController_sendMessage_v1',
+    operationId: 'SseController_sendMessage_v1'
   });
 }
 
@@ -3899,7 +4137,7 @@ export function fetchSseBroadcast() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/resource/sse/broadcast',
-    operationId: 'SseController_broadcast_v1',
+    operationId: 'SseController_broadcast_v1'
   });
 }
 
@@ -3910,7 +4148,7 @@ export function fetchSseGetCount() {
   return apiRequest<unknown>({
     method: 'POST',
     url: '/api/v1/resource/sse/count',
-    operationId: 'SseController_getCount_v1',
+    operationId: 'SseController_getCount_v1'
   });
 }
 
@@ -3923,7 +4161,7 @@ export function fetchOssConfigCreate(data: CreateOssConfigRequestDto) {
     method: 'POST',
     url: '/api/v1/resource/oss/config',
     data,
-    operationId: 'OssConfigController_create_v1',
+    operationId: 'OssConfigController_create_v1'
   });
 }
 
@@ -3936,7 +4174,7 @@ export function fetchOssConfigUpdate(data: UpdateOssConfigRequestDto) {
     method: 'PUT',
     url: '/api/v1/resource/oss/config',
     data,
-    operationId: 'OssConfigController_update_v1',
+    operationId: 'OssConfigController_update_v1'
   });
 }
 
@@ -3949,7 +4187,7 @@ export function fetchOssConfigFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/resource/oss/config/list',
     params,
-    operationId: 'OssConfigController_findAll_v1',
+    operationId: 'OssConfigController_findAll_v1'
   });
 }
 
@@ -3961,7 +4199,7 @@ export function fetchOssConfigFindOne(id: string | number) {
   return apiRequest<OssConfigResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/resource/oss/config/{id}', { id }),
-    operationId: 'OssConfigController_findOne_v1',
+    operationId: 'OssConfigController_findOne_v1'
   });
 }
 
@@ -3974,7 +4212,7 @@ export function fetchOssConfigChangeStatus(data: ChangeOssConfigStatusRequestDto
     method: 'PUT',
     url: '/api/v1/resource/oss/config/changeStatus',
     data,
-    operationId: 'OssConfigController_changeStatus_v1',
+    operationId: 'OssConfigController_changeStatus_v1'
   });
 }
 
@@ -3986,7 +4224,7 @@ export function fetchOssConfigRemove(ids: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/resource/oss/config/{ids}', { ids }),
-    operationId: 'OssConfigController_remove_v1',
+    operationId: 'OssConfigController_remove_v1'
   });
 }
 
@@ -3999,7 +4237,7 @@ export function fetchOssFindAll(params?: Record<string, unknown>) {
     method: 'GET',
     url: '/api/v1/resource/oss/list',
     params,
-    operationId: 'OssController_findAll_v1',
+    operationId: 'OssController_findAll_v1'
   });
 }
 
@@ -4011,7 +4249,7 @@ export function fetchOssFindByIds(ids: string | number) {
   return apiRequest<OssListResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/resource/oss/listByIds/{ids}', { ids }),
-    operationId: 'OssController_findByIds_v1',
+    operationId: 'OssController_findByIds_v1'
   });
 }
 
@@ -4023,7 +4261,7 @@ export function fetchOssFindOne(id: string | number) {
   return apiRequest<OssResponseDto>({
     method: 'GET',
     url: buildUrl('/api/v1/resource/oss/{id}', { id }),
-    operationId: 'OssController_findOne_v1',
+    operationId: 'OssController_findOne_v1'
   });
 }
 
@@ -4035,7 +4273,7 @@ export function fetchOssUpload() {
   return apiRequest<OssResponseDto>({
     method: 'POST',
     url: '/api/v1/resource/oss/upload',
-    operationId: 'OssController_upload_v1',
+    operationId: 'OssController_upload_v1'
   });
 }
 
@@ -4047,6 +4285,6 @@ export function fetchOssRemove(ids: string | number) {
   return apiRequest<unknown>({
     method: 'DELETE',
     url: buildUrl('/api/v1/resource/oss/{ids}', { ids }),
-    operationId: 'OssController_remove_v1',
+    operationId: 'OssController_remove_v1'
   });
 }

@@ -227,7 +227,7 @@ async function getTreeData() {
   startTreeLoading();
   try {
     const { data: tree } = await fetchDictFindOptionselect();
-    dictData.value = tree;
+    dictData.value = tree || [];
     handleClickTree(route.query.dictType ? [route.query.dictType as string] : []);
   } catch {
     // 错误消息已在请求工具中显示

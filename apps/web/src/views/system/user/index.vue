@@ -4,6 +4,7 @@ import { NAvatar, NButton, NDivider, NEllipsis } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
 import { fetchUserChangeStatus, fetchUserDeptTree, fetchUserFindAll, fetchUserRemove } from '@/service/api';
+import type { ChangeUserStatusDto } from '@/service/api-gen';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate, useTableProps } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
@@ -250,7 +251,7 @@ async function getTreeData() {
   startTreeLoading();
   try {
     const { data: tree } = await fetchUserDeptTree();
-    deptData.value = tree || [];
+    deptData.value = (tree || []) as any;
   } catch (error) {
     // 错误消息已在请求工具中显示
   } finally {
@@ -279,7 +280,7 @@ function handleImport() {
 async function handleStatusChange(row: Api.System.User, value: string, callback: (flag: boolean) => void) {
   try {
     const data: ChangeUserStatusDto = {
-      userId: row.userId,
+      userId: row.userId as number,
       status: value as '0' | '1'
     };
     await fetchUserChangeStatus(data);
@@ -342,7 +343,12 @@ function handleResetSearch() {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <UserSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
+      <UserSearch
+        :model="(searchParams as any)"
+        @update:model="(v: any) => { searchParams = v; }"
+        @reset="handleResetSearch"
+        @search="getDataByPage"
+      />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
       <NCard :title="$t('page.system.user.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>

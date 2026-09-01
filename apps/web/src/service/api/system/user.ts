@@ -28,7 +28,21 @@ export function fetchUserFindAll(params?: Api.System.UserSearchParams) {
 
 /** 用户详情 */
 export function fetchUserFindOne(userId: CommonType.IdType) {
-  return request<Api.System.UserDetail>({
+  return request<{
+    userId: CommonType.IdType;
+    userName: string;
+    nickName: string;
+    email: string;
+    phonenumber: string;
+    sex: string;
+    status: CommonType.EnableStatus;
+    deptId: CommonType.IdType;
+    remark?: string;
+    roleIds: CommonType.IdType[];
+    postIds: CommonType.IdType[];
+    roles: Array<{ roleId: CommonType.IdType; roleName: string }>;
+    posts: Array<{ postId: CommonType.IdType; postName: string }>;
+  }>({
     url: `/system/user/${userId}`,
     method: 'get'
   });

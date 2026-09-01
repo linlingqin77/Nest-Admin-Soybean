@@ -75,7 +75,8 @@ declare namespace Api {
       roleId: CommonType.IdType;
       userName?: string;
       phonenumber?: string;
-    }> & Api.Common.CommonSearchParams;
+    }> &
+      Api.Common.CommonSearchParams;
 
     /** role menu tree select */
     type RoleMenuTreeSelect = Common.CommonRecord<{
@@ -1075,8 +1076,15 @@ declare namespace Api {
       remark?: string;
     }>;
 
-    type SmsChannelSearchParams = CommonType.RecordNullable<Pick<SmsChannel, 'name' | 'code' | 'status'> & Common.CommonSearchParams>;
-    type SmsChannelOperateParams = CommonType.RecordNullable<Pick<SmsChannel, 'id' | 'code' | 'name' | 'signature' | 'apiKey' | 'apiSecret' | 'callbackUrl' | 'status' | 'remark'>>;
+    type SmsChannelSearchParams = CommonType.RecordNullable<
+      Pick<SmsChannel, 'name' | 'code' | 'status'> & Common.CommonSearchParams
+    >;
+    type SmsChannelOperateParams = CommonType.RecordNullable<
+      Pick<
+        SmsChannel,
+        'id' | 'code' | 'name' | 'signature' | 'apiKey' | 'apiSecret' | 'callbackUrl' | 'status' | 'remark'
+      >
+    >;
     type SmsChannelList = Common.PaginatingQueryRecord<SmsChannel>;
 
     type SmsTemplateType = 1 | 2 | 3;
@@ -1094,8 +1102,15 @@ declare namespace Api {
       remark?: string;
     }>;
 
-    type SmsTemplateSearchParams = CommonType.RecordNullable<Pick<SmsTemplate, 'name' | 'code' | 'channelId' | 'type' | 'status'> & Common.CommonSearchParams>;
-    type SmsTemplateOperateParams = CommonType.RecordNullable<Pick<SmsTemplate, 'id' | 'channelId' | 'code' | 'name' | 'content' | 'params' | 'apiTemplateId' | 'type' | 'status' | 'remark'>>;
+    type SmsTemplateSearchParams = CommonType.RecordNullable<
+      Pick<SmsTemplate, 'name' | 'code' | 'channelId' | 'type' | 'status'> & Common.CommonSearchParams
+    >;
+    type SmsTemplateOperateParams = CommonType.RecordNullable<
+      Pick<
+        SmsTemplate,
+        'id' | 'channelId' | 'code' | 'name' | 'content' | 'params' | 'apiTemplateId' | 'type' | 'status' | 'remark'
+      >
+    >;
     type SmsTemplateList = Common.PaginatingQueryRecord<SmsTemplate>;
 
     type SmsSendStatus = 0 | 1 | 2;
@@ -1118,7 +1133,12 @@ declare namespace Api {
       errorMsg?: string;
     }>;
 
-    type SmsLogSearchParams = CommonType.RecordNullable<Pick<SmsLog, 'mobile' | 'channelId' | 'templateId' | 'sendStatus'> & { sendTimeStart?: string; sendTimeEnd?: string } & Common.CommonSearchParams>;
+    type SmsLogSearchParams = CommonType.RecordNullable<
+      Pick<SmsLog, 'mobile' | 'channelId' | 'templateId' | 'sendStatus'> & {
+        sendTimeStart?: string;
+        sendTimeEnd?: string;
+      } & Common.CommonSearchParams
+    >;
     type SmsLogList = Common.PaginatingQueryRecord<SmsLog>;
     type SendSmsParams = { mobile: string; templateCode: string; params?: Record<string, string> };
     type BatchSendSmsParams = { mobiles: string[]; templateCode: string; params?: Record<string, string> };
@@ -1138,8 +1158,12 @@ declare namespace Api {
       remark?: string;
     }>;
 
-    type NotifyTemplateSearchParams = CommonType.RecordNullable<Pick<NotifyTemplate, 'name' | 'code' | 'type' | 'status'> & Common.CommonSearchParams>;
-    type NotifyTemplateOperateParams = CommonType.RecordNullable<Pick<NotifyTemplate, 'id' | 'name' | 'code' | 'nickname' | 'content' | 'params' | 'type' | 'status' | 'remark'>>;
+    type NotifyTemplateSearchParams = CommonType.RecordNullable<
+      Pick<NotifyTemplate, 'name' | 'code' | 'type' | 'status'> & Common.CommonSearchParams
+    >;
+    type NotifyTemplateOperateParams = CommonType.RecordNullable<
+      Pick<NotifyTemplate, 'id' | 'name' | 'code' | 'nickname' | 'content' | 'params' | 'type' | 'status' | 'remark'>
+    >;
     type NotifyTemplateList = Common.PaginatingQueryRecord<NotifyTemplate>;
     type NotifyTemplateSelect = { id: CommonType.IdType; name: string; code: string };
 
@@ -1157,11 +1181,19 @@ declare namespace Api {
       readTime?: string;
     }>;
 
-    type NotifyMessageSearchParams = CommonType.RecordNullable<Pick<NotifyMessage, 'userId' | 'templateCode' | 'readStatus'> & Common.CommonSearchParams>;
-    type MyNotifyMessageSearchParams = CommonType.RecordNullable<Pick<NotifyMessage, 'readStatus'> & Common.CommonSearchParams>;
+    type NotifyMessageSearchParams = CommonType.RecordNullable<
+      Pick<NotifyMessage, 'userId' | 'templateCode' | 'readStatus'> & Common.CommonSearchParams
+    >;
+    type MyNotifyMessageSearchParams = CommonType.RecordNullable<
+      Pick<NotifyMessage, 'readStatus'> & Common.CommonSearchParams
+    >;
     type NotifyMessageList = Common.PaginatingQueryRecord<NotifyMessage>;
     type UnreadCountResponse = { count: number };
-    type SendNotifyMessageParams = { userIds: CommonType.IdType[]; templateCode: string; params?: Record<string, string> };
+    type SendNotifyMessageParams = {
+      userIds: CommonType.IdType[];
+      templateCode: string;
+      params?: Record<string, string>;
+    };
     type SendNotifyAllParams = { templateCode: string; params?: Record<string, string> };
   }
 }

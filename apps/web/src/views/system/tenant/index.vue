@@ -241,13 +241,9 @@ async function handleSyncTenantConfig() {
   });
 }
 
-async function handleSyncTenantPackage(row: Api.System.Tenant) {
-  const params = {
-    tenantId: row.tenantId,
-    packageId: row.packageId
-  };
+async function handleSyncTenantPackage(_row: Api.System.Tenant) {
   try {
-    await fetchTenantSyncPackage(params);
+    await fetchTenantSyncPackage();
     window.$message?.success('同步租户套餐成功');
     await getData();
   } catch {

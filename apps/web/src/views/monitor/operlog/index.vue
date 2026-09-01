@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton } from 'naive-ui';
-import { fetchOperlogFindAll, fetchOperlogRemove, fetchOperlogClean } from '@/service/api';
+import { fetchOperlogClean, fetchOperlogFindAll, fetchOperlogRemove } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';

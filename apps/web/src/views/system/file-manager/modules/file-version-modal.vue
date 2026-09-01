@@ -65,7 +65,10 @@ function handleRestore(version: Api.System.FileManager.FileVersion) {
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       try {
-        const { data } = await fetchFileManagerRestoreVersion();
+        const { data } = await fetchFileManagerRestoreVersion({
+          fileId: String((version as any).uploadId),
+          targetVersionId: String(version.version)
+        });
 
         if (data) {
           message.success(

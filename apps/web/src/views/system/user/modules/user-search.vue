@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { NDatePicker } from 'naive-ui';
+import type { ListUserDto } from '@/service/api-gen';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 

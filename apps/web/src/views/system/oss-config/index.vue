@@ -202,13 +202,13 @@ async function edit(ossConfigId: CommonType.IdType) {
 
 /** 处理状态切换 */
 async function handleStatusChange(
-  row: OssApi.System.Config,
+  row: Api.System.OssConfig,
   value: Api.Common.EnableStatus,
   callback: (flag: boolean) => void
 ) {
   try {
     await fetchOssConfigChangeStatus({
-      ossConfigId: row.ossConfigId!,
+      ossConfigId: row.ossConfigId as number,
       status: value
     });
     callback(true);

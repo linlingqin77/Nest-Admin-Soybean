@@ -1,12 +1,7 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { NButton, NDivider, NInputNumber, NSpace, NTag } from 'naive-ui';
-import {
-  fetchHistoryBatchDelete,
-  fetchHistoryCleanup,
-  fetchHistoryDelete,
-  fetchHistoryList
-} from '@/service/api';
+import { fetchHistoryBatchDelete, fetchHistoryCleanup, fetchHistoryDelete, fetchHistoryList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -135,7 +130,7 @@ const {
       minWidth: 180,
       render: row => {
         const dataRow = row as unknown as Api.Tool.GenHistory;
-        return formatDateTime(dataRow.generatedAt);
+        return formatDateTime(dataRow.generatedAt as string);
       }
     },
     {
@@ -171,7 +166,7 @@ const {
               type="success"
               icon="material-symbols:download"
               tooltipContent="下载"
-              onClick={() => handleDownload(dataRow.id)}
+              onClick={() => handleDownload(dataRow.id as number)}
             />
           );
         };
@@ -187,7 +182,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(dataRow.id)}
+              onPositiveClick={() => handleDelete(dataRow.id as number)}
             />
           );
         };
@@ -256,7 +251,7 @@ function showCleanupModal() {
 async function handleCleanup() {
   cleanupLoading.value = true;
   try {
-    const { data: count } = await fetchHistoryCleanup({ days: cleanupDays.value });
+    const { data: count } = await fetchHistoryCleanup(cleanupDays.value);
     window.$message?.success(`成功清理 ${count} 条过期记录`);
     cleanupModalVisible.value = false;
     getData();

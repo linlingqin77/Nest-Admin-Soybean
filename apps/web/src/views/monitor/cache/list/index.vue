@@ -62,7 +62,7 @@ async function getCacheKeys(cacheName: string) {
   startKeysLoading();
   try {
     const { data } = await fetchCacheGetKeys(cacheName);
-    cacheKeys.value = (data?.keys || []).map((key: string) => ({ key }));
+    cacheKeys.value = ((data as any)?.keys || []).map((key: string) => ({ key }));
   } catch {
     // error handled by request interceptor
   } finally {

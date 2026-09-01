@@ -110,8 +110,8 @@ async function handleSubmit() {
         jobGroup: model.jobGroup,
         invokeTarget: model.invokeTarget,
         cronExpression: model.cronExpression,
-        misfirePolicy: model.misfirePolicy as string | undefined,
-        concurrent: model.concurrent as string | undefined,
+        misfirePolicy: model.misfirePolicy as Api.Monitor.MisfirePolicy | null,
+        concurrent: model.concurrent as Api.Monitor.Concurrent | null,
         status: model.status || '0'
       };
       await fetchJobCreate(createData);
