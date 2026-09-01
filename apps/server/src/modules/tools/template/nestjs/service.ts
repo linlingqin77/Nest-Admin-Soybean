@@ -1,6 +1,25 @@
 import * as Lodash from 'lodash';
 import { GenConstants } from 'src/shared/constants/gen.constant';
 
+interface ColumnInfo {
+  javaField?: string;
+  javaType?: string;
+  isList?: string;
+  isQuery?: string;
+  queryType?: string;
+}
+
+interface ServiceOptions {
+  BusinessName: string;
+  primaryKey?: string;
+  businessName?: string;
+  className?: string;
+  functionName?: string;
+  tableComment?: string;
+  columns?: ColumnInfo[];
+  tenantAware?: boolean;
+}
+
 /**
  * NestJS Service 模板生成器
  *
@@ -12,7 +31,7 @@ import { GenConstants } from 'src/shared/constants/gen.constant';
  *
  * Requirements: 13.2, 13.3, 13.5, 13.6, 13.11
  */
-export const serviceTem = (options) => {
+export const serviceTem = (options: ServiceOptions) => {
   const {
     BusinessName,
     primaryKey,
@@ -32,7 +51,7 @@ export const serviceTem = (options) => {
   const selectLine = listSelectDefinition ? '      select: listSelect,\n' : '';
 
   // 检查是否有租户字段
-  const hasTenantId = tenantAware || columns?.some((col) => col.javaField === 'tenantId');
+  const hasTenantId = tenantAware || columns?.some((col: ColumnInfo) => col.javaField === 'tenantId');
   const tenantImport = hasTenantId ? "import { TenantContext } from 'src/core/tenancy/context/tenant.context';\n" : '';
   const tenantWhereClause = hasTenantId ? '      tenantId: TenantContext.getTenantId(),\n' : '';
   const tenantCreateData = hasTenantId ? '        tenantId: TenantContext.getTenantId(),\n' : '';
@@ -203,27 +222,27 @@ ${tenantWhereClause}        },
 /**
  * 生成列表查询的 select 定义
  */
-const getListSelectDefinition = (options, modelName) => {
+const getListSelectDefinition = (options: ServiceOptions, modelName: string) => {
   const { columns } = options;
   if (!columns) return '';
 
-  const fields = columns.filter((column) => column.isList === '1').map((column) => column.javaField);
+  const fields = columns.filter((column: ColumnInfo) => column.isList === '1').map((column: ColumnInfo) => column.javaField);
   if (!fields.length) {
     return '';
   }
-  return `    const listSelect: Prisma.${modelName}Select = {\n${fields.map((field) => `      ${field}: true,`).join('\n')}\n    };\n\n`;
+  return `    const listSelect: Prisma.${modelName}Select = {\n${fields.map((field: string | undefined) => `      ${field}: true,`).join('\n')}\n    };\n\n`;
 };
 
 /**
  * 生成查询条件语句
  */
-const getListQueryStr = (options) => {
+const getListQueryStr = (options: ServiceOptions) => {
   const { columns } = options;
   if (!columns) return '';
 
   const statements = columns
-    .filter((column) => column.isQuery === '1')
-    .map((column) => {
+    .filter((column: ColumnInfo) => column.isQuery === '1')
+    .map((column: ColumnInfo) => {
       const field = column.javaField;
       switch (column.queryType) {
         case GenConstants.QUERY_EQ:
@@ -254,21 +273,21 @@ const getListQueryStr = (options) => {
 /**
  * 获取主键类型
  */
-const getPrimaryKeyType = (options) => {
+const getPrimaryKeyType = (options: ServiceOptions) => {
   const { primaryKey, columns } = options;
 
   if (!primaryKey || !columns) {
     return 'string';
   }
 
-  const primaryKeyColumn = columns.find((item) => item.javaField === primaryKey);
+  const primaryKeyColumn = columns.find((item: ColumnInfo) => item.javaField === primaryKey);
   return mapJavaTypeToTs(primaryKeyColumn?.javaType);
 };
 
 /**
  * 首字母小写
  */
-const lowercaseFirst = (str) => {
+const lowercaseFirst = (str: string) => {
   if (!str) return '';
   return str.charAt(0).toLowerCase() + str.slice(1);
 };

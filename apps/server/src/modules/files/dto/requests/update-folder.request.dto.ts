@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateFolderRequestDto {
   @ApiProperty({ required: true, description: '文件夹ID' })
   @IsNumber()
-  folderId: number;
+  folderId!:  number;
 
   @ApiProperty({ required: false, description: '文件夹名称' })
   @IsOptional()

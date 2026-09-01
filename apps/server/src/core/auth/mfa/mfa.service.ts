@@ -293,7 +293,7 @@ export class MfaService {
       const delta = totp.validate({ token: code, window: 1 });
       return delta !== null;
     } catch (error) {
-      this.logger.warn(`TOTP verification error: ${error.message}`);
+      this.logger.warn(`TOTP verification error: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
   }

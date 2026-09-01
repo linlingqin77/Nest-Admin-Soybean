@@ -41,7 +41,7 @@ export class RoleLoader extends BaseLoader<number, SysRole> {
     const roles = await this.prisma.sysRole.findMany({
       where: {
         roleId: { in: [...roleIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -79,7 +79,7 @@ export class RoleLoader extends BaseLoader<number, SysRole> {
         ? await this.prisma.sysRole.findMany({
             where: {
               roleId: { in: roleIds },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
           })
         : [];
@@ -207,7 +207,7 @@ export class RoleLoader extends BaseLoader<number, SysRole> {
         ? await this.prisma.sysMenu.findMany({
             where: {
               menuId: { in: menuIds },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
             select: {
               menuId: true,

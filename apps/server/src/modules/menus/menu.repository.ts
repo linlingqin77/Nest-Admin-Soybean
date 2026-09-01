@@ -55,7 +55,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
               userRoles: {
                 some: { userId },
               },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
               status: StatusEnum.NORMAL,
             },
           },
@@ -86,7 +86,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
     return this.prisma.sysMenu.findMany({
       where: {
         menuId: { in: menuIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ parentId: 'asc' }, { orderNum: 'asc' }],
     });
@@ -97,7 +97,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
    */
   async findAllMenus(query?: { status?: string; parentId?: number; menuType?: string }): Promise<SysMenu[]> {
     const where: Prisma.SysMenuWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query?.status) {
@@ -123,7 +123,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
    */
   async countChildren(parentId: number): Promise<number> {
     return this.delegate.count({
-      where: { parentId, delFlag: DelFlagEnum.NORMAL },
+      where: { parentId, delFlag: '0' },
     });
   }
 
@@ -165,7 +165,7 @@ export class MenuRepository extends BaseRepository<SysMenu, Prisma.SysMenuDelega
           in: menuIds,
         },
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
   }

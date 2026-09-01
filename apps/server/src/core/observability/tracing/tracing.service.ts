@@ -106,7 +106,7 @@ export class TracingService implements OnModuleInit, OnModuleDestroy {
         `OpenTelemetry tracing initialized: service=${this.config.serviceName}, endpoint=${this.config.endpoint}`,
       );
     } catch (error) {
-      this.logger.error(`Failed to initialize OpenTelemetry: ${error.message}`, error.stack);
+      this.logger.error(`Failed to initialize OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
     }
   }
 
@@ -116,7 +116,7 @@ export class TracingService implements OnModuleInit, OnModuleDestroy {
         await this.sdk.shutdown();
         this.logger.log('OpenTelemetry SDK shut down successfully');
       } catch (error) {
-        this.logger.error(`Error shutting down OpenTelemetry: ${error.message}`);
+        this.logger.error(`Error shutting down OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   }

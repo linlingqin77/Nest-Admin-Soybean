@@ -55,10 +55,10 @@ export function fetchTemplateGetDefaultGroup() {
 
 /** 导出模板组 */
 export function fetchTemplateExportGroup(id: CommonType.IdType) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: `/tool/gen/template/group/${id}/export`,
     method: 'get',
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

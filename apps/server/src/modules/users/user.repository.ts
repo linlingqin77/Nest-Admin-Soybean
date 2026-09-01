@@ -33,21 +33,21 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
    * 根据用户名查询用户
    */
   async findByUserName(userName: string): Promise<SysUser | null> {
-    return this.findOne({ userName, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ userName, delFlag: '0' });
   }
 
   /**
    * 根据手机号查询用户
    */
   async findByPhoneNumber(phonenumber: string): Promise<SysUser | null> {
-    return this.findOne({ phonenumber, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ phonenumber, delFlag: '0' });
   }
 
   /**
    * 根据邮箱查询用户
    */
   async findByEmail(email: string): Promise<SysUser | null> {
-    return this.findOne({ email, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ email, delFlag: '0' });
   }
 
   /**
@@ -56,7 +56,7 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
   async existsByUserName(userName: string, excludeUserId?: number): Promise<boolean> {
     const where: Prisma.SysUserWhereInput = {
       userName,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeUserId) {
@@ -72,7 +72,7 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
   async existsByPhoneNumber(phonenumber: string, excludeUserId?: number): Promise<boolean> {
     const where: Prisma.SysUserWhereInput = {
       phonenumber,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeUserId) {
@@ -88,7 +88,7 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
   async existsByEmail(email: string, excludeUserId?: number): Promise<boolean> {
     const where: Prisma.SysUserWhereInput = {
       email,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeUserId) {
@@ -164,7 +164,7 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
     const result = await this.delegate.updateMany({
       where: {
         userId: { in: userIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       data: { delFlag: '2' },
     });

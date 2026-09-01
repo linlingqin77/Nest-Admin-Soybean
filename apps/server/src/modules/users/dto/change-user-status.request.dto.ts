@@ -8,10 +8,10 @@ import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 export class ChangeUserStatusRequestDto {
   @ApiProperty({ required: true, description: '用户ID' })
   @IsNumber()
-  userId: number;
+  userId!:  number;
 
   @ApiProperty({ enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema, required: true })
   @IsString()
   @IsEnum(StatusEnum)
-  status: string;
+  status!:  string;
 }

@@ -75,7 +75,7 @@ export class JobLogService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '调度日志',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '日志编号', dataIndex: 'jobLogId' },
         { title: '任务名称', dataIndex: 'jobName' },

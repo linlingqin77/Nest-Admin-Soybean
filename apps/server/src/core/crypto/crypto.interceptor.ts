@@ -63,11 +63,11 @@ export class DecryptInterceptor implements NestInterceptor {
         );
       }
     } catch (error) {
-      this.logger.error('Failed to decrypt request body:', error.message);
-      this.logger.error('Error stack:', error.stack);
+      this.logger.error('Failed to decrypt request body:', error instanceof Error ? error.message : String(error));
+      this.logger.error('Error stack:', error instanceof Error ? error.stack : String(error));
       // 解密失败时，保持原始请求体，让后续处理决定如何响应
       // 如果是BadRequestException，直接抛出让全局异常过滤器处理
-      if (error.constructor.name === 'BadRequestException') {
+      if (error instanceof Error && error.constructor.name === 'BadRequestException') {
         throw error;
       }
     }

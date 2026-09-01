@@ -124,10 +124,10 @@ export function fetchRoleSelectAuthUserAll(data: { roleId: number; userIds: stri
 
 /** 导出角色 */
 export function fetchRoleExport(params?: Api.System.RoleSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/role/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

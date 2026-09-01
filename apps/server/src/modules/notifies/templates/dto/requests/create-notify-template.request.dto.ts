@@ -6,21 +6,21 @@ export class CreateNotifyTemplateRequestDto {
   @ApiProperty({ description: '模板名称', example: '系统通知' })
   @IsString()
   @Length(1, 100)
-  name: string;
+  name!:  string;
 
   @ApiProperty({ description: '模板编码', example: 'system_notify' })
   @IsString()
   @Length(1, 100)
-  code: string;
+  code!:  string;
 
   @ApiProperty({ description: '发送人名称', example: '系统管理员' })
   @IsString()
   @Length(1, 100)
-  nickname: string;
+  nickname!:  string;
 
   @ApiProperty({ description: '模板内容', example: '您有一条新的通知：${content}' })
   @IsString()
-  content: string;
+  content!:  string;
 
   @ApiPropertyOptional({ description: '参数列表（JSON数组）', example: '["content", "time"]' })
   @IsOptional()

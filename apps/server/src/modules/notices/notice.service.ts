@@ -27,7 +27,7 @@ export class NoticeService {
 
   async findAll(query: ListNoticeDto) {
     const where: Prisma.SysNoticeWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.noticeTitle) {

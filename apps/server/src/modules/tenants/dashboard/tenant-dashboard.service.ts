@@ -49,14 +49,14 @@ export class TenantDashboardService {
         // 租户总数（排除超级管理员租户）
         this.prisma.sysTenant.count({
           where: {
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             tenantId: { not: TenantContext.SUPER_TENANT_ID },
           },
         }),
         // 活跃租户数（状态正常）
         this.prisma.sysTenant.count({
           where: {
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             status: StatusEnum.NORMAL,
             tenantId: { not: TenantContext.SUPER_TENANT_ID },
           },
@@ -64,14 +64,14 @@ export class TenantDashboardService {
         // 本月新增租户数
         this.prisma.sysTenant.count({
           where: {
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             tenantId: { not: TenantContext.SUPER_TENANT_ID },
             createTime: { gte: monthStart },
           },
         }),
         // 用户总数
         this.prisma.sysUser.count({
-          where: { delFlag: DelFlagEnum.NORMAL },
+          where: { delFlag: '0' },
         }),
         // 今日登录用户数（从登录日志统计）
         this.prisma.sysLogininfor.count({
@@ -83,7 +83,7 @@ export class TenantDashboardService {
         // 存储使用总量
         this.prisma.sysTenant.aggregate({
           where: {
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             tenantId: { not: TenantContext.SUPER_TENANT_ID },
           },
           _sum: { storageUsed: true },
@@ -136,7 +136,7 @@ export class TenantDashboardService {
     // 获取时间范围内每天的新增租户数
     const tenants = await this.prisma.sysTenant.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
         createTime: { gte: begin, lte: end },
       },
@@ -147,7 +147,7 @@ export class TenantDashboardService {
     // 获取开始日期之前的租户总数
     const previousTotal = await this.prisma.sysTenant.count({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
         createTime: { lt: begin },
       },
@@ -192,7 +192,7 @@ export class TenantDashboardService {
   async getPackageDistribution(): Promise<Result<PackageDistributionVo[]>> {
     // 获取所有套餐
     const packages = await this.prisma.sysTenantPackage.findMany({
-      where: { delFlag: DelFlagEnum.NORMAL },
+      where: { delFlag: '0' },
       select: { packageId: true, packageName: true },
     });
 
@@ -200,7 +200,7 @@ export class TenantDashboardService {
     const distribution = await this.prisma.sysTenant.groupBy({
       by: ['packageId'],
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
       },
       _count: { packageId: true },
@@ -230,7 +230,7 @@ export class TenantDashboardService {
 
     const tenants = await this.prisma.sysTenant.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
         expireTime: { gte: now, lte: futureDate },
@@ -284,7 +284,7 @@ export class TenantDashboardService {
     // 获取所有租户及其配额信息
     const tenants = await this.prisma.sysTenant.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
       },
@@ -303,7 +303,7 @@ export class TenantDashboardService {
     const userCounts = await this.prisma.sysUser.groupBy({
       by: ['tenantId'],
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { in: tenantIds },
       },
       _count: { userId: true },

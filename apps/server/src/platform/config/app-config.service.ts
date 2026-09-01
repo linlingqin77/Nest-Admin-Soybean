@@ -148,6 +148,7 @@ export class AppConfigService {
    * @param defaultValue 默认值
    */
   getValue<T = any>(path: string, defaultValue?: T): T {
-    return this.configService.get(path as any, defaultValue);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.configService.get(path as any, defaultValue as any) as T;
   }
 }

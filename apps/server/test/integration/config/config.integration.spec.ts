@@ -109,8 +109,8 @@ describe('Config Integration Tests', () => {
         configKey: 'sys.index',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((platform/config: any) => {
-        expect(platform/config.configKey.toLowerCase()).toContain('sys.index');
+      result.data.rows.forEach((mockConfig: any) => {
+        expect(mockConfig.configKey.toLowerCase()).toContain('sys.index');
       });
     });
 
@@ -123,8 +123,8 @@ describe('Config Integration Tests', () => {
         configType: 'Y',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((platform/config: any) => {
-        expect(platform/config.configType).toBe('Y');
+      result.data.rows.forEach((mockConfig: any) => {
+        expect(mockConfig.configType).toBe('Y');
       });
     });
   });

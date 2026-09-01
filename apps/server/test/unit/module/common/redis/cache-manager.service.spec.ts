@@ -198,7 +198,7 @@ describe('CacheManagerService', () => {
       expect(stats).toHaveProperty('dict');
       expect(stats).toHaveProperty('platform/config');
       expect(stats.dict.count).toBe(2);
-      expect(stats.platform/config.count).toBe(1);
+      expect(stats.mockConfig.count).toBe(1);
     });
   });
 });

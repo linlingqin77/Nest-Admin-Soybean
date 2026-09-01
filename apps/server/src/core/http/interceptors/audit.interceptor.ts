@@ -130,7 +130,7 @@ export class AuditInterceptor implements NestInterceptor {
     if (!obj || typeof obj !== 'object') return obj;
 
     const sensitiveFields = ['password', 'token', 'secret', 'credential', 'apiKey', 'privateKey'];
-    const result = { ...obj };
+    const result = { ...(obj as Record<string, unknown>) };
 
     for (const key of Object.keys(result)) {
       if (sensitiveFields.some((field) => key.toLowerCase().includes(field.toLowerCase()))) {

@@ -155,7 +155,7 @@ function autoDetectAndMask(value: string): string {
  * 根据字段名自动选择脱敏策略
  */
 export function smartMask(value: unknown, fieldPath: string): string {
-  if (value === null || value === undefined) return value as string;
+  if (value === null || value === undefined) return (value ?? '') as string;
   if (typeof value !== 'string') return String(value);
 
   // 从路径中提取字段名
@@ -181,7 +181,7 @@ export function maskObjectDeep(obj: unknown, sensitiveFields: string[]): unknown
     return obj.map((item) => maskObjectDeep(item, sensitiveFields));
   }
 
-  const masked = { ...obj };
+  const masked = { ...(obj as Record<string, unknown>) };
   for (const key of Object.keys(masked)) {
     const value = masked[key];
     if (value === null || value === undefined) continue;
@@ -208,7 +208,7 @@ export function maskObjectDeep(obj: unknown, sensitiveFields: string[]): unknown
  * 优先级: req.requestId > req.id > req.headers['x-request-id']
  */
 export function getRequestId(req: Request): string {
-  return req['requestId'] || req['id'] || (req.headers['x-request-id'] as string) || 'unknown';
+  return ((req as unknown) as Record<string, unknown>)['requestId'] as string || ((req as unknown) as Record<string, unknown>)['id'] as string || (req.headers['x-request-id'] as string) || 'unknown';
 }
 
 /**
@@ -322,7 +322,7 @@ export function createPinoConfig(
       // JSON 格式日志文件 (生产环境)
       ...(!prettyPrint && {
         formatters: {
-          level: (label) => {
+          level: (label: string) => {
             return { level: label };
           },
         },
@@ -330,7 +330,7 @@ export function createPinoConfig(
 
       // 自定义请求日志格式 - 包含 Request ID 用于追踪
       customProps: (req: Request, _res: Response) => {
-        const user = req['user'];
+        const user = (req as unknown as Record<string, unknown>)['user'] as { userId?: number; userName?: string; user?: { userId?: number; userName?: string } } | undefined;
         const requestId = getRequestId(req);
         return {
           requestId,
@@ -344,7 +344,7 @@ export function createPinoConfig(
 
       // 自定义序列化器 - 增强调试信息并应用智能脱敏
       serializers: {
-        req(req) {
+        req(req: any) {
           // 对请求体应用智能脱敏
           const maskedBody = req.raw?.body ? maskObjectDeep(req.raw.body, sensitiveFields) : undefined;
 
@@ -365,7 +365,7 @@ export function createPinoConfig(
             },
           };
         },
-        res(res) {
+        res(res: any) {
           return {
             statusCode: res.statusCode,
             // 添加响应头信息便于调试
@@ -377,7 +377,7 @@ export function createPinoConfig(
               : {},
           };
         },
-        err(err) {
+        err(err: any) {
           return {
             type: err.constructor.name,
             message: err.message,
@@ -391,7 +391,7 @@ export function createPinoConfig(
       },
 
       // 自定义日志级别
-      customLogLevel: function (_req, res, err) {
+      customLogLevel: function (_req: any, res: any, err: any) {
         if (res.statusCode >= 500 || err) {
           return 'error';
         } else if (res.statusCode >= 400) {
@@ -401,7 +401,7 @@ export function createPinoConfig(
       },
 
       // 自定义成功消息
-      customSuccessMessage: function (req, res) {
+      customSuccessMessage: function (req: any, res: any) {
         if (res.statusCode === 404) {
           return 'Resource not found';
         }
@@ -409,17 +409,17 @@ export function createPinoConfig(
       },
 
       // 自定义错误消息
-      customErrorMessage: function (req, _res, err) {
+      customErrorMessage: function (req: any, _res: any, err: any) {
         return `${req.method} ${req.url} failed: ${err.message}`;
       },
 
       // 自动记录请求
       autoLogging: {
-        ignore: (req) => {
+        ignore: (req: any) => {
           // 排除的路径
           return excludePaths.some((path) => req.url?.startsWith(path));
         },
       },
     },
-  };
+  } as unknown as Params;
 }

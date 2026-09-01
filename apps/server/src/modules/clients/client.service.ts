@@ -58,7 +58,7 @@ export class ClientService {
    */
   async findAll(query: ListClientDto) {
     const where: Prisma.SysClientWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.clientKey) {

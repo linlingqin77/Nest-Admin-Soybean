@@ -56,7 +56,7 @@ class QueryHistoryParamsDto {
  */
 class BatchDeleteDto {
   @ApiProperty({ description: '历史记录ID列表', example: [1, 2, 3], type: [Number] })
-  historyIds: number[];
+  historyIds!:  number[];
 }
 
 /**

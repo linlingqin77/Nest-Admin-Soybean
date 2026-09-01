@@ -117,11 +117,11 @@ export const index = (options: TemplateOptions): Record<string, string> => {
  * 获取指定模板的代码
  */
 export const getTemplate = (templatePath: string, options: TemplateOptions): string => {
-  const templateFunc = templates[templatePath];
+  const templateFunc = (templates as Record<string, (options: TemplateOptions) => string>)[templatePath];
   if (!templateFunc) {
     throw new Error(`Template not found: ${templatePath}`);
   }
-  return templateFunc(options as any);
+  return templateFunc(options);
 };
 
 /**

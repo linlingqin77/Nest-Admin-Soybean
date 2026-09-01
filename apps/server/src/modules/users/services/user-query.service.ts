@@ -52,13 +52,13 @@ export class UserQueryService {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     const deptMap = new Map<number, SysDept>(depts.map((dept) => [dept.deptId, dept]));
     return users.map((item) => ({
       ...item,
-      dept: deptMap.get(item.deptId) ?? null,
+      dept: deptMap.get(item.deptId ?? -1) ?? null,
     }));
   }
 
@@ -113,7 +113,7 @@ export class UserQueryService {
     }
 
     for (const scope of deptScopes) {
-      const deptIds = await this.deptService.findDeptIdsByDataScope(currentUser.deptId, scope);
+      const deptIds = await this.deptService.findDeptIdsByDataScope(currentUser.deptId ?? 0, scope);
       deptIds.forEach((id) => deptIdSet.add(+id));
     }
 
@@ -133,7 +133,7 @@ export class UserQueryService {
    */
   async findAll(query: ListUserRequestDto, user: UserType['user']) {
     const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     const andConditions: Prisma.SysUserWhereInput[] = await this.buildDataScopeConditions(user);

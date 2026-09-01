@@ -7,5 +7,5 @@ export class UpdateTenantPackageRequestDto extends PartialType(CreateTenantPacka
   @ApiProperty({ required: true, description: '套餐ID' })
   @IsNumber()
   @IsNotEmpty()
-  packageId: number;
+  packageId!:  number;
 }

@@ -129,11 +129,11 @@ export function fetchFileManagerGetShareInfo(shareId: number) {
 
 /** 下载分享文件（无需登录） */
 export function fetchFileManagerDownloadShareFile(shareId: number, password?: string) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: `/system/file-manager/share/${shareId}/download`,
     method: 'post',
     data: { password },
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 
@@ -214,21 +214,21 @@ export function fetchFileManagerGetAccessToken(uploadId: string) {
 
 /** 下载文件 */
 export function fetchFileManagerDownloadFile(uploadId: string, token: string) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: `/system/file-manager/file/${uploadId}/download`,
     method: 'get',
     params: { token },
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 
 /** 批量下载文件 */
 export function fetchFileManagerBatchDownload(uploadIds: string[]) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/file-manager/file/batch-download',
     method: 'post',
     data: { uploadIds },
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

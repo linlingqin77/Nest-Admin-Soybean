@@ -70,10 +70,10 @@ export function fetchConfigRefreshCache() {
 
 /** 导出参数配置 */
 export function fetchConfigExport(params?: Api.System.ConfigSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/config/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

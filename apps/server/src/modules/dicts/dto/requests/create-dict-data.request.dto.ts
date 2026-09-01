@@ -6,22 +6,22 @@ export class CreateDictDataRequestDto {
   @ApiProperty({ required: true, description: '字典类型' })
   @IsString()
   @Length(0, 100)
-  dictType: string;
+  dictType!:  string;
 
   @ApiProperty({ required: true, description: '字典标签' })
   @IsString()
   @Length(0, 100)
-  dictLabel: string;
+  dictLabel!:  string;
 
   @ApiProperty({ required: true, description: '字典键值' })
   @IsString()
   @Length(0, 100)
-  dictValue: string;
+  dictValue!:  string;
 
   @ApiProperty({ required: true, description: '样式属性' })
   @IsString()
   @Length(0, 100)
-  listClass: string;
+  listClass!:  string;
 
   @ApiProperty({ required: false, description: 'CSS样式' })
   @IsOptional()

@@ -37,7 +37,7 @@ export class SmsChannelService {
    */
   async findAll(query: ListSmsChannelDto) {
     const where: Prisma.SysSmsChannelWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.name) {

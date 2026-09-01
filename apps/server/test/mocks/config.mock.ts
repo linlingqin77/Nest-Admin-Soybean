@@ -128,37 +128,37 @@ const setNestedValue = (obj: Record<string, any>, path: string, value: any): voi
  */
 export const createMockConfig = (overrides: Record<string, any> = {}): MockConfigService => {
   // 深拷贝默认配置
-  const platform/config = JSON.parse(JSON.stringify(defaultConfig));
+  const mockConfig = JSON.parse(JSON.stringify(defaultConfig));
 
   // 应用覆盖值
   Object.entries(overrides).forEach(([path, value]) => {
-    setNestedValue(platform/config, path, value);
+    setNestedValue(mockConfig, path, value);
   });
 
   const mock: MockConfigService = {
     get: jest.fn((path: string, defaultValue?: any) => {
-      const value = getNestedValue(platform/config, path);
+      const value = getNestedValue(mockConfig, path);
       return value !== undefined ? value : defaultValue;
     }),
 
     getOrThrow: jest.fn((path: string) => {
-      const value = getNestedValue(platform/config, path);
+      const value = getNestedValue(mockConfig, path);
       if (value === undefined) {
         throw new Error(`Configuration key "${path}" does not exist`);
       }
       return value;
     }),
 
-    _config: platform/config,
+    _config: mockConfig,
 
     _setConfig: (path: string, value: any) => {
-      setNestedValue(platform/config, path, value);
+      setNestedValue(mockConfig, path, value);
     },
 
     _resetAll: () => {
       // 重置为默认配置
-      Object.keys(platform/config).forEach((key) => delete platform/config[key]);
-      Object.assign(platform/config, JSON.parse(JSON.stringify(defaultConfig)));
+      Object.keys(mockConfig).forEach((key) => delete mockConfig[key]);
+      Object.assign(mockConfig, JSON.parse(JSON.stringify(defaultConfig)));
       mock.get.mockClear();
       mock.getOrThrow.mockClear();
     },

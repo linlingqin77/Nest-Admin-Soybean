@@ -159,14 +159,14 @@ describe('FeatureToggleService', () => {
         },
         update: {
           enabled: true,
-          platform/config: null,
+          mockConfig: null,
           updateTime: expect.any(Date),
         },
         create: {
           tenantId,
           featureKey: feature,
           enabled: true,
-          platform/config: null,
+          mockConfig: null,
         },
       });
       expect(mockRedisService.hset).toHaveBeenCalledWith(`tenant:feature:${tenantId}`, feature, '1');
@@ -182,9 +182,9 @@ describe('FeatureToggleService', () => {
 
     it('应该支持设置功能配置', async () => {
       mockPrismaService.sysTenantFeature.upsert.mockResolvedValue({});
-      const platform/config = { maxUsers: 100, theme: 'dark' };
+      const mockConfig = { maxUsers: 100, theme: 'dark' };
 
-      await service.setFeature(tenantId, feature, true, platform/config);
+      await service.setFeature(tenantId, feature, true, mockConfig);
 
       expect(mockPrismaService.sysTenantFeature.upsert).toHaveBeenCalledWith({
         where: {
@@ -195,14 +195,14 @@ describe('FeatureToggleService', () => {
         },
         update: {
           enabled: true,
-          platform/config: JSON.stringify(platform/config),
+          mockConfig: JSON.stringify(mockConfig),
           updateTime: expect.any(Date),
         },
         create: {
           tenantId,
           featureKey: feature,
           enabled: true,
-          platform/config: JSON.stringify(platform/config),
+          mockConfig: JSON.stringify(mockConfig),
         },
       });
     });
@@ -279,19 +279,19 @@ describe('FeatureToggleService', () => {
     });
 
     it('应该返回功能配置（带配置）', async () => {
-      const platform/config = { maxUsers: 100, theme: 'dark' };
+      const mockConfig = { maxUsers: 100, theme: 'dark' };
       mockPrismaService.sysTenantFeature.findUnique.mockResolvedValue({
         tenantId,
         featureKey: feature,
         enabled: true,
-        platform/config: JSON.stringify(platform/config),
+        mockConfig: JSON.stringify(mockConfig),
       });
 
       const result = await service.getFeatureConfig(tenantId, feature);
 
       expect(result).toEqual({
         enabled: true,
-        platform/config,
+        mockConfig,
       });
     });
 
@@ -300,14 +300,14 @@ describe('FeatureToggleService', () => {
         tenantId,
         featureKey: feature,
         enabled: false,
-        platform/config: null,
+        mockConfig: null,
       });
 
       const result = await service.getFeatureConfig(tenantId, feature);
 
       expect(result).toEqual({
         enabled: false,
-        platform/config: undefined,
+        mockConfig: undefined,
       });
     });
 

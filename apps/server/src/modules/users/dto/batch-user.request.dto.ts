@@ -31,18 +31,18 @@ export class BatchCreateUserItemRequestDto {
   @ApiProperty({ required: true, description: '用户昵称' })
   @IsString()
   @Length(1, 30)
-  nickName: string;
+  nickName!:  string;
 
   @ApiProperty({ required: true, description: '用户账号' })
   @IsString()
   @Length(1, 30)
-  userName: string;
+  userName!:  string;
 
   @ApiProperty({ required: true, description: '用户密码' })
   @IsString()
   @IsStrongPassword()
   @Length(1, 200)
-  password: string;
+  password!:  string;
 
   @ApiProperty({ required: false, description: '手机号码' })
   @IsOptional()
@@ -93,7 +93,7 @@ export class BatchCreateUserRequestDto {
   @ArrayMinSize(1, { message: '至少需要一个用户' })
   @ArrayMaxSize(100, { message: '单次最多创建100个用户' })
   @Type(() => BatchCreateUserItemRequestDto)
-  users: BatchCreateUserItemRequestDto[];
+  users!:  BatchCreateUserItemRequestDto[];
 }
 
 /**
@@ -112,7 +112,7 @@ export class BatchDeleteUserRequestDto {
   @ArrayMinSize(1, { message: '至少需要一个用户ID' })
   @ArrayMaxSize(100, { message: '单次最多删除100个用户' })
   @Type(() => Number)
-  userIds: number[];
+  userIds!:  number[];
 }
 
 /**
@@ -120,10 +120,10 @@ export class BatchDeleteUserRequestDto {
  */
 export class BatchResultItemResponseDto {
   @ApiProperty({ description: '索引或ID' })
-  index: number;
+  index!:  number;
 
   @ApiProperty({ description: '是否成功' })
-  success: boolean;
+  success!:  boolean;
 
   @ApiPropertyOptional({ description: '错误消息' })
   error?: string;
@@ -137,14 +137,14 @@ export class BatchResultItemResponseDto {
  */
 export class BatchResultResponseDto {
   @ApiProperty({ description: '成功数量' })
-  successCount: number;
+  successCount!:  number;
 
   @ApiProperty({ description: '失败数量' })
-  failedCount: number;
+  failedCount!:  number;
 
   @ApiProperty({ description: '总数量' })
-  totalCount: number;
+  totalCount!:  number;
 
   @ApiProperty({ description: '详细结果', type: [BatchResultItemResponseDto] })
-  results: BatchResultItemResponseDto[];
+  results!:  BatchResultItemResponseDto[];
 }

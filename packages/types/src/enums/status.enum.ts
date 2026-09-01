@@ -12,15 +12,16 @@ export enum StatusEnum {
 
 /**
  * 删除标志枚举
- * - NORMAL (0): 正常（未删除）
- * - DELETE (1): 已删除
+ * - NORMAL ('0'): 正常（未删除）
+ * - DELETE ('1'): 已删除
  */
-export enum DelFlagEnum {
+export const DelFlagEnum = {
   /** 正常（未删除） */
-  NORMAL = '0',
+  NORMAL: '0',
   /** 已删除 */
-  DELETE = '1',
-}
+  DELETE: '1',
+} as const;
+export type DelFlagEnum = (typeof DelFlagEnum)[keyof typeof DelFlagEnum];
 
 /**
  * 租户状态枚举
@@ -57,4 +58,4 @@ export enum YesNoChar {
 /** 状态类型 */
 export type StatusType = `${StatusEnum}`;
 /** 删除标志类型 */
-export type DelFlagType = `${DelFlagEnum}`;
+export type DelFlagType = '0' | '1';

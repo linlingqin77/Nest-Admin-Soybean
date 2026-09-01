@@ -51,25 +51,25 @@ export async function ExportTable(options: ExportOptions, res: Response) {
 
   // 添加表头
   worksheet.columns = options.header.map((column) => {
-    const width = column.width;
+    const width: number | undefined = column.width;
     return {
       header: column.title,
       key: column.dataIndex,
-      width: isNaN(width) ? 16 : width,
+      width: width !== undefined && !isNaN(width) ? width : 16,
     };
   });
 
-  const dictMap = { ...commonExportMap, ...options.dictMap };
+  const dictMap: Record<string, Record<string | number, string>> = { ...commonExportMap, ...options.dictMap };
 
   // 数据过滤+排序
   data = data.map((item) => {
-    const newItem = {};
+    const newItem: Record<string, unknown> = {};
     options.header.forEach((field) => {
       const dataIndex = field.dataIndex;
       const dataValue = Lodash.get(item, dataIndex);
       /**字典映射 */
-      if (dictMap && dictMap[dataIndex]) {
-        newItem[dataIndex] = dictMap[dataIndex][dataValue] !== undefined ? dictMap[dataIndex][dataValue] : dataValue;
+      if (dictMap && dictMap[dataIndex as string]) {
+        newItem[dataIndex] = dictMap[dataIndex as string][dataValue as string] !== undefined ? dictMap[dataIndex as string][dataValue as string] : dataValue;
       } else {
         newItem[dataIndex] = dataValue;
       }

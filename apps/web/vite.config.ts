@@ -15,7 +15,6 @@ export default defineConfig(configEnv => {
     base: viteEnv.VITE_BASE_URL,
     resolve: {
       alias: {
-        '~': fileURLToPath(new URL('./', import.meta.url)),
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },

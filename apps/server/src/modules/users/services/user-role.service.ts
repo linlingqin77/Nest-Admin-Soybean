@@ -49,13 +49,13 @@ export class UserRoleService {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     const deptMap = new Map<number, SysDept>(depts.map((dept) => [dept.deptId, dept]));
     return users.map((item) => ({
       ...item,
-      dept: deptMap.get(item.deptId) ?? null,
+      dept: deptMap.get(item.deptId ?? -1) ?? null,
     }));
   }
 
@@ -80,7 +80,7 @@ export class UserRoleService {
    */
   async authRole(userId: number) {
     const [allRoles, user] = await Promise.all([
-      this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
+      this.roleService.findRoles({ where: { delFlag: '0' } }),
       this.userRepo.findById(userId),
     ]);
 
@@ -89,7 +89,7 @@ export class UserRoleService {
     }
 
     const dept = user.deptId
-      ? await this.prisma.sysDept.findFirst({ where: { delFlag: DelFlagEnum.NORMAL, deptId: user.deptId } })
+      ? await this.prisma.sysDept.findFirst({ where: { delFlag: '0', deptId: user.deptId } })
       : null;
     const roleIds = await this.getRoleIds([userId]);
 
@@ -134,7 +134,7 @@ export class UserRoleService {
    */
   async allocatedList(query: AllocatedListRequestDto) {
     const relations = await this.prisma.sysUserRole.findMany({
-      where: { roleId: +query.roleId },
+      where: { roleId: +(query.roleId ?? 0) },
       select: { userId: true },
     });
     if (!relations.length) {
@@ -142,7 +142,7 @@ export class UserRoleService {
     }
     const userIds = relations.map((item) => item.userId);
     const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       status: StatusEnum.NORMAL,
       userId: { in: userIds },
     };
@@ -170,13 +170,13 @@ export class UserRoleService {
    */
   async unallocatedList(query: AllocatedListRequestDto) {
     const relations = await this.prisma.sysUserRole.findMany({
-      where: { roleId: +query.roleId },
+      where: { roleId: +(query.roleId ?? 0) },
       select: { userId: true },
     });
     const userIds = relations.map((item) => item.userId);
 
     const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       status: StatusEnum.NORMAL,
     };
 

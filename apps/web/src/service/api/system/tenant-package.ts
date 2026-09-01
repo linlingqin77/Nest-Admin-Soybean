@@ -65,10 +65,10 @@ export function fetchUpdateTenantPackageStatus(data: {
 
 /** 导出租户套餐 */
 export function fetchTenantPackageExport(params?: Api.System.TenantPackageSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/tenant/package/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

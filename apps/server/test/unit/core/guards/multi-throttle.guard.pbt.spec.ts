@@ -143,18 +143,18 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
           // Clear storage
           redisStorage.clear();
 
-          const platform/config: ThrottleConfig = { ttl, limit };
+          const mockConfig: ThrottleConfig = { ttl, limit };
 
           // Make 'limit' number of requests - all should succeed
           for (let i = 0; i < limit; i++) {
-            const result = await guard.checkLimit(`throttle:ip:${ip}`, platform/config);
+            const result = await guard.checkLimit(`throttle:ip:${ip}`, mockConfig);
             if (result.blocked) {
               return false; // Should not be blocked before reaching limit
             }
           }
 
           // The (limit + 1)th request should be blocked
-          const finalResult = await guard.checkLimit(`throttle:ip:${ip}`, platform/config);
+          const finalResult = await guard.checkLimit(`throttle:ip:${ip}`, mockConfig);
 
           // Property: After reaching limit, next request should be blocked
           return finalResult.blocked === true;
@@ -183,13 +183,13 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
           // Clear storage
           redisStorage.clear();
 
-          const platform/config: ThrottleConfig = { ttl: 60000, limit: 100 }; // High limit to avoid blocking
+          const mockConfig: ThrottleConfig = { ttl: 60000, limit: 100 }; // High limit to avoid blocking
           const key = `throttle:ip:${ip}`;
 
           // Make requests
           let lastResult;
           for (let i = 0; i < numRequests; i++) {
-            lastResult = await guard.checkLimit(key, platform/config);
+            lastResult = await guard.checkLimit(key, mockConfig);
           }
 
           // Property: Current count should equal number of requests
@@ -221,19 +221,19 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
           // Clear storage
           redisStorage.clear();
 
-          const platform/config: ThrottleConfig = { ttl: 60000, limit: 5 };
+          const mockConfig: ThrottleConfig = { ttl: 60000, limit: 5 };
 
           // Exhaust IP limit
           for (let i = 0; i < 5; i++) {
-            await guard.checkLimit(`throttle:ip:${ip}`, platform/config);
+            await guard.checkLimit(`throttle:ip:${ip}`, mockConfig);
           }
-          const ipResult = await guard.checkLimit(`throttle:ip:${ip}`, platform/config);
+          const ipResult = await guard.checkLimit(`throttle:ip:${ip}`, mockConfig);
 
           // User limit should still be available
-          const userResult = await guard.checkLimit(`throttle:user:${userId}`, platform/config);
+          const userResult = await guard.checkLimit(`throttle:user:${userId}`, mockConfig);
 
           // Tenant limit should still be available
-          const tenantResult = await guard.checkLimit(`throttle:tenant:${tenantId}`, platform/config);
+          const tenantResult = await guard.checkLimit(`throttle:tenant:${tenantId}`, mockConfig);
 
           // Property: IP blocked, but user and tenant should not be blocked
           return ipResult.blocked === true && userResult.blocked === false && tenantResult.blocked === false;
@@ -261,22 +261,22 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
           // Clear storage
           redisStorage.clear();
 
-          const platform/config: ThrottleConfig = { ttl: 60000, limit };
+          const mockConfig: ThrottleConfig = { ttl: 60000, limit };
           const key = `throttle:ip:${ip}`;
 
           // Make (limit - 1) requests
           for (let i = 0; i < limit - 1; i++) {
-            await guard.checkLimit(key, platform/config);
+            await guard.checkLimit(key, mockConfig);
           }
 
           // Request at exactly the limit should succeed
-          const atLimitResult = await guard.checkLimit(key, platform/config);
+          const atLimitResult = await guard.checkLimit(key, mockConfig);
           if (atLimitResult.blocked) {
             return false;
           }
 
           // Request over the limit should fail
-          const overLimitResult = await guard.checkLimit(key, platform/config);
+          const overLimitResult = await guard.checkLimit(key, mockConfig);
 
           // Property: At limit succeeds, over limit fails
           return overLimitResult.blocked === true;
@@ -333,11 +333,11 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
   /**
    * Property 5f: Custom Config Override
    *
-   * Custom throttle configuration from decorator should override default platform/config.
+   * Custom throttle configuration from decorator should override default mockConfig.
    *
    * **Validates: Requirements 4.1**
    */
-  it('Property 5f: Custom platform/config should override default limits', async () => {
+  it('Property 5f: Custom mockConfig should override default limits', async () => {
     await fc.assert(
       fc.asyncProperty(
         // Generate custom limit (different from default 100)
@@ -352,7 +352,7 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
             ip: { ttl: 60000, limit: customLimit },
           };
 
-          // Configure reflector to return custom platform/config
+          // Configure reflector to return custom mockConfig
           jest.spyOn(reflector, 'getAllAndOverride').mockImplementation((key) => {
             if (key === THROTTLE_KEY) return customConfig;
             return undefined;
@@ -405,14 +405,14 @@ describe('MultiThrottleGuard Property-Based Tests', () => {
           redisStorage.clear();
 
           const ttlMs = ttlSeconds * 1000;
-          const platform/config: ThrottleConfig = { ttl: ttlMs, limit: 1 };
+          const mockConfig: ThrottleConfig = { ttl: ttlMs, limit: 1 };
           const key = `throttle:ip:${ip}`;
 
           // Make one request to reach limit
-          await guard.checkLimit(key, platform/config);
+          await guard.checkLimit(key, mockConfig);
 
           // Next request should be blocked with remaining time
-          const result = await guard.checkLimit(key, platform/config);
+          const result = await guard.checkLimit(key, mockConfig);
 
           // Property: Remaining time should be positive and <= TTL in seconds
           return result.blocked === true && result.remaining > 0 && result.remaining <= ttlSeconds;

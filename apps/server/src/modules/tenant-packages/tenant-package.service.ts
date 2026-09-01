@@ -35,7 +35,7 @@ export class TenantPackageService {
   async create(createTenantPackageDto: CreateTenantPackageRequestDto) {
     // 检查套餐名称是否已存在
     const existPackage = await this.prisma.sysTenantPackage.findFirst({
-      where: { packageName: createTenantPackageDto.packageName, delFlag: DelFlagEnum.NORMAL },
+      where: { packageName: createTenantPackageDto.packageName, delFlag: '0' },
     });
 
     if (existPackage) {
@@ -51,7 +51,7 @@ export class TenantPackageService {
         menuCheckStrictly: createTenantPackageDto.menuCheckStrictly ?? false,
         status: createTenantPackageDto.status ?? '0',
         remark: createTenantPackageDto.remark,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -64,7 +64,7 @@ export class TenantPackageService {
   @IgnoreTenant()
   async findAll(query: ListTenantPackageRequestDto) {
     const where: Prisma.SysTenantPackageWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.packageName) {
@@ -98,7 +98,7 @@ export class TenantPackageService {
     const list = await this.prisma.sysTenantPackage.findMany({
       where: {
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       select: {
         packageId: true,
@@ -149,7 +149,7 @@ export class TenantPackageService {
         where: {
           packageName: updateData.packageName,
           packageId: { not: packageId },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -181,7 +181,7 @@ export class TenantPackageService {
     const tenantsUsingPackage = await this.prisma.sysTenant.findFirst({
       where: {
         packageId: { in: packageIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -232,7 +232,7 @@ export class TenantPackageService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '租户套餐数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '套餐ID', dataIndex: 'packageId' },
         { title: '套餐名称', dataIndex: 'packageName' },

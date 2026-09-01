@@ -74,7 +74,7 @@ export class TemplateService {
           { tenantId, name: dto.name },
           { tenantId: null, name: dto.name },
         ],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -87,7 +87,7 @@ export class TemplateService {
           where: {
             OR: [{ tenantId }, { tenantId: null }],
             isDefault: true,
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
           },
           data: { isDefault: false },
         });
@@ -100,7 +100,7 @@ export class TemplateService {
           description: dto.description,
           isDefault: dto.isDefault ?? false,
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           createBy: username,
           updateBy: username,
         },
@@ -109,7 +109,7 @@ export class TemplateService {
       this.logger.log(`模板组创建成功: ${group.name} (ID: ${group.id})`);
       return Result.ok(group, '创建成功');
     } catch (error) {
-      this.logger.error(`模板组创建失败: ${error.message}`, error.stack);
+      this.logger.error(`模板组创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建模板组失败');
     }
   }
@@ -126,7 +126,7 @@ export class TemplateService {
       where: {
         id,
         OR: [{ tenantId }, { tenantId: null }],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -146,7 +146,7 @@ export class TemplateService {
           OR: [{ tenantId }, { tenantId: null }],
           name: dto.name,
           id: { not: id },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -163,7 +163,7 @@ export class TemplateService {
             OR: [{ tenantId }, { tenantId: null }],
             isDefault: true,
             id: { not: id },
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
           },
           data: { isDefault: false },
         });
@@ -181,7 +181,7 @@ export class TemplateService {
       this.logger.log(`模板组更新成功: ${group.name} (ID: ${group.id})`);
       return Result.ok(group, '更新成功');
     } catch (error) {
-      this.logger.error(`模板组更新失败: ${error.message}`, error.stack);
+      this.logger.error(`模板组更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新模板组失败');
     }
   }
@@ -197,7 +197,7 @@ export class TemplateService {
       where: {
         id,
         OR: [{ tenantId }, { tenantId: null }],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -214,7 +214,7 @@ export class TemplateService {
     const relatedTables = await this.prisma.genTable.count({
       where: {
         templateGroupId: id,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -228,7 +228,7 @@ export class TemplateService {
         this.prisma.genTemplate.updateMany({
           where: { groupId: id },
           data: {
-            delFlag: DelFlagEnum.DELETE,
+            delFlag: '1',
             updateBy: username,
             updateTime: new Date(),
           },
@@ -236,7 +236,7 @@ export class TemplateService {
         this.prisma.genTemplateGroup.update({
           where: { id },
           data: {
-            delFlag: DelFlagEnum.DELETE,
+            delFlag: '1',
             updateBy: username,
             updateTime: new Date(),
           },
@@ -246,7 +246,7 @@ export class TemplateService {
       this.logger.log(`模板组删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`模板组删除失败: ${error.message}`, error.stack);
+      this.logger.error(`模板组删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除模板组失败');
     }
   }
@@ -259,7 +259,7 @@ export class TemplateService {
     const tenantId = TenantContext.getTenantId() || TenantContext.SUPER_TENANT_ID;
 
     const where: Prisma.GenTemplateGroupWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     // 租户隔离：查询当前租户的模板组和系统级模板组
@@ -285,7 +285,7 @@ export class TemplateService {
         orderBy: query.getOrderBy('createTime'),
         include: {
           templates: {
-            where: { delFlag: DelFlagEnum.NORMAL },
+            where: { delFlag: '0' },
             orderBy: { sort: 'asc' },
           },
         },
@@ -307,11 +307,11 @@ export class TemplateService {
       where: {
         id,
         OR: [{ tenantId }, { tenantId: null }],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       include: {
         templates: {
-          where: { delFlag: DelFlagEnum.NORMAL },
+          where: { delFlag: '0' },
           orderBy: { sort: 'asc' },
         },
       },
@@ -336,13 +336,13 @@ export class TemplateService {
         OR: [{ tenantId }, { tenantId: null }],
         isDefault: true,
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       include: {
         templates: {
           where: {
             status: StatusEnum.NORMAL,
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
           },
           orderBy: { sort: 'asc' },
         },
@@ -370,7 +370,7 @@ export class TemplateService {
       where: {
         id: dto.groupId,
         OR: [{ tenantId }, { tenantId: null }],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -400,7 +400,7 @@ export class TemplateService {
           language: dto.language,
           sort: dto.sort ?? 0,
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           createBy: username,
           updateBy: username,
         },
@@ -409,7 +409,7 @@ export class TemplateService {
       this.logger.log(`模板创建成功: ${template.name} (ID: ${template.id})`);
       return Result.ok(template, '创建成功');
     } catch (error) {
-      this.logger.error(`模板创建失败: ${error.message}`, error.stack);
+      this.logger.error(`模板创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建模板失败');
     }
   }
@@ -425,7 +425,7 @@ export class TemplateService {
     const existing = await this.prisma.genTemplate.findFirst({
       where: {
         id,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       include: {
         group: true,
@@ -462,7 +462,7 @@ export class TemplateService {
       this.logger.log(`模板更新成功: ${template.name} (ID: ${template.id})`);
       return Result.ok(template, '更新成功');
     } catch (error) {
-      this.logger.error(`模板更新失败: ${error.message}`, error.stack);
+      this.logger.error(`模板更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新模板失败');
     }
   }
@@ -477,7 +477,7 @@ export class TemplateService {
     const existing = await this.prisma.genTemplate.findFirst({
       where: {
         id,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       include: {
         group: true,
@@ -497,7 +497,7 @@ export class TemplateService {
       await this.prisma.genTemplate.update({
         where: { id },
         data: {
-          delFlag: DelFlagEnum.DELETE,
+          delFlag: '1',
           updateBy: username,
           updateTime: new Date(),
         },
@@ -506,7 +506,7 @@ export class TemplateService {
       this.logger.log(`模板删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`模板删除失败: ${error.message}`, error.stack);
+      this.logger.error(`模板删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除模板失败');
     }
   }
@@ -517,7 +517,7 @@ export class TemplateService {
    */
   async findAllTemplates(query: ListTemplateRequestDto): Promise<Result> {
     const where: Prisma.GenTemplateWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.groupId) {
@@ -557,7 +557,7 @@ export class TemplateService {
     const template = await this.prisma.genTemplate.findFirst({
       where: {
         id,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -583,7 +583,7 @@ export class TemplateService {
 
     // 替换所有变量
     result = result.replace(TEMPLATE_VARIABLE_REGEX, (match, variableName) => {
-      const value = context[variableName];
+      const value = (context as Record<string, unknown>)[variableName];
 
       if (value === undefined || value === null) {
         // 未定义的变量保持原样
@@ -722,11 +722,11 @@ export class TemplateService {
       where: {
         id,
         OR: [{ tenantId }, { tenantId: null }],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       include: {
         templates: {
-          where: { delFlag: DelFlagEnum.NORMAL },
+          where: { delFlag: '0' },
           orderBy: { sort: 'asc' },
         },
       },
@@ -768,7 +768,7 @@ export class TemplateService {
           { tenantId, name: dto.name },
           { tenantId: null, name: dto.name },
         ],
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -795,7 +795,7 @@ export class TemplateService {
             description: dto.description,
             isDefault: false,
             status: StatusEnum.NORMAL,
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             createBy: username,
             updateBy: username,
           },
@@ -812,7 +812,7 @@ export class TemplateService {
             language: t.language,
             sort: t.sort ?? index,
             status: StatusEnum.NORMAL,
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             createBy: username,
             updateBy: username,
           })),
@@ -824,7 +824,7 @@ export class TemplateService {
       this.logger.log(`模板组导入成功: ${group.name} (ID: ${group.id}), 包含 ${dto.templates.length} 个模板`);
       return Result.ok(group, '导入成功');
     } catch (error) {
-      this.logger.error(`模板组导入失败: ${error.message}`, error.stack);
+      this.logger.error(`模板组导入失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '导入模板组失败');
     }
   }

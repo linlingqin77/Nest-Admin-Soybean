@@ -34,8 +34,8 @@ describe('PasswordValidator - Property Tests', () => {
             requireNumber: fc.boolean(),
             requireSpecial: fc.boolean(),
           }),
-          (platform/config) => {
-            const result = PasswordValidator.validate('', platform/config);
+          (mockConfig) => {
+            const result = PasswordValidator.validate('', mockConfig);
             return result.valid === false && result.errors.includes('密码不能为空');
           },
         ),
@@ -55,13 +55,13 @@ describe('PasswordValidator - Property Tests', () => {
           fc.integer({ min: 8, max: 20 }),
           fc.string({ minLength: 1, maxLength: 7 }),
           (minLength, password) => {
-            const platform/config: PasswordValidationConfig = {
+            const mockConfig: PasswordValidationConfig = {
               minLength,
               requireUppercase: false,
               requireLowercase: false,
               requireNumber: false,
             };
-            const result = PasswordValidator.validate(password, platform/config);
+            const result = PasswordValidator.validate(password, mockConfig);
             return result.valid === false;
           },
         ),
@@ -77,14 +77,14 @@ describe('PasswordValidator - Property Tests', () => {
       fc.assert(
         fc.property(fc.integer({ min: 10, max: 50 }), (maxLength) => {
           const password = 'A'.repeat(maxLength + 10);
-          const platform/config: PasswordValidationConfig = {
+          const mockConfig: PasswordValidationConfig = {
             maxLength,
             minLength: 1,
             requireUppercase: false,
             requireLowercase: false,
             requireNumber: false,
           };
-          const result = PasswordValidator.validate(password, platform/config);
+          const result = PasswordValidator.validate(password, mockConfig);
           return result.valid === false && result.errors.some((e) => e.includes('最多'));
         }),
         { numRuns: 100 },
@@ -100,12 +100,12 @@ describe('PasswordValidator - Property Tests', () => {
     it('要求大写字母时，纯小写密码被拒绝', () => {
       fc.assert(
         fc.property(lowercaseAndDigits, (password) => {
-          const platform/config: PasswordValidationConfig = {
+          const mockConfig: PasswordValidationConfig = {
             requireUppercase: true,
             requireLowercase: false,
             requireNumber: false,
           };
-          const result = PasswordValidator.validate(password, platform/config);
+          const result = PasswordValidator.validate(password, mockConfig);
           return result.valid === false && result.errors.includes('密码必须包含大写字母');
         }),
         { numRuns: 50 },
@@ -119,12 +119,12 @@ describe('PasswordValidator - Property Tests', () => {
     it('要求小写字母时，纯大写密码被拒绝', () => {
       fc.assert(
         fc.property(uppercaseAndDigits, (password) => {
-          const platform/config: PasswordValidationConfig = {
+          const mockConfig: PasswordValidationConfig = {
             requireUppercase: false,
             requireLowercase: true,
             requireNumber: false,
           };
-          const result = PasswordValidator.validate(password, platform/config);
+          const result = PasswordValidator.validate(password, mockConfig);
           return result.valid === false && result.errors.includes('密码必须包含小写字母');
         }),
         { numRuns: 50 },
@@ -138,12 +138,12 @@ describe('PasswordValidator - Property Tests', () => {
     it('要求数字时，纯字母密码被拒绝', () => {
       fc.assert(
         fc.property(lettersOnly, (password) => {
-          const platform/config: PasswordValidationConfig = {
+          const mockConfig: PasswordValidationConfig = {
             requireUppercase: false,
             requireLowercase: false,
             requireNumber: true,
           };
-          const result = PasswordValidator.validate(password, platform/config);
+          const result = PasswordValidator.validate(password, mockConfig);
           return result.valid === false && result.errors.includes('密码必须包含数字');
         }),
         { numRuns: 50 },
@@ -220,14 +220,14 @@ describe('PasswordValidator - Property Tests', () => {
           (prefix, suffix) => {
             const forbiddenWord = 'password';
             const password = prefix + forbiddenWord + suffix;
-            const platform/config: PasswordValidationConfig = {
+            const mockConfig: PasswordValidationConfig = {
               forbiddenPatterns: [/password/i],
               minLength: 1,
               requireUppercase: false,
               requireLowercase: false,
               requireNumber: false,
             };
-            const result = PasswordValidator.validate(password, platform/config);
+            const result = PasswordValidator.validate(password, mockConfig);
             return result.valid === false && result.errors.includes('密码包含不允许的模式');
           },
         ),
@@ -253,9 +253,9 @@ describe('PasswordValidator - Property Tests', () => {
             requireNumber: fc.boolean(),
             requireSpecial: fc.boolean(),
           }),
-          (password, platform/config) => {
-            const result1 = PasswordValidator.validate(password, platform/config);
-            const result2 = PasswordValidator.validate(password, platform/config);
+          (password, mockConfig) => {
+            const result1 = PasswordValidator.validate(password, mockConfig);
+            const result2 = PasswordValidator.validate(password, mockConfig);
             return result1.valid === result2.valid && result1.errors.length === result2.errors.length;
           },
         ),

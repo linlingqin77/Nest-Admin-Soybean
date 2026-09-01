@@ -7,11 +7,11 @@ import { Expose, Type } from 'class-transformer';
 export class TenantInfoResponseDto {
   @Expose()
   @ApiProperty({ description: '租户ID' })
-  tenantId: string;
+  tenantId!:  string;
 
   @Expose()
   @ApiProperty({ description: '企业名称' })
-  companyName: string;
+  companyName!:  string;
 
   @Expose()
   @ApiProperty({ description: '域名' })
@@ -24,10 +24,10 @@ export class TenantInfoResponseDto {
 export class LoginTenantResponseDto {
   @Expose()
   @ApiProperty({ description: '是否开启租户' })
-  tenantEnabled: boolean;
+  tenantEnabled!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '租户列表', type: [TenantInfoResponseDto] })
   @Type(() => TenantInfoResponseDto)
-  voList: TenantInfoResponseDto[];
+  voList!:  TenantInfoResponseDto[];
 }

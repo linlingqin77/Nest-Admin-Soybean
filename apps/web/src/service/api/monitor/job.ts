@@ -63,10 +63,10 @@ export function fetchRunJob(jobId: CommonType.IdType, jobGroup: string) {
 
 /** 导出定时任务 */
 export function fetchJobExport(params?: Api.Monitor.JobSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/monitor/job/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

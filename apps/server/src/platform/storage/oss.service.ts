@@ -31,7 +31,7 @@ export class OssService {
    */
   async findAll(query: ListOssDto) {
     const where: Prisma.SysOssWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.fileName) {

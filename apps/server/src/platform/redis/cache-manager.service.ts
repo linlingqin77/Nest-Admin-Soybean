@@ -63,7 +63,7 @@ export class CacheManagerService implements OnModuleInit {
       warmOnStart: true,
       fetcher: async () => {
         const dictTypes = await this.prisma.sysDictType.findMany({
-          where: { status: StatusEnum.NORMAL, delFlag: DelFlagEnum.NORMAL },
+          where: { status: StatusEnum.NORMAL, delFlag: '0' },
           select: { dictType: true },
         });
 
@@ -89,7 +89,7 @@ export class CacheManagerService implements OnModuleInit {
       warmOnStart: true,
       fetcher: async () => {
         const configs = await this.prisma.sysConfig.findMany({
-          where: { status: StatusEnum.NORMAL, delFlag: DelFlagEnum.NORMAL },
+          where: { status: StatusEnum.NORMAL, delFlag: '0' },
         });
 
         const result = new Map<string, any>();

@@ -64,7 +64,7 @@ export class GenTableService {
   private buildTenantWhere(additionalWhere: Prisma.GenTableWhereInput = {}): Prisma.GenTableWhereInput {
     const tenantId = this.getCurrentTenantId();
     const where: Prisma.GenTableWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       ...additionalWhere,
     };
 
@@ -133,7 +133,7 @@ export class GenTableService {
     }
 
     const columns = await this.prisma.genTableColumn.findMany({
-      where: { tableId: table.tableId, delFlag: DelFlagEnum.NORMAL },
+      where: { tableId: table.tableId, delFlag: '0' },
       orderBy: { sort: 'asc' },
     });
 
@@ -156,7 +156,7 @@ export class GenTableService {
     }
 
     const columns = await this.prisma.genTableColumn.findMany({
-      where: { tableId: table.tableId, delFlag: DelFlagEnum.NORMAL },
+      where: { tableId: table.tableId, delFlag: '0' },
       orderBy: { sort: 'asc' },
     });
 
@@ -187,7 +187,7 @@ export class GenTableService {
       if (tablesResult.code !== 200) {
         throw new BusinessException(tablesResult.code, tablesResult.msg);
       }
-      tableList = tablesResult.data
+      tableList = (tablesResult.data ?? [])
         .filter((t) => tableNames.includes(t.tableName))
         .map((t) => ({
           tableName: t.tableName,
@@ -214,7 +214,7 @@ export class GenTableService {
         where: {
           tableName,
           tenantId,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -244,7 +244,7 @@ export class GenTableService {
         genPath: '/',
         options: '',
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tplCategory: 'crud',
         tplWebType: 'naive-ui',
         dataSourceId: dto.dataSourceId || null,
@@ -261,7 +261,7 @@ export class GenTableService {
           this.logger.error(`获取表 ${tableName} 的列信息失败: ${columnsResult.msg}`);
           continue;
         }
-        columns = columnsResult.data;
+        columns = columnsResult.data ?? [];
       } else {
         columns = await this.getTableColumnInfo(tableName);
       }
@@ -304,7 +304,7 @@ export class GenTableService {
       if (columnsResult.code !== 200) {
         throw new BusinessException(columnsResult.code, columnsResult.msg);
       }
-      currentColumns = columnsResult.data;
+      currentColumns = columnsResult.data ?? [];
     } else {
       currentColumns = await this.getTableColumnInfo(dto.tableName);
     }
@@ -512,7 +512,7 @@ export class GenTableService {
       dictType: inferred.dictType,
       sort,
       status: StatusEnum.NORMAL,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       createBy,
       createTime,
       updateBy: createBy,

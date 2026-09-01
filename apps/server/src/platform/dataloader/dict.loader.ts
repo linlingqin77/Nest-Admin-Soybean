@@ -40,7 +40,7 @@ export class DictTypeLoader extends BaseLoader<number, SysDictType> {
     const dictTypes = await this.prisma.sysDictType.findMany({
       where: {
         dictId: { in: [...dictIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -61,7 +61,7 @@ export class DictTypeLoader extends BaseLoader<number, SysDictType> {
     const types = await this.prisma.sysDictType.findMany({
       where: {
         dictType: { in: dictTypes },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -83,7 +83,7 @@ export class DictTypeLoader extends BaseLoader<number, SysDictType> {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
         dictType: { in: dictTypes },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { dictSort: 'asc' },
     });
@@ -140,7 +140,7 @@ export class DictDataLoader extends BaseLoader<number, SysDictData> {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
         dictCode: { in: [...dictCodes] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -175,7 +175,7 @@ export class DictDataLoader extends BaseLoader<number, SysDictData> {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
         OR: orConditions,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -216,7 +216,7 @@ export class DictDataLoader extends BaseLoader<number, SysDictData> {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
         dictType: { in: dictTypes },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { dictSort: 'asc' },
     });
@@ -247,7 +247,7 @@ export class DictDataLoader extends BaseLoader<number, SysDictData> {
       where: {
         dictType: { in: dictTypes },
         isDefault: 'Y',
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 

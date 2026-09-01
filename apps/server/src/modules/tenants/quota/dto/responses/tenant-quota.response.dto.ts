@@ -16,22 +16,22 @@ export enum QuotaStatus {
  */
 export class QuotaChangeRecordVo {
   @ApiProperty({ description: '记录ID' })
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '配额类型', enum: ['user', 'storage', 'api'] })
-  quotaType: string;
+  quotaType!:  string;
 
   @ApiProperty({ description: '原值' })
-  oldValue: number;
+  oldValue!:  number;
 
   @ApiProperty({ description: '新值' })
-  newValue: number;
+  newValue!:  number;
 
   @ApiProperty({ description: '修改人' })
-  changeBy: string;
+  changeBy!:  string;
 
   @ApiProperty({ description: '修改时间' })
-  changeTime: Date;
+  changeTime!:  Date;
 }
 
 /**
@@ -39,22 +39,22 @@ export class QuotaChangeRecordVo {
  */
 export class QuotaCheckResultVo {
   @ApiProperty({ description: '是否允许' })
-  allowed: boolean;
+  allowed!:  boolean;
 
   @ApiProperty({ description: '配额类型' })
-  quotaType: string;
+  quotaType!:  string;
 
   @ApiProperty({ description: '当前使用量' })
-  used: number;
+  used!:  number;
 
   @ApiProperty({ description: '配额限制' })
-  limit: number;
+  limit!:  number;
 
   @ApiProperty({ description: '使用率' })
-  usageRate: number;
+  usageRate!:  number;
 
   @ApiProperty({ description: '提示信息' })
-  message: string;
+  message!:  string;
 }
 
 /**
@@ -62,49 +62,49 @@ export class QuotaCheckResultVo {
  */
 export class TenantQuotaVo {
   @ApiProperty({ description: '配额记录ID' })
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '租户ID' })
-  tenantId: string;
+  tenantId!:  string;
 
   @ApiProperty({ description: '企业名称' })
-  companyName: string;
+  companyName!:  string;
 
   @ApiProperty({ description: '用户数量配额，-1表示不限' })
-  userQuota: number;
+  userQuota!:  number;
 
   @ApiProperty({ description: '已使用用户数' })
-  userUsed: number;
+  userUsed!:  number;
 
   @ApiProperty({ description: '用户配额使用率' })
-  userUsageRate: number;
+  userUsageRate!:  number;
 
   @ApiProperty({ description: '存储配额（MB），-1表示不限' })
-  storageQuota: number;
+  storageQuota!:  number;
 
   @ApiProperty({ description: '已使用存储（MB）' })
-  storageUsed: number;
+  storageUsed!:  number;
 
   @ApiProperty({ description: '存储配额使用率' })
-  storageUsageRate: number;
+  storageUsageRate!:  number;
 
   @ApiProperty({ description: 'API调用配额（月），-1表示不限' })
-  apiQuota: number;
+  apiQuota!:  number;
 
   @ApiProperty({ description: '本月已调用次数' })
-  apiUsed: number;
+  apiUsed!:  number;
 
   @ApiProperty({ description: 'API配额使用率' })
-  apiUsageRate: number;
+  apiUsageRate!:  number;
 
   @ApiProperty({ description: '配额状态', enum: QuotaStatus })
-  status: QuotaStatus;
+  status!:  QuotaStatus;
 
   @ApiProperty({ description: '创建时间' })
-  createTime: Date;
+  createTime!:  Date;
 
   @ApiProperty({ description: '更新时间' })
-  updateTime: Date;
+  updateTime!:  Date;
 }
 
 /**
@@ -112,7 +112,7 @@ export class TenantQuotaVo {
  */
 export class TenantQuotaDetailVo extends TenantQuotaVo {
   @ApiProperty({ description: '配额变更历史', type: [QuotaChangeRecordVo] })
-  quotaHistory: QuotaChangeRecordVo[];
+  quotaHistory!:  QuotaChangeRecordVo[];
 }
 
 /**
@@ -121,53 +121,53 @@ export class TenantQuotaDetailVo extends TenantQuotaVo {
 export class TenantQuotaResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '配额记录ID' })
   @Expose()
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '租户ID' })
   @Expose()
-  override tenantId: number;
+  override tenantId!: number;
 
   @ApiProperty({ description: '企业名称' })
   @Expose()
-  companyName: string;
+  companyName!:  string;
 
   @ApiProperty({ description: '用户数量配额，-1表示不限' })
   @Expose()
-  userQuota: number;
+  userQuota!:  number;
 
   @ApiProperty({ description: '已使用用户数' })
   @Expose()
-  userUsed: number;
+  userUsed!:  number;
 
   @ApiProperty({ description: '用户配额使用率' })
   @Expose()
-  userUsageRate: number;
+  userUsageRate!:  number;
 
   @ApiProperty({ description: '存储配额（MB），-1表示不限' })
   @Expose()
-  storageQuota: number;
+  storageQuota!:  number;
 
   @ApiProperty({ description: '已使用存储（MB）' })
   @Expose()
-  storageUsed: number;
+  storageUsed!:  number;
 
   @ApiProperty({ description: '存储配额使用率' })
   @Expose()
-  storageUsageRate: number;
+  storageUsageRate!:  number;
 
   @ApiProperty({ description: 'API调用配额（月），-1表示不限' })
   @Expose()
-  apiQuota: number;
+  apiQuota!:  number;
 
   @ApiProperty({ description: '本月已调用次数' })
   @Expose()
-  apiUsed: number;
+  apiUsed!:  number;
 
   @ApiProperty({ description: 'API配额使用率' })
   @Expose()
-  apiUsageRate: number;
+  apiUsageRate!:  number;
 
   @ApiProperty({ description: '配额状态', enum: ['normal', 'warning', 'danger'] })
   @Expose()
-  status: string;
+  status!:  string;
 }

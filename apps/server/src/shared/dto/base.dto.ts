@@ -396,7 +396,7 @@ export class IdsDto {
   @ApiProperty({ description: 'ID 数组', example: [1, 2, 3], type: [Number] })
   @IsInt({ each: true })
   @Type(() => Number)
-  ids: number[];
+  ids!:  number[];
 }
 
 /**
@@ -405,7 +405,7 @@ export class IdsDto {
 export class StringIdsDto {
   @ApiProperty({ description: 'ID 数组', example: ['1', '2', '3'], type: [String] })
   @IsString({ each: true })
-  ids: string[];
+  ids!:  string[];
 }
 
 /**
@@ -415,7 +415,7 @@ export class IdParamDto {
   @ApiProperty({ description: 'ID', example: 1 })
   @Type(() => Number)
   @IsInt()
-  id: number;
+  id!:  number;
 }
 
 /**

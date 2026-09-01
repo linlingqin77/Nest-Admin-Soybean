@@ -18,47 +18,47 @@ import { ClientConfig } from './client.config';
 export class Configuration {
   @ValidateNested()
   @Type(() => AppConfig)
-  app: AppConfig;
+  app!:  AppConfig;
 
   @ValidateNested()
   @Type(() => DatabaseConfig)
-  db: DatabaseConfig;
+  db!:  DatabaseConfig;
 
   @ValidateNested()
   @Type(() => RedisConfig)
-  redis: RedisConfig;
+  redis!:  RedisConfig;
 
   @ValidateNested()
   @Type(() => JwtConfig)
-  jwt: JwtConfig;
+  jwt!:  JwtConfig;
 
   @ValidateNested()
   @Type(() => TenantConfig)
-  tenant: TenantConfig;
+  tenant!:  TenantConfig;
 
   @ValidateNested()
   @Type(() => CryptoConfig)
-  crypto: CryptoConfig;
+  crypto!:  CryptoConfig;
 
   @ValidateNested()
   @Type(() => CosConfig)
-  cos: CosConfig;
+  cos!:  CosConfig;
 
   @ValidateNested()
   @Type(() => PermissionConfig)
-  perm: PermissionConfig;
+  perm!:  PermissionConfig;
 
   @ValidateNested()
   @Type(() => GeneratorConfig)
-  gen: GeneratorConfig;
+  gen!:  GeneratorConfig;
 
   @ValidateNested()
   @Type(() => UserConfig)
-  user: UserConfig;
+  user!:  UserConfig;
 
   @ValidateNested()
   @Type(() => ClientConfig)
-  client: ClientConfig;
+  client!:  ClientConfig;
 }
 
 // 导出所有配置类型

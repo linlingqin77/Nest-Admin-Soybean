@@ -6,23 +6,23 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-vali
 export class RedisConfig {
   @IsString()
   @IsNotEmpty()
-  host: string;
+  host!:  string;
 
   @IsNumber()
   @Min(1)
   @Max(65535)
-  port: number;
+  port!:  number;
 
   @IsString()
   @IsOptional()
-  password: string;
+  password!:  string;
 
   @IsNumber()
   @Min(0)
   @Max(15)
-  db: number;
+  db!:  number;
 
   @IsString()
   @IsOptional()
-  keyPrefix: string;
+  keyPrefix!:  string;
 }

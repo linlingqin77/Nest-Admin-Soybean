@@ -7,11 +7,12 @@ import { ExecutionContext, Inject, Injectable, Logger, UnauthorizedException } f
 import { UserService } from 'src/modules/users/user.service';
 import { TokenBlacklistService } from 'src/core/auth/token-blacklist.service';
 import { METADATA_KEYS } from 'src/shared/constants/metadata.constants';
+import { RouteWhitelistItem } from 'src/platform/config/types/permission.config';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(JwtAuthGuard.name);
-  private globalWhiteList = [];
+  private globalWhiteList: RouteWhitelistItem[] = [];
 
   constructor(
     private readonly reflector: Reflector,
@@ -21,7 +22,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     private readonly tokenBlacklistService: TokenBlacklistService,
   ) {
     super();
-    this.globalWhiteList = [].concat(this.config.perm.router.whitelist || []);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.globalWhiteList = ([].concat((this.config.perm.router as any).whitelist || []) as RouteWhitelistItem[]);
   }
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
@@ -68,7 +70,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   async activate(ctx: ExecutionContext) {
-    return super.canActivate(ctx) as boolean;
+    const result = await super.canActivate(ctx);
+    return result as boolean;
   }
 
   /**

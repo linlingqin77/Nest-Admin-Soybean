@@ -19,17 +19,9 @@ export const StatusEnumSchema = {
 
 /**
  * 删除标志枚举
- * - NORMAL (0): 正常（未删除）
- * - DELETE (1): 已删除
+ *
+ * @deprecated 此处仅保留 Swagger Schema，运行时值由 @nest-admin/types 的 DelFlagEnum 提供
  */
-export enum DelFlagEnum {
-  /** 正常（未删除） */
-  NORMAL = '0',
-  /** 已删除 */
-  DELETE = '1',
-}
-
-/** DelFlagEnum Swagger Schema */
 export const DelFlagEnumSchema = {
   description: `删除标志枚举
 - NORMAL (0): 正常（未删除）

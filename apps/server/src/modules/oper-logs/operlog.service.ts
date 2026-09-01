@@ -89,8 +89,8 @@ export class OperlogService {
     }
     if (!isEmpty(query.params?.beginTime) && !isEmpty(query.params?.endTime)) {
       where.operTime = {
-        gte: new Date(query.params.beginTime),
-        lte: new Date(query.params.endTime),
+        gte: new Date(query.params?.beginTime as string),
+        lte: new Date(query.params?.endTime as string),
       };
     }
     if (!isEmpty(query.status)) {
@@ -169,7 +169,7 @@ export class OperlogService {
   }) {
     const { originalUrl, method, ip, body, query } = this.request;
     const loginUser = this.request.user?.user ?? {};
-    const operLocation = await this.axiosService.getIpAddress(ip);
+    const operLocation = await this.axiosService.getIpAddress(ip ?? '');
 
     const safeStringify = (payload: unknown): string => {
       try {
@@ -205,7 +205,7 @@ export class OperlogService {
     }
 
     await this.prisma.sysOperLog.create({
-      data: params,
+      data: params as Prisma.SysOperLogUncheckedCreateInput,
     });
   }
 
@@ -218,13 +218,13 @@ export class OperlogService {
     delete body.pageSize;
     const list = await this.findAll(body);
     const { data: operatorTypeDict } = await this.dictService.findOneDataType('sys_oper_type');
-    const operatorTypeDictMap = {};
-    operatorTypeDict.forEach((item) => {
+    const operatorTypeDictMap: Record<string, string> = {};
+    operatorTypeDict?.forEach((item) => {
       operatorTypeDictMap[item.dictValue] = item.dictLabel;
     });
     const options = {
       sheetName: '操作日志数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '日志编号', dataIndex: 'operId' },
         { title: '系统模块', dataIndex: 'title', width: 15 },
@@ -249,6 +249,6 @@ export class OperlogService {
         businessType: operatorTypeDictMap,
       },
     };
-    return await ExportTable(options, res);
+    return await ExportTable(options as Parameters<typeof ExportTable>[0], res);
   }
 }

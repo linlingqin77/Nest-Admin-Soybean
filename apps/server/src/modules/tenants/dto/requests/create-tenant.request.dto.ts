@@ -25,7 +25,7 @@ export class CreateTenantRequestDto {
   @ApiProperty({ required: true, description: '企业名称' })
   @IsString()
   @Length(1, 100)
-  companyName: string;
+  companyName!:  string;
 
   @ApiProperty({ required: false, description: '统一社会信用代码' })
   @IsOptional()
@@ -80,11 +80,11 @@ export class CreateTenantRequestDto {
   @ApiProperty({ required: true, description: '管理员账号' })
   @IsString()
   @Length(1, 30)
-  username: string;
+  username!:  string;
 
   @ApiProperty({ required: true, description: '管理员密码' })
   @IsString()
   @IsStrongPassword()
   @Length(6, 20)
-  password: string;
+  password!:  string;
 }

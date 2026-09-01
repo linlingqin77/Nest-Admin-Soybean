@@ -19,10 +19,10 @@ export function fetchHistoryFindOne(id: CommonType.IdType) {
 
 /** 下载历史版本代码 */
 export function fetchHistoryDownload(id: CommonType.IdType) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: `/tool/gen/history/${id}/download`,
     method: 'get',
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

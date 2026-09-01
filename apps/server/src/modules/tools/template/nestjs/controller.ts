@@ -1,5 +1,21 @@
 import * as Lodash from 'lodash';
 
+interface ColumnInfo {
+  javaField?: string;
+  javaType?: string;
+}
+
+interface ControllerOptions {
+  BusinessName: string;
+  businessName: string;
+  functionName?: string;
+  moduleName: string;
+  primaryKey?: string;
+  tableComment?: string;
+  columns?: ColumnInfo[];
+  tenantAware?: boolean;
+}
+
 /**
  * NestJS Controller 模板生成器
  *
@@ -11,7 +27,7 @@ import * as Lodash from 'lodash';
  *
  * Requirements: 13.2, 13.4, 15.1-15.10
  */
-export const controllerTem = (options) => {
+export const controllerTem = (options: ControllerOptions) => {
   const {
     BusinessName,
     businessName,
@@ -29,7 +45,7 @@ export const controllerTem = (options) => {
   const primaryKeyType = getPrimaryKeyType(options);
 
   // 检查是否有租户字段
-  const hasTenantId = tenantAware || columns?.some((col) => col.javaField === 'tenantId');
+  const hasTenantId = tenantAware || columns?.some((col: ColumnInfo) => col.javaField === 'tenantId');
 
   return `import { Controller, Get, Post, Put, Body, Query, Param, Delete } from '@nestjs/common';
 import {
@@ -165,14 +181,14 @@ export class ${className}Controller {
 /**
  * 获取主键类型
  */
-const getPrimaryKeyType = (options) => {
+const getPrimaryKeyType = (options: ControllerOptions) => {
   const { primaryKey, columns } = options;
 
   if (!primaryKey || !columns) {
     return 'string';
   }
 
-  const primaryKeyColumn = columns.find((item) => item.javaField === primaryKey);
+  const primaryKeyColumn = columns.find((item: ColumnInfo) => item.javaField === primaryKey);
   if (!primaryKeyColumn) {
     return 'string';
   }

@@ -83,7 +83,7 @@ export class FeatureToggleService {
 
       return enabled;
     } catch (error) {
-      this.logger.error(`Failed to check feature ${feature} for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to check feature ${feature} for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
   }
@@ -134,7 +134,7 @@ export class FeatureToggleService {
 
       this.logger.log(`Feature ${feature} set to ${enabled} for tenant ${tenantId}`);
     } catch (error) {
-      this.logger.error(`Failed to set feature ${feature} for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to set feature ${feature} for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -180,7 +180,7 @@ export class FeatureToggleService {
 
       return features;
     } catch (error) {
-      this.logger.error(`Failed to get features for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to get features for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       return {};
     }
   }
@@ -216,7 +216,7 @@ export class FeatureToggleService {
         config: dbFeature.config ? JSON.parse(dbFeature.config) : undefined,
       };
     } catch (error) {
-      this.logger.error(`Failed to get feature config ${feature} for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to get feature config ${feature} for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       return null;
     }
   }
@@ -247,7 +247,7 @@ export class FeatureToggleService {
 
       this.logger.log(`Feature ${feature} deleted for tenant ${tenantId}`);
     } catch (error) {
-      this.logger.error(`Failed to delete feature ${feature} for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to delete feature ${feature} for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -267,7 +267,7 @@ export class FeatureToggleService {
       await this.redisService.del(cacheKey);
       this.logger.log(`Feature cache cleared for tenant ${tenantId}`);
     } catch (error) {
-      this.logger.error(`Failed to clear feature cache for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to clear feature cache for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -316,7 +316,7 @@ export class FeatureToggleService {
 
       this.logger.log(`Batch set ${Object.keys(features).length} features for tenant ${tenantId}`);
     } catch (error) {
-      this.logger.error(`Failed to batch set features for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to batch set features for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }

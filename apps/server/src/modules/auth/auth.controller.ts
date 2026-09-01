@@ -96,7 +96,7 @@ export class AuthController {
         }));
       } catch (error) {
         // 如果表不存在，返回默认租户
-        this.logger.warn('SysTenant table may not exist yet:', error.message);
+        this.logger.warn('SysTenant table may not exist yet:', error instanceof Error ? error.message : String(error));
         result.voList = [
           {
             tenantId: TenantContext.SUPER_TENANT_ID,

@@ -1,5 +1,12 @@
 import * as Lodash from 'lodash';
 
+interface ModuleOptions {
+  BusinessName: string;
+  businessName: string;
+  functionName?: string;
+  tableComment?: string;
+}
+
 /**
  * NestJS Module 模板生成器
  *
@@ -7,7 +14,7 @@ import * as Lodash from 'lodash';
  *
  * Requirements: 13.2
  */
-export const moduleTem = (options) => {
+export const moduleTem = (options: ModuleOptions) => {
   const { BusinessName, businessName, functionName, tableComment } = options;
   const className = Lodash.upperFirst(BusinessName);
 

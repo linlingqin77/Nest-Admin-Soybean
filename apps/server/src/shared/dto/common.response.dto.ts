@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 export class SuccessVo {
   @ApiProperty({ description: '操作是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -13,7 +13,7 @@ export class SuccessVo {
  */
 export class BooleanResultVo {
   @ApiProperty({ description: '结果值', example: true })
-  value: boolean;
+  value!:  boolean;
 }
 
 /**
@@ -21,7 +21,7 @@ export class BooleanResultVo {
  */
 export class DeleteResultVo {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 /**
@@ -29,7 +29,7 @@ export class DeleteResultVo {
  */
 export class CreateResultVo {
   @ApiProperty({ description: '创建的记录ID', example: 1 })
-  id: number;
+  id!:  number;
 }
 
 /**
@@ -37,8 +37,8 @@ export class CreateResultVo {
  */
 export class UpdateResultVo {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 
   @ApiProperty({ description: '影响的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }

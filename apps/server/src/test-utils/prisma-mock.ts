@@ -8,12 +8,12 @@ const createModelMock = () =>
   new Proxy(
     {},
     {
-      get(target, prop: string) {
+      get(target: Record<string, unknown>, prop: string) {
         if (!Object.prototype.hasOwnProperty.call(target, prop)) {
           // eslint-disable-next-line @typescript-eslint/ban-types
-          target[prop] = jest.fn();
+          (target as Record<string, unknown>)[prop] = jest.fn();
         }
-        return target[prop];
+        return (target as Record<string, unknown>)[prop];
       },
     },
   );
@@ -29,9 +29,9 @@ export const createPrismaMock = (): PrismaMock => {
   const handler: ProxyHandler<Record<string, any>> = {
     get(target, prop: string) {
       if (!Object.prototype.hasOwnProperty.call(target, prop)) {
-        target[prop] = createModelMock();
+        (target as Record<string, any>)[prop] = createModelMock();
       }
-      return target[prop];
+      return (target as Record<string, any>)[prop];
     },
   };
 

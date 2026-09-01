@@ -40,7 +40,7 @@ export class UserLoader extends BaseLoader<number, SysUser> {
     const users = await this.prisma.sysUser.findMany({
       where: {
         userId: { in: [...userIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -61,7 +61,7 @@ export class UserLoader extends BaseLoader<number, SysUser> {
     const users = await this.prisma.sysUser.findMany({
       where: {
         userId: { in: userIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -74,7 +74,7 @@ export class UserLoader extends BaseLoader<number, SysUser> {
         ? await this.prisma.sysDept.findMany({
             where: {
               deptId: { in: deptIds },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
           })
         : [];

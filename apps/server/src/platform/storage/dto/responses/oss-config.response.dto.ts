@@ -9,47 +9,47 @@ import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 export class OssConfigResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: 'OSS配置ID' })
-  ossConfigId: number;
+  ossConfigId!:  number;
 
   @Expose()
   @ApiProperty({ description: '配置名称' })
-  configKey: string;
+  configKey!:  string;
 
   @Expose()
   @ApiProperty({ description: 'accessKey' })
-  accessKey: string;
+  accessKey!:  string;
 
   @Expose()
   @ApiProperty({ description: '秘钥secretKey' })
-  secretKey: string;
+  secretKey!:  string;
 
   @Expose()
   @ApiProperty({ description: '桶名称' })
-  bucketName: string;
+  bucketName!:  string;
 
   @Expose()
   @ApiProperty({ description: '前缀' })
-  prefix: string;
+  prefix!:  string;
 
   @Expose()
   @ApiProperty({ description: '访问站点' })
-  endpoint: string;
+  endpoint!:  string;
 
   @Expose()
   @ApiProperty({ description: '自定义域名' })
-  domain: string;
+  domain!:  string;
 
   @Expose()
   @ApiProperty({ description: '是否https（Y=是,N=否）' })
-  isHttps: string;
+  isHttps!:  string;
 
   @Expose()
   @ApiProperty({ description: '域' })
-  region: string;
+  region!:  string;
 
   @Expose()
   @ApiProperty({ description: '桶权限类型' })
-  accessPolicy: string;
+  accessPolicy!:  string;
 
   @Expose()
   @ApiProperty({
@@ -58,15 +58,15 @@ export class OssConfigResponseDto extends BaseResponseDto {
     enumName: 'StatusEnum',
     enumSchema: StatusEnumSchema,
   })
-  status: string;
+  status!:  string;
 
   @Expose()
   @ApiProperty({ description: '扩展字段' })
-  ext1: string;
+  ext1!:  string;
 
   @Expose()
   @ApiProperty({ description: '备注' })
-  remark: string;
+  remark!:  string;
 }
 
 /**
@@ -74,8 +74,8 @@ export class OssConfigResponseDto extends BaseResponseDto {
  */
 export class OssConfigListResponseDto {
   @ApiProperty({ description: 'OSS配置列表', type: [OssConfigResponseDto] })
-  rows: OssConfigResponseDto[];
+  rows!:  OssConfigResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }

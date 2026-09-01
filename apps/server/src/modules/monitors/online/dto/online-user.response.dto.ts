@@ -11,7 +11,7 @@ import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 export class OnlineUserResponseDto {
   @ApiProperty({ description: '会话编号' })
   @Expose()
-  tokenId: string;
+  tokenId!:  string;
 
   @ApiPropertyOptional({ description: '部门名称' })
   @Expose()
@@ -19,11 +19,11 @@ export class OnlineUserResponseDto {
 
   @ApiProperty({ description: '用户名称' })
   @Expose()
-  userName: string;
+  userName!:  string;
 
   @ApiProperty({ description: '登录IP地址' })
   @Expose()
-  ipaddr: string;
+  ipaddr!:  string;
 
   @ApiPropertyOptional({ description: '登录地点' })
   @Expose()
@@ -40,7 +40,7 @@ export class OnlineUserResponseDto {
   @ApiProperty({ description: '登录时间', example: '2025-01-01 00:00:00' })
   @Expose()
   @DateFormat()
-  loginTime: string;
+  loginTime!:  string;
 
   @ApiPropertyOptional({ description: '设备类型' })
   @Expose()

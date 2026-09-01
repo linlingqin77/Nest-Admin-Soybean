@@ -6,12 +6,12 @@ export class CreateClientRequestDto {
   @ApiProperty({ required: true, description: '客户端key' })
   @IsString()
   @Length(1, 64)
-  clientKey: string;
+  clientKey!:  string;
 
   @ApiProperty({ required: true, description: '客户端秘钥' })
   @IsString()
   @Length(1, 255)
-  clientSecret: string;
+  clientSecret!:  string;
 
   @ApiProperty({ required: false, description: '授权类型列表', type: [String] })
   @IsOptional()

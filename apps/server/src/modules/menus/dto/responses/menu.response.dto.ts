@@ -9,31 +9,31 @@ import { StatusEnum, StatusEnumSchema, MenuTypeEnum, MenuTypeEnumSchema } from '
 export class MenuResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '菜单ID' })
-  menuId: number;
+  menuId!:  number;
 
   @Expose()
   @ApiProperty({ description: '菜单名称' })
-  menuName: string;
+  menuName!:  string;
 
   @Expose()
   @ApiProperty({ description: '父菜单ID' })
-  parentId: number;
+  parentId!:  number;
 
   @Expose()
   @ApiProperty({ description: '显示顺序' })
-  orderNum: number;
+  orderNum!:  number;
 
   @Expose()
   @ApiProperty({ description: '路由地址' })
-  path: string;
+  path!:  string;
 
   @Expose()
   @ApiProperty({ description: '组件路径' })
-  component: string;
+  component!:  string;
 
   @Expose()
   @ApiProperty({ description: '路由参数' })
-  query: string;
+  query!:  string;
 
   @Expose()
   @ApiProperty({
@@ -42,7 +42,7 @@ export class MenuResponseDto extends BaseResponseDto {
     enumName: 'StatusEnum',
     enumSchema: StatusEnumSchema,
   })
-  isFrame: string;
+  isFrame!:  string;
 
   @Expose()
   @ApiProperty({
@@ -51,7 +51,7 @@ export class MenuResponseDto extends BaseResponseDto {
     enumName: 'StatusEnum',
     enumSchema: StatusEnumSchema,
   })
-  isCache: string;
+  isCache!:  string;
 
   @Expose()
   @ApiProperty({
@@ -60,7 +60,7 @@ export class MenuResponseDto extends BaseResponseDto {
     enumName: 'MenuTypeEnum',
     enumSchema: MenuTypeEnumSchema,
   })
-  menuType: string;
+  menuType!:  string;
 
   @Expose()
   @ApiProperty({
@@ -69,19 +69,19 @@ export class MenuResponseDto extends BaseResponseDto {
     enumName: 'StatusEnum',
     enumSchema: StatusEnumSchema,
   })
-  visible: string;
+  visible!:  string;
 
   @Expose()
   @ApiProperty({ description: '菜单状态', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
-  status: string;
+  status!:  string;
 
   @Expose()
   @ApiProperty({ description: '权限标识' })
-  perms: string;
+  perms!:  string;
 
   @Expose()
   @ApiProperty({ description: '菜单图标' })
-  icon: string;
+  icon!:  string;
 }
 
 /**
@@ -90,11 +90,11 @@ export class MenuResponseDto extends BaseResponseDto {
 export class MenuTreeResponseDto {
   @Expose()
   @ApiProperty({ description: '菜单ID' })
-  id: number;
+  id!:  number;
 
   @Expose()
   @ApiProperty({ description: '菜单名称' })
-  label: string;
+  label!:  string;
 
   @Expose()
   @Type(() => MenuTreeResponseDto)
@@ -109,7 +109,7 @@ export class MenuListResponseDto {
   @Expose()
   @Type(() => MenuResponseDto)
   @ApiProperty({ description: '菜单列表', type: [MenuResponseDto] })
-  list: MenuResponseDto[];
+  list!:  MenuResponseDto[];
 }
 
 /**
@@ -118,15 +118,15 @@ export class MenuListResponseDto {
 export class RouterMetaResponseDto {
   @Expose()
   @ApiProperty({ description: '设置该路由在侧边栏和面包屑中展示的名字' })
-  title: string;
+  title!:  string;
 
   @Expose()
   @ApiProperty({ description: '设置该路由的图标' })
-  icon: string;
+  icon!:  string;
 
   @Expose()
   @ApiProperty({ description: '设置为true，则不会被 <keep-alive>缓存' })
-  noCache: boolean;
+  noCache!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '内链地址（http(s)://开头）', required: false })
@@ -139,15 +139,15 @@ export class RouterMetaResponseDto {
 export class RouterResponseDto {
   @Expose()
   @ApiProperty({ description: '路由名字' })
-  name: string;
+  name!:  string;
 
   @Expose()
   @ApiProperty({ description: '路由地址' })
-  path: string;
+  path!:  string;
 
   @Expose()
   @ApiProperty({ description: '是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现' })
-  hidden: boolean;
+  hidden!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击', required: false })
@@ -155,7 +155,7 @@ export class RouterResponseDto {
 
   @Expose()
   @ApiProperty({ description: '组件地址' })
-  component: string;
+  component!:  string;
 
   @Expose()
   @ApiProperty({ description: '路由参数', required: false })
@@ -171,7 +171,7 @@ export class RouterResponseDto {
   @Expose()
   @Type(() => RouterMetaResponseDto)
   @ApiProperty({ description: '其他元素', type: RouterMetaResponseDto })
-  meta: RouterMetaResponseDto;
+  meta!:  RouterMetaResponseDto;
 
   @Expose()
   @Type(() => RouterResponseDto)
@@ -186,7 +186,7 @@ export class MenuTreeSelectResponseDto {
   @Expose()
   @Type(() => MenuTreeResponseDto)
   @ApiProperty({ description: '菜单树数据', type: [MenuTreeResponseDto] })
-  menus: MenuTreeResponseDto[];
+  menus!:  MenuTreeResponseDto[];
 }
 
 /**
@@ -195,12 +195,12 @@ export class MenuTreeSelectResponseDto {
 export class RoleMenuTreeSelectResponseDto {
   @Expose()
   @ApiProperty({ description: '已选中的菜单ID列表', type: [Number] })
-  checkedKeys: number[];
+  checkedKeys!:  number[];
 
   @Expose()
   @Type(() => MenuTreeResponseDto)
   @ApiProperty({ description: '菜单树数据', type: [MenuTreeResponseDto] })
-  menus: MenuTreeResponseDto[];
+  menus!:  MenuTreeResponseDto[];
 }
 
 /**
@@ -209,7 +209,7 @@ export class RoleMenuTreeSelectResponseDto {
 export class CreateMenuResultResponseDto {
   @Expose()
   @ApiProperty({ description: '创建的菜单ID', example: 1 })
-  menuId: number;
+  menuId!:  number;
 }
 
 /**
@@ -218,7 +218,7 @@ export class CreateMenuResultResponseDto {
 export class UpdateMenuResultResponseDto {
   @Expose()
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -227,7 +227,7 @@ export class UpdateMenuResultResponseDto {
 export class DeleteMenuResultResponseDto {
   @Expose()
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 // 保持向后兼容的别名

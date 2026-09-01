@@ -34,7 +34,7 @@ export class ConfigService {
 
   async findAll(query: ListConfigDto) {
     const where: Prisma.SysConfigWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.configName) {
@@ -186,7 +186,7 @@ export class ConfigService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '参数管理',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '参数主键', dataIndex: 'configId' },
         { title: '参数名称', dataIndex: 'configName' },
@@ -227,7 +227,7 @@ export class ConfigService {
    */
   async loadingConfigCache() {
     const list = await this.configRepo.findMany({
-      where: { delFlag: DelFlagEnum.NORMAL },
+      where: { delFlag: '0' },
     });
     list.forEach((item) => {
       if (item.configKey) {

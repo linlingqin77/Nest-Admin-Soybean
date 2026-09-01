@@ -53,7 +53,7 @@ export class TaskService implements OnModuleInit {
         this.taskMap.set(metadata.name, method);
         this.logger.log(`注册任务: ${metadata.name}`);
       } catch (error) {
-        this.logger.error(`注册任务失败 ${metadata.name}: ${error.message}`);
+        this.logger.error(`注册任务失败 ${metadata.name}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   }
@@ -93,8 +93,8 @@ export class TaskService implements OnModuleInit {
     } catch (error) {
       status = StatusEnum.STOP;
       jobMessage = '执行失败';
-      exceptionInfo = error.message;
-      this.logger.error(`执行任务失败: ${error.message}`);
+      exceptionInfo = error instanceof Error ? error.message : String(error);
+      this.logger.error(`执行任务失败: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     } finally {
       // 记录日志
@@ -139,7 +139,7 @@ export class TaskService implements OnModuleInit {
       // 尝试解析为 JSON
       return Function(`return [${normalizedStr}]`)();
     } catch (error) {
-      this.logger.error(`解析参数失败: ${error.message}`);
+      this.logger.error(`解析参数失败: ${error instanceof Error ? error.message : String(error)}`);
       return [];
     }
   }
@@ -204,7 +204,7 @@ export class TaskService implements OnModuleInit {
       const tenants = await this.prisma.sysTenant.findMany({
         where: {
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
         select: {
           tenantId: true,
@@ -263,7 +263,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
 
       this.logger.log(`存储配额预警任务执行完成，共发送 ${alertCount} 条预警通知`);
     } catch (error) {
-      this.logger.error(`存储配额预警任务执行失败: ${error.message}`, error.stack);
+      this.logger.error(`存储配额预警任务执行失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw error;
     }
   }
@@ -285,7 +285,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
       const autoCleanConfig = await this.prisma.sysConfig.findFirst({
         where: {
           configKey: 'sys.file.autoCleanVersions',
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -298,7 +298,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
       const maxVersionsConfig = await this.prisma.sysConfig.findFirst({
         where: {
           configKey: 'sys.file.maxVersions',
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -310,7 +310,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
         by: ['parentFileId'],
         where: {
           parentFileId: { not: null },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
         _count: {
           uploadId: true,
@@ -328,12 +328,13 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
 
       for (const group of filesWithVersions) {
         const parentFileId = group.parentFileId;
+        if (!parentFileId) continue;
 
         // 查询该文件的所有版本
         const versions = await this.prisma.sysUpload.findMany({
           where: {
             OR: [{ uploadId: parentFileId }, { parentFileId: parentFileId }],
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
           },
           orderBy: { version: 'desc' },
         });
@@ -355,7 +356,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
               totalCleaned++;
               this.logger.log(`已清理版本: ${version.uploadId}, 文件: ${version.fileName}, 版本号: ${version.version}`);
             } catch (error) {
-              this.logger.error(`清理版本失败: ${version.uploadId}, 错误: ${error.message}`);
+              this.logger.error(`清理版本失败: ${version.uploadId}, 错误: ${error instanceof Error ? error.message : String(error)}`);
             }
           }
         }
@@ -363,7 +364,7 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
 
       this.logger.log(`清理旧文件版本任务执行完成，共清理 ${totalCleaned} 个旧版本`);
     } catch (error) {
-      this.logger.error(`清理旧文件版本任务执行失败: ${error.message}`, error.stack);
+      this.logger.error(`清理旧文件版本任务执行失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw error;
     }
   }

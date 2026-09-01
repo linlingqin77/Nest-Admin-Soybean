@@ -7,11 +7,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class AuthUserCancelRequestDto {
   @ApiProperty({ required: true, description: '角色ID' })
   @IsNumber()
-  roleId: number;
+  roleId!:  number;
 
   @ApiProperty({ required: true, description: '用户ID' })
   @IsNumber()
-  userId: number;
+  userId!:  number;
 }
 
 /**
@@ -20,11 +20,11 @@ export class AuthUserCancelRequestDto {
 export class AuthUserCancelAllRequestDto {
   @ApiProperty({ required: true, description: '角色ID' })
   @IsNumber()
-  roleId: number;
+  roleId!:  number;
 
   @ApiProperty({ required: true, description: '用户ID列表' })
   @IsString()
-  userIds: string;
+  userIds!:  string;
 }
 
 /**
@@ -33,9 +33,9 @@ export class AuthUserCancelAllRequestDto {
 export class AuthUserSelectAllRequestDto {
   @ApiProperty({ required: true, description: '角色ID' })
   @IsNumber()
-  roleId: number;
+  roleId!:  number;
 
   @ApiProperty({ required: true, description: '用户ID列表' })
   @IsString()
-  userIds: string;
+  userIds!:  string;
 }

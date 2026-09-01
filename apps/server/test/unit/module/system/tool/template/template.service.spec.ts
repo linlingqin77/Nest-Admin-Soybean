@@ -435,7 +435,7 @@ describe('TemplateService', () => {
 
     it('应该处理对象类型的值', () => {
       const template = 'platform/config: ${platform/config}';
-      const context = { platform/config: { key: 'value' } };
+      const context = { mockConfig: { key: 'value' } };
 
       const result = service.render(template, context);
 

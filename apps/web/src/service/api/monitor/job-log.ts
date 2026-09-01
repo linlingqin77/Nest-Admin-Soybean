@@ -27,10 +27,10 @@ export function fetchJobLogClean() {
 
 /** 导出调度日志 */
 export function fetchJobLogExport(params?: Api.Monitor.JobLogSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/monitor/jobLog/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

@@ -188,7 +188,7 @@ export default () => {
 
     return validatedConfig;
   } catch (error) {
-    logger.error('Configuration validation failed:', error.message);
+    logger.error('Configuration validation failed:', error instanceof Error ? error.message : String(error));
     // 配置验证失败时抛出异常，阻止应用启动
     throw error;
   }

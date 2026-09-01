@@ -11,15 +11,15 @@ import { DateFormat } from 'src/shared/decorators';
 export class RoleInfoResponseDto {
   @Expose()
   @ApiProperty({ description: '角色ID', example: 1 })
-  roleId: number;
+  roleId!:  number;
 
   @Expose()
   @ApiProperty({ description: '角色名称', example: '超级管理员' })
-  roleName: string;
+  roleName!:  string;
 
   @Expose()
   @ApiProperty({ description: '角色权限字符串', example: 'admin' })
-  roleKey: string;
+  roleKey!:  string;
 }
 
 /**
@@ -30,11 +30,11 @@ export class RoleInfoResponseDto {
 export class DeptInfoResponseDto {
   @Expose()
   @ApiProperty({ description: '部门ID', example: 100 })
-  deptId: number;
+  deptId!:  number;
 
   @Expose()
   @ApiProperty({ description: '部门名称', example: '研发部门' })
-  deptName: string;
+  deptName!:  string;
 }
 
 /**
@@ -45,31 +45,31 @@ export class DeptInfoResponseDto {
 export class UserProfileResponseDto {
   @Expose()
   @ApiProperty({ description: '用户ID', example: 1 })
-  userId: number;
+  userId!:  number;
 
   @Expose()
   @ApiProperty({ description: '部门ID', example: 100 })
-  deptId: number;
+  deptId!:  number;
 
   @Expose()
   @ApiProperty({ description: '用户账号', example: 'admin' })
-  userName: string;
+  userName!:  string;
 
   @Expose()
   @ApiProperty({ description: '用户昵称', example: '管理员' })
-  nickName: string;
+  nickName!:  string;
 
   @Expose()
   @ApiProperty({ description: '用户类型', example: '00' })
-  userType: string;
+  userType!:  string;
 
   @Expose()
   @ApiProperty({ description: '用户邮箱', example: 'admin@example.com' })
-  email: string;
+  email!:  string;
 
   @Expose()
   @ApiProperty({ description: '手机号码', example: '13800138000' })
-  phonenumber: string;
+  phonenumber!:  string;
 
   @Expose()
   @ApiProperty({
@@ -79,11 +79,11 @@ export class UserProfileResponseDto {
     enumSchema: SexEnumSchema,
     example: '0',
   })
-  sex: string;
+  sex!:  string;
 
   @Expose()
   @ApiProperty({ description: '头像地址', example: '/profile/avatar/2024/01/01/avatar.png' })
-  avatar: string;
+  avatar!:  string;
 
   @Expose()
   @ApiProperty({
@@ -93,26 +93,26 @@ export class UserProfileResponseDto {
     enumSchema: StatusEnumSchema,
     example: '0',
   })
-  status: string;
+  status!:  string;
 
   @Expose()
   @ApiProperty({ description: '最后登录IP', example: '127.0.0.1' })
-  loginIp: string;
+  loginIp!:  string;
 
   @Expose()
   @ApiProperty({ description: '最后登录时间', example: '2025-01-01 12:00:00' })
   @DateFormat()
-  loginDate: string;
+  loginDate!:  string;
 
   @Expose()
   @ApiProperty({ description: '创建时间', example: '2025-01-01 00:00:00' })
   @DateFormat()
-  createTime: string;
+  createTime!:  string;
 
   @Expose()
   @ApiProperty({ description: '更新时间', example: '2025-01-01 12:00:00' })
   @DateFormat()
-  updateTime: string;
+  updateTime!:  string;
 
   @Expose()
   @ApiProperty({ description: '部门信息', required: false, type: DeptInfoResponseDto })
@@ -149,13 +149,13 @@ export class GetInfoResponseDto {
   @Expose()
   @ApiProperty({ description: '用户信息', type: UserProfileResponseDto })
   @Type(() => UserProfileResponseDto)
-  user: UserProfileResponseDto;
+  user!:  UserProfileResponseDto;
 
   @Expose()
   @ApiProperty({ description: '角色权限字符串集合', type: [String], example: ['admin', 'common'] })
-  roles: string[];
+  roles!:  string[];
 
   @Expose()
   @ApiProperty({ description: '菜单权限集合', type: [String], example: ['*:*:*', 'system:user:list'] })
-  permissions: string[];
+  permissions!:  string[];
 }

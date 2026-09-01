@@ -9,31 +9,31 @@ import { DateFormat } from 'src/shared/decorators';
 export class NotifyMessageResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '消息ID' })
   @Expose()
-  id: string;
+  id!:  string;
 
   @ApiProperty({ description: '用户ID' })
   @Expose()
-  userId: number;
+  userId!:  number;
 
   @ApiProperty({ description: '用户类型' })
   @Expose()
-  userType: number;
+  userType!:  number;
 
   @ApiProperty({ description: '模板ID' })
   @Expose()
-  templateId: number;
+  templateId!:  number;
 
   @ApiProperty({ description: '模板编码' })
   @Expose()
-  templateCode: string;
+  templateCode!:  string;
 
   @ApiProperty({ description: '模板发送人名称' })
   @Expose()
-  templateNickname: string;
+  templateNickname!:  string;
 
   @ApiProperty({ description: '模板内容' })
   @Expose()
-  templateContent: string;
+  templateContent!:  string;
 
   @ApiPropertyOptional({ description: '模板参数' })
   @Expose()
@@ -41,7 +41,7 @@ export class NotifyMessageResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '是否已读' })
   @Expose()
-  readStatus: boolean;
+  readStatus!:  boolean;
 
   @ApiPropertyOptional({ description: '阅读时间' })
   @Expose()
@@ -54,5 +54,5 @@ export class NotifyMessageResponseDto extends BaseResponseDto {
  */
 export class UnreadCountResponseDto {
   @ApiProperty({ description: '未读计数' })
-  count: number;
+  count!:  number;
 }

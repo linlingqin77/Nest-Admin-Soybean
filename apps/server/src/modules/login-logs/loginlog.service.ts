@@ -28,7 +28,7 @@ export class LoginlogService {
         os: createLoginlogDto.os ?? '',
         msg: createLoginlogDto.msg ?? '',
         status: createLoginlogDto.status ?? '0',
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     return Result.ok(data);
@@ -41,7 +41,7 @@ export class LoginlogService {
    */
   async findAll(query: ListLoginlogRequestDto) {
     const where: Prisma.SysLogininforWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.ipaddr) {
@@ -134,7 +134,7 @@ export class LoginlogService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '登录日志',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '序号', dataIndex: 'infoId' },
         { title: '用户账号', dataIndex: 'userName' },

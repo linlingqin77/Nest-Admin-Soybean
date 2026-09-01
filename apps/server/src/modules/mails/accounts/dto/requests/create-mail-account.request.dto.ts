@@ -6,28 +6,28 @@ export class CreateMailAccountRequestDto {
   @ApiProperty({ description: '邮箱地址', example: 'admin@example.com' })
   @IsEmail()
   @Length(1, 255)
-  mail: string;
+  mail!:  string;
 
   @ApiProperty({ description: '用户名', example: 'admin@example.com' })
   @IsString()
   @Length(1, 255)
-  username: string;
+  username!:  string;
 
   @ApiProperty({ description: '密码', example: 'password123' })
   @IsString()
   @Length(1, 255)
-  password: string;
+  password!:  string;
 
   @ApiProperty({ description: 'SMTP主机', example: 'smtp.example.com' })
   @IsString()
   @Length(1, 255)
-  host: string;
+  host!:  string;
 
   @ApiProperty({ description: 'SMTP端口', example: 465 })
   @IsNumber()
   @Min(1)
   @Max(65535)
-  port: number;
+  port!:  number;
 
   @ApiPropertyOptional({ description: '是否启用SSL', default: false })
   @IsOptional()

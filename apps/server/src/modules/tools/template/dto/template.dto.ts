@@ -43,7 +43,7 @@ export class CreateTemplateGroupDto {
   @IsNotEmpty({ message: '模板组名称不能为空' })
   @MinLength(1, { message: '模板组名称至少1个字符' })
   @MaxLength(100, { message: '模板组名称最多100个字符' })
-  name: string;
+  name!:  string;
 
   @ApiPropertyOptional({
     description: '模板组描述',
@@ -159,7 +159,7 @@ export class CreateTemplateDto {
   })
   @Type(() => Number)
   @IsInt({ message: '模板组ID必须是整数' })
-  groupId: number;
+  groupId!:  number;
 
   @ApiProperty({
     description: '模板名称',
@@ -171,7 +171,7 @@ export class CreateTemplateDto {
   @IsNotEmpty({ message: '模板名称不能为空' })
   @MinLength(1, { message: '模板名称至少1个字符' })
   @MaxLength(100, { message: '模板名称最多100个字符' })
-  name: string;
+  name!:  string;
 
   @ApiProperty({
     description: '输出文件名模板',
@@ -181,7 +181,7 @@ export class CreateTemplateDto {
   @IsString()
   @IsNotEmpty({ message: '输出文件名不能为空' })
   @MaxLength(200, { message: '输出文件名最多200个字符' })
-  fileName: string;
+  fileName!:  string;
 
   @ApiProperty({
     description: '输出路径模板',
@@ -191,7 +191,7 @@ export class CreateTemplateDto {
   @IsString()
   @IsNotEmpty({ message: '输出路径不能为空' })
   @MaxLength(500, { message: '输出路径最多500个字符' })
-  filePath: string;
+  filePath!:  string;
 
   @ApiProperty({
     description: '模板内容',
@@ -200,7 +200,7 @@ export class CreateTemplateDto {
   })
   @IsString()
   @IsNotEmpty({ message: '模板内容不能为空' })
-  content: string;
+  content!:  string;
 
   @ApiProperty({
     description: '模板语言',
@@ -208,7 +208,7 @@ export class CreateTemplateDto {
     example: TemplateLanguage.TYPESCRIPT,
   })
   @IsEnum(TemplateLanguage, { message: '模板语言必须是 typescript、vue 或 sql' })
-  language: TemplateLanguage;
+  language!:  TemplateLanguage;
 
   @ApiPropertyOptional({
     description: '排序号',
@@ -356,7 +356,7 @@ export class ValidateTemplateDto {
   })
   @IsString()
   @IsNotEmpty({ message: '模板内容不能为空' })
-  content: string;
+  content!:  string;
 }
 
 /**
@@ -369,26 +369,26 @@ export class ImportTemplateItemDto {
   @ApiProperty({ description: '模板名称' })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!:  string;
 
   @ApiProperty({ description: '输出文件名模板' })
   @IsString()
   @IsNotEmpty()
-  fileName: string;
+  fileName!:  string;
 
   @ApiProperty({ description: '输出路径模板' })
   @IsString()
   @IsNotEmpty()
-  filePath: string;
+  filePath!:  string;
 
   @ApiProperty({ description: '模板内容' })
   @IsString()
   @IsNotEmpty()
-  content: string;
+  content!:  string;
 
   @ApiProperty({ description: '模板语言', enum: TemplateLanguage })
   @IsEnum(TemplateLanguage)
-  language: TemplateLanguage;
+  language!:  TemplateLanguage;
 
   @ApiPropertyOptional({ description: '排序号' })
   @IsOptional()
@@ -409,7 +409,7 @@ export class ImportTemplateGroupDto {
   })
   @IsString()
   @IsNotEmpty({ message: '模板组名称不能为空' })
-  name: string;
+  name!:  string;
 
   @ApiPropertyOptional({
     description: '模板组描述',
@@ -427,7 +427,7 @@ export class ImportTemplateGroupDto {
   @ArrayMinSize(1, { message: '至少需要一个模板' })
   @ValidateNested({ each: true })
   @Type(() => ImportTemplateItemDto)
-  templates: ImportTemplateItemDto[];
+  templates!:  ImportTemplateItemDto[];
 }
 
 /**
@@ -438,34 +438,34 @@ export class ImportTemplateGroupDto {
  */
 export class TemplateResponseDto {
   @ApiProperty({ description: '模板ID', example: 1 })
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '模板组ID', example: 1 })
-  groupId: number;
+  groupId!:  number;
 
   @ApiProperty({ description: '模板名称', example: 'Controller 模板' })
-  name: string;
+  name!:  string;
 
   @ApiProperty({ description: '输出文件名模板', example: '${businessName}.controller.ts' })
-  fileName: string;
+  fileName!:  string;
 
   @ApiProperty({ description: '输出路径模板', example: 'server/src/modules/${moduleName}/${businessName}' })
-  filePath: string;
+  filePath!:  string;
 
   @ApiProperty({ description: '模板内容' })
-  content: string;
+  content!:  string;
 
   @ApiProperty({ description: '模板语言', enum: TemplateLanguage, example: TemplateLanguage.TYPESCRIPT })
-  language: string;
+  language!:  string;
 
   @ApiProperty({ description: '排序号', example: 0 })
-  sort: number;
+  sort!:  number;
 
   @ApiProperty({ description: '状态（0正常 1停用）', example: '0' })
-  status: string;
+  status!:  string;
 
   @ApiProperty({ description: '创建时间', example: '2024-01-01T00:00:00.000Z' })
-  createTime: Date;
+  createTime!:  Date;
 
   @ApiPropertyOptional({ description: '更新时间', example: '2024-01-01T00:00:00.000Z' })
   updateTime?: Date;
@@ -479,25 +479,25 @@ export class TemplateResponseDto {
  */
 export class TemplateGroupResponseDto {
   @ApiProperty({ description: '模板组ID', example: 1 })
-  id: number;
+  id!:  number;
 
   @ApiPropertyOptional({ description: '租户ID（null表示系统级）', example: '000000' })
   tenantId?: string | null;
 
   @ApiProperty({ description: '模板组名称', example: 'NestJS + Vue3 标准模板' })
-  name: string;
+  name!:  string;
 
   @ApiPropertyOptional({ description: '模板组描述', example: '适用于 NestJS 后端和 Vue3 前端的标准代码生成模板' })
   description?: string;
 
   @ApiProperty({ description: '是否为默认模板组', example: false })
-  isDefault: boolean;
+  isDefault!:  boolean;
 
   @ApiProperty({ description: '状态（0正常 1停用）', example: '0' })
-  status: string;
+  status!:  string;
 
   @ApiProperty({ description: '创建时间', example: '2024-01-01T00:00:00.000Z' })
-  createTime: Date;
+  createTime!:  Date;
 
   @ApiPropertyOptional({ description: '更新时间', example: '2024-01-01T00:00:00.000Z' })
   updateTime?: Date;
@@ -514,19 +514,19 @@ export class TemplateGroupResponseDto {
  */
 export class ExportTemplateGroupDto {
   @ApiProperty({ description: '模板组名称' })
-  name: string;
+  name!:  string;
 
   @ApiPropertyOptional({ description: '模板组描述' })
   description?: string;
 
   @ApiProperty({ description: '导出时间' })
-  exportTime: string;
+  exportTime!:  string;
 
   @ApiProperty({ description: '版本号' })
-  version: string;
+  version!:  string;
 
   @ApiProperty({ description: '模板列表', type: [ImportTemplateItemDto] })
-  templates: ImportTemplateItemDto[];
+  templates!:  ImportTemplateItemDto[];
 }
 
 /**
@@ -537,19 +537,19 @@ export class ExportTemplateGroupDto {
  */
 export class TemplateContextDto {
   @ApiProperty({ description: '表名', example: 'sys_user' })
-  tableName: string;
+  tableName!:  string;
 
   @ApiProperty({ description: '类名', example: 'SysUser' })
-  className: string;
+  className!:  string;
 
   @ApiProperty({ description: '业务名', example: 'user' })
-  businessName: string;
+  businessName!:  string;
 
   @ApiProperty({ description: '模块名', example: 'system' })
-  moduleName: string;
+  moduleName!:  string;
 
   @ApiProperty({ description: '功能名', example: '用户管理' })
-  functionName: string;
+  functionName!:  string;
 
   @ApiPropertyOptional({ description: '作者', example: 'admin' })
   author?: string;

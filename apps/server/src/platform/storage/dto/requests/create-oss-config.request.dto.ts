@@ -6,22 +6,22 @@ export class CreateOssConfigRequestDto {
   @ApiProperty({ required: true, description: '配置名称' })
   @IsString()
   @Length(1, 100)
-  configKey: string;
+  configKey!:  string;
 
   @ApiProperty({ required: true, description: 'accessKey' })
   @IsString()
   @Length(1, 255)
-  accessKey: string;
+  accessKey!:  string;
 
   @ApiProperty({ required: true, description: '秘钥secretKey' })
   @IsString()
   @Length(1, 255)
-  secretKey: string;
+  secretKey!:  string;
 
   @ApiProperty({ required: true, description: '桶名称' })
   @IsString()
   @Length(1, 255)
-  bucketName: string;
+  bucketName!:  string;
 
   @ApiProperty({ required: false, description: '前缀' })
   @IsOptional()
@@ -32,7 +32,7 @@ export class CreateOssConfigRequestDto {
   @ApiProperty({ required: true, description: '访问站点' })
   @IsString()
   @Length(1, 255)
-  endpoint: string;
+  endpoint!:  string;
 
   @ApiProperty({ required: false, description: '自定义域名' })
   @IsOptional()

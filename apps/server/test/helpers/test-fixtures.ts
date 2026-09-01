@@ -335,7 +335,7 @@ export class TestFixtures {
    * 创建测试配置
    */
   async createTestConfig(data: Partial<CreateConfigDto> = {}): Promise<any> {
-    const platform/config = await this.prisma.sysConfig.create({
+    const mockConfig = await this.prisma.sysConfig.create({
       data: {
         tenantId: data.tenantId || this.defaultTenantId,
         configName: data.configName || `测试配置_${Date.now()}`,
@@ -347,8 +347,8 @@ export class TestFixtures {
       },
     });
 
-    this.createdConfigs.push(platform/config.configId);
-    return platform/config;
+    this.createdConfigs.push(mockConfig.configId);
+    return mockConfig;
   }
 
   /**

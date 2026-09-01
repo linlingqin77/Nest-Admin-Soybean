@@ -183,7 +183,7 @@ export class QueryBuilder<T extends Record<string, unknown>> {
  * 快捷方法：创建带软删除过滤的查询条件
  */
 export function createWhereWithDelFlag<T extends Record<string, unknown>>(additionalConditions?: Partial<T>): T {
-  return QueryBuilder.create<T>({ delFlag: '0', ...additionalConditions } as Partial<T>).build();
+  return QueryBuilder.create<T>({ delFlag: '0', ...additionalConditions } as unknown as Partial<T>).build();
 }
 
 /**

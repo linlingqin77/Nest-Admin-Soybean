@@ -13,11 +13,11 @@ import { StatusEnum, StatusEnumSchema, NoticeTypeEnum, NoticeTypeEnumSchema } fr
 export class NoticeResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '公告ID' })
-  noticeId: number;
+  noticeId!:  number;
 
   @Expose()
   @ApiProperty({ description: '公告标题' })
-  noticeTitle: string;
+  noticeTitle!:  string;
 
   @Expose()
   @ApiPropertyOptional({
@@ -49,10 +49,10 @@ export class NoticeResponseDto extends BaseResponseDto {
  */
 export class NoticeListResponseDto {
   @ApiProperty({ description: '公告列表', type: [NoticeResponseDto] })
-  rows: NoticeResponseDto[];
+  rows!:  NoticeResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -60,7 +60,7 @@ export class NoticeListResponseDto {
  */
 export class CreateNoticeResultResponseDto {
   @ApiProperty({ description: '创建的公告ID', example: 1 })
-  noticeId: number;
+  noticeId!:  number;
 }
 
 /**
@@ -68,7 +68,7 @@ export class CreateNoticeResultResponseDto {
  */
 export class UpdateNoticeResultResponseDto {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -76,5 +76,5 @@ export class UpdateNoticeResultResponseDto {
  */
 export class DeleteNoticeResultResponseDto {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }

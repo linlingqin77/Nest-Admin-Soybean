@@ -9,10 +9,10 @@ export class UpdateTenantRequestDto extends PartialType(
   @ApiProperty({ required: true, description: '租户ID' })
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  id!:  number;
 
   @ApiProperty({ required: true, description: '租户编号' })
   @IsNotEmpty()
   @IsNotEmpty()
-  tenantId: string;
+  tenantId!:  string;
 }

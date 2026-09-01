@@ -209,7 +209,7 @@ export class CacheWarmupService implements OnModuleInit, OnModuleDestroy {
 
       this.logger.log(`Warmup task "${task.name}" completed in ${duration}ms, cached to key: ${key}`);
     } catch (error) {
-      this.logger.error(`Warmup task "${task.name}" failed: ${error.message}`);
+      this.logger.error(`Warmup task "${task.name}" failed: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -255,7 +255,7 @@ export class CacheWarmupService implements OnModuleInit, OnModuleDestroy {
         await this.executeTask(task);
         this.logger.debug(`Refreshed warmup task: ${task.name}`);
       } catch (error) {
-        this.logger.error(`Failed to refresh warmup task "${task.name}": ${error.message}`);
+        this.logger.error(`Failed to refresh warmup task "${task.name}": ${error instanceof Error ? error.message : String(error)}`);
       }
     }, task.refreshInterval);
 

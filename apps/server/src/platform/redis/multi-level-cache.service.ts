@@ -95,7 +95,7 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
       this.l1Cache.close();
       this.logger.log('L1 cache (node-cache) closed successfully.');
     } catch (error) {
-      this.logger.error(`Error closing L1 cache: ${error.message}`);
+      this.logger.error(`Error closing L1 cache: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -141,7 +141,7 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
         }
         this.l2Misses++;
       } catch (error) {
-        this.logger.warn(`L2 cache error for key ${key}: ${error.message}`);
+        this.logger.warn(`L2 cache error for key ${key}: ${error instanceof Error ? error.message : String(error)}`);
         this.l2Misses++;
       }
     }
@@ -178,10 +178,10 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
     if (enableL2) {
       try {
         // Redis TTL 使用毫秒
-        await this.redisService.set(key, value, effectiveL2Ttl * 1000);
+        await this.redisService.set(key, value as string, effectiveL2Ttl * 1000);
         this.logger.debug(`Set L2 cache for key: ${key}, ttl: ${effectiveL2Ttl}s`);
       } catch (error) {
-        this.logger.warn(`Failed to set L2 cache for key ${key}: ${error.message}`);
+        this.logger.warn(`Failed to set L2 cache for key ${key}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   }
@@ -207,7 +207,7 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
       await this.redisService.del(keys);
       this.logger.debug(`Deleted L2 cache for keys: ${keys.join(', ')}`);
     } catch (error) {
-      this.logger.warn(`Failed to delete L2 cache for keys ${keys.join(', ')}: ${error.message}`);
+      this.logger.warn(`Failed to delete L2 cache for keys ${keys.join(', ')}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

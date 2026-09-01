@@ -40,7 +40,7 @@ export class PostLoader extends BaseLoader<number, SysPost> {
     const posts = await this.prisma.sysPost.findMany({
       where: {
         postId: { in: [...postIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -78,7 +78,7 @@ export class PostLoader extends BaseLoader<number, SysPost> {
         ? await this.prisma.sysPost.findMany({
             where: {
               postId: { in: postIds },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
             orderBy: { postSort: 'asc' },
           })
@@ -114,7 +114,7 @@ export class PostLoader extends BaseLoader<number, SysPost> {
     const posts = await this.prisma.sysPost.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { postSort: 'asc' },
     });
@@ -206,7 +206,7 @@ export class PostLoader extends BaseLoader<number, SysPost> {
     const posts = await this.prisma.sysPost.findMany({
       where: {
         postCode: { in: postCodes },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 

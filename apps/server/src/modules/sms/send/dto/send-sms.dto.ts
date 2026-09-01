@@ -6,12 +6,12 @@ export class SendSmsDto {
   @IsString()
   @Length(11, 11)
   @Matches(/^1[3-9]\d{9}$/, { message: '手机号格式不正确' })
-  mobile: string;
+  mobile!:  string;
 
   @ApiProperty({ description: '模板编码', example: 'SMS_LOGIN_CODE' })
   @IsString()
   @Length(1, 100)
-  templateCode: string;
+  templateCode!:  string;
 
   @ApiPropertyOptional({
     description: '模板参数',
@@ -29,12 +29,12 @@ export class BatchSendSmsDto {
     type: [String],
   })
   @IsString({ each: true })
-  mobiles: string[];
+  mobiles!:  string[];
 
   @ApiProperty({ description: '模板编码', example: 'SMS_LOGIN_CODE' })
   @IsString()
   @Length(1, 100)
-  templateCode: string;
+  templateCode!:  string;
 
   @ApiPropertyOptional({
     description: '模板参数',

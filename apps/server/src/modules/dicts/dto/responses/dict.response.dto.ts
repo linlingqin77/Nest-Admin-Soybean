@@ -12,15 +12,15 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class DictTypeResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '字典类型ID' })
-  dictId: number;
+  dictId!:  number;
 
   @Expose()
   @ApiProperty({ description: '字典名称' })
-  dictName: string;
+  dictName!:  string;
 
   @Expose()
   @ApiProperty({ description: '字典类型' })
-  dictType: string;
+  dictType!:  string;
 
   @Expose()
   @ApiPropertyOptional({ description: '状态（0正常 1停用）' })
@@ -34,10 +34,10 @@ export class DictTypeResponseDto extends BaseResponseDto {
  */
 export class DictTypeListResponseDto {
   @ApiProperty({ description: '字典类型列表', type: [DictTypeResponseDto] })
-  rows: DictTypeResponseDto[];
+  rows!:  DictTypeResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -50,7 +50,7 @@ export class DictTypeListResponseDto {
 export class DictDataResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '字典数据ID' })
-  dictCode: number;
+  dictCode!:  number;
 
   @Expose()
   @ApiPropertyOptional({ description: '字典排序' })
@@ -58,15 +58,15 @@ export class DictDataResponseDto extends BaseResponseDto {
 
   @Expose()
   @ApiProperty({ description: '字典标签' })
-  dictLabel: string;
+  dictLabel!:  string;
 
   @Expose()
   @ApiProperty({ description: '字典键值' })
-  dictValue: string;
+  dictValue!:  string;
 
   @Expose()
   @ApiProperty({ description: '字典类型' })
-  dictType: string;
+  dictType!:  string;
 
   @Expose()
   @ApiPropertyOptional({ description: '样式属性' })
@@ -92,10 +92,10 @@ export class DictDataResponseDto extends BaseResponseDto {
  */
 export class DictDataListResponseDto {
   @ApiProperty({ description: '字典数据列表', type: [DictDataResponseDto] })
-  rows: DictDataResponseDto[];
+  rows!:  DictDataResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -104,19 +104,19 @@ export class DictDataListResponseDto {
 export class DictOptionResponseDto {
   @Expose()
   @ApiProperty({ description: '字典标签' })
-  dictLabel: string;
+  dictLabel!:  string;
 
   @Expose()
   @ApiProperty({ description: '字典值' })
-  dictValue: string;
+  dictValue!:  string;
 
   @Expose()
   @ApiProperty({ description: '样式类名' })
-  cssClass: string;
+  cssClass!:  string;
 
   @Expose()
   @ApiProperty({ description: '列表样式' })
-  listClass: string;
+  listClass!:  string;
 }
 
 /**
@@ -125,7 +125,7 @@ export class DictOptionResponseDto {
 export class CreateDictTypeResultResponseDto {
   @Expose()
   @ApiProperty({ description: '创建的字典类型ID', example: 1 })
-  dictId: number;
+  dictId!:  number;
 }
 
 /**
@@ -134,7 +134,7 @@ export class CreateDictTypeResultResponseDto {
 export class UpdateDictTypeResultResponseDto {
   @Expose()
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -143,7 +143,7 @@ export class UpdateDictTypeResultResponseDto {
 export class DeleteDictTypeResultResponseDto {
   @Expose()
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 /**
@@ -152,7 +152,7 @@ export class DeleteDictTypeResultResponseDto {
 export class CreateDictDataResultResponseDto {
   @Expose()
   @ApiProperty({ description: '创建的字典数据ID', example: 1 })
-  dictCode: number;
+  dictCode!:  number;
 }
 
 /**
@@ -161,7 +161,7 @@ export class CreateDictDataResultResponseDto {
 export class UpdateDictDataResultResponseDto {
   @Expose()
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -170,7 +170,7 @@ export class UpdateDictDataResultResponseDto {
 export class DeleteDictDataResultResponseDto {
   @Expose()
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 /**
@@ -179,5 +179,5 @@ export class DeleteDictDataResultResponseDto {
 export class RefreshCacheResultResponseDto {
   @Expose()
   @ApiProperty({ description: '刷新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }

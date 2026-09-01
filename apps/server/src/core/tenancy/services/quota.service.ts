@@ -320,7 +320,7 @@ export class TenantQuotaService {
 
       this.logger.debug(`Incremented ${resource} usage for tenant ${tenantId} by ${amount}`);
     } catch (error) {
-      this.logger.error(`Failed to increment ${resource} usage for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to increment ${resource} usage for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -461,7 +461,7 @@ export class TenantQuotaService {
 
       this.logger.debug(`Updated storage usage for tenant ${tenantId} to ${storageMB} MB`);
     } catch (error) {
-      this.logger.error(`Failed to update storage usage for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to update storage usage for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -504,7 +504,7 @@ export class TenantQuotaService {
 
       this.logger.debug(`Synced user count for tenant ${tenantId}: ${userCount}`);
     } catch (error) {
-      this.logger.error(`Failed to sync user count for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to sync user count for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -530,7 +530,7 @@ export class TenantQuotaService {
 
       this.logger.debug(`Cleared quota cache for tenant ${tenantId}`);
     } catch (error) {
-      this.logger.error(`Failed to clear quota cache for tenant ${tenantId}: ${error.message}`);
+      this.logger.error(`Failed to clear quota cache for tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

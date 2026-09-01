@@ -67,7 +67,7 @@ export class UserController {
   @Get('getInfo')
   getInfo(@User() user: UserDto) {
     // 移除敏感字段
-    const safeUser = { ...user.user };
+    const safeUser: any = { ...user.user };
     delete safeUser.password;
 
     // 返回 Soybean 前端期望的格式
@@ -226,7 +226,7 @@ export class UserController {
   })
   @RequireRole('admin')
   @Put('authRole')
-  updateAuthRole(@Query() query) {
+  updateAuthRole(@Query() query: { userId: number; roleIds: number | string }) {
     return this.userService.updateAuthRole(query);
   }
 

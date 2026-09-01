@@ -1,6 +1,29 @@
 import * as Lodash from 'lodash';
 import { GenConstants } from 'src/shared/constants/gen.constant';
 
+interface ColumnInfo {
+  javaField?: string;
+  javaType?: string;
+  columnComment?: string;
+  columnType?: string;
+  isRequired?: string;
+  isPk?: string;
+  isInsert?: string;
+  isEdit?: string;
+  isQuery?: string;
+  isList?: string;
+  queryType?: string;
+  dictType?: string;
+}
+
+interface DtoOptions {
+  BusinessName: string;
+  functionName?: string;
+  tableComment?: string;
+  columns?: ColumnInfo[];
+  primaryKey?: string;
+}
+
 /**
  * NestJS DTO 模板生成器
  *
@@ -12,7 +35,7 @@ import { GenConstants } from 'src/shared/constants/gen.constant';
  *
  * Requirements: 13.5, 13.6, 15.4, 15.5, 15.6
  */
-export const dtoTem = (options) => {
+export const dtoTem = (options: DtoOptions) => {
   const { BusinessName, functionName, tableComment, columns, primaryKey } = options;
   const className = Lodash.upperFirst(BusinessName);
 
@@ -97,16 +120,16 @@ export class ${className}ListResponseDto {
 `;
 };
 
-const generateBaseFields = (options) => {
+const generateBaseFields = (options: DtoOptions) => {
   const { columns } = options;
   if (!columns) return '';
   return columns
-    .map((column) => {
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, isRequired, columnComment, columnType, queryType, dictType } = column;
       const tsType = getTsType(javaType, queryType);
       const comment = getCleanComment(columnComment);
-      const decorators = [];
-      const apiPropertyOptions = [];
+      const decorators: string[] = [];
+      const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       if (columnType === 'char' && dictType) {
         apiPropertyOptions.push(`enum: ['0', '1']`);
@@ -124,17 +147,17 @@ const generateBaseFields = (options) => {
     .join('\n');
 };
 
-const generateCreateFields = (options) => {
+const generateCreateFields = (options: DtoOptions) => {
   const { columns } = options;
   if (!columns) return '';
   return columns
-    .filter((column) => column.isInsert === '1' && column.isPk !== '1')
-    .map((column) => {
+    .filter((column: ColumnInfo) => column.isInsert === '1' && column.isPk !== '1')
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, isRequired, columnComment, columnType, queryType, dictType } = column;
       const tsType = getTsType(javaType, queryType);
       const comment = getCleanComment(columnComment);
-      const decorators = [];
-      const apiPropertyOptions = [];
+      const decorators: string[] = [];
+      const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       apiPropertyOptions.push(`example: ${getExampleValue(javaType, javaField)}`);
       if (columnType === 'char' && dictType) {
@@ -154,10 +177,10 @@ const generateCreateFields = (options) => {
     .join('\n');
 };
 
-const generateUpdateFields = (options) => {
+const generateUpdateFields = (options: DtoOptions) => {
   const { columns, primaryKey } = options;
   if (!columns) return '';
-  const pkColumn = columns.find((col) => col.isPk === '1');
+  const pkColumn = columns.find((col: ColumnInfo) => col.isPk === '1');
   let result = '';
   if (pkColumn) {
     const pkType = getTsType(pkColumn.javaType, pkColumn.queryType);
@@ -168,13 +191,13 @@ const generateUpdateFields = (options) => {
     result += `  ${primaryKey}: ${pkType};\n\n`;
   }
   result += columns
-    .filter((column) => column.isEdit === '1' && column.isPk !== '1')
-    .map((column) => {
+    .filter((column: ColumnInfo) => column.isEdit === '1' && column.isPk !== '1')
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, columnType, queryType, dictType } = column;
       const tsType = getTsType(javaType, queryType);
       const comment = getCleanComment(columnComment);
-      const decorators = [];
-      const apiPropertyOptions = [];
+      const decorators: string[] = [];
+      const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       apiPropertyOptions.push(`example: ${getExampleValue(javaType, javaField)}`);
       if (columnType === 'char' && dictType) {
@@ -189,17 +212,17 @@ const generateUpdateFields = (options) => {
   return result;
 };
 
-const generateQueryFields = (options) => {
+const generateQueryFields = (options: DtoOptions) => {
   const { columns } = options;
   if (!columns) return '';
   return columns
-    .filter((column) => column.isQuery === '1')
-    .map((column) => {
+    .filter((column: ColumnInfo) => column.isQuery === '1')
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, queryType, dictType } = column;
       const tsType = getTsType(javaType, queryType);
       const comment = getCleanComment(columnComment);
-      const decorators = [];
-      const apiPropertyOptions = [];
+      const decorators: string[] = [];
+      const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       if (dictType) {
         apiPropertyOptions.push(`enum: ['0', '1']`);
@@ -212,16 +235,16 @@ const generateQueryFields = (options) => {
     .join('\n');
 };
 
-const generateResponseFields = (options) => {
+const generateResponseFields = (options: DtoOptions) => {
   const { columns } = options;
   if (!columns) return '';
   return columns
-    .filter((column) => column.isList === '1' || column.isPk === '1')
-    .map((column) => {
+    .filter((column: ColumnInfo) => column.isList === '1' || column.isPk === '1')
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, queryType, dictType } = column;
       const tsType = getTsType(javaType, queryType);
       const comment = getCleanComment(columnComment);
-      const apiPropertyOptions = [];
+      const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       apiPropertyOptions.push(`example: ${getExampleValue(javaType, javaField)}`);
       if (dictType) {
@@ -232,7 +255,7 @@ const generateResponseFields = (options) => {
     .join('\n');
 };
 
-const getCleanComment = (comment) => {
+const getCleanComment = (comment?: string) => {
   if (!comment) return '';
   const idx1 = comment.indexOf('（');
   if (idx1 !== -1) return comment.substring(0, idx1);
@@ -241,7 +264,7 @@ const getCleanComment = (comment) => {
   return comment;
 };
 
-const getTsType = (javaType, queryType) => {
+const getTsType = (javaType?: string, queryType?: string) => {
   if (javaType === 'Date') {
     return queryType === GenConstants.QUERY_BETWEEN ? 'string[]' : 'string';
   }
@@ -260,7 +283,7 @@ const getTsType = (javaType, queryType) => {
   }
 };
 
-const getValidatorDecorator = (javaType, queryType) => {
+const getValidatorDecorator = (javaType?: string, queryType?: string) => {
   switch (javaType) {
     case 'String':
       return '@IsString()';
@@ -280,7 +303,7 @@ const getValidatorDecorator = (javaType, queryType) => {
   }
 };
 
-const getExampleValue = (javaType, fieldName) => {
+const getExampleValue = (javaType?: string, fieldName?: string) => {
   switch (javaType) {
     case 'Number':
     case 'Integer':
@@ -295,9 +318,9 @@ const getExampleValue = (javaType, fieldName) => {
       return "'2025-01-01 00:00:00'";
     case 'String':
     default:
-      if (fieldName.toLowerCase().includes('name')) return "'示例名称'";
-      if (fieldName.toLowerCase().includes('status')) return "'0'";
-      if (fieldName.toLowerCase().includes('remark')) return "'备注信息'";
+      if (fieldName?.toLowerCase().includes('name')) return "'示例名称'";
+      if (fieldName?.toLowerCase().includes('status')) return "'0'";
+      if (fieldName?.toLowerCase().includes('remark')) return "'备注信息'";
       return "'示例值'";
   }
 };

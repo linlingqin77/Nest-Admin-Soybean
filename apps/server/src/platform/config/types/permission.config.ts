@@ -6,10 +6,10 @@ import { Type } from 'class-transformer';
  */
 export class RouteWhitelistItem {
   @IsString()
-  path: string;
+  path!:  string;
 
   @IsIn(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'])
-  method: string;
+  method!:  string;
 }
 
 /**
@@ -19,7 +19,7 @@ export class RouterConfig {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RouteWhitelistItem)
-  whitelist: RouteWhitelistItem[];
+  whitelist!:  RouteWhitelistItem[];
 }
 
 /**
@@ -28,5 +28,5 @@ export class RouterConfig {
 export class PermissionConfig {
   @ValidateNested()
   @Type(() => RouterConfig)
-  router: RouterConfig;
+  router!:  RouterConfig;
 }

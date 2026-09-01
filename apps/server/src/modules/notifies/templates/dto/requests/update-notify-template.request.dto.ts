@@ -6,5 +6,5 @@ import { PartialType } from '@nestjs/swagger';
 export class UpdateNotifyTemplateRequestDto extends PartialType(CreateNotifyTemplateRequestDto) {
   @ApiProperty({ description: '模板ID', example: 1 })
   @IsNumber()
-  id: number;
+  id!:  number;
 }

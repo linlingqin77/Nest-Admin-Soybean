@@ -66,13 +66,13 @@ export class UserCrudService {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     const deptMap = new Map<number, SysDept>(depts.map((dept) => [dept.deptId, dept]));
     return users.map((item) => ({
       ...item,
-      dept: deptMap.get(item.deptId) ?? null,
+      dept: deptMap.get(item.deptId ?? -1) ?? null,
     }));
   }
 
@@ -127,7 +127,7 @@ export class UserCrudService {
     }
 
     for (const scope of deptScopes) {
-      const deptIds = await this.deptService.findDeptIdsByDataScope(currentUser.deptId, scope);
+      const deptIds = await this.deptService.findDeptIdsByDataScope(currentUser.deptId ?? 0, scope);
       deptIds.forEach((id) => deptIdSet.add(+id));
     }
 
@@ -171,7 +171,7 @@ export class UserCrudService {
       sex: userPayload.sex ?? '0',
       status: userPayload.status ?? '0',
       avatar: '',
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       loginIp: '',
     });
 
@@ -197,7 +197,7 @@ export class UserCrudService {
    */
   async findAll(query: ListUserRequestDto, user: UserType['user']) {
     const where: Prisma.SysUserWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     const andConditions: Prisma.SysUserWhereInput[] = await this.buildDataScopeConditions(user);
@@ -266,8 +266,7 @@ export class UserCrudService {
     const [dept, postList, roleIds] = await Promise.all([
       data?.deptId
         ? this.prisma.sysDept.findFirst({
-            where: { deptId: data.deptId, delFlag: DelFlagEnum.NORMAL },
-            select: { deptId: true, deptName: true, parentId: true, leader: true, status: true },
+            where: { deptId: data.deptId, delFlag: '0' },
           })
         : Promise.resolve(null),
       this.prisma.sysUserPost.findMany({ where: { userId }, select: { postId: true } }),
@@ -279,13 +278,13 @@ export class UserCrudService {
     // 按需获取用户关联的角色和岗位，避免全表扫描
     const [userRoles, userPosts, allPosts, allRoles] = await Promise.all([
       roleIds.length > 0
-        ? this.roleService.findRoles({ where: { roleId: { in: roleIds }, delFlag: DelFlagEnum.NORMAL } })
+        ? this.roleService.findRoles({ where: { roleId: { in: roleIds }, delFlag: '0' } })
         : Promise.resolve([]),
       postIds.length > 0
-        ? this.prisma.sysPost.findMany({ where: { postId: { in: postIds }, delFlag: DelFlagEnum.NORMAL } })
+        ? this.prisma.sysPost.findMany({ where: { postId: { in: postIds }, delFlag: '0' } })
         : Promise.resolve([]),
-      this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }),
-      this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
+      this.prisma.sysPost.findMany({ where: { delFlag: '0' } }),
+      this.roleService.findRoles({ where: { delFlag: '0' } }),
     ]);
 
     const enrichedData: UserWithRelations = {
@@ -324,7 +323,7 @@ export class UserCrudService {
       throw new BusinessException(ResponseCode.BUSINESS_ERROR, '不允许修改超级管理员');
     }
 
-    updateUserDto.roleIds = updateUserDto.roleIds.filter((v) => v !== SUPER_ADMIN_ROLE_ID);
+    updateUserDto.roleIds = (updateUserDto.roleIds ?? []).filter((v) => v !== SUPER_ADMIN_ROLE_ID);
 
     if (updateUserDto.userId === userId) {
       delete updateUserDto.status;

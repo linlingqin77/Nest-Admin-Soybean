@@ -5,7 +5,7 @@ import { StatusEnum, StatusEnumSchema, DeviceTypeEnum, DeviceTypeEnumSchema } fr
 export class UpdateClientRequestDto {
   @ApiProperty({ required: true, description: '客户端ID' })
   @IsInt()
-  id: number;
+  id!:  number;
 
   @ApiProperty({ required: false, description: '客户端key' })
   @IsOptional()
@@ -65,7 +65,7 @@ export class UpdateClientRequestDto {
 export class ChangeClientStatusRequestDto {
   @ApiProperty({ required: true, description: '客户端ID' })
   @IsInt()
-  id: number;
+  id!:  number;
 
   @ApiProperty({
     enum: StatusEnum,
@@ -76,5 +76,5 @@ export class ChangeClientStatusRequestDto {
   })
   @IsString()
   @IsEnum(StatusEnum)
-  status: string;
+  status!:  string;
 }

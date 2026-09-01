@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { Prisma } from '@prisma/client';
 import { Result, ResponseCode } from 'src/shared/response';
-import { BusinessException } from 'src/shared/exceptions';
+import { BusinessException, BusinessExceptionData } from 'src/shared/exceptions';
 import { CreateDeptDto, UpdateDeptDto, ListDeptDto } from './dto/index';
 import { DeptResponseDto } from './dto/responses/dept.response.dto';
 import { ListToTree } from 'src/shared/utils/index';
@@ -40,16 +40,13 @@ export class DeptService {
       ancestors = parent.ancestors ? `${parent.ancestors},${createDeptDto.parentId}` : `${createDeptDto.parentId}`;
     }
     const payload: Prisma.SysDeptUncheckedCreateInput = {
-      parentId: createDeptDto.parentId,
+      ...createDeptDto,
       ancestors,
-      deptName: createDeptDto.deptName,
-      orderNum: createDeptDto.orderNum,
       leader: createDeptDto.leader ?? '',
       phone: createDeptDto.phone ?? '',
       email: createDeptDto.email ?? '',
       status: createDeptDto.status ?? '0',
-      delFlag: DelFlagEnum.NORMAL,
-      ...createDeptDto,
+      delFlag: '0',
       remark: null,
     };
     await this.deptRepo.create(payload);
@@ -58,7 +55,7 @@ export class DeptService {
 
   async findAll(query: ListDeptDto) {
     const where: Prisma.SysDeptWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.deptName) {
@@ -99,7 +96,7 @@ export class DeptService {
       }
 
       const where: Prisma.SysDeptWhereInput = {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       };
 
       if (dataScope === DataScopeEnum.DATA_SCOPE_DEPT) {
@@ -121,7 +118,7 @@ export class DeptService {
       return list.map((item) => item.deptId);
     } catch (error) {
       this.logger.error('Failed to query department IDs', { action: 'dept.findDeptIdsByDataScope' });
-      BusinessException.throw(ResponseCode.INTERNAL_SERVER_ERROR, '查询部门ID失败', error);
+      BusinessException.throw(ResponseCode.INTERNAL_SERVER_ERROR, '查询部门ID失败', error as BusinessExceptionData);
     }
   }
 
@@ -130,7 +127,7 @@ export class DeptService {
     // 排除 ancestors 中包含指定 id 的部门（排除子部门）
     const data = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         NOT: {
           OR: [
             { deptId: id },
@@ -176,7 +173,7 @@ export class DeptService {
   async optionselect() {
     const list = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
       },
       orderBy: { orderNum: 'asc' },
@@ -192,7 +189,7 @@ export class DeptService {
   async deptTree() {
     const res = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { orderNum: 'asc' },
     });
@@ -212,7 +209,7 @@ export class DeptService {
   async getChildDeptIds(deptId: number): Promise<number[]> {
     const depts = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         OR: [
           { deptId },
           { ancestors: { contains: `,${deptId}` } },

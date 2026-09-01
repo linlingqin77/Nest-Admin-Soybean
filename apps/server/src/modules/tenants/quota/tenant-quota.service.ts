@@ -71,7 +71,7 @@ export class TenantQuotaService {
 
     // 构建租户查询条件
     const tenantWhere: any = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       tenantId: { not: TenantContext.SUPER_TENANT_ID },
     };
 
@@ -109,7 +109,7 @@ export class TenantQuotaService {
     const userCounts = await this.prisma.sysUser.groupBy({
       by: ['tenantId'],
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { in: tenantIds },
       },
       _count: { userId: true },
@@ -200,7 +200,7 @@ export class TenantQuotaService {
     const userCount = await this.prisma.sysUser.count({
       where: {
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -364,7 +364,7 @@ export class TenantQuotaService {
     switch (dto.quotaType) {
       case 'user':
         used = await this.prisma.sysUser.count({
-          where: { tenantId: dto.tenantId, delFlag: DelFlagEnum.NORMAL },
+          where: { tenantId: dto.tenantId, delFlag: '0' },
         });
         limit = tenant.accountCount;
         quotaName = '用户数量';

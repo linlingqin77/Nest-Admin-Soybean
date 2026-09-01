@@ -8,35 +8,35 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class PostResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '岗位ID' })
-  postId: number;
+  postId!:  number;
 
   @Expose()
   @ApiProperty({ description: '岗位编码' })
-  postCode: string;
+  postCode!:  string;
 
   @Expose()
   @ApiProperty({ description: '岗位名称' })
-  postName: string;
+  postName!:  string;
 
   @Expose()
   @ApiProperty({ description: '类别编码' })
-  postCategory: string;
+  postCategory!:  string;
 
   @Expose()
   @ApiProperty({ description: '显示顺序' })
-  postSort: number;
+  postSort!:  number;
 
   @Expose()
   @ApiProperty({ description: '状态（0正常 1停用）' })
-  status: string;
+  status!:  string;
 
   @Expose()
   @ApiProperty({ description: '备注' })
-  remark: string;
+  remark!:  string;
 
   @Expose()
   @ApiProperty({ description: '部门ID' })
-  deptId: number;
+  deptId!:  number;
 }
 
 /**
@@ -44,10 +44,10 @@ export class PostResponseDto extends BaseResponseDto {
  */
 export class PostListResponseDto {
   @ApiProperty({ description: '岗位列表', type: [PostResponseDto] })
-  rows: PostResponseDto[];
+  rows!:  PostResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -55,7 +55,7 @@ export class PostListResponseDto {
  */
 export class CreatePostResultResponseDto {
   @ApiProperty({ description: '创建的岗位ID', example: 1 })
-  postId: number;
+  postId!:  number;
 }
 
 /**
@@ -63,7 +63,7 @@ export class CreatePostResultResponseDto {
  */
 export class UpdatePostResultResponseDto {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -71,7 +71,7 @@ export class UpdatePostResultResponseDto {
  */
 export class DeletePostResultResponseDto {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 /**
@@ -79,10 +79,10 @@ export class DeletePostResultResponseDto {
  */
 export class DeptTreeResponseDto {
   @ApiProperty({ description: '部门ID' })
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '部门名称' })
-  label: string;
+  label!:  string;
 
   @ApiProperty({ description: '子部门', type: [DeptTreeResponseDto], required: false })
   children?: DeptTreeResponseDto[];

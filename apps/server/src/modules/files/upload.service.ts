@@ -3,6 +3,12 @@ import { AppConfigService } from 'src/platform/config/app-config.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { Result, ResponseCode } from 'src/shared/response';
+
+interface ChunkCheckBody {
+  uploadId: string;
+  fileName: string;
+  index: number;
+}
 import { StatusEnum } from 'src/shared/enums/index';
 import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 import { GenerateUUID } from 'src/shared/utils/index';
@@ -48,7 +54,7 @@ export class UploadService {
    * @returns
    */
   async singleFileUpload(file: Express.Multer.File, folderId?: number) {
-    const tenantId = TenantContext.getTenantId();
+    const tenantId = TenantContext.getTenantId()!;
     const originalFilename = iconv.decode(Buffer.from(file.originalname, 'binary'), 'utf8');
 
     // 1. 文件大小检查
@@ -337,7 +343,7 @@ export class UploadService {
    * @param uploadId
    * @param index
    */
-  async checkChunkFile(body) {
+  async checkChunkFile(body: ChunkCheckBody) {
     const rootPath = process.cwd();
     const baseDirPath = path.posix.join(rootPath, this.appConfig.app.file.location);
     const chunckDirPath = path.posix.join(baseDirPath, this.thunkDir, body.uploadId);
@@ -354,7 +360,7 @@ export class UploadService {
    * @param dirname
    * @returns
    */
-  mkdirsSync(dirname) {
+  mkdirsSync(dirname: string) {
     if (fs.existsSync(dirname)) {
       return true;
     } else {
@@ -440,18 +446,18 @@ export class UploadService {
    * @param {string} sourceFiles 源文件目录
    * @param {string} targetFile 目标文件路径
    */
-  async thunkStreamMerge(sourceFilesDir, targetFile) {
+  async thunkStreamMerge(sourceFilesDir: string, targetFile: string) {
     const fileList = fs
       .readdirSync(sourceFilesDir)
-      .filter((file) => fs.lstatSync(path.posix.join(sourceFilesDir, file)).isFile())
-      .sort((a, b) => parseInt(a.split('@')[1]) - parseInt(b.split('@')[1]))
-      .map((name) => ({
+      .filter((file: string) => fs.lstatSync(path.posix.join(sourceFilesDir, file)).isFile())
+      .sort((a: string, b: string) => parseInt(a.split('@')[1]) - parseInt(b.split('@')[1]))
+      .map((name: string) => ({
         name,
         filePath: path.posix.join(sourceFilesDir, name),
       }));
 
     const fileWriteStream = fs.createWriteStream(targetFile);
-    let onResolve: (value) => void;
+    let onResolve!: (value: unknown) => void;
     const callbackPromise = new Promise((resolve) => {
       onResolve = resolve;
     });
@@ -465,15 +471,20 @@ export class UploadService {
    * @param {WritableStream} fileWriteStream 最终的写入结果流
    * @param {string} sourceFilesDir 源文件目录
    */
-  thunkStreamMergeProgress(fileList, fileWriteStream, sourceFilesDir, onResolve) {
+  thunkStreamMergeProgress(
+    fileList: { name: string; filePath: string }[],
+    fileWriteStream: fs.WriteStream,
+    sourceFilesDir: string,
+    onResolve: (value: unknown) => void,
+  ) {
     if (!fileList.length) {
       // 删除临时目录
       fs.rmdirSync(sourceFilesDir, { recursive: true });
-      onResolve();
+      onResolve(undefined);
       return;
     }
 
-    const { filePath: chunkFilePath } = fileList.shift();
+    const { filePath: chunkFilePath } = fileList.shift()!;
     const currentReadStream = fs.createReadStream(chunkFilePath);
 
     // 把结果往最终的生成文件上进行拼接
@@ -664,7 +675,7 @@ export class UploadService {
         Key: targetFile,
       });
     } catch (error) {
-      return error;
+      return error as { statusCode?: number };
     }
   }
 

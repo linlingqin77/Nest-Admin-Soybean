@@ -7,5 +7,5 @@ export class UserConfig {
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
-  initialPassword: string;
+  initialPassword!:  string;
 }

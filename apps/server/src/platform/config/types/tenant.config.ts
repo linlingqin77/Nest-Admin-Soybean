@@ -5,13 +5,13 @@ import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
  */
 export class TenantConfig {
   @IsBoolean()
-  enabled: boolean;
+  enabled!:  boolean;
 
   @IsString()
   @IsNotEmpty()
-  superTenantId: string;
+  superTenantId!:  string;
 
   @IsString()
   @IsNotEmpty()
-  defaultTenantId: string;
+  defaultTenantId!:  string;
 }

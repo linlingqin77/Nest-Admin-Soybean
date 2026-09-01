@@ -45,7 +45,7 @@ export class SmsTemplateService {
    */
   async findAll(query: ListSmsTemplateDto) {
     const where: Prisma.SysSmsTemplateWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.name) {

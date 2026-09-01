@@ -57,7 +57,7 @@ export class FileAccessService {
         tenantId: payload.tenantId,
       };
     } catch (error) {
-      throw new UnauthorizedException('令牌验证失败: ' + error.message);
+      throw new UnauthorizedException('令牌验证失败: ' + (error instanceof Error ? error.message : String(error)));
     }
   }
 

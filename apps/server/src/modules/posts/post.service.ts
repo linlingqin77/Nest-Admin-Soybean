@@ -21,22 +21,18 @@ export class PostService {
   private get prisma() { return this.txHost.tx; }
   async create(createPostDto: CreatePostRequestDto) {
     await this.postRepo.create({
-      deptId: createPostDto.deptId,
-      postCode: createPostDto.postCode,
-      postCategory: createPostDto.postCategory,
-      postName: createPostDto.postName,
+      ...createPostDto,
       postSort: createPostDto.postSort ?? 0,
       status: createPostDto.status ?? '0',
       remark: createPostDto.remark ?? '',
-      delFlag: DelFlagEnum.NORMAL,
-      ...createPostDto,
+      delFlag: '0',
     });
     return Result.ok();
   }
 
   async findAll(query: ListPostRequestDto) {
     const where: Prisma.SysPostWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.postName) {
@@ -111,7 +107,7 @@ export class PostService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '岗位数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '岗位序号', dataIndex: 'postId' },
         { title: '岗位编码', dataIndex: 'postCode' },

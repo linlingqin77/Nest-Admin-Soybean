@@ -50,7 +50,9 @@ export async function apiRequest<T = unknown>(config: ApiRequestConfig): Promise
     axiosConfig.params = config.params;
   }
   if (config.responseType) {
-    axiosConfig.responseType = config.responseType;
+    // Cast: InternalAxiosRequestConfig.responseType is a strict string union,
+    // but our config accepts 'json' | 'blob' | 'arraybuffer'.
+    (axiosConfig as { responseType?: string }).responseType = config.responseType;
   }
   if (config.operationId) {
     axiosConfig.operationId = config.operationId;

@@ -8,27 +8,27 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class NotifyTemplateResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '模板ID' })
   @Expose()
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '模板名称' })
   @Expose()
-  name: string;
+  name!:  string;
 
   @ApiProperty({ description: '模板编码' })
   @Expose()
-  code: string;
+  code!:  string;
 
   @ApiProperty({ description: '发送人名称' })
   @Expose()
-  nickname: string;
+  nickname!:  string;
 
   @ApiProperty({ description: '模板内容' })
   @Expose()
-  content: string;
+  content!:  string;
 
   @ApiProperty({ description: '模板类型' })
   @Expose()
-  type: number;
+  type!:  number;
 
   @ApiPropertyOptional({ description: '参数列表' })
   @Expose()
@@ -36,7 +36,7 @@ export class NotifyTemplateResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '状态' })
   @Expose()
-  status: string;
+  status!:  string;
 
   @ApiPropertyOptional({ description: '备注' })
   @Expose()

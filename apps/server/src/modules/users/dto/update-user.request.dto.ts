@@ -8,5 +8,5 @@ import { CreateUserRequestDto } from './create-user.request.dto';
 export class UpdateUserRequestDto extends PartialType(CreateUserRequestDto) {
   @ApiProperty({ required: true, description: '用户ID' })
   @IsNumber()
-  userId: number;
+  userId!:  number;
 }

@@ -144,8 +144,8 @@ export class UserService {
    */
   async findPostAndRoleAll() {
     const [posts, roles] = await Promise.all([
-      this.prisma.sysPost.findMany({ where: { delFlag: DelFlagEnum.NORMAL } }),
-      this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL } }),
+      this.prisma.sysPost.findMany({ where: { delFlag: '0' } }),
+      this.roleService.findRoles({ where: { delFlag: '0' } }),
     ]);
 
     return Result.ok({ posts, roles });
@@ -165,7 +165,7 @@ export class UserService {
   async optionselect() {
     const list = await this.prisma.sysUser.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
       },
       select: {
@@ -184,7 +184,7 @@ export class UserService {
     const list = await this.prisma.sysUser.findMany({
       where: {
         deptId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     return Result.ok(toDtoList(UserResponseDto, list));
@@ -261,8 +261,8 @@ export class UserService {
   /**
    * 获取当前用户个人资料
    */
-  async profile(user) {
-    return this.userProfileService.profile(user);
+  async profile(user: { userId: number; userName: string; [key: string]: unknown }) {
+    return this.userProfileService.profile(user as unknown as Parameters<typeof this.userProfileService.profile>[0]);
   }
 
   /**
@@ -299,8 +299,8 @@ export class UserService {
    * 更新用户的角色授权
    */
   @Transactional()
-  async updateAuthRole(query) {
-    return this.userRoleService.updateAuthRole(query);
+  async updateAuthRole(query: { userId: number; roleIds: number | string }) {
+    return this.userRoleService.updateAuthRole({ userId: query.userId, roleIds: String(query.roleIds) });
   }
 
   /**

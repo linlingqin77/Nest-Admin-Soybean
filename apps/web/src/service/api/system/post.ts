@@ -62,10 +62,10 @@ export function fetchPostDeptTree() {
 
 /** 导出岗位 */
 export function fetchPostExport(params?: Api.System.PostSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/post/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

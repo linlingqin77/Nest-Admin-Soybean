@@ -9,28 +9,28 @@ import { StatusEnum, StatusEnumSchema, DeviceTypeEnum, DeviceTypeEnumSchema } fr
 export class ClientResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '客户端ID' })
-  id: number;
+  id!:  number;
 
   @Expose()
   @ApiProperty({ description: '客户端唯一标识' })
-  clientId: string;
+  clientId!:  string;
 
   @Expose()
   @ApiProperty({ description: '客户端key' })
-  clientKey: string;
+  clientKey!:  string;
 
   @Expose()
   @ApiProperty({ description: '客户端秘钥' })
-  clientSecret: string;
+  clientSecret!:  string;
 
   @Expose()
   @ApiProperty({ description: '授权类型列表（逗号分隔）' })
-  grantTypeList: string;
+  grantTypeList!:  string;
 
   @Expose()
   @Transform(({ value }) => (value ? value.split(',') : []))
   @ApiProperty({ description: '授权类型数组', type: [String] })
-  grantTypeArray: string[];
+  grantTypeArray!:  string[];
 
   @Expose()
   @ApiProperty({
@@ -39,15 +39,15 @@ export class ClientResponseDto extends BaseResponseDto {
     enumName: 'DeviceTypeEnum',
     enumSchema: DeviceTypeEnumSchema,
   })
-  deviceType: string;
+  deviceType!:  string;
 
   @Expose()
   @ApiProperty({ description: 'token活跃超时时间（秒）' })
-  activeTimeout: number;
+  activeTimeout!:  number;
 
   @Expose()
   @ApiProperty({ description: 'token固定超时时间（秒）' })
-  timeout: number;
+  timeout!:  number;
 
   @Expose()
   @ApiProperty({
@@ -56,7 +56,7 @@ export class ClientResponseDto extends BaseResponseDto {
     enumName: 'StatusEnum',
     enumSchema: StatusEnumSchema,
   })
-  status: string;
+  status!:  string;
 }
 
 /**
@@ -64,8 +64,8 @@ export class ClientResponseDto extends BaseResponseDto {
  */
 export class ClientListResponseDto {
   @ApiProperty({ description: '客户端列表', type: [ClientResponseDto] })
-  rows: ClientResponseDto[];
+  rows!:  ClientResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }

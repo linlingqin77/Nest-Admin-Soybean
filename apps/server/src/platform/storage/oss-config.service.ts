@@ -41,7 +41,7 @@ export class OssConfigService {
     // 如果设置为默认配置，需要将其他配置设为非默认
     if (createOssConfigDto.status === '0') {
       await this.prisma.sysOssConfig.updateMany({
-        where: { status: '0', delFlag: DelFlagEnum.NORMAL },
+        where: { status: '0', delFlag: '0' },
         data: { status: '1' },
       });
     }
@@ -69,7 +69,7 @@ export class OssConfigService {
    */
   async findAll(query: ListOssConfigDto) {
     const where: Prisma.SysOssConfigWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.configKey) {
@@ -129,7 +129,7 @@ export class OssConfigService {
     // 如果设置为默认配置，需要将其他配置设为非默认
     if (updateOssConfigDto.status === '0' && ossConfig.status !== '0') {
       await this.prisma.sysOssConfig.updateMany({
-        where: { status: '0', delFlag: DelFlagEnum.NORMAL },
+        where: { status: '0', delFlag: '0' },
         data: { status: '1' },
       });
     }
@@ -189,7 +189,7 @@ export class OssConfigService {
     // 如果设置为默认配置，需要将其他配置设为非默认
     if (dto.status === '0') {
       await this.prisma.sysOssConfig.updateMany({
-        where: { status: '0', delFlag: DelFlagEnum.NORMAL },
+        where: { status: '0', delFlag: '0' },
         data: { status: '1' },
       });
     }

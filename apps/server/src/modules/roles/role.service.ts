@@ -69,7 +69,7 @@ export class RoleService {
         ...rolePayload,
         roleSort: rolePayload.roleSort ?? 0,
         status: rolePayload.status ?? '0',
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -103,7 +103,7 @@ export class RoleService {
    */
   async findAll(query: ListRoleRequestDto) {
     const where: Prisma.SysRoleWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.roleName) {
@@ -270,7 +270,7 @@ export class RoleService {
   async deptTree(roleId: number) {
     const res = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
     const tree = ListToTree(
@@ -321,7 +321,7 @@ export class RoleService {
 
     const permissions = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
         menuId: { in: menuIds },
       },
@@ -337,7 +337,7 @@ export class RoleService {
    */
   async optionselect(roleIds?: number[]) {
     const where: Prisma.SysRoleWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       status: StatusEnum.NORMAL,
     };
     if (roleIds && roleIds.length > 0) {
@@ -378,7 +378,7 @@ export class RoleService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '角色数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '角色编号', dataIndex: 'roleId' },
         { title: '角色名称', dataIndex: 'roleName', width: 15 },

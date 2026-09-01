@@ -147,11 +147,11 @@ export function fetchUserUpdateAuthRole(data: { userId: number; roleIds: string 
 
 /** 导出用户 */
 export function fetchUserExport(params?: Api.System.UserSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/user/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

@@ -17,15 +17,15 @@ import {
 export class PostResponseDto {
   @Expose()
   @ApiProperty({ description: '岗位ID' })
-  postId: number;
+  postId!:  number;
 
   @Expose()
   @ApiProperty({ description: '岗位编码' })
-  postCode: string;
+  postCode!:  string;
 
   @Expose()
   @ApiProperty({ description: '岗位名称' })
-  postName: string;
+  postName!:  string;
 }
 
 /**
@@ -34,19 +34,19 @@ export class PostResponseDto {
 export class RoleResponseDto {
   @Expose()
   @ApiProperty({ description: '角色ID' })
-  roleId: number;
+  roleId!:  number;
 
   @Expose()
   @ApiProperty({ description: '角色名称' })
-  roleName: string;
+  roleName!:  string;
 
   @Expose()
   @ApiProperty({ description: '角色权限字符串' })
-  roleKey: string;
+  roleKey!:  string;
 
   @Expose()
   @ApiProperty({ description: '显示顺序' })
-  roleSort: number;
+  roleSort!:  number;
 
   @Expose()
   @ApiProperty({
@@ -55,11 +55,11 @@ export class RoleResponseDto {
     enumName: 'DataScopeEnum',
     enumSchema: DataScopeEnumSchema,
   })
-  dataScope: string;
+  dataScope!:  string;
 
   @Expose()
   @ApiProperty({ description: '角色状态', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
-  status: string;
+  status!:  string;
 }
 
 /**
@@ -72,7 +72,7 @@ export class RoleResponseDto {
 export class UserResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '用户ID' })
-  userId: number;
+  userId!:  number;
 
   @Expose()
   @ApiPropertyOptional({ description: '部门ID' })
@@ -80,11 +80,11 @@ export class UserResponseDto extends BaseResponseDto {
 
   @Expose()
   @ApiProperty({ description: '用户账号' })
-  userName: string;
+  userName!:  string;
 
   @Expose()
   @ApiProperty({ description: '用户昵称' })
-  nickName: string;
+  nickName!:  string;
 
   @Expose()
   @ApiPropertyOptional({ description: '用户类型（00系统用户）' })
@@ -153,10 +153,10 @@ export class UserResponseDto extends BaseResponseDto {
  */
 export class UserListResponseDto {
   @ApiProperty({ description: '用户列表', type: [UserResponseDto] })
-  rows: UserResponseDto[];
+  rows!:  UserResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -167,10 +167,10 @@ export class UserDetailResponseDto {
   data?: UserResponseDto;
 
   @ApiProperty({ description: '岗位选项列表', type: [PostResponseDto] })
-  posts: PostResponseDto[];
+  posts!:  PostResponseDto[];
 
   @ApiProperty({ description: '角色选项列表', type: [RoleResponseDto] })
-  roles: RoleResponseDto[];
+  roles!:  RoleResponseDto[];
 
   @ApiProperty({ description: '用户已分配的岗位ID列表', type: [Number], required: false })
   postIds?: number[];
@@ -184,13 +184,13 @@ export class UserDetailResponseDto {
  */
 export class UserProfileResponseDto {
   @ApiProperty({ description: '用户信息', type: UserResponseDto })
-  user: UserResponseDto;
+  user!:  UserResponseDto;
 
   @ApiProperty({ description: '角色组名称' })
-  roleGroup: string;
+  roleGroup!:  string;
 
   @ApiProperty({ description: '岗位组名称' })
-  postGroup: string;
+  postGroup!:  string;
 }
 
 /**
@@ -199,7 +199,7 @@ export class UserProfileResponseDto {
 export class UserAvatarResponseDto {
   @Expose()
   @ApiProperty({ description: '头像URL' })
-  imgUrl: string;
+  imgUrl!:  string;
 }
 
 /**
@@ -207,10 +207,10 @@ export class UserAvatarResponseDto {
  */
 export class AuthRoleResponseDto {
   @ApiProperty({ description: '用户信息', type: UserResponseDto })
-  user: UserResponseDto;
+  user!:  UserResponseDto;
 
   @ApiProperty({ description: '角色列表', type: [RoleResponseDto] })
-  roles: RoleResponseDto[];
+  roles!:  RoleResponseDto[];
 }
 
 /**
@@ -218,13 +218,13 @@ export class AuthRoleResponseDto {
  */
 export class CurrentUserInfoResponseDto {
   @ApiProperty({ description: '用户信息', type: UserResponseDto })
-  user: UserResponseDto;
+  user!:  UserResponseDto;
 
   @ApiProperty({ description: '角色列表', type: [String], example: ['admin'] })
-  roles: string[];
+  roles!:  string[];
 
   @ApiProperty({ description: '权限列表', type: [String], example: ['system:user:list'] })
-  permissions: string[];
+  permissions!:  string[];
 }
 
 /**
@@ -233,15 +233,15 @@ export class CurrentUserInfoResponseDto {
 export class UserOptionResponseDto {
   @Expose()
   @ApiProperty({ description: '用户ID', example: 1 })
-  userId: number;
+  userId!:  number;
 
   @Expose()
   @ApiProperty({ description: '用户名', example: 'admin' })
-  userName: string;
+  userName!:  string;
 
   @Expose()
   @ApiProperty({ description: '昵称', example: '管理员' })
-  nickName: string;
+  nickName!:  string;
 }
 
 /**
@@ -249,5 +249,5 @@ export class UserOptionResponseDto {
  */
 export class UserOptionSelectResponseDto {
   @ApiProperty({ description: '用户选项列表', type: [UserOptionResponseDto] })
-  list: UserOptionResponseDto[];
+  list!:  UserOptionResponseDto[];
 }

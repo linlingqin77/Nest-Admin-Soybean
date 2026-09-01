@@ -12,15 +12,15 @@ import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 export class LoginLogResponseDto {
   @ApiProperty({ description: '访问ID' })
   @Expose()
-  infoId: number;
+  infoId!:  number;
 
   @ApiProperty({ description: '用户账号' })
   @Expose()
-  userName: string;
+  userName!:  string;
 
   @ApiProperty({ description: '登录IP地址' })
   @Expose()
-  ipaddr: string;
+  ipaddr!:  string;
 
   @ApiPropertyOptional({ description: '登录地点' })
   @Expose()
@@ -28,11 +28,11 @@ export class LoginLogResponseDto {
 
   @ApiProperty({ description: '浏览器类型' })
   @Expose()
-  browser: string;
+  browser!:  string;
 
   @ApiProperty({ description: '操作系统' })
   @Expose()
-  os: string;
+  os!:  string;
 
   @ApiPropertyOptional({ description: '设备类型' })
   @Expose()
@@ -40,7 +40,7 @@ export class LoginLogResponseDto {
 
   @ApiProperty({ description: '登录状态（0成功 1失败）' })
   @Expose()
-  status: string;
+  status!:  string;
 
   @ApiPropertyOptional({ description: '提示消息' })
   @Expose()
@@ -49,7 +49,7 @@ export class LoginLogResponseDto {
   @ApiProperty({ description: '访问时间', example: '2025-01-01 00:00:00' })
   @Expose()
   @DateFormat()
-  loginTime: string;
+  loginTime!:  string;
 
   /**
    * 租户ID - 不返回给前端

@@ -40,7 +40,7 @@ export class MenuLoader extends BaseLoader<number, SysMenu> {
     const menus = await this.prisma.sysMenu.findMany({
       where: {
         menuId: { in: [...menuIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -78,7 +78,7 @@ export class MenuLoader extends BaseLoader<number, SysMenu> {
         ? await this.prisma.sysMenu.findMany({
             where: {
               menuId: { in: menuIds },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
             orderBy: [{ parentId: 'asc' }, { orderNum: 'asc' }],
           })
@@ -114,7 +114,7 @@ export class MenuLoader extends BaseLoader<number, SysMenu> {
     const children = await this.prisma.sysMenu.findMany({
       where: {
         parentId: { in: parentIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { orderNum: 'asc' },
     });
@@ -144,7 +144,7 @@ export class MenuLoader extends BaseLoader<number, SysMenu> {
     const menus = await this.prisma.sysMenu.findMany({
       where: {
         menuId: { in: menuIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       select: {
         menuId: true,
@@ -170,7 +170,7 @@ export class MenuLoader extends BaseLoader<number, SysMenu> {
     // 获取所有菜单
     const allMenus = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ parentId: 'asc' }, { orderNum: 'asc' }],
     });

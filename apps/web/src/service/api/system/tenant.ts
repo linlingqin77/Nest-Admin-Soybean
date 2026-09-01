@@ -71,11 +71,11 @@ export function fetchTenantSyncConfig() {
 
 /** 导出租户 */
 export function fetchTenantExport(params?: Api.System.TenantSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/tenant/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 
@@ -195,11 +195,11 @@ export function fetchGetTenantAuditStats() {
 
 /** 导出租户审计日志 */
 export function fetchExportTenantAuditLog(params?: Api.System.TenantAuditLogSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/system/tenant/audit/export',
     method: 'post',
     data: params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

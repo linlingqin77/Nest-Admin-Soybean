@@ -79,7 +79,7 @@ export class DataSourceService {
       where: {
         tenantId,
         name: dto.name,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -102,7 +102,7 @@ export class DataSourceService {
           username: dto.username,
           password: encryptedPassword,
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           createBy: username,
           updateBy: username,
           remark: dto.remark,
@@ -112,7 +112,7 @@ export class DataSourceService {
       this.logger.log(`数据源创建成功: ${dataSource.name} (ID: ${dataSource.id})`);
       return Result.ok(dataSource, '创建成功');
     } catch (error) {
-      this.logger.error(`数据源创建失败: ${error.message}`, error.stack);
+      this.logger.error(`数据源创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建数据源失败');
     }
   }
@@ -129,7 +129,7 @@ export class DataSourceService {
       where: {
         id,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -144,7 +144,7 @@ export class DataSourceService {
           tenantId,
           name: dto.name,
           id: { not: id },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -175,7 +175,7 @@ export class DataSourceService {
       this.logger.log(`数据源更新成功: ${dataSource.name} (ID: ${dataSource.id})`);
       return Result.ok(dataSource, '更新成功');
     } catch (error) {
-      this.logger.error(`数据源更新失败: ${error.message}`, error.stack);
+      this.logger.error(`数据源更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新数据源失败');
     }
   }
@@ -191,7 +191,7 @@ export class DataSourceService {
       where: {
         id,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -203,7 +203,7 @@ export class DataSourceService {
     const relatedTables = await this.prisma.genTable.count({
       where: {
         dataSourceId: id,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -215,7 +215,7 @@ export class DataSourceService {
       await this.prisma.genDataSource.update({
         where: { id },
         data: {
-          delFlag: DelFlagEnum.DELETE,
+          delFlag: '1',
           updateBy: username,
           updateTime: new Date(),
         },
@@ -224,7 +224,7 @@ export class DataSourceService {
       this.logger.log(`数据源删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`数据源删除失败: ${error.message}`, error.stack);
+      this.logger.error(`数据源删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除数据源失败');
     }
   }
@@ -238,7 +238,7 @@ export class DataSourceService {
 
     const where: Prisma.GenDataSourceWhereInput = {
       tenantId,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.name) {
@@ -283,7 +283,7 @@ export class DataSourceService {
       where: {
         id,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -295,7 +295,7 @@ export class DataSourceService {
     return Result.ok({
       ...dataSource,
       password: undefined,
-    } as GenDataSource);
+    } as unknown as GenDataSource);
   }
 
   /**
@@ -313,8 +313,8 @@ export class DataSourceService {
         throw new BusinessException(ResponseCode.OPERATION_FAILED, testResult.message);
       }
     } catch (error) {
-      this.logger.error(`连接测试失败: ${error.message}`, error.stack);
-      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error));
+      this.logger.error(`连接测试失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }
 
@@ -329,7 +329,7 @@ export class DataSourceService {
       where: {
         id,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -360,7 +360,7 @@ export class DataSourceService {
       where: {
         id: dataSourceId,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -372,8 +372,8 @@ export class DataSourceService {
       const tables = await this.fetchTables(dataSource);
       return Result.ok(tables);
     } catch (error) {
-      this.logger.error(`获取表列表失败: ${error.message}`, error.stack);
-      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error));
+      this.logger.error(`获取表列表失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }
 
@@ -388,7 +388,7 @@ export class DataSourceService {
       where: {
         id: dataSourceId,
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -400,8 +400,8 @@ export class DataSourceService {
       const columns = await this.fetchColumns(dataSource, tableName);
       return Result.ok(columns);
     } catch (error) {
-      this.logger.error(`获取列信息失败: ${error.message}`, error.stack);
-      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error));
+      this.logger.error(`获取列信息失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }
 

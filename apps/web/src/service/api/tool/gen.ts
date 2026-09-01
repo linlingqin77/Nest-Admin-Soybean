@@ -78,21 +78,21 @@ export function fetchToolPreview(id: CommonType.IdType) {
 
 /** 批量生成代码（通过表名） */
 export function fetchToolBatchGenCodeByNames(tables: string) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/tool/gen/batchGenCode/zip',
     method: 'get',
     params: { tables },
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 
 /** 批量生成代码（通过表ID） */
 export function fetchToolGen(tableIds: number[]) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/tool/gen/batchGenCode',
     method: 'post',
     data: { tableIds },
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }
 

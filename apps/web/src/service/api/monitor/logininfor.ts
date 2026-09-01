@@ -38,10 +38,10 @@ export function fetchLogininforUnlock(username: string) {
 
 /** 导出登录日志 */
 export function fetchLogininforExport(params?: Api.Monitor.LoginInforSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/monitor/logininfor/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

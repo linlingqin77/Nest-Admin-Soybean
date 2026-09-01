@@ -19,8 +19,8 @@ export class CryptoService implements OnModuleInit {
   private readonly logger = new Logger(CryptoService.name);
 
   // RSA 密钥对
-  private publicKey: string;
-  private privateKey: string;
+  private publicKey!: string;
+  private privateKey!: string;
 
   // 是否启用加密
   private enabled: boolean = false;
@@ -136,7 +136,7 @@ export class CryptoService implements OnModuleInit {
 
       return decrypted;
     } catch (error) {
-      this.logger.error('RSA decrypt error:', error.message);
+      this.logger.error('RSA decrypt error:', error instanceof Error ? error.message : String(error));
       throw CryptoException.rsaDecryptFailed();
     }
   }
@@ -156,7 +156,7 @@ export class CryptoService implements OnModuleInit {
       // Base64 编码
       return forge.util.encode64(encrypted);
     } catch (error) {
-      this.logger.error('RSA encrypt error:', error.message);
+      this.logger.error('RSA encrypt error:', error instanceof Error ? error.message : String(error));
       throw new Error('RSA encrypt failed');
     }
   }
@@ -189,7 +189,7 @@ export class CryptoService implements OnModuleInit {
 
       return decrypted.toString('utf8');
     } catch (error) {
-      this.logger.error('AES decrypt error:', error.message);
+      this.logger.error('AES decrypt error:', error instanceof Error ? error.message : String(error));
       throw CryptoException.aesDecryptFailed();
     }
   }
@@ -219,7 +219,7 @@ export class CryptoService implements OnModuleInit {
 
       return ivAndCiphertext.toString('base64');
     } catch (error) {
-      this.logger.error('AES encrypt error:', error.message);
+      this.logger.error('AES encrypt error:', error instanceof Error ? error.message : String(error));
       throw CryptoException.aesEncryptFailed();
     }
   }

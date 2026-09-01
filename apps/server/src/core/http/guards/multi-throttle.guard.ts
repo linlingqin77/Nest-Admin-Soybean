@@ -272,7 +272,7 @@ export class MultiThrottleGuard implements CanActivate {
       blocked: count >= config.limit,
       current: count,
       limit: config.limit,
-      remaining: ttl > 0 ? ttl : 0,
+      remaining: ttl !== null && ttl > 0 ? ttl : 0,
     };
   }
 }

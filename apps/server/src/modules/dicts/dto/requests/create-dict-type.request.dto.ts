@@ -9,7 +9,7 @@ export class CreateDictTypeRequestDto {
   })
   @IsString()
   @Length(0, 100)
-  dictName: string;
+  dictName!:  string;
 
   @ApiProperty({
     required: true,
@@ -17,7 +17,7 @@ export class CreateDictTypeRequestDto {
   })
   @IsString()
   @Length(0, 100)
-  dictType: string;
+  dictType!:  string;
 
   @ApiProperty({
     required: true,

@@ -113,7 +113,7 @@ export class TenantService {
 
     // 检查企业名称是否已存在
     const existCompany = await this.prisma.sysTenant.findFirst({
-      where: { companyName: createTenantDto.companyName, delFlag: DelFlagEnum.NORMAL },
+      where: { companyName: createTenantDto.companyName, delFlag: '0' },
     });
 
     if (existCompany) {
@@ -140,7 +140,7 @@ export class TenantService {
           accountCount: createTenantDto.accountCount ?? -1,
           status: createTenantDto.status ?? '0',
           remark: createTenantDto.remark,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -153,7 +153,7 @@ export class TenantService {
           userType: SYS_USER_TYPE.SYS,
           password: hashedPassword,
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -186,7 +186,7 @@ export class TenantService {
   @IgnoreTenant()
   async findAll(query: ListTenantRequestDto) {
     const where: Prisma.SysTenantWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.tenantId) {
@@ -232,21 +232,21 @@ export class TenantService {
         orderBy: { createTime: 'desc' },
       }),
       this.prisma.sysTenant.count({ where }),
-    ]);
+    ]) as [Array<{ packageId: number | null; [key: string]: unknown }>, number];
 
     // 优化：使用单次查询获取所有套餐名称，避免 N+1 问题
-    const packageIds = list.map((item) => item.packageId).filter(Boolean);
+    const packageIds = list.map((item: { packageId: number | null }) => item.packageId).filter(Boolean);
     const packages =
       packageIds.length > 0
         ? await this.prisma.sysTenantPackage.findMany({
-            where: { packageId: { in: packageIds } },
+            where: { packageId: { in: packageIds as number[] } },
             select: { packageId: true, packageName: true },
           })
         : [];
 
     const packageMap = new Map(packages.map((pkg) => [pkg.packageId, pkg.packageName]));
 
-    const listWithPackage = list.map((item) => ({
+    const listWithPackage = list.map((item: { packageId: number | null }) => ({
       ...item,
       packageName: item.packageId ? packageMap.get(item.packageId) || '' : '',
     }));
@@ -303,7 +303,7 @@ export class TenantService {
         where: {
           companyName: updateData.companyName,
           id: { not: id },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
       });
 
@@ -370,7 +370,7 @@ export class TenantService {
       const tenants = await this.prisma.sysTenant.findMany({
         where: {
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           tenantId: { not: TenantContext.SUPER_TENANT_ID },
         },
         select: { tenantId: true, companyName: true },
@@ -380,7 +380,7 @@ export class TenantService {
 
       // 获取超级管理员租户的字典类型
       const dictTypes = await this.prisma.sysDictType.findMany({
-        where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: DelFlagEnum.NORMAL },
+        where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
       });
 
       this.logger.info({ action: 'tenant.syncDict.dictTypesFound', message: `找到 ${dictTypes.length} 个字典类型需要同步` });
@@ -410,7 +410,7 @@ export class TenantService {
                 dictType: dictType.dictType,
                 status: dictType.status,
                 remark: dictType.remark,
-                delFlag: DelFlagEnum.NORMAL,
+                delFlag: '0',
                 createBy: 'system',
                 updateBy: 'system',
               },
@@ -421,7 +421,7 @@ export class TenantService {
               where: {
                 tenantId: TenantContext.SUPER_TENANT_ID,
                 dictType: dictType.dictType,
-                delFlag: DelFlagEnum.NORMAL,
+                delFlag: '0',
               },
             });
 
@@ -440,14 +440,14 @@ export class TenantService {
                     isDefault: dictData.isDefault,
                     status: dictData.status,
                     remark: dictData.remark,
-                    delFlag: DelFlagEnum.NORMAL,
+                    delFlag: '0',
                     createBy: 'system',
                     updateBy: 'system',
                   })),
                   skipDuplicates: true, // 跳过重复记录
                 });
               } catch (dataError) {
-                this.logger.warn(`为租户 ${tenant.tenantId} 同步字典数据时出错: ${dataError.message}`, { action: 'tenant.syncDict.dataError' });
+                this.logger.warn(`为租户 ${tenant.tenantId} 同步字典数据时出错: ${dataError instanceof Error ? dataError.message : String(dataError)}`, { action: 'tenant.syncDict.dataError' });
               }
             }
 
@@ -470,7 +470,7 @@ export class TenantService {
       });
     } catch (error) {
       this.logger.error('同步租户字典失败', { action: 'tenant.syncDict.failed' });
-      throw new HttpException(`同步租户字典失败: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(`同步租户字典失败: ${error instanceof Error ? error.message : String(error)}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -555,7 +555,7 @@ export class TenantService {
       const tenants = await this.prisma.sysTenant.findMany({
         where: {
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           tenantId: { not: TenantContext.SUPER_TENANT_ID },
         },
         select: { tenantId: true, companyName: true },
@@ -565,7 +565,7 @@ export class TenantService {
 
       // 获取超级管理员租户的配置
       const configs = await this.prisma.sysConfig.findMany({
-        where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: DelFlagEnum.NORMAL },
+        where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
       });
 
       this.logger.info({ action: 'tenant.syncConfig.configsFound', message: `找到 ${configs.length} 个配置项需要同步` });
@@ -587,7 +587,7 @@ export class TenantService {
               configValue: config.configValue,
               configType: config.configType,
               remark: config.remark,
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
               createBy: 'system',
               updateBy: 'system',
             })),
@@ -596,7 +596,7 @@ export class TenantService {
 
           syncedCount += result.count;
         } catch (configError) {
-          this.logger.warn(`为租户 ${tenant.tenantId} 同步配置时出错: ${configError.message}`, { action: 'tenant.syncConfig.error' });
+          this.logger.warn(`为租户 ${tenant.tenantId} 同步配置时出错: ${configError instanceof Error ? configError.message : String(configError)}`, { action: 'tenant.syncConfig.error' });
         }
 
         // 清除租户配置缓存
@@ -615,7 +615,7 @@ export class TenantService {
       });
     } catch (error) {
       this.logger.error('同步租户配置失败', { action: 'tenant.syncConfig.failed' });
-      throw new HttpException(`同步租户配置失败: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(`同步租户配置失败: ${error instanceof Error ? error.message : String(error)}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -633,7 +633,7 @@ export class TenantService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '租户数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '租户编号', dataIndex: 'tenantId' },
         { title: '企业名称', dataIndex: 'companyName' },
@@ -670,7 +670,7 @@ export class TenantService {
     const tenants = await this.prisma.sysTenant.findMany({
       where: {
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       select: {
         tenantId: true,
@@ -707,7 +707,7 @@ export class TenantService {
       where: {
         tenantId: targetTenantId,
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 

@@ -95,7 +95,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
             // Clear any existing state
             await service.unlockAccount(username);
 
-            const platform/config = {
+            const mockConfig = {
               maxFailedAttempts,
               lockDurationMs: 15 * 60 * 1000,
               failedCountTtlMs: 15 * 60 * 1000,
@@ -103,14 +103,14 @@ describe('LoginSecurityService Property-Based Tests', () => {
 
             // Record failures up to maxFailedAttempts - 1
             for (let i = 0; i < maxFailedAttempts - 1; i++) {
-              const status = await service.recordLoginFailure(username, platform/config);
+              const status = await service.recordLoginFailure(username, mockConfig);
               // Should NOT be locked yet
               expect(status.isLocked).toBe(false);
               expect(status.failedAttempts).toBe(i + 1);
             }
 
             // Record the final failure that triggers lock
-            const finalStatus = await service.recordLoginFailure(username, platform/config);
+            const finalStatus = await service.recordLoginFailure(username, mockConfig);
 
             // Property: Account should be locked after exactly maxFailedAttempts
             expect(finalStatus.isLocked).toBe(true);
@@ -236,7 +236,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
             // Clear any existing state
             await service.unlockAccount(username);
 
-            const platform/config = {
+            const mockConfig = {
               maxFailedAttempts,
               lockDurationMs: 15 * 60 * 1000,
               failedCountTtlMs: 15 * 60 * 1000,
@@ -248,7 +248,7 @@ describe('LoginSecurityService Property-Based Tests', () => {
               await redisService.set(countKey, currentFailures.toString(), 15 * 60 * 1000);
             }
 
-            const status = await service.getSecurityStatus(username, platform/config);
+            const status = await service.getSecurityStatus(username, mockConfig);
 
             // Property: remainingAttempts = max(0, maxFailedAttempts - currentFailures)
             const expectedRemaining = Math.max(0, maxFailedAttempts - currentFailures);

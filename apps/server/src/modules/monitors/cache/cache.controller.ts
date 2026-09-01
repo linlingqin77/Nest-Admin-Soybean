@@ -59,7 +59,7 @@ export class CacheController {
     ],
   })
   @Get('/getValue/:cacheName/:cacheKey')
-  getValue(@Param() params: string[]) {
+  getValue(@Param() params: { cacheName: string; cacheKey: string }) {
     return this.cacheService.getValue(params);
   }
 

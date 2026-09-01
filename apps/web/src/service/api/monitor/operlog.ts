@@ -35,10 +35,10 @@ export function fetchOperlogClean() {
 
 /** 导出操作日志 */
 export function fetchOperlogExport(params?: Api.Monitor.OperLogSearchParams) {
-  return request<Blob>({
+  return request<Blob, 'blob'>({
     url: '/monitor/operlog/export',
     method: 'post',
     params,
-    responseType: 'blob' as any
+    responseType: 'blob'
   });
 }

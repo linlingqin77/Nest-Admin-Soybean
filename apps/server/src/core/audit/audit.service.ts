@@ -97,7 +97,7 @@ export class AuditService implements OnModuleDestroy {
         data: record,
       });
     } catch (error) {
-      this.logger.error(`Failed to write audit log: ${error.message}`, error.stack);
+      this.logger.error(`Failed to write audit log: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
     }
   }
 
@@ -127,7 +127,7 @@ export class AuditService implements OnModuleDestroy {
   private startFlushTimer(): void {
     this.flushTimer = setInterval(() => {
       this.flush().catch((error) => {
-        this.logger.error(`Failed to flush audit logs: ${error.message}`, error.stack);
+        this.logger.error(`Failed to flush audit logs: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       });
     }, this.FLUSH_INTERVAL);
   }
@@ -148,7 +148,7 @@ export class AuditService implements OnModuleDestroy {
       });
       this.logger.debug(`Flushed ${records.length} audit logs`);
     } catch (error) {
-      this.logger.error(`Failed to batch write audit logs: ${error.message}`, error.stack);
+      this.logger.error(`Failed to batch write audit logs: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       // 将失败的记录放回队列头部
       this.writeQueue.unshift(...records);
     }

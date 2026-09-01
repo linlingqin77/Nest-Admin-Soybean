@@ -133,7 +133,7 @@ export class UserAuthService {
       user: userObj,
       userId: userData.userId,
       userName: userData.userName,
-      deptId: userData.deptId,
+      deptId: userData.deptId ?? undefined,
     };
 
     await this.updateRedisToken(uuid, userInfo);
@@ -169,7 +169,7 @@ export class UserAuthService {
       sex: '0',
       avatar: '',
       status: StatusEnum.NORMAL,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
       loginIp: '',
     });
     return Result.ok();
@@ -193,7 +193,7 @@ export class UserAuthService {
       const payload = this.jwtService.verify(token.replace('Bearer ', ''));
       return payload;
     } catch (error) {
-      this.logger.debug(`JWT token validation failed: ${error.message}`, { action: 'auth.parseToken' });
+      this.logger.debug(`JWT token validation failed: ${error instanceof Error ? error.message : String(error)}`, { action: 'auth.parseToken' });
       return null;
     }
   }
@@ -275,7 +275,7 @@ export class UserAuthService {
 
     const [dept, roleIds, postRelations] = await Promise.all([
       user.deptId
-        ? this.prisma.sysDept.findFirst({ where: { deptId: user.deptId, delFlag: DelFlagEnum.NORMAL } })
+        ? this.prisma.sysDept.findFirst({ where: { deptId: user.deptId, delFlag: '0' } })
         : Promise.resolve(null),
       this.getRoleIds([userId]),
       this.prisma.sysUserPost.findMany({ where: { userId }, select: { postId: true } }),
@@ -284,7 +284,7 @@ export class UserAuthService {
     const posts = postRelations.length
       ? await this.prisma.sysPost.findMany({
           where: {
-            delFlag: DelFlagEnum.NORMAL,
+            delFlag: '0',
             postId: {
               in: postRelations.map((item) => item.postId),
             },
@@ -293,7 +293,7 @@ export class UserAuthService {
       : [];
 
     const roles = roleIds.length
-      ? await this.roleService.findRoles({ where: { delFlag: DelFlagEnum.NORMAL, roleId: { in: roleIds } } })
+      ? await this.roleService.findRoles({ where: { delFlag: '0', roleId: { in: roleIds } } })
       : [];
 
     return {

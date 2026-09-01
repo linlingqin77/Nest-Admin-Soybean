@@ -6,12 +6,12 @@ export class CreateNoticeRequestDto {
   @ApiProperty({ required: true, description: '公告标题' })
   @IsString()
   @Length(0, 50)
-  noticeTitle: string;
+  noticeTitle!:  string;
 
   @ApiProperty({ enum: NoticeTypeEnum, enumName: 'NoticeTypeEnum', enumSchema: NoticeTypeEnumSchema, required: true })
   @IsString()
   @IsEnum(NoticeTypeEnum)
-  noticeType: string;
+  noticeType!:  string;
 
   @ApiProperty({
     required: true,

@@ -61,8 +61,8 @@ describe('Config E2E Tests', () => {
 
       expect(response.body.code).toBe(200);
       if (response.body.data.rows.length > 0) {
-        response.body.data.rows.forEach((platform/config: any) => {
-          expect(platform/config.configKey.toLowerCase()).toContain('sys.index');
+        response.body.data.rows.forEach((mockConfig: any) => {
+          expect(mockConfig.configKey.toLowerCase()).toContain('sys.index');
         });
       }
     });
@@ -73,8 +73,8 @@ describe('Config E2E Tests', () => {
         .expect(200);
 
       expect(response.body.code).toBe(200);
-      response.body.data.rows.forEach((platform/config: any) => {
-        expect(platform/config.configType).toBe('Y');
+      response.body.data.rows.forEach((mockConfig: any) => {
+        expect(mockConfig.configType).toBe('Y');
       });
     });
 
@@ -166,15 +166,15 @@ describe('Config E2E Tests', () => {
       const listResponse = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=10`).expect(200);
 
       if (listResponse.body.data.rows.length > 0) {
-        const platform/config = listResponse.body.data.rows[0];
-        const originalValue = platform/config.configValue;
+        const mockConfig = listResponse.body.data.rows[0];
+        const originalValue = mockConfig.configValue;
 
         const response = await helper.authPut(`${apiPrefix}/system/config`).send({
-          configId: platform/config.configId,
-          configName: platform/config.configName,
-          configKey: platform/config.configKey,
+          configId: mockConfig.configId,
+          configName: mockConfig.configName,
+          configKey: mockConfig.configKey,
           configValue: 'updated-test-value',
-          configType: platform/config.configType,
+          configType: mockConfig.configType,
         });
 
         // Either success or validation error (built-in configs may have restrictions)
@@ -183,11 +183,11 @@ describe('Config E2E Tests', () => {
         // If successful, restore original value
         if (response.status === 200 && response.body.code === 200) {
           await helper.authPut(`${apiPrefix}/system/config`).send({
-            configId: platform/config.configId,
-            configName: platform/config.configName,
-            configKey: platform/config.configKey,
+            configId: mockConfig.configId,
+            configName: mockConfig.configName,
+            configKey: mockConfig.configKey,
             configValue: originalValue,
-            configType: platform/config.configType,
+            configType: mockConfig.configType,
           });
         }
       }
@@ -210,11 +210,11 @@ describe('Config E2E Tests', () => {
       const listResponse = await helper.authGet(`${apiPrefix}/system/config/list?pageNum=1&pageSize=10`).expect(200);
 
       if (listResponse.body.data.rows.length > 0) {
-        const platform/config = listResponse.body.data.rows[0];
-        const originalValue = platform/config.configValue;
+        const mockConfig = listResponse.body.data.rows[0];
+        const originalValue = mockConfig.configValue;
 
         const response = await helper.authPut(`${apiPrefix}/system/config/updateByKey`).send({
-          configKey: platform/config.configKey,
+          configKey: mockConfig.configKey,
           configValue: 'updated-by-key-value',
         });
 
@@ -224,7 +224,7 @@ describe('Config E2E Tests', () => {
         // If successful, restore original value
         if (response.status === 200 && response.body.code === 200) {
           await helper.authPut(`${apiPrefix}/system/config/updateByKey`).send({
-            configKey: platform/config.configKey,
+            configKey: mockConfig.configKey,
             configValue: originalValue,
           });
         }

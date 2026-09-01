@@ -4,10 +4,11 @@ import { PrismaService } from 'src/platform/prisma';
 import { IPaginatedData } from 'src/shared/response/response.interface';
 import { BusinessException } from 'src/shared/exceptions';
 import { ResponseCode } from 'src/shared/response';
+import { DelFlagEnum } from 'src/shared/enums';
 
 /**
  * 软删除仓储基类
- * 自动处理软删除逻辑（delFlag = '0' 表示正常，'1' 表示已删除）
+ * 自动处理软删除逻辑（DelFlagEnum.NORMAL 表示正常，DelFlagEnum.DELETE 表示已删除）
  */
 export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends BaseRepository<T, D> {
   constructor(prisma: PrismaService, modelName: keyof PrismaClient) {
@@ -29,7 +30,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
     const idField = this.getIdField();
     return await this.delegate.update({
       where: { [idField]: id },
-      data: { delFlag: '1' },
+      data: { delFlag: DelFlagEnum.DELETE },
     });
   }
 
@@ -45,7 +46,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
       where: {
         [idField]: { in: ids },
       },
-      data: { delFlag: '1' },
+      data: { delFlag: DelFlagEnum.DELETE },
     });
 
     return result.count;
@@ -59,7 +60,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
     const where = args?.where || {};
     // 只有在 where 中没有显式设置 delFlag 时才添加默认过滤
     if (!('delFlag' in where)) {
-      (where as Record<string, unknown>).delFlag = '0';
+      (where as Record<string, unknown>).delFlag = DelFlagEnum.NORMAL;
     }
 
     return await this.delegate.findMany({
@@ -74,7 +75,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
   override async findOne(where: Record<string, unknown>, options?: FindOptions): Promise<T | null> {
     // 添加软删除过滤
     if (!('delFlag' in where)) {
-      where.delFlag = '0';
+      where.delFlag = DelFlagEnum.NORMAL;
     }
 
     return await this.delegate.findFirst({ where, ...options });
@@ -96,7 +97,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
 
     // 添加软删除过滤
     if (!('delFlag' in where)) {
-      (where as Record<string, unknown>).delFlag = '0';
+      (where as Record<string, unknown>).delFlag = DelFlagEnum.NORMAL;
     }
 
     return this.delegate.findMany({
@@ -116,7 +117,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
 
     // 添加软删除过滤
     if (!('delFlag' in where)) {
-      (where as Record<string, unknown>).delFlag = '0';
+      (where as Record<string, unknown>).delFlag = DelFlagEnum.NORMAL;
     }
 
     const [rows, total] = await Promise.all([
@@ -147,7 +148,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
     const whereClause = where || {};
     // 添加软删除过滤
     if (!('delFlag' in whereClause)) {
-      (whereClause as Record<string, unknown>).delFlag = '0';
+      (whereClause as Record<string, unknown>).delFlag = DelFlagEnum.NORMAL;
     }
     return this.delegate.count({ where: whereClause });
   }
@@ -157,7 +158,7 @@ export abstract class SoftDeleteRepository<T, D extends PrismaDelegate> extends 
    */
   override async exists(where: Record<string, unknown>): Promise<boolean> {
     if (!('delFlag' in where)) {
-      where.delFlag = '0';
+      where.delFlag = DelFlagEnum.NORMAL;
     }
 
     const count = await this.delegate.count({ where });

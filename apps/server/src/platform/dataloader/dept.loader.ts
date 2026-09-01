@@ -40,7 +40,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         deptId: { in: [...deptIds] },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -61,7 +61,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
     // 查询所有相关部门（包括子部门）
     const allDepts = await this.prisma.sysDept.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         OR: [
           { deptId: { in: deptIds } },
           ...deptIds.map((id) => ({
@@ -94,7 +94,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
     const children = await this.prisma.sysDept.findMany({
       where: {
         parentId: { in: parentIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { orderNum: 'asc' },
     });
@@ -125,7 +125,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
       by: ['deptId'],
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       _count: {
         userId: true,
@@ -156,7 +156,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
     const depts = await this.prisma.sysDept.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       select: {
         deptId: true,
@@ -185,7 +185,7 @@ export class DeptLoader extends BaseLoader<number, SysDept> {
         ? await this.prisma.sysDept.findMany({
             where: {
               deptId: { in: [...allAncestorIds] },
-              delFlag: DelFlagEnum.NORMAL,
+              delFlag: '0',
             },
           })
         : [];

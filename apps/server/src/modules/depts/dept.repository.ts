@@ -17,7 +17,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
    * 根据部门名称查询
    */
   async findByDeptName(deptName: string): Promise<SysDept | null> {
-    return this.findOne({ deptName, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ deptName, delFlag: '0' });
   }
 
   /**
@@ -27,7 +27,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
     const where: Prisma.SysDeptWhereInput = {
       deptName,
       parentId,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeDeptId) {
@@ -42,7 +42,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
    */
   async findAllDepts(status?: string): Promise<SysDept[]> {
     const where: Prisma.SysDeptWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (status) {
@@ -60,7 +60,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
    */
   async countChildren(parentId: number): Promise<number> {
     return this.delegate.count({
-      where: { parentId, delFlag: DelFlagEnum.NORMAL },
+      where: { parentId, delFlag: '0' },
     });
   }
 
@@ -69,7 +69,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
    */
   async countUsers(deptId: number): Promise<number> {
     return this.prisma.sysUser.count({
-      where: { deptId, delFlag: DelFlagEnum.NORMAL },
+      where: { deptId, delFlag: '0' },
     });
   }
 
@@ -92,7 +92,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
     return this.delegate.findMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ parentId: 'asc' }, { orderNum: 'asc' }],
     });
@@ -105,7 +105,7 @@ export class DeptRepository extends SoftDeleteRepository<SysDept, Prisma.SysDept
     const result = await this.delegate.updateMany({
       where: {
         deptId: { in: deptIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       data: { delFlag: '2' },
     });

@@ -50,7 +50,7 @@ export class MailTemplateService {
    */
   async findAll(query: ListMailTemplateDto) {
     const where: Prisma.SysMailTemplateWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.name) {

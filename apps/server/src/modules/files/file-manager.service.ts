@@ -74,7 +74,7 @@ export class FileManagerService {
         tenantId,
         parentId,
         folderName,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -91,7 +91,7 @@ export class FileManagerService {
         '父文件夹不存在',
         ResponseCode.DATA_NOT_FOUND,
       );
-      folderPath = `${parent.folderPath}${parent.folderName}/`;
+      folderPath = `${parent!.folderPath}${parent!.folderName}/`;
     }
 
     const folder = await this.prisma.sysFileFolder.create({
@@ -124,13 +124,13 @@ export class FileManagerService {
     BusinessException.throwIf(!folder || folder.tenantId !== tenantId, '文件夹不存在', ResponseCode.DATA_NOT_FOUND);
 
     // 如果修改了名称，检查是否重复
-    if (folderName && folderName !== folder.folderName) {
+    if (folderName && folderName !== folder!.folderName) {
       const exists = await this.prisma.sysFileFolder.findFirst({
         where: {
           tenantId,
-          parentId: folder.parentId,
+          parentId: folder!.parentId,
           folderName,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           folderId: { not: folderId },
         },
       });
@@ -171,7 +171,7 @@ export class FileManagerService {
       where: {
         tenantId,
         parentId: folderId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -182,7 +182,7 @@ export class FileManagerService {
       where: {
         tenantId,
         folderId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
 
@@ -192,7 +192,7 @@ export class FileManagerService {
         where: {
           tenantId,
           folderId,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
         select: {
           uploadId: true,
@@ -208,7 +208,7 @@ export class FileManagerService {
     await this.prisma.sysFileFolder.update({
       where: { folderId },
       data: {
-        delFlag: DelFlagEnum.DELETE,
+        delFlag: '1',
         updateBy: username,
         updateTime: new Date(),
       },
@@ -226,7 +226,7 @@ export class FileManagerService {
 
     const where: Prisma.SysFileFolderWhereInput = {
       tenantId,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (parentId !== undefined) {
@@ -254,7 +254,7 @@ export class FileManagerService {
     const folders = await this.prisma.sysFileFolder.findMany({
       where: {
         tenantId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ orderNum: 'asc' }, { createTime: 'desc' }],
     });
@@ -268,7 +268,8 @@ export class FileManagerService {
             ...folder,
             children: buildTree(folder.folderId),
           }),
-        );
+        )
+        .filter((node): node is FolderTreeNodeResponseDto => node !== null);
     };
 
     return Result.ok(buildTree());
@@ -285,7 +286,7 @@ export class FileManagerService {
 
     const where: Prisma.SysUploadWhereInput = {
       tenantId,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     // folderId 筛选：支持 0 表示根目录，undefined 表示所有文件
@@ -426,7 +427,7 @@ export class FileManagerService {
         await this.prisma.sysUpload.update({
           where: { uploadId },
           data: {
-            delFlag: DelFlagEnum.DELETE,
+            delFlag: '1',
             updateBy: username,
             updateTime: new Date(),
           },
@@ -625,7 +626,7 @@ export class FileManagerService {
 
     const where: Prisma.SysUploadWhereInput = {
       tenantId,
-      delFlag: DelFlagEnum.DELETE, // 只查询已删除的文件
+      delFlag: '1', // 只查询已删除的文件
     };
 
     if (fileName) {
@@ -672,7 +673,7 @@ export class FileManagerService {
       await this.prisma.sysUpload.update({
         where: { uploadId },
         data: {
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           updateBy: username,
           updateTime: new Date(),
         },
@@ -838,7 +839,7 @@ export class FileManagerService {
           isLatest: true,
           downloadCount: 0,
           status: StatusEnum.NORMAL,
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           createBy: username,
           updateBy: username,
         },

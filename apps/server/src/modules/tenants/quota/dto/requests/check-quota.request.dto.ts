@@ -8,11 +8,11 @@ import { Type } from 'class-transformer';
 export class CheckQuotaRequestDto {
   @ApiProperty({ description: '租户ID' })
   @IsString()
-  tenantId: string;
+  tenantId!:  string;
 
   @ApiProperty({ description: '配额类型', enum: ['user', 'storage', 'api'] })
   @IsString()
-  quotaType: 'user' | 'storage' | 'api';
+  quotaType!:  'user' | 'storage' | 'api';
 
   @ApiPropertyOptional({ description: '请求增量（默认1）' })
   @IsNumber()

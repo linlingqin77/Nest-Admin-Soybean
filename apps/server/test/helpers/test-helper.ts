@@ -100,7 +100,7 @@ export interface TestContext {
 export class TestHelper {
   private app: INestApplication | null = null;
   private token: string = '';
-  private platform/config: TestConfig;
+  private mockConfig: TestConfig;
   private prisma: PrismaService | null = null;
   private loginSecurityService: LoginSecurityService | null = null;
   private createdIds: TestContext['createdIds'] = {
@@ -118,8 +118,8 @@ export class TestHelper {
     files: [],
   };
 
-  constructor(platform/config: Partial<TestConfig> = {}) {
-    this.platform/config = { ...defaultTestConfig, ...platform/config };
+  constructor(mockConfig: Partial<TestConfig> = {}) {
+    this.mockConfig = { ...defaultTestConfig, ...mockConfig };
   }
 
   /**
@@ -135,7 +135,7 @@ export class TestHelper {
     this.app = moduleFixture.createNestApplication();
 
     // 设置全局前缀
-    this.app.setGlobalPrefix(this.platform/config.apiPrefix.replace('/v1', ''));
+    this.app.setGlobalPrefix(this.mockConfig.apiPrefix.replace('/v1', ''));
 
     // 启用版本控制
     this.app.enableVersioning({
@@ -209,7 +209,7 @@ export class TestHelper {
    *
    * @param username 用户名
    */
-  async unlockAccount(username: string = this.platform/config.adminUsername): Promise<void> {
+  async unlockAccount(username: string = this.mockConfig.adminUsername): Promise<void> {
     if (!this.loginSecurityService) {
       throw new Error('TestHelper not initialized. Call init() first.');
     }
@@ -225,9 +225,9 @@ export class TestHelper {
    * @returns 访问Token
    */
   async login(
-    username: string = this.platform/config.adminUsername,
-    password: string = this.platform/config.adminPassword,
-    tenantId: string = this.platform/config.tenantId,
+    username: string = this.mockConfig.adminUsername,
+    password: string = this.mockConfig.adminPassword,
+    tenantId: string = this.mockConfig.tenantId,
   ): Promise<string> {
     if (!this.app) {
       throw new Error('TestHelper not initialized. Call init() first.');
@@ -298,7 +298,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .get(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.platform/config.tenantId);
+      .set('x-tenant-id', this.mockConfig.tenantId);
   }
 
   /**
@@ -311,7 +311,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .post(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.platform/config.tenantId);
+      .set('x-tenant-id', this.mockConfig.tenantId);
   }
 
   /**
@@ -324,7 +324,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .put(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.platform/config.tenantId);
+      .set('x-tenant-id', this.mockConfig.tenantId);
   }
 
   /**
@@ -337,7 +337,7 @@ export class TestHelper {
     return this.getAuthRequest()
       .delete(url)
       .set('Authorization', `Bearer ${this.token}`)
-      .set('x-tenant-id', this.platform/config.tenantId);
+      .set('x-tenant-id', this.mockConfig.tenantId);
   }
 
   /**
@@ -506,14 +506,14 @@ export class TestHelper {
    * 获取测试配置
    */
   getConfig(): TestConfig {
-    return this.platform/config;
+    return this.mockConfig;
   }
 
   /**
    * 获取API前缀
    */
   getApiPrefix(): string {
-    return this.platform/config.apiPrefix;
+    return this.mockConfig.apiPrefix;
   }
 }
 
@@ -523,8 +523,8 @@ export class TestHelper {
  * @param platform/config 测试配置
  * @returns TestHelper 实例
  */
-export function createTestHelper(platform/config: Partial<TestConfig> = {}): TestHelper {
-  return new TestHelper(platform/config);
+export function createTestHelper(mockConfig: Partial<TestConfig> = {}): TestHelper {
+  return new TestHelper(mockConfig);
 }
 
 export default TestHelper;

@@ -5,7 +5,7 @@ import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 export class ChangeOssConfigStatusDto {
   @ApiProperty({ description: '配置ID' })
   @IsString()
-  configId: string;
+  configId!:  string;
 
   @ApiProperty({
     enum: StatusEnum,
@@ -15,5 +15,5 @@ export class ChangeOssConfigStatusDto {
   })
   @IsString()
   @IsEnum(StatusEnum)
-  status: string;
+  status!:  string;
 }

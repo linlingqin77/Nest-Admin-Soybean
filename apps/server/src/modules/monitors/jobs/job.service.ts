@@ -34,7 +34,7 @@ export class JobService {
   private async initializeJobs() {
     const jobs = await this.prisma.sysJob.findMany({ where: { status: StatusEnum.NORMAL } });
     jobs.forEach((job) => {
-      this.addCronJob(job.jobName, job.cronExpression, job.invokeTarget);
+      this.addCronJob(job.jobName, job.cronExpression ?? "", job.invokeTarget ?? "");
     });
   }
 
@@ -87,7 +87,7 @@ export class JobService {
 
     // 如果状态为正常，则添加到调度器
     if (job.status === StatusEnum.NORMAL) {
-      this.addCronJob(job.jobName, job.cronExpression, createJobDto.invokeTarget);
+      this.addCronJob(job.jobName, job.cronExpression ?? '', createJobDto.invokeTarget ?? '');
     }
 
     return Result.ok();
@@ -114,7 +114,7 @@ export class JobService {
       }
 
       if (nextStatus === StatusEnum.NORMAL) {
-        this.addCronJob(job.jobName, nextCron, nextInvokeTarget);
+        this.addCronJob(job.jobName, nextCron ?? '', nextInvokeTarget ?? '');
       }
     }
 
@@ -166,7 +166,7 @@ export class JobService {
     if (status === StatusEnum.NORMAL) {
       // 启用
       if (!cronJob) {
-        this.addCronJob(job.jobName, job.cronExpression, job.invokeTarget);
+        this.addCronJob(job.jobName, job.cronExpression ?? "", job.invokeTarget ?? "");
       } else {
         cronJob.start();
       }
@@ -235,7 +235,7 @@ export class JobService {
     const list = await this.findAll(body);
     const options = {
       sheetName: '定时任务',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '任务编号', dataIndex: 'jobId' },
         { title: '任务名称', dataIndex: 'jobName' },

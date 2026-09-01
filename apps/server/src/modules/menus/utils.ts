@@ -32,7 +32,7 @@ interface InternalMenuItem extends MenuItem {
 /**
  * 路由配置接口
  */
-interface RouterConfig {
+export interface RouterConfig {
   hidden: boolean;
   name: string;
   path: string;

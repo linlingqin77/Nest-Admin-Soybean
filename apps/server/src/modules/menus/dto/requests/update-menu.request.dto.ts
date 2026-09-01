@@ -5,7 +5,7 @@ import { CreateMenuRequestDto } from './create-menu.request.dto';
 export class UpdateMenuRequestDto extends CreateMenuRequestDto {
   @ApiProperty({ required: true, description: '菜单ID' })
   @IsNumber()
-  menuId: number;
+  menuId!:  number;
 }
 
 // 保持向后兼容

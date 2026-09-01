@@ -32,23 +32,23 @@ export class CreateUserRequestDto {
   @ApiProperty({ required: false, description: '邮箱地址', example: 'user@example.com' })
   @IsOptional()
   @Length(0, 50)
-  email: string;
+  email!:  string;
 
   @ApiProperty({ required: true, description: '用户昵称', example: '张三' })
   @IsString()
   @Length(0, 30)
-  nickName: string;
+  nickName!:  string;
 
   @ApiProperty({ required: true, description: '用户账号', example: 'zhangsan' })
   @IsString()
   @Length(0, 30)
-  userName: string;
+  userName!:  string;
 
   @ApiProperty({ required: true, description: '用户密码（需包含大小写字母、数字和特殊字符）', example: 'Admin@123456' })
   @IsString()
   @IsStrongPassword()
   @Length(0, 200)
-  password: string;
+  password!:  string;
 
   @ApiProperty({ required: false, description: '手机号码', example: '13800138000' })
   @IsOptional()

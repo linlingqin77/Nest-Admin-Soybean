@@ -42,7 +42,7 @@ export class NotifyTemplateService {
    */
   async findAll(query: ListNotifyTemplateDto) {
     const where: Prisma.SysNotifyTemplateWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.name) {

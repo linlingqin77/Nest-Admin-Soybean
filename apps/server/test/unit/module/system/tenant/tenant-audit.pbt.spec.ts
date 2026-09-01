@@ -364,8 +364,8 @@ describe('TenantAuditLog Property-Based Tests', () => {
               'config_change',
               'platform/config',
               ipAddress,
-              { platform/config: {} },
-              { platform/config: configData },
+              { mockConfig: {} },
+              { mockConfig: configData },
             );
 
             // Verify audit log was created

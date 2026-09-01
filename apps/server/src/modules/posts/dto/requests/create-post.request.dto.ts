@@ -11,12 +11,12 @@ export class CreatePostRequestDto {
   @ApiProperty({ required: true, description: '岗位名称' })
   @IsString()
   @Length(0, 50)
-  postName: string;
+  postName!:  string;
 
   @ApiProperty({ required: true, description: '岗位编码' })
   @IsString()
   @Length(0, 64)
-  postCode: string;
+  postCode!:  string;
 
   @ApiProperty({ required: false, description: '类别编码' })
   @IsOptional()

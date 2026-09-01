@@ -9,15 +9,15 @@ import { Expose } from 'class-transformer';
 export class CaptchaResponseDto {
   @Expose()
   @ApiProperty({ description: '是否开启验证码', example: true })
-  captchaEnabled: boolean;
+  captchaEnabled!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '验证码唯一标识', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
-  uuid: string;
+  uuid!:  string;
 
   @Expose()
   @ApiProperty({ description: '验证码图片Base64', example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...' })
-  img: string;
+  img!:  string;
 }
 
 /**
@@ -28,7 +28,7 @@ export class CaptchaResponseDto {
 export class CaptchaCodeResponseDto {
   @Expose()
   @ApiProperty({ description: '是否开启验证码', example: true })
-  captchaEnabled: boolean;
+  captchaEnabled!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '验证码唯一标识', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', required: false })

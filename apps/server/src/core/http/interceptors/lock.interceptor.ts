@@ -99,7 +99,7 @@ export class LockInterceptor implements NestInterceptor {
       return result === 1;
     } catch (error) {
       // 释放锁失败，记录日志但不抛出异常
-      this.logger.error(`Failed to release lock ${key}: ${error.message}`, error.stack);
+      this.logger.error(`Failed to release lock ${key}: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
       return false;
     }
   }

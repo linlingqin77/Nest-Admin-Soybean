@@ -171,7 +171,7 @@ export class TenantJobExecutor {
           duration: Date.now() - startTime,
         };
         results.push(result);
-        this.logger.error(`Tenant ${tenant.tenantId} failed: ${error.message}`);
+        this.logger.error(`Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`);
 
         if (!options.continueOnError) {
           this.logger.warn('Stopping execution due to error');
@@ -213,7 +213,7 @@ export class TenantJobExecutor {
             duration: Date.now() - startTime,
           } as TenantJobResult;
         } catch (error) {
-          this.logger.error(`Tenant ${tenant.tenantId} failed: ${error.message}`);
+          this.logger.error(`Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`);
           return {
             tenantId: tenant.tenantId,
             success: false,

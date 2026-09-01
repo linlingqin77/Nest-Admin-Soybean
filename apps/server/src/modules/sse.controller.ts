@@ -63,7 +63,7 @@ export class SseController {
         }
       });
     } catch (error) {
-      this.logger.warn(`SSE connection rejected: JWT verification failed - ${error.message}`);
+      this.logger.warn(`SSE connection rejected: JWT verification failed - ${error instanceof Error ? error.message : String(error)}`);
       return new Observable<MessageEvent>((subscriber) => {
         subscriber.next({ data: JSON.stringify({ type: 'error', message: 'Unauthorized: Token expired or invalid' }) } as MessageEvent);
         subscriber.complete();

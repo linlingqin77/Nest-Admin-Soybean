@@ -42,7 +42,7 @@ export class OptimisticLockInterceptor implements NestInterceptor {
     }
 
     // 检查当前版本
-    const model = this.prisma[options.model];
+    const model = (this.prisma as unknown as Record<string, { findUnique: (args: unknown) => Promise<unknown> }>)[options.model];
     if (!model) {
       throw new Error(`Model ${options.model} not found in Prisma client`);
     }
@@ -56,14 +56,16 @@ export class OptimisticLockInterceptor implements NestInterceptor {
       throw new HttpException('数据不存在', HttpStatus.NOT_FOUND);
     }
 
-    const currentVersion = current[options.versionField];
+    const currentVersion = (current as Record<string, unknown>)[options.versionField];
     if (currentVersion !== version) {
       throw new OptimisticLockException(options.message);
     }
 
     // 在请求中注入新版本号，供 Service 使用
     if (request.body) {
-      request.body[options.versionField] = currentVersion + 1;
+      const newVersion =
+        typeof currentVersion === 'number' ? currentVersion + 1 : 1;
+      request.body[options.versionField] = newVersion;
     }
 
     return next.handle();

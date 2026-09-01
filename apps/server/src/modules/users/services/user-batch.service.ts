@@ -82,7 +82,7 @@ export class UserBatchService {
           remark: userDto.remark ?? '',
           userType: SYS_USER_TYPE.CUSTOM,
           avatar: '',
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           loginIp: '',
         });
 

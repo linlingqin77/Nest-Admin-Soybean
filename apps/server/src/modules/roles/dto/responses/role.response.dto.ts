@@ -10,19 +10,19 @@ import { DeptTreeNodeResponseDto } from 'src/shared/dto/dept-tree-node.response.
 export class RoleResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '角色ID' })
-  roleId: number;
+  roleId!:  number;
 
   @Expose()
   @ApiProperty({ description: '角色名称' })
-  roleName: string;
+  roleName!:  string;
 
   @Expose()
   @ApiProperty({ description: '角色权限字符串' })
-  roleKey: string;
+  roleKey!:  string;
 
   @Expose()
   @ApiProperty({ description: '显示顺序' })
-  roleSort: number;
+  roleSort!:  number;
 
   @Expose()
   @ApiProperty({
@@ -31,19 +31,19 @@ export class RoleResponseDto extends BaseResponseDto {
     enumName: 'DataScopeEnum',
     enumSchema: DataScopeEnumSchema,
   })
-  dataScope: string;
+  dataScope!:  string;
 
   @Expose()
   @ApiProperty({ description: '菜单树选择项是否关联显示' })
-  menuCheckStrictly: boolean;
+  menuCheckStrictly!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '部门树选择项是否关联显示' })
-  deptCheckStrictly: boolean;
+  deptCheckStrictly!:  boolean;
 
   @Expose()
   @ApiProperty({ description: '角色状态', enum: StatusEnum, enumName: 'StatusEnum', enumSchema: StatusEnumSchema })
-  status: string;
+  status!:  string;
 }
 
 /**
@@ -51,10 +51,10 @@ export class RoleResponseDto extends BaseResponseDto {
  */
 export class RoleListResponseDto {
   @ApiProperty({ description: '角色列表', type: [RoleResponseDto] })
-  rows: RoleResponseDto[];
+  rows!:  RoleResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -62,10 +62,10 @@ export class RoleListResponseDto {
  */
 export class RoleDeptTreeResponseDto {
   @ApiProperty({ description: '已选中的部门ID列表', type: [Number] })
-  checkedKeys: number[];
+  checkedKeys!:  number[];
 
   @ApiProperty({ description: '部门树数据', type: [DeptTreeNodeResponseDto] })
-  depts: DeptTreeNodeResponseDto[];
+  depts!:  DeptTreeNodeResponseDto[];
 }
 
 /**
@@ -73,10 +73,10 @@ export class RoleDeptTreeResponseDto {
  */
 export class MenuTreeNodeResponseDto {
   @ApiProperty({ description: '节点ID' })
-  id: number;
+  id!:  number;
 
   @ApiProperty({ description: '节点标签' })
-  label: string;
+  label!:  string;
 
   @ApiProperty({ description: '子节点列表', type: [MenuTreeNodeResponseDto], required: false })
   children?: MenuTreeNodeResponseDto[];
@@ -87,10 +87,10 @@ export class MenuTreeNodeResponseDto {
  */
 export class RoleMenuTreeResponseDto {
   @ApiProperty({ description: '已选中的菜单ID列表', type: [Number] })
-  checkedKeys: number[];
+  checkedKeys!:  number[];
 
   @ApiProperty({ description: '菜单树数据', type: [MenuTreeNodeResponseDto] })
-  menus: MenuTreeNodeResponseDto[];
+  menus!:  MenuTreeNodeResponseDto[];
 }
 
 /**
@@ -98,7 +98,7 @@ export class RoleMenuTreeResponseDto {
  */
 export class AllocatedUserListResponseDto {
   @ApiProperty({ description: '用户列表' })
-  rows: Array<{
+  rows!:  Array<{
     userId: number;
     deptId: number;
     userName: string;
@@ -113,7 +113,7 @@ export class AllocatedUserListResponseDto {
   }>;
 
   @ApiProperty({ description: '总数量' })
-  total: number;
+  total!:  number;
 }
 
 /**
@@ -121,7 +121,7 @@ export class AllocatedUserListResponseDto {
  */
 export class CreateRoleResultResponseDto {
   @ApiProperty({ description: '创建的角色ID', example: 1 })
-  roleId: number;
+  roleId!:  number;
 }
 
 /**
@@ -129,7 +129,7 @@ export class CreateRoleResultResponseDto {
  */
 export class UpdateRoleResultResponseDto {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -137,7 +137,7 @@ export class UpdateRoleResultResponseDto {
  */
 export class ChangeRoleStatusResultResponseDto {
   @ApiProperty({ description: '修改是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -145,7 +145,7 @@ export class ChangeRoleStatusResultResponseDto {
  */
 export class DeleteRoleResultResponseDto {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected: number;
+  affected!:  number;
 }
 
 /**
@@ -153,7 +153,7 @@ export class DeleteRoleResultResponseDto {
  */
 export class DataScopeResultResponseDto {
   @ApiProperty({ description: '修改是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }
 
 /**
@@ -161,5 +161,5 @@ export class DataScopeResultResponseDto {
  */
 export class AuthUserResultResponseDto {
   @ApiProperty({ description: '操作是否成功', example: true })
-  success: boolean;
+  success!:  boolean;
 }

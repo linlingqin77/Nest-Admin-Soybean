@@ -64,32 +64,32 @@ export class CreateGenTableColumnDto {
   @ApiProperty({ description: '归属表编号' })
   @Type(() => Number)
   @IsInt()
-  tableId: number;
+  tableId!:  number;
 
   @ApiProperty({ description: '列名称', example: 'user_name' })
   @IsString()
   @IsNotEmpty({ message: '列名称不能为空' })
-  columnName: string;
+  columnName!:  string;
 
   @ApiProperty({ description: '列描述', example: '用户名' })
   @IsString()
   @IsNotEmpty({ message: '列描述不能为空' })
-  columnComment: string;
+  columnComment!:  string;
 
   @ApiProperty({ description: '列类型', example: 'varchar(64)' })
   @IsString()
   @IsNotEmpty({ message: '列类型不能为空' })
-  columnType: string;
+  columnType!:  string;
 
   @ApiProperty({ description: 'Java 字段名', example: 'userName' })
   @IsString()
   @IsNotEmpty({ message: 'Java 字段名不能为空' })
-  javaField: string;
+  javaField!:  string;
 
   @ApiProperty({ description: 'Java 类型', example: 'String' })
   @IsString()
   @IsNotEmpty({ message: 'Java 类型不能为空' })
-  javaType: string;
+  javaType!:  string;
 
   @ApiPropertyOptional({ description: '查询方式', enum: QueryType, default: QueryType.EQ })
   @IsOptional()
@@ -159,7 +159,7 @@ export class GenTableColumnUpdateDto {
   @ApiProperty({ description: '列ID' })
   @Type(() => Number)
   @IsInt()
-  columnId: number;
+  columnId!:  number;
 
   @ApiPropertyOptional({ description: '列描述' })
   @IsOptional()
@@ -234,13 +234,13 @@ export class ColumnSortDto {
   @ApiProperty({ description: '列ID' })
   @Type(() => Number)
   @IsInt()
-  columnId: number;
+  columnId!:  number;
 
   @ApiProperty({ description: '新排序值' })
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  sort: number;
+  sort!:  number;
 }
 
 /**
@@ -253,8 +253,8 @@ export class BatchColumnSortDto {
   @ApiProperty({ description: '表ID' })
   @Type(() => Number)
   @IsInt()
-  tableId: number;
+  tableId!:  number;
 
   @ApiProperty({ description: '列排序列表', type: [ColumnSortDto] })
-  columns: ColumnSortDto[];
+  columns!:  ColumnSortDto[];
 }

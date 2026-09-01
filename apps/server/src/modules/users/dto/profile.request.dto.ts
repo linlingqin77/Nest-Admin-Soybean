@@ -11,24 +11,24 @@ export class UpdateProfileRequestDto {
   @IsOptional()
   @IsString()
   @Length(0, 30)
-  nickName: string;
+  nickName!:  string;
 
   @ApiProperty({ required: true, description: '邮箱地址' })
   @IsOptional()
   @IsEmail()
   @Length(0, 50)
-  email: string;
+  email!:  string;
 
   @ApiProperty({ required: true, description: '手机号码' })
   @IsOptional()
   @IsString()
-  phonenumber: string;
+  phonenumber!:  string;
 
   @ApiProperty({ enum: SexEnum, enumName: 'SexEnum', enumSchema: SexEnumSchema, required: true })
   @IsOptional()
   @IsString()
   @IsEnum(SexEnum)
-  sex: string;
+  sex!:  string;
 
   @ApiProperty({ required: false, description: '头像地址' })
   @IsOptional()
@@ -43,11 +43,11 @@ export class UpdatePwdRequestDto {
   @ApiProperty({ required: true, description: '旧密码' })
   @IsString()
   @Length(0, 200)
-  oldPassword: string;
+  oldPassword!:  string;
 
   @ApiProperty({ required: true, description: '新密码' })
   @IsString()
   @IsStrongPassword()
   @Length(0, 200)
-  newPassword: string;
+  newPassword!:  string;
 }

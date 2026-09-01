@@ -24,13 +24,13 @@ export class RedisService implements OnModuleDestroy {
         this.logger.log(`Redis connection already closed (status: ${this.client.status})`);
       }
     } catch (error) {
-      this.logger.error(`Error closing Redis connection: ${error.message}`);
+      this.logger.error(`Error closing Redis connection: ${error instanceof Error ? error.message : String(error)}`);
       // 如果 quit 失败，强制断开连接
       try {
         this.client.disconnect();
         this.logger.log('Redis connection forcefully disconnected.');
       } catch (disconnectError) {
-        this.logger.error(`Error forcefully disconnecting Redis: ${disconnectError.message}`);
+        this.logger.error(`Error forcefully disconnecting Redis: ${disconnectError instanceof Error ? disconnectError.message : String(disconnectError)}`);
       }
     }
   }
@@ -48,11 +48,11 @@ export class RedisService implements OnModuleDestroy {
     const rawInfo = await this.client.info();
     // 按行分割字符串
     const lines = rawInfo.split('\r\n');
-    const parsedInfo = {};
+    const parsedInfo: Record<string, string> = {};
     // 遍历每一行并分割键值对
     lines.forEach((line) => {
       const [key, value] = line.split(':');
-      parsedInfo[key?.trim()] = value?.trim();
+      parsedInfo[key?.trim() ?? ''] = value?.trim() ?? '';
     });
     return parsedInfo;
   }
@@ -86,7 +86,7 @@ export class RedisService implements OnModuleDestroy {
     const rawInfo = await this.client.info('commandstats');
     // 按行分割字符串
     const lines = rawInfo.split('\r\n');
-    const commandStats = [];
+    const commandStats: Array<{ name: string; value: number }> = [];
     // 遍历每一行并分割键值对
     lines.forEach((line) => {
       const [key, value] = line.split(':');
@@ -120,9 +120,9 @@ export class RedisService implements OnModuleDestroy {
   }
 
   async mget(keys: string[]): Promise<any[]> {
-    if (!keys) return null;
+    if (!keys) return [];
     const list = await this.client.mget(keys);
-    return list.map((item) => JSON.parse(item));
+    return list.map((item: string | null) => (item ? JSON.parse(item) : null));
   }
 
   /**
@@ -158,7 +158,7 @@ export class RedisService implements OnModuleDestroy {
    * @param key
    */
   async keys(key?: string) {
-    return await this.client.keys(key);
+    return await this.client.keys(key ?? '');
   }
 
   /* ----------------------- hash ----------------------- */
@@ -342,9 +342,9 @@ export class RedisService implements OnModuleDestroy {
    * @param key
    */
   async lLeftPop(key: string): Promise<string> {
-    if (!key) return null;
+    if (!key) return '';
     const result = await this.client.blpop(key);
-    return result.length > 0 ? result[0] : null;
+    return result && result.length > 0 ? result[0] : "";
   }
 
   /**
@@ -352,9 +352,9 @@ export class RedisService implements OnModuleDestroy {
    * @param key
    */
   async lRightPop(key: string): Promise<string> {
-    if (!key) return null;
+    if (!key) return '';
     const result = await this.client.brpop(key);
-    return result.length > 0 ? result[0] : null;
+    return result && result.length > 0 ? result[0] : "";
   }
 
   /**
@@ -390,8 +390,8 @@ export class RedisService implements OnModuleDestroy {
    * @param timeout
    */
   async lPoplPush(sourceKey: string, destinationKey: string, timeout: number): Promise<string> {
-    if (!sourceKey || !destinationKey) return null;
-    return await this.client.brpoplpush(sourceKey, destinationKey, timeout);
+    if (!sourceKey || !destinationKey) return '';
+    return (await this.client.brpoplpush(sourceKey, destinationKey, timeout)) ?? '';
   }
 
   /**

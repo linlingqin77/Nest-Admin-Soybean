@@ -14,7 +14,7 @@ describe('FeatureToggleService - Property Tests', () => {
   let service: FeatureToggleService;
 
   // 内存存储模拟
-  const featureStore = new Map<string, Map<string, { enabled: boolean; platform/config?: string }>>();
+  const featureStore = new Map<string, Map<string, { enabled: boolean; mockConfig?: string }>>();
   const cacheStore = new Map<string, Map<string, string>>();
 
   const mockRedisClient = {
@@ -33,7 +33,7 @@ describe('FeatureToggleService - Property Tests', () => {
           tenantId,
           featureKey,
           enabled: feature.enabled,
-          platform/config: feature.platform/config,
+          mockConfig: feature.mockConfig,
         });
       }),
       findMany: jest.fn().mockImplementation(({ where }) => {
@@ -44,7 +44,7 @@ describe('FeatureToggleService - Property Tests', () => {
             tenantId: where.tenantId,
             featureKey,
             enabled: data.enabled,
-            platform/config: data.platform/config,
+            mockConfig: data.mockConfig,
           })),
         );
       }),
@@ -56,7 +56,7 @@ describe('FeatureToggleService - Property Tests', () => {
         const tenantFeatures = featureStore.get(tenantId)!;
         tenantFeatures.set(featureKey, {
           enabled: update.enabled ?? create.enabled,
-          platform/config: update.platform/config ?? create.platform/config,
+          mockConfig: update.mockConfig ?? create.mockConfig,
         });
         return Promise.resolve({ tenantId, featureKey });
       }),
@@ -348,13 +348,13 @@ describe('FeatureToggleService - Property Tests', () => {
             minKeys: 0,
             maxKeys: 5,
           }),
-          async (tenantId, feature, enabled, platform/config) => {
+          async (tenantId, feature, enabled, mockConfig) => {
             // 清空存储
             featureStore.clear();
             cacheStore.clear();
 
             // 设置功能开关和配置
-            await service.setFeature(tenantId, feature, enabled, platform/config);
+            await service.setFeature(tenantId, feature, enabled, mockConfig);
 
             // 获取功能配置
             const result = await service.getFeatureConfig(tenantId, feature);

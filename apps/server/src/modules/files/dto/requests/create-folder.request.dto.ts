@@ -10,7 +10,7 @@ export class CreateFolderRequestDto {
   @ApiProperty({ required: true, description: '文件夹名称' })
   @IsString()
   @Length(1, 100)
-  folderName: string;
+  folderName!:  string;
 
   @ApiProperty({ required: false, description: '排序' })
   @IsOptional()

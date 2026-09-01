@@ -12,7 +12,7 @@ import toolConfig from './config';
 import { GenConstants } from 'src/shared/constants/gen.constant';
 import { camelCase, toLower } from 'lodash';
 import { arraysContains, getColumnLength, StringUtils, capitalize } from './utils/index';
-import { index as templateIndex } from './template/index';
+import { index as templateIndex, TemplateOptions } from './template/index';
 import archiver from 'archiver';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -54,13 +54,13 @@ export class ToolService {
   }
 
   private async fetchTableDetail(where: Prisma.GenTableWhereInput): Promise<GenTableWithColumns | null> {
-    const criteria: Prisma.GenTableWhereInput = { delFlag: DelFlagEnum.NORMAL, ...where };
+    const criteria: Prisma.GenTableWhereInput = { delFlag: '0', ...where };
     const table = await this.prisma.genTable.findFirst({ where: criteria });
     if (!table) {
       return null;
     }
     const columns = await this.prisma.genTableColumn.findMany({
-      where: { tableId: table.tableId, delFlag: DelFlagEnum.NORMAL },
+      where: { tableId: table.tableId, delFlag: '0' },
       orderBy: { sort: 'asc' },
     });
     return { ...table, columns };
@@ -102,7 +102,7 @@ export class ToolService {
    */
   async findAll(query: GenTableList) {
     const where: Prisma.GenTableWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
     if (query.tableName) {
       where.tableName = { contains: query.tableName };
@@ -154,7 +154,7 @@ export class ToolService {
         genPath: '/',
         options: '',
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tplCategory: 'crud',
         tplWebType: 'element-plus',
       };
@@ -398,7 +398,7 @@ export class ToolService {
 
     // 为每个表生成代码
     for (const item of tableList) {
-      const templateOutput = templateIndex(item);
+      const templateOutput = templateIndex(item as unknown as TemplateOptions);
 
       // 使用 PreviewService 获取文件列表
       const previewResponse = this.previewService.createPreviewResponse(templateOutput, item.BusinessName);
@@ -475,7 +475,7 @@ export class ToolService {
 
     // 为每个表生成代码
     for (const item of tableList) {
-      const templateOutput = templateIndex(item);
+      const templateOutput = templateIndex(item as unknown as TemplateOptions);
 
       // 使用 PreviewService 获取文件列表
       const previewResponse = this.previewService.createPreviewResponse(templateOutput, item.BusinessName);
@@ -517,7 +517,7 @@ export class ToolService {
     }
     const primaryKey = await this.getPrimaryKey(data.columns);
     const info = { primaryKey, BusinessName: capitalize(data.businessName), ...data, columns: data.columns };
-    const templateOutput = templateIndex(info);
+    const templateOutput = templateIndex(info as unknown as TemplateOptions);
 
     // 使用 PreviewService 创建完整的预览响应
     const previewResponse = this.previewService.createPreviewResponse(templateOutput, capitalize(data.businessName));

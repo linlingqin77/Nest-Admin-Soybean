@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/platform/prisma';
 import { BusinessException } from 'src/shared/exceptions';
 import { ResponseCode } from 'src/shared/response';
@@ -149,7 +150,8 @@ export class TenantExportService {
    * 收集导出数据
    */
   private async collectExportData(tenantId: string, options: ExportOptions): Promise<TenantExportData> {
-    const delFlagFilter = options.includeDeleted ? {} : { delFlag: DelFlagEnum.NORMAL };
+    const includeDeleted = options.includeDeleted;
+    const delFlagFilter: { delFlag: string } | null = includeDeleted ? null : { delFlag: '0' };
 
     const exportData: TenantExportData = {
       exportTime: new Date().toISOString(),
@@ -175,7 +177,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysUser
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysUserWhereInput,
           })
           .then((users) => {
             exportData.users = users.map((u) =>
@@ -189,7 +191,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysRole
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysRoleWhereInput,
           })
           .then((roles) => {
             exportData.roles = roles.map((r) => this.sanitizeRecord(r));
@@ -201,7 +203,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysDept
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysDeptWhereInput,
           })
           .then((depts) => {
             exportData.depts = depts.map((d) => this.sanitizeRecord(d));
@@ -213,7 +215,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysMenu
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysMenuWhereInput,
           })
           .then((menus) => {
             exportData.menus = menus.map((m) => this.sanitizeRecord(m));
@@ -225,7 +227,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysPost
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysPostWhereInput,
           })
           .then((posts) => {
             exportData.posts = posts.map((p) => this.sanitizeRecord(p));
@@ -237,7 +239,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysDictType
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysDictTypeWhereInput,
           })
           .then((dictTypes) => {
             exportData.dictTypes = dictTypes.map((dt) => this.sanitizeRecord(dt));
@@ -249,7 +251,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysDictData
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysDictDataWhereInput,
           })
           .then((dictData) => {
             exportData.dictData = dictData.map((dd) => this.sanitizeRecord(dd));
@@ -261,7 +263,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysConfig
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysConfigWhereInput,
           })
           .then((configs) => {
             exportData.configs = configs.map((c) => this.sanitizeRecord(c));
@@ -273,7 +275,7 @@ export class TenantExportService {
       promises.push(
         this.prismaService.sysNotice
           .findMany({
-            where: { tenantId, ...delFlagFilter },
+            where: { tenantId, ...(delFlagFilter ? delFlagFilter : {}) } as Prisma.SysNoticeWhereInput,
           })
           .then((notices) => {
             exportData.notices = notices.map((n) => this.sanitizeRecord(n));

@@ -81,7 +81,7 @@ export class MailAccountService {
    */
   async findAll(query: ListMailAccountDto) {
     const where: Prisma.SysMailAccountWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.mail) {

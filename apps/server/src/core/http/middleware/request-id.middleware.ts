@@ -22,8 +22,8 @@ export class RequestIdMiddleware implements NestMiddleware {
     const requestId = (req.headers['x-request-id'] as string) || uuidv4();
 
     // 将 Request ID 存储到请求对象
-    req['requestId'] = requestId;
-    req['id'] = requestId;
+    (req as unknown as Record<string, unknown>)['requestId'] = requestId;
+    (req as unknown as Record<string, unknown>)['id'] = requestId;
 
     // 设置响应头
     res.setHeader('X-Request-Id', requestId);

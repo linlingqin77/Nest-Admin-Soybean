@@ -168,7 +168,7 @@ export function Paginate<T extends { ipaddr?: string; userName?: string }>(
     arrayData = Lodash.filter(arrayData, (item) => {
       const arr = [];
       if (filterParam.ipaddr) {
-        arr.push(Boolean(item.ipaddr.includes(filterParam.ipaddr)));
+        arr.push(Boolean(item.ipaddr?.includes(filterParam.ipaddr)));
       }
 
       if (filterParam.userName && item.userName) {

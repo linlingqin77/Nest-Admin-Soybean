@@ -6,5 +6,5 @@ import { PartialType } from '@nestjs/swagger';
 export class UpdateMailAccountRequestDto extends PartialType(CreateMailAccountRequestDto) {
   @ApiProperty({ description: '账号ID', example: 1 })
   @IsNumber()
-  id: number;
+  id!:  number;
 }

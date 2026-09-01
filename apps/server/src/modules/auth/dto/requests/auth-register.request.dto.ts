@@ -17,7 +17,7 @@ export class AuthRegisterRequestDto {
   @IsString()
   @MinLength(2)
   @MaxLength(20)
-  username: string;
+  username!:  string;
 
   @ApiProperty({ description: '密码', required: true })
   @IsNotEmpty({ message: '密码不能为空' })
@@ -25,22 +25,22 @@ export class AuthRegisterRequestDto {
   @IsStrongPassword()
   @MinLength(5)
   @MaxLength(20)
-  password: string;
+  password!:  string;
 
   @ApiProperty({ description: '确认密码', required: true })
   @IsNotEmpty({ message: '确认密码不能为空' })
   @IsString()
-  confirmPassword: string;
+  confirmPassword!:  string;
 
   @ApiProperty({ description: '验证码', required: true })
   @IsNotEmpty({ message: '验证码不能为空' })
   @IsString()
-  code: string;
+  code!:  string;
 
   @ApiProperty({ description: '验证码唯一标识', required: true })
   @IsNotEmpty({ message: 'uuid不能为空' })
   @IsString()
-  uuid: string;
+  uuid!:  string;
 
   @ApiProperty({ description: '用户类型', required: false })
   @IsOptional()

@@ -17,14 +17,14 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
    * 根据角色key查询角色
    */
   async findByRoleKey(roleKey: string): Promise<SysRole | null> {
-    return this.findOne({ roleKey, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ roleKey, delFlag: '0' });
   }
 
   /**
    * 根据角色名称查询角色
    */
   async findByRoleName(roleName: string): Promise<SysRole | null> {
-    return this.findOne({ roleName, delFlag: DelFlagEnum.NORMAL });
+    return this.findOne({ roleName, delFlag: '0' });
   }
 
   /**
@@ -33,7 +33,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
   async existsByRoleKey(roleKey: string, excludeRoleId?: number): Promise<boolean> {
     const where: Prisma.SysRoleWhereInput = {
       roleKey,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeRoleId) {
@@ -49,7 +49,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
   async existsByRoleName(roleName: string, excludeRoleId?: number): Promise<boolean> {
     const where: Prisma.SysRoleWhereInput = {
       roleName,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (excludeRoleId) {
@@ -65,7 +65,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
   async findUserRoles(userId: number): Promise<SysRole[]> {
     return this.prisma.sysRole.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         userRoles: {
           some: { userId },
         },
@@ -81,7 +81,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
     skip: number,
     take: number,
     orderBy?: Prisma.SysRoleOrderByWithRelationInput,
-  ): Promise<{ list: any[]; total: number }> {
+  ): Promise<{ list: SysRole[]; total: number }> {
     // 先查询角色列表
     const [roles, total] = await this.prisma.$transaction([
       this.prisma.sysRole.findMany({
@@ -91,10 +91,10 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
         orderBy: orderBy || { createTime: 'desc' },
       }),
       this.prisma.sysRole.count({ where }),
-    ]);
+    ]) as [SysRole[], number];
 
     // 再查询每个角色的菜单数量
-    const roleIds = roles.map((role) => role.roleId);
+    const roleIds = roles.map((role: SysRole) => role.roleId);
     const menuCounts = await this.prisma.sysRoleMenu.groupBy({
       by: ['roleId'],
       where: {
@@ -122,7 +122,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
     const result = await this.delegate.updateMany({
       where: {
         roleId: { in: roleIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       data: { delFlag: '2' },
     });

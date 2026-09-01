@@ -64,10 +64,10 @@ describe('JwtAuthGuard', () => {
           useFactory: (
             reflector: Reflector,
             userService: UserService,
-            platform/config: AppConfigService,
+            mockConfig: AppConfigService,
             tokenBlacklistService: TokenBlacklistService,
           ) => {
-            return new JwtAuthGuard(reflector, userService, platform/config, tokenBlacklistService);
+            return new JwtAuthGuard(reflector, userService, mockConfig, tokenBlacklistService);
           },
           inject: [Reflector, UserService, AppConfigService, TokenBlacklistService],
         },

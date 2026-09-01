@@ -28,7 +28,7 @@ model SysTenant {
   storageUsed     Int       @default(0) @map("storage_used") // 已使用存储(MB)
   apiQuota        Int       @default(10000) @map("api_quota") // API日调用量配额，默认10000次，-1表示无限制
   status          String    @default("0") @db.Char(1)
-  delFlag         String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy        String    @default("") @map("create_by") @db.VarChar(64)
   createTime      DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy        String    @default("") @map("update_by") @db.VarChar(64)
@@ -45,7 +45,7 @@ model SysTenantPackage {
   menuIds            String?   @map("menu_ids") @db.Text
   menuCheckStrictly  Boolean   @default(false) @map("menu_check_strictly")
   status             String    @default("0") @db.Char(1)
-  delFlag            String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy           String    @default("") @map("create_by") @db.VarChar(64)
   createTime         DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy           String    @default("") @map("update_by") @db.VarChar(64)
@@ -66,7 +66,7 @@ model SysClient {
   activeTimeout Int       @default(1800) @map("active_timeout")
   timeout       Int       @default(86400)
   status        String    @default("0") @db.Char(1)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)
@@ -91,7 +91,7 @@ model GenDataSource {
   username    String    @db.VarChar(100)
   password    String    @db.VarChar(500) // 加密存储
   status      String    @default("0") @db.Char(1)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy    String    @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
@@ -113,7 +113,7 @@ model GenTemplateGroup {
   description String?   @db.VarChar(500)
   isDefault   Boolean   @default(false) @map("is_default")
   status      String    @default("0") @db.Char(1)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy    String    @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
@@ -139,7 +139,7 @@ model GenTemplate {
   language    String    @db.VarChar(20) // typescript, vue, sql
   sort        Int       @default(0)
   status      String    @default("0") @db.Char(1)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy    String    @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
@@ -193,10 +193,10 @@ model GenTable {
   genPath         String    @map("gen_path") @db.VarChar(200)
   options         String    @db.VarChar(1000)
   status          String    @db.Char(1)
-  delFlag         String    @map("del_flag") @db.Char(1)
-  createBy        String    @map("create_by") @db.VarChar(64)
+  delFlag         String         @map("del_flag") @db.Char(1)
+  createBy        String    @default("") @map("create_by") @db.VarChar(64)
   createTime      DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  updateBy        String    @map("update_by") @db.VarChar(64)
+  updateBy        String    @default("") @map("update_by") @db.VarChar(64)
   updateTime      DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark          String?   @db.VarChar(500)
 
@@ -232,10 +232,10 @@ model GenTableColumn {
   columnDefault String?  @map("column_default") @db.VarChar(200)
   sort         Int       @db.Integer
   status       String    @db.Char(1)
-  delFlag      String    @map("del_flag") @db.Char(1)
-  createBy     String    @map("create_by") @db.VarChar(64)
+  delFlag         String         @map("del_flag") @db.Char(1)
+  createBy     String    @default("") @map("create_by") @db.VarChar(64)
   createTime   DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  updateBy     String    @map("update_by") @db.VarChar(64)
+  updateBy     String    @default("") @map("update_by") @db.VarChar(64)
   updateTime   DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark       String?   @db.VarChar(500)
 
@@ -257,7 +257,7 @@ model SysSystemConfig {
   updateTime  DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark      String?   @db.VarChar(500)
   status      String    @default("0") @db.Char(1)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@index([status])
   @@index([configType])
@@ -280,7 +280,7 @@ model SysConfig {
   updateTime  DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark      String?   @db.VarChar(500)
   status      String    @default("0") @db.Char(1)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@unique([tenantId, configKey], name: "unique_tenant_config_key")
   @@index([tenantId, status])
@@ -302,7 +302,7 @@ model SysDept {
   phone     String    @default("") @db.VarChar(11)
   email     String    @default("") @db.VarChar(50)
   status    String    @default("0") @db.Char(1)
-  delFlag   String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy  String    @default("") @map("create_by") @db.VarChar(64)
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy  String    @default("") @map("update_by") @db.VarChar(64)
@@ -333,7 +333,7 @@ model SysDictData {
   updateBy   String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark     String?   @db.VarChar(500)
-  delFlag    String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@unique([tenantId, dictType, dictValue], name: "unique_tenant_dict_data")
   @@index([tenantId, dictType, status])
@@ -352,7 +352,7 @@ model SysDictType {
   updateBy  String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark    String?   @db.VarChar(500)
-  delFlag   String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@unique([tenantId, dictType], name: "unique_tenant_dict_type")
   @@index([tenantId, status])
@@ -370,9 +370,9 @@ model SysJob {
   misfirePolicy  String?   @map("misfire_policy") @db.VarChar(20)
   concurrent     String?   @db.Char(1)
   status         String?   @db.Char(1)
-  createBy       String    @map("create_by") @db.VarChar(64)
+  createBy       String    @default("") @map("create_by") @db.VarChar(64)
   createTime     DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  updateBy       String    @map("update_by") @db.VarChar(64)
+  updateBy       String    @default("") @map("update_by") @db.VarChar(64)
   updateTime     DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark         String?   @db.VarChar(500)
 
@@ -405,7 +405,7 @@ model SysLogininfor {
   deviceType    String    @default("0") @map("device_type") @db.Char(1)
   status        String    @db.Char(1)
   msg           String    @db.VarChar(255)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   loginTime     DateTime  @map("login_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
 
   @@index([tenantId, loginTime])
@@ -438,7 +438,7 @@ model SysMenu {
   updateBy  String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark    String?   @db.VarChar(500)
-  delFlag   String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@index([tenantId, status])
   @@index([tenantId, parentId])
@@ -459,7 +459,7 @@ model SysNotice {
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)
   updateTime    DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   remark        String?   @db.VarChar(500)
 
   @@index([tenantId, status])
@@ -514,7 +514,7 @@ model SysPost {
   updateBy  String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   remark    String?   @db.VarChar(500)
-  delFlag   String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@index([tenantId, status])
   @@index([deptId])
@@ -532,7 +532,7 @@ model SysRole {
   menuCheckStrictly Boolean  @map("menu_check_strictly") @default(false)
   deptCheckStrictly Boolean  @map("dept_check_strictly") @default(false)
   status           String    @default("0") @db.Char(1)
-  delFlag          String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy         String    @default("") @map("create_by") @db.VarChar(64)
   createTime       DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy         String    @default("") @map("update_by") @db.VarChar(64)
@@ -573,7 +573,7 @@ model SysFileFolder {
   folderPath String    @map("folder_path") @db.VarChar(500)
   orderNum   Int       @default(0) @map("order_num")
   status     String    @default("0") @db.Char(1)
-  delFlag    String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy   String    @default("") @map("create_by") @db.VarChar(64)
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy   String    @default("") @map("update_by") @db.VarChar(64)
@@ -603,7 +603,7 @@ model SysUpload {
   isLatest      Boolean   @default(true) @map("is_latest") // 是否最新版本
   downloadCount Int       @default(0) @map("download_count")
   status        String    @default("0") @db.Char(1)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)
@@ -653,7 +653,7 @@ model SysUser {
   avatar    String    @default("") @db.VarChar(255)
   password  String    @db.VarChar(200)
   status    String    @default("0") @db.Char(1)
-  delFlag   String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   loginIp   String    @default("") @map("login_ip") @db.VarChar(128)
   loginDate DateTime? @map("login_date") @db.Timestamp(6)
   createBy  String    @default("") @map("create_by") @db.VarChar(64)
@@ -773,7 +773,7 @@ model SysSmsChannel {
   createTime  DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy    String    @default("") @map("update_by") @db.VarChar(64)
   updateTime  DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag     String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   templates   SysSmsTemplate[]
 
@@ -798,7 +798,7 @@ model SysSmsTemplate {
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)
   updateTime    DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   channel       SysSmsChannel @relation(fields: [channelId], references: [id])
 
@@ -850,7 +850,7 @@ model SysMailAccount {
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy   String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag    String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   templates  SysMailTemplate[]
 
@@ -874,7 +874,7 @@ model SysMailTemplate {
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy   String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag    String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   account    SysMailAccount @relation(fields: [accountId], references: [id])
 
@@ -925,7 +925,7 @@ model SysNotifyTemplate {
   createTime DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy   String    @default("") @map("update_by") @db.VarChar(64)
   updateTime DateTime? @map("update_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
-  delFlag    String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
 
   @@index([status])
   @@index([type])
@@ -945,7 +945,7 @@ model SysNotifyMessage {
   templateParams   String?   @map("template_params") @db.Text
   readStatus       Boolean   @default(false) @map("read_status")
   readTime         DateTime? @map("read_time") @db.Timestamp(6)
-  delFlag          String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createTime       DateTime  @default(now()) @map("create_time") @db.Timestamp(6)
 
   @@index([tenantId, userId])
@@ -999,7 +999,7 @@ model SysTenantBilling {
   dueDate     DateTime  @map("due_date") @db.Timestamp(6)        // 到期日
   paidTime    DateTime? @map("paid_time") @db.Timestamp(6)       // 支付时间
   remark      String?   @db.VarChar(500)
-  createBy    String    @map("create_by") @db.VarChar(64)
+  createBy    String    @default("") @map("create_by") @db.VarChar(64)
   createTime  DateTime  @default(now()) @map("create_time") @db.Timestamp(6)
   updateTime  DateTime  @updatedAt @map("update_time") @db.Timestamp(6)
 
@@ -1074,7 +1074,7 @@ model SysOssConfig {
   status        String    @default("1") @db.Char(1)
   ext1          String?   @db.VarChar(255)
   remark        String?   @db.VarChar(500)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)
@@ -1095,7 +1095,7 @@ model SysOss {
   url           String    @db.VarChar(500)
   size          BigInt    @default(0)
   service       String    @default("local") @db.VarChar(50)
-  delFlag       String    @default("0") @map("del_flag") @db.Char(1)
+  delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)
   createTime    DateTime? @map("create_time") @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamp(6)
   updateBy      String    @default("") @map("update_by") @db.VarChar(64)

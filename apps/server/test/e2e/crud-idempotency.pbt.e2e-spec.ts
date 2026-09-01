@@ -75,8 +75,8 @@ describe('Property 5: CRUD Idempotency for Read Operations', () => {
       path: '/system/config',
       description: 'Config',
       getExistingId: async () => {
-        const platform/config = await prisma.sysConfig.findFirst();
-        return platform/config?.configId ?? null;
+        const mockConfig = await prisma.sysConfig.findFirst();
+        return mockConfig?.configId ?? null;
       },
     },
     {

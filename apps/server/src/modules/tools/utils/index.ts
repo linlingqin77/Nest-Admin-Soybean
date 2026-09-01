@@ -46,14 +46,14 @@ export class StringUtils {
  * @param {string} str - 输入的字符串，使用下划线分隔
  * @returns {string} - 转换后的驼峰命名法字符串
  */
-export function convertToCamelCase(str) {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+export function convertToCamelCase(str: string) {
+  return str.replace(/_([a-z])/g, (_: string, letter: string) => letter.toUpperCase());
 }
 /**
  * 将字符串的首字母大写
  * @param {string} str - 输入的字符串
  * @returns {string} - 首字母大写后的字符串
  */
-export function capitalize(str) {
+export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

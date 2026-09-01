@@ -1,5 +1,21 @@
 import * as Lodash from 'lodash';
 
+interface ColumnInfo {
+  javaField?: string;
+  javaType?: string;
+  columnComment?: string;
+  isRequired?: string;
+  isPk?: string;
+}
+
+interface EntityOptions {
+  BusinessName: string;
+  tableComment?: string;
+  functionName?: string;
+  columns?: ColumnInfo[];
+  tenantAware?: boolean;
+}
+
 /**
  * NestJS Entity 模板生成器
  *
@@ -10,13 +26,13 @@ import * as Lodash from 'lodash';
  *
  * Requirements: 13.2, 13.11, 14.8
  */
-export const entityTem = (options) => {
+export const entityTem = (options: EntityOptions) => {
   const { BusinessName, tableComment, functionName, columns, tenantAware = false } = options;
   const className = Lodash.upperFirst(BusinessName);
   const contentTem = generateContent(options);
 
   // 检查是否有租户字段
-  const hasTenantId = tenantAware || columns?.some((col) => col.javaField === 'tenantId');
+  const hasTenantId = tenantAware || columns?.some((col: ColumnInfo) => col.javaField === 'tenantId');
 
   return `/**
  * ${functionName || tableComment || BusinessName} 实体类
@@ -42,19 +58,19 @@ export type Update${className}Input = Partial<${className}Entity>;
 /**
  * 生成实体内容
  */
-const generateContent = (options) => {
+const generateContent = (options: EntityOptions) => {
   const { columns } = options;
   if (!columns) return '';
 
   // 按主键排序，主键在前
-  const sortedColumns = [...columns].sort((a, b) => {
+  const sortedColumns = [...columns].sort((a: ColumnInfo, b: ColumnInfo) => {
     if (a.isPk === '1' && b.isPk !== '1') return -1;
     if (a.isPk !== '1' && b.isPk === '1') return 1;
     return 0;
   });
 
   return sortedColumns
-    .map((column) => {
+    .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, isRequired } = column;
       const type = mapJavaTypeToTs(javaType);
       const optionalFlag = isRequired === '1' ? '' : '?';

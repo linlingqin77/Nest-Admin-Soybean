@@ -75,7 +75,7 @@ export interface QuotaTestData {
  * @param platform/config 租户配置
  * @returns 配置好的 MockPrismaService
  */
-export function createTenantMockPrisma(platform/config: Partial<TenantTestConfig> = {}): MockPrismaService {
+export function createTenantMockPrisma(mockConfig: Partial<TenantTestConfig> = {}): MockPrismaService {
   const mock = createMockPrisma();
 
   // 添加租户相关的默认行为
@@ -141,8 +141,8 @@ export function createTenantMockRedis(): MockRedisService {
  * @param platform/config 租户配置覆盖
  * @returns 配置好的 MockConfigService
  */
-export function createTenantMockConfig(platform/config: Partial<TenantTestConfig> = {}): MockConfigService {
-  const tenantConfig = { ...defaultTenantTestConfig, ...platform/config };
+export function createTenantMockConfig(mockConfig: Partial<TenantTestConfig> = {}): MockConfigService {
+  const tenantConfig = { ...defaultTenantTestConfig, ...mockConfig };
 
   return createMockConfig({
     'tenant.enabled': tenantConfig.enabled,
@@ -156,8 +156,8 @@ export function createTenantMockConfig(platform/config: Partial<TenantTestConfig
  * @param platform/config 租户配置覆盖
  * @returns AppConfigService Mock 对象
  */
-export function createMockAppConfigService(platform/config: Partial<TenantTestConfig> = {}) {
-  const tenantConfig = { ...defaultTenantTestConfig, ...platform/config };
+export function createMockAppConfigService(mockConfig: Partial<TenantTestConfig> = {}) {
+  const tenantConfig = { ...defaultTenantTestConfig, ...mockConfig };
 
   return {
     tenant: {

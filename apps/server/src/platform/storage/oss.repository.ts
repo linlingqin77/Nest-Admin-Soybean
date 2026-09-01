@@ -27,7 +27,7 @@ export class OssRepository extends SoftDeleteRepository<SysOss, Prisma.SysOssDel
     return this.delegate.findFirst({
       where: {
         ossId,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
   }
@@ -39,7 +39,7 @@ export class OssRepository extends SoftDeleteRepository<SysOss, Prisma.SysOssDel
     return this.delegate.findMany({
       where: {
         ossId: { in: ossIds },
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
   }

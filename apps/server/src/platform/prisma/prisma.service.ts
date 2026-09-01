@@ -420,7 +420,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       await this.$disconnect();
       this.logger.log('Prisma connection closed successfully.');
     } catch (error) {
-      this.logger.error(`Error closing Prisma connection: ${error.message}`);
+      this.logger.error(`Error closing Prisma connection: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }

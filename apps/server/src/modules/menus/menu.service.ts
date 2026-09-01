@@ -27,7 +27,7 @@ export class MenuService {
       ...createMenuDto,
       path: createMenuDto.path ?? '',
       icon: createMenuDto.icon ?? '',
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     });
     return Result.ok(toDto(MenuResponseDto, res));
   }
@@ -68,7 +68,7 @@ export class MenuService {
   async tenantPackageMenuTreeselect(packageId: number): Promise<any> {
     const res = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ orderNum: 'asc' }, { parentId: 'asc' }],
     });
@@ -133,7 +133,7 @@ export class MenuService {
       const children = await this.prisma.sysMenu.findMany({
         where: {
           parentId: { in: ids },
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
         },
         select: { menuId: true },
       });
@@ -168,7 +168,7 @@ export class MenuService {
     if (roleIds.includes(1)) {
       const allMenus = await this.prisma.sysMenu.findMany({
         where: {
-          delFlag: DelFlagEnum.NORMAL,
+          delFlag: '0',
           status: StatusEnum.NORMAL,
         },
         select: {
@@ -196,7 +196,7 @@ export class MenuService {
 
     const menuList = await this.prisma.sysMenu.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         status: StatusEnum.NORMAL,
         menuId: {
           in: menuIds,
@@ -207,7 +207,7 @@ export class MenuService {
       },
     });
     // 构建前端需要的菜单树
-    const menuTree = buildMenus(menuList);
+    const menuTree = buildMenus(menuList as unknown as Parameters<typeof buildMenus>[0]);
     return Result.ok(menuTree);
   }
 }

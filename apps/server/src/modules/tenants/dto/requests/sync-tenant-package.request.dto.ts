@@ -5,9 +5,9 @@ export class SyncTenantPackageRequestDto {
   @ApiProperty({ required: true, description: '租户ID' })
   @IsString()
   @IsNotEmpty()
-  tenantId: string;
+  tenantId!:  string;
 
   @ApiProperty({ required: true, description: '套餐ID' })
   @IsNotEmpty()
-  packageId: number;
+  packageId!:  number;
 }

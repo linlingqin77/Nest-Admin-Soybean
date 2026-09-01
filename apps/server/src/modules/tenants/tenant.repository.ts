@@ -28,7 +28,7 @@ export class TenantRepository {
     return this.prisma.sysTenant.findMany({
       where: {
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: { createTime: 'desc' },
     });
@@ -41,7 +41,7 @@ export class TenantRepository {
     return this.prisma.sysTenant.findMany({
       where: {
         status: StatusEnum.NORMAL,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
         tenantId: { not: TenantContext.SUPER_TENANT_ID },
       },
       select: {
@@ -60,7 +60,7 @@ export class TenantRepository {
     return this.prisma.sysTenant.findFirst({
       where: {
         companyName,
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
     });
   }
@@ -140,7 +140,7 @@ export class TenantRepository {
   async softDelete(tenantId: string): Promise<SysTenant> {
     return this.prisma.sysTenant.update({
       where: { tenantId },
-      data: { delFlag: DelFlagEnum.DELETE },
+      data: { delFlag: '1' },
     });
   }
 

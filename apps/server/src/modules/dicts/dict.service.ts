@@ -46,7 +46,7 @@ export class DictService {
 
   async findAllType(query: ListDictTypeRequestDto) {
     const where: Prisma.SysDictTypeWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.dictName) {
@@ -94,7 +94,7 @@ export class DictService {
       dictSort: createDictDataDto.dictSort ?? 0,
       status: createDictDataDto.status ?? '0',
       isDefault: 'N',
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     });
     return Result.ok();
   }
@@ -111,7 +111,7 @@ export class DictService {
 
   async findAllData(query: ListDictDataRequestDto) {
     const where: Prisma.SysDictDataWhereInput = {
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     };
 
     if (query.dictLabel) {
@@ -171,7 +171,7 @@ export class DictService {
     const list = await this.findAllType(body);
     const options = {
       sheetName: '字典数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '字典主键', dataIndex: 'dictId' },
         { title: '字典名称', dataIndex: 'dictName' },
@@ -192,7 +192,7 @@ export class DictService {
     const list = await this.findAllData(body);
     const options = {
       sheetName: '字典数据',
-      data: list.data.rows as unknown as Record<string, unknown>[],
+      data: ((list.data as { rows?: unknown[] })?.rows ?? []) as unknown as Record<string, unknown>[],
       header: [
         { title: '字典主键', dataIndex: 'dictCode' },
         { title: '字典名称', dataIndex: 'dictLabel' },
@@ -232,7 +232,7 @@ export class DictService {
   async loadingDictCache() {
     const dictData = await this.prisma.sysDictData.findMany({
       where: {
-        delFlag: DelFlagEnum.NORMAL,
+        delFlag: '0',
       },
       orderBy: [{ dictType: 'asc' }, { dictSort: 'asc' }],
     });
