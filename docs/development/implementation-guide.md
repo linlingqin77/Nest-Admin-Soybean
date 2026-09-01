@@ -213,3 +213,49 @@ pnpm --filter @nest-admin/web generate:api
 | Harness 脚本 | `harness/scripts/` |
 | 工程文档 | `docs/engineering/` |
 | 共享 OpenAPI | `packages/contracts/openapi/openapi.json` |
+
+## 12. 已知架构债
+
+> 这部分记录**当前代码中违反架构规范但可以接受**的设计。如果需要做下一轮重构，这些是候选目标。
+
+### 12.1 `shared/services/user-role-bridge.service.ts`（🟡 P1）
+
+**问题**：`shared/` 按设计只放"纯工具、不含业务规则"，但 `user-role-bridge.service.ts` 是一个 NestJS `@Injectable` 服务，单纯为了解决 `UserService` 和 `MenuService` 之间的循环依赖而存在。
+
+**位置**：`apps/server/src/shared/services/user-role-bridge.service.ts`
+
+**推荐重构**：
+- 方案 A：将 `getRoleIdsByUserId` 移到 `UsersService` 或独立的 `UsersRepository` 中
+- 方案 B：使用 NestJS 的 `forwardRef(() => ...)` 打破循环依赖
+- 方案 C：将菜单和用户的查询拆到独立的 `ReadModel` 中
+
+### 12.2 `core/decorators/` 8 个文件混杂（🟢 P3）
+
+**问题**：`core/decorators/` 直接挂在 `core/` 下，混杂了多种主题：
+- `api-version.decorator.ts`, `api.decorator.ts` → 属于 `core/http/decorators/`
+- `require-permission.decorator.ts`, `require-role.decorator.ts` → 属于 `core/permissions/decorators/`
+- `throttle.decorator.ts`, `optimistic-lock.decorator.ts` → 属于 `core/http/decorators/`
+- `version.decorator.ts` → 通用
+
+**推荐重构**：迁移到各自主题子目录，`core/decorators/` 只保留通用装饰器（目前为空）。
+
+### 12.3 `core/audit/` 与 `core/observability/` 概念重叠（🟡 P2）
+
+**问题**：`core/audit/`（3 个文件）是审计日志，`core/observability/metrics/` 是指标——但都叫"observability"。
+
+**历史原因**：早期架构把 metrics/tracing/health 都放在 `observability/` 下，audit 是后加的独立模块。
+
+**推荐重构**：合并 `core/audit/` 到 `core/observability/audit/`，统一命名空间。
+
+### 12.4 `shared/` 子目录过多（🟢 P3）
+
+**现状**：`shared/` 下有 11 个子目录（`validators/`、`enums/`、`dto/`、`exceptions/`、`events/`、`services/`、`entities/`、`decorators/`、`constants/`、`utils/`、`response/`）。每个职责清晰，但目录数过多。
+
+**推荐重构**：
+- 短期：保持现状，子目录独立维护
+- 长期：合并 `entities/` + `response/` + `dto/` 到 `types/`；`events/` + `services/` 移到业务层或拆为领域事件
+
+### 12.5 已完成的重构债（✅ 已处理）
+
+- ✅ 重复的 `src/observability/` 与 `src/core/observability/` → 已删除旧位置
+- ✅ 30+ 处预存的 TypeScript 类型错误 → 已修复（102→0）
