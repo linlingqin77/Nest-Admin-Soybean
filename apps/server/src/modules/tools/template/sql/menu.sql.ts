@@ -11,7 +11,7 @@
  * @modules sql/menu
  */
 
-import { assertSafeText } from '../utils/sanitize';
+import { assertSafeText } from '../../utils/sanitize';
 
 /**
  * SQL 字符串字面量转义（单引号、反斜杠、NULL 等）

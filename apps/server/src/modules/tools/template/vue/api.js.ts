@@ -12,7 +12,7 @@
  * @modules vue/api
  */
 
-import { assertSafeText } from '../utils/sanitize';
+import { assertSafeText } from '../../utils/sanitize';
 
 export interface ApiTemplateOptions {
   /** 业务名称 (PascalCase) */

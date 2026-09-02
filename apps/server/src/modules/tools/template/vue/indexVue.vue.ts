@@ -44,7 +44,7 @@ export interface IndexVueTemplateOptions {
   }>;
 }
 
-import { assertSafeText } from '../utils/sanitize';
+import { assertSafeText } from '../../utils/sanitize';
 
 /**
  * 生成列表页面

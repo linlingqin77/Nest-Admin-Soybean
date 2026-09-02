@@ -1,6 +1,6 @@
 import * as Lodash from 'lodash';
 import { GenConstants } from 'src/shared/constants/gen.constant';
-import { assertIdentifier, escapeMultilineText, escapeStringLiteral } from '../utils/sanitize';
+import { assertIdentifier, escapeMultilineText, escapeStringLiteral } from '../../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;

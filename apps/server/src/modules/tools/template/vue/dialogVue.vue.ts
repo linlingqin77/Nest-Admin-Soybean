@@ -14,7 +14,7 @@
  */
 
 import { indexScriptDicts } from './indexVue.vue';
-import { assertSafeText } from '../utils/sanitize';
+import { assertSafeText } from '../../utils/sanitize';
 
 export interface DialogVueTemplateOptions {
   /** 业务名称 (PascalCase) */

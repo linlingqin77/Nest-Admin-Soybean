@@ -12,7 +12,7 @@
  * @modules vue/searchVue
  */
 
-import { assertSafeText } from '../utils/sanitize';
+import { assertSafeText } from '../../utils/sanitize';
 
 export interface SearchVueTemplateOptions {
   /** 业务名称 (PascalCase) */

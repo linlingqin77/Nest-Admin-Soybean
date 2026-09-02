@@ -1,5 +1,5 @@
 import * as Lodash from 'lodash';
-import { assertIdentifier, escapeMultilineText, escapeStringLiteral, isValidIdentifier } from '../utils/sanitize';
+import { assertIdentifier, escapeMultilineText, escapeStringLiteral, isValidIdentifier } from '../../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;
