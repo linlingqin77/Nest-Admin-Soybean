@@ -201,8 +201,8 @@ describe('TenantService', () => {
       const result = await service.findAll(query as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.rows).toHaveLength(1);
-      expect(result.data.total).toBe(1);
+      expect(result.data!.rows).toHaveLength(1);
+      expect(result.data!.total).toBe(1);
     });
 
     it('should filter tenants by tenantId', async () => {
@@ -305,8 +305,8 @@ describe('TenantService', () => {
       const result = await service.findAll(query as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.rows).toHaveLength(0);
-      expect(result.data.total).toBe(0);
+      expect(result.data!.rows).toHaveLength(0);
+      expect(result.data!.total).toBe(0);
     });
   });
 
@@ -318,16 +318,16 @@ describe('TenantService', () => {
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
       // DTO 会过滤掉敏感字段 (delFlag, createBy, updateBy)
-      expect(result.data.id).toBe(mockTenant.id);
-      expect(result.data.tenantId).toBe(mockTenant.tenantId);
-      expect(result.data.companyName).toBe(mockTenant.companyName);
-      expect(result.data.contactUserName).toBe(mockTenant.contactUserName);
-      expect(result.data.contactPhone).toBe(mockTenant.contactPhone);
-      expect(result.data.status).toBe(mockTenant.status);
+      expect(result.data!.id).toBe(mockTenant.id);
+      expect(result.data!.tenantId).toBe(mockTenant.tenantId);
+      expect(result.data!.companyName).toBe(mockTenant.companyName);
+      expect(result.data!.contactUserName).toBe(mockTenant.contactUserName);
+      expect(result.data!.contactPhone).toBe(mockTenant.contactPhone);
+      expect(result.data!.status).toBe(mockTenant.status);
       // 敏感字段应该被过滤
-      expect(result.data.delFlag).toBeUndefined();
-      expect(result.data.createBy).toBeUndefined();
-      expect(result.data.updateBy).toBeUndefined();
+      expect(result.data!.delFlag).toBeUndefined();
+      expect(result.data!.createBy).toBeUndefined();
+      expect(result.data!.updateBy).toBeUndefined();
     });
 
     it('should throw error when tenant not found', async () => {
@@ -425,7 +425,7 @@ describe('TenantService', () => {
       const result = await service.syncTenantDict();
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.detail.tenants).toBe(2);
+      expect(result.data!.detail.tenants).toBe(2);
     });
 
     it('should skip existing dict types', async () => {
@@ -507,7 +507,7 @@ describe('TenantService', () => {
       const result = await service.syncTenantConfig();
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.detail.tenants).toBe(2);
+      expect(result.data!.detail.tenants).toBe(2);
       expect(redisService.del).toHaveBeenCalledTimes(2);
     });
   });
@@ -529,7 +529,7 @@ describe('TenantService', () => {
       const result = await service.getSelectList(mockUser as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.list).toHaveLength(2);
+      expect(result.data!.list).toHaveLength(2);
     });
 
     it('should throw error for non-super admin', async () => {
@@ -572,8 +572,8 @@ describe('TenantService', () => {
       const result = await service.switchTenant('100001', mockUser as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.tenantId).toBe('100001');
-      expect(result.data.companyName).toBe('目标公司');
+      expect(result.data!.tenantId).toBe('100001');
+      expect(result.data!.companyName).toBe('目标公司');
     });
 
     it('should throw error when target tenant not found', async () => {
@@ -620,7 +620,7 @@ describe('TenantService', () => {
       const result = await service.restoreTenant(mockUser as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.originalTenantId).toBe('000000');
+      expect(result.data!.originalTenantId).toBe('000000');
     });
 
     it('should throw error when no switch record', async () => {
@@ -647,7 +647,7 @@ describe('TenantService', () => {
       const result = await service.getSwitchStatus(mockUser as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.isSwitched).toBe(false);
+      expect(result.data!.isSwitched).toBe(false);
     });
 
     it('should return switched status', async () => {
@@ -670,7 +670,7 @@ describe('TenantService', () => {
       const result = await service.getSwitchStatus(mockUser as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.isSwitched).toBe(true);
+      expect(result.data!.isSwitched).toBe(true);
       expect((result.data as any).originalTenantId).toBe('000000');
     });
   });

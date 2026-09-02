@@ -105,11 +105,11 @@ describe('Tenant Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
+      expect(result.data!.rows).toBeDefined();
       // Note: delFlag is excluded from TenantResponseDto, so we verify by checking
       // that the query only returns non-deleted tenants (which is enforced by the service)
       // We can verify this by checking that all returned tenants exist in DB with delFlag='0'
-      for (const tenant of result.data.rows) {
+      for (const tenant of result.data!.rows) {
         const dbTenant = await prisma.sysTenant.findUnique({
           where: { id: tenant.id },
         });
@@ -154,7 +154,7 @@ describe('Tenant Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThan(0);
+      expect(result.data!.rows.length).toBeGreaterThan(0);
     });
   });
 
@@ -189,7 +189,7 @@ describe('Tenant Integration Tests', () => {
 
       const findResult = await tenantService.findOne(tenant!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.companyName).toBe(companyName);
+      expect(findResult.data!.companyName).toBe(companyName);
     });
 
     it('should create tenant with auto-generated tenantId', async () => {
@@ -324,7 +324,7 @@ describe('Tenant Integration Tests', () => {
 
       const findResult = await tenantPackageService.findOne(pkg!.packageId);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.packageName).toBe(packageName);
+      expect(findResult.data!.packageName).toBe(packageName);
     });
 
     it('should list packages with pagination', async () => {
@@ -336,9 +336,9 @@ describe('Tenant Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should get select list for packages', async () => {
@@ -347,7 +347,7 @@ describe('Tenant Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
 
-      result.data.forEach((item: any) => {
+      result.data!.forEach((item: any) => {
         expect(item).toHaveProperty('packageId');
         expect(item).toHaveProperty('packageName');
       });

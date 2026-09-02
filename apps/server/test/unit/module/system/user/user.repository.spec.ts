@@ -6,7 +6,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserRepository } from '@/modules/users/user.repository';
 import { PrismaService } from '@/platform/prisma';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { DelFlagEnum } from '@/shared/enums/index';
 import { SysUser } from '@prisma/client';
 

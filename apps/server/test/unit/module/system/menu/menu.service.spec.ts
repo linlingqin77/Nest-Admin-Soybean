@@ -176,7 +176,7 @@ describe('MenuService', () => {
       const result = await service.findOne(1);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.menuId).toBe(1);
+      expect(result.data!.menuId).toBe(1);
     });
   });
 

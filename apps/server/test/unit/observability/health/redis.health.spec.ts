@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisHealthIndicator } from '@/core/core/observability/health/redis.health';
+import { RedisHealthIndicator } from '@/core/observability/health/redis.health';
 import { RedisService } from '@/platform/redis/redis.service';
 import { HealthCheckError } from '@nestjs/terminus';
 
@@ -72,7 +72,7 @@ describe('RedisHealthIndicator', () => {
         fail('Expected HealthCheckError to be thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(HealthCheckError);
-        expect(error.causes).toEqual({
+        expect((error as { causes?: unknown }).causes).toEqual({
           redis: {
             status: 'down',
             message: errorMessage,

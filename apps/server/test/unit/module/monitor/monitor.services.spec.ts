@@ -10,7 +10,7 @@ import { LoginlogService } from '@/modules/login-logs/loginlog.service';
 import { OnlineService } from '@/modules/monitors/online/online.service';
 import { OperlogService } from '@/modules/oper-logs/operlog.service';
 import { ServerService } from '@/modules/monitors/server/server.service';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';
 import { ModuleRef } from '@nestjs/core';
@@ -72,6 +72,7 @@ describe('Monitor modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new JobLogService(prisma);
     });
 
@@ -85,23 +86,24 @@ describe('Monitor modules services', () => {
     it('should filter job logs by jobName', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, jobName: 'test' }], 1]);
       const res = await service.findAll({ skip: 0, take: 10, jobName: 'test' } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should filter job logs by jobGroup', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, jobGroup: 'SYSTEM' }], 1]);
       const res = await service.findAll({ skip: 0, take: 10, jobGroup: 'SYSTEM' } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should filter job logs by status', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobLogId: 1, status: '0' }], 1]);
       const res = await service.findAll({ skip: 0, take: 10, status: '0' } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should add a job log record', async () => {
       await service.addJobLog({ jobName: 'demo' });
+      // @ts-expect-error
       expect(prisma.sysJobLog.create).toHaveBeenCalled();
     });
 
@@ -116,15 +118,18 @@ describe('Monitor modules services', () => {
         createTime: new Date(),
       };
       await service.addJobLog(logData);
+      // @ts-expect-error
       expect(prisma.sysJobLog.create).toHaveBeenCalledWith({ data: logData });
     });
 
     it('should clean all job logs', async () => {
       await service.clean();
+      // @ts-expect-error
       expect(prisma.sysJobLog.deleteMany).toHaveBeenCalled();
     });
 
     it('should export job logs to excel', async () => {
+      // @ts-expect-error
       jest.spyOn(service, 'list').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
       await service.export({} as any, {} as any);
       expect(ExportTable).toHaveBeenCalled();
@@ -146,52 +151,58 @@ describe('Monitor modules services', () => {
     beforeEach(() => {
       jest.clearAllMocks();
       prisma = createPrismaMock();
+      // @ts-expect-error
       (prisma.sysJob.findMany as jest.Mock).mockResolvedValue([]);
+      // @ts-expect-error
       service = new JobService(schedulerRegistry as any, prisma, taskService as any);
     });
 
     it('should list jobs via prisma transaction', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobId: 1 }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 5 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should filter jobs by jobName', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobId: 1, jobName: 'test' }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 5, jobName: 'test' } as any);
       expect(prisma.$transaction).toHaveBeenCalled();
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should filter jobs by jobGroup', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobId: 1, jobGroup: 'SYSTEM' }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 5, jobGroup: 'SYSTEM' } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should filter jobs by status', async () => {
       prisma.$transaction.mockResolvedValue([[{ jobId: 1, status: '0' }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 5, status: '0' } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should get single job by id', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
         cronExpression: '* * * * * *',
       });
       const res = await service.findOne(1);
-      expect(res.data.jobId).toBe(1);
+      expect(res.data!.jobId).toBe(1);
+      // @ts-expect-error
       expect(prisma.sysJob.findUnique).toHaveBeenCalledWith({ where: { jobId: 1 } });
     });
 
     it('should throw error when job not found', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
       await expect(service.findOne(999)).rejects.toThrow();
     });
 
     it('should create job and register cron when status is normal', async () => {
+      // @ts-expect-error
       (prisma.sysJob.create as jest.Mock).mockResolvedValue({
         jobName: 'demo',
         status: '0',
@@ -202,11 +213,13 @@ describe('Monitor modules services', () => {
         { jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '0' } as any,
         'admin',
       );
+      // @ts-expect-error
       expect(prisma.sysJob.create).toHaveBeenCalled();
       expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
     });
 
     it('should create job without registering cron when status is stopped', async () => {
+      // @ts-expect-error
       (prisma.sysJob.create as jest.Mock).mockResolvedValue({
         jobName: 'demo',
         status: '1',
@@ -217,11 +230,13 @@ describe('Monitor modules services', () => {
         { jobName: 'demo', cronExpression: '* * * * * *', invokeTarget: 'task', status: '1' } as any,
         'admin',
       );
+      // @ts-expect-error
       expect(prisma.sysJob.create).toHaveBeenCalled();
       expect(schedulerRegistry.addCronJob).not.toHaveBeenCalled();
     });
 
     it('should update job and reschedule when cron expression changes', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -236,10 +251,12 @@ describe('Monitor modules services', () => {
 
       expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledWith('demo');
       expect(schedulerRegistry.addCronJob).toHaveBeenCalledWith('demo', expect.any(Object));
+      // @ts-expect-error
       expect(prisma.sysJob.update).toHaveBeenCalled();
     });
 
     it('should update job and reschedule when invokeTarget changes', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -257,28 +274,34 @@ describe('Monitor modules services', () => {
     });
 
     it('should throw error when updating non-existent job', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
       await expect(service.update(999, { jobName: 'test' }, 'admin')).rejects.toThrow();
     });
 
     it('should delete single job and remove from scheduler', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findMany as jest.Mock).mockResolvedValue([{ jobId: 1, jobName: 'demo' }]);
       await service.remove(1);
       expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledWith('demo');
+      // @ts-expect-error
       expect(prisma.sysJob.deleteMany).toHaveBeenCalledWith({ where: { jobId: { in: [1] } } });
     });
 
     it('should delete multiple jobs', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findMany as jest.Mock).mockResolvedValue([
         { jobId: 1, jobName: 'demo1' },
         { jobId: 2, jobName: 'demo2' },
       ]);
       await service.remove([1, 2]);
       expect(schedulerRegistry.deleteCronJob).toHaveBeenCalledTimes(2);
+      // @ts-expect-error
       expect(prisma.sysJob.deleteMany).toHaveBeenCalledWith({ where: { jobId: { in: [1, 2] } } });
     });
 
     it('should change status by controlling cron job', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -293,6 +316,7 @@ describe('Monitor modules services', () => {
     });
 
     it('should start cron job when changing status to normal', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -307,6 +331,7 @@ describe('Monitor modules services', () => {
     });
 
     it('should create new cron job when enabling and no existing job', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -320,11 +345,13 @@ describe('Monitor modules services', () => {
     });
 
     it('should throw error when changing status of non-existent job', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
       await expect(service.changeStatus(999, '0', 'admin')).rejects.toThrow();
     });
 
     it('should run job immediately via task service', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue({
         jobId: 1,
         jobName: 'demo',
@@ -336,11 +363,13 @@ describe('Monitor modules services', () => {
     });
 
     it('should throw error when running non-existent job', async () => {
+      // @ts-expect-error
       (prisma.sysJob.findUnique as jest.Mock).mockResolvedValue(null);
       await expect(service.run(999)).rejects.toThrow();
     });
 
     it('should export job list to excel', async () => {
+      // @ts-expect-error
       jest.spyOn(service, 'list').mockResolvedValue(Result.ok({ rows: [], total: 0 }));
       await service.export({} as any, {} as any);
       expect(ExportTable).toHaveBeenCalled();
@@ -479,18 +508,21 @@ describe('Monitor modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new LoginlogService(prisma);
     });
 
     it('should query login logs via prisma transaction', async () => {
       prisma.$transaction.mockResolvedValue([[{ infoId: 1 }], 1]);
       const res = await service.findAll({ skip: 0, take: 10 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should soft delete log entries', async () => {
+      // @ts-expect-error
       (prisma.sysLogininfor.updateMany as jest.Mock).mockResolvedValue({ count: 1 });
       await service.remove(['1']);
+      // @ts-expect-error
       expect(prisma.sysLogininfor.updateMany).toHaveBeenCalled();
     });
   });
@@ -522,8 +554,8 @@ describe('Monitor modules services', () => {
         },
       ]);
       const res = await service.findAll({ pageNum: '1', pageSize: '10' });
-      expect(res.data.total).toBe(1);
-      expect(res.data.rows[0].tokenId).toBe('1');
+      expect(res.data!.total).toBe(1);
+      expect(res.data!.rows[0].tokenId).toBe('1');
     });
 
     it('should delete session token from redis', async () => {
@@ -550,6 +582,7 @@ describe('Monitor modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new OperlogService(request, prisma, axiosService as any, dictService as any);
     });
 

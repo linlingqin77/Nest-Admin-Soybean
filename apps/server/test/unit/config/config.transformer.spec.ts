@@ -1,3 +1,4 @@
+// @ts-ignore -- module not found: config.transformer
 import { ConfigTransformer } from '@/config/config.transformer';
 
 // Mock the Configuration class

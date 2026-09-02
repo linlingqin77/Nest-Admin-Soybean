@@ -15,13 +15,13 @@ import { BaseResponseDto } from '@/shared/dto/base.response.dto';
  */
 class TestResponseDto extends BaseResponseDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  name: string;
+  name!: string;
 
   @Expose()
-  status: string;
+  status!: string;
 
   // createTime is inherited from BaseResponseDto as string type
 }

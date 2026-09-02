@@ -34,18 +34,23 @@ describe('RequestIdMiddleware', () => {
       middleware.use(mockRequest as Request, mockResponse as Response, mockNext);
 
       // Should set requestId on request object
+      // @ts-expect-error
       expect(mockRequest['requestId']).toBeDefined();
       expect(mockRequest['id']).toBeDefined();
+      // @ts-expect-error
       expect(mockRequest['requestId']).toBe(mockRequest['id']);
 
       // Should be a valid UUID format
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      // @ts-expect-error
       expect(mockRequest['requestId']).toMatch(uuidRegex);
 
       // Should set response header
+      // @ts-expect-error
       expect(mockResponse.setHeader).toHaveBeenCalledWith('X-Request-Id', mockRequest['requestId']);
 
       // Should store in CLS
+      // @ts-expect-error
       expect(mockClsService.set).toHaveBeenCalledWith('requestId', mockRequest['requestId']);
 
       // Should call next
@@ -61,6 +66,7 @@ describe('RequestIdMiddleware', () => {
       middleware.use(mockRequest as Request, mockResponse as Response, mockNext);
 
       // Should use the existing Request ID
+      // @ts-expect-error
       expect(mockRequest['requestId']).toBe(existingRequestId);
       expect(mockRequest['id']).toBe(existingRequestId);
 
@@ -82,6 +88,7 @@ describe('RequestIdMiddleware', () => {
       }).not.toThrow();
 
       // Should still set requestId on request object
+      // @ts-expect-error
       expect(mockRequest['requestId']).toBeDefined();
 
       // Should still set response header
@@ -97,6 +104,7 @@ describe('RequestIdMiddleware', () => {
       for (let i = 0; i < 10; i++) {
         const req: Partial<Request> = { headers: {} };
         middleware.use(req as Request, mockResponse as Response, mockNext);
+        // @ts-expect-error
         requestIds.push(req['requestId']);
       }
 

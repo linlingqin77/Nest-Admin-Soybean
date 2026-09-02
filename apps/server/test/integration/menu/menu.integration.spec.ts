@@ -85,8 +85,8 @@ describe('Menu Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // Tree nodes should have id and label
-      if (result.data.length > 0) {
-        const node = result.data[0];
+      if (result.data!.length > 0) {
+        const node = result.data![0];
         expect(node).toHaveProperty('id');
         expect(node).toHaveProperty('label');
       }
@@ -99,8 +99,8 @@ describe('Menu Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // Menus should have required fields
-      if (result.data.length > 0) {
-        const menu = result.data[0];
+      if (result.data!.length > 0) {
+        const menu = result.data![0];
         expect(menu).toHaveProperty('menuId');
         expect(menu).toHaveProperty('menuName');
         expect(menu).toHaveProperty('parentId');
@@ -114,7 +114,7 @@ describe('Menu Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // All returned menus should have status '0'
-      result.data.forEach((menu: any) => {
+      result.data!.forEach((menu: any) => {
         expect(menu.status).toBe('0');
       });
     });
@@ -126,7 +126,7 @@ describe('Menu Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // All returned menus should have menuType 'M'
-      result.data.forEach((menu: any) => {
+      result.data!.forEach((menu: any) => {
         expect(menu.menuType).toBe('M');
       });
     });

@@ -5,15 +5,15 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 class TestUserVo {
   @ApiProperty({ description: '用户ID' })
-  userId: number;
+  userId!: number;
 
   @ApiProperty({ description: '用户名' })
-  userName: string;
+  userName!: string;
 }
 
 class TestResultVo {
   @ApiProperty({ description: '操作结果' })
-  success: boolean;
+  success!: boolean;
 }
 
 /**

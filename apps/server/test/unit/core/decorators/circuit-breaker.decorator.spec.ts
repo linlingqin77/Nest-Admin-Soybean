@@ -6,7 +6,7 @@ import {
   CIRCUIT_BREAKER_KEY,
   CircuitBreakerMeta,
 } from '@/core/http/decorators/circuit-breaker.decorator';
-import { CircuitBreakerService } from '@/platform/platform/resilience/circuit-breaker/circuit-breaker.service';
+import { CircuitBreakerService } from '@/platform/resilience/circuit-breaker/circuit-breaker.service';
 import { Reflector } from '@nestjs/core';
 
 // Test service using the decorator

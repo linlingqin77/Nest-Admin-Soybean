@@ -120,9 +120,9 @@ describe('MainController', () => {
       const result = await controller.captchaImage();
 
       expect(result.code).toBe(200);
-      expect(result.data.captchaEnabled).toBe(false);
-      expect(result.data.img).toBe('');
-      expect(result.data.uuid).toBe('');
+      expect(result.data!.captchaEnabled).toBe(false);
+      expect(result.data!.img).toBe('');
+      expect(result.data!.uuid).toBe('');
     });
 
     it('should return captcha when enabled', async () => {
@@ -131,9 +131,9 @@ describe('MainController', () => {
       const result = await controller.captchaImage();
 
       expect(result.code).toBe(200);
-      expect(result.data.captchaEnabled).toBe(true);
-      expect(result.data.img).toBeTruthy();
-      expect(result.data.uuid).toBeTruthy();
+      expect(result.data!.captchaEnabled).toBe(true);
+      expect(result.data!.img).toBeTruthy();
+      expect(result.data!.uuid).toBeTruthy();
       expect(redisServiceMock.set).toHaveBeenCalled();
     });
   });

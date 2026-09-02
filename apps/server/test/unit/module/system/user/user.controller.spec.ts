@@ -79,9 +79,9 @@ describe('UserController', () => {
       const result = controller.getInfo(mockUser as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.user).not.toHaveProperty('password');
-      expect(result.data.roles).toEqual(['admin']);
-      expect(result.data.permissions).toEqual(['*:*:*']);
+      expect(result.data!.user).not.toHaveProperty('password');
+      expect(result.data!.roles).toEqual(['admin']);
+      expect(result.data!.permissions).toEqual(['*:*:*']);
     });
   });
 
@@ -111,7 +111,7 @@ describe('UserController', () => {
       const result = await controller.avatar(file, mockUser as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.imgUrl).toBe('avatar.jpg');
+      expect(result.data!.imgUrl).toBe('avatar.jpg');
     });
   });
 

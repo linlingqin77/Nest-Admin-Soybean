@@ -5,7 +5,7 @@ import { ConfigService } from '@/modules/configs/config.service';
 import { PrismaService } from '@/platform/prisma';
 import { RedisService } from '@/platform/redis/redis.service';
 import { ConfigRepository } from '@/modules/configs/config.repository';
-import { SystemConfigService } from '@/modules/configs/system-platform/config.service';
+import { SystemConfigService } from '@/modules/configs/system-config.service';
 import { DelFlagEnum } from '@/shared/enums/index';
 import { ResponseCode } from '@/shared/response';
 import { BusinessException } from '@/shared/exceptions';
@@ -145,8 +145,8 @@ describe('ConfigService', () => {
       const result = await service.findAll(query as any);
 
       expect(result.code).toBe(ResponseCode.SUCCESS);
-      expect(result.data.rows).toHaveLength(1);
-      expect(result.data.total).toBe(1);
+      expect(result.data!.rows).toHaveLength(1);
+      expect(result.data!.total).toBe(1);
     });
 
     it('should filter configs by configName', async () => {

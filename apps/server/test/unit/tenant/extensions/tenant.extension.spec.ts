@@ -154,7 +154,7 @@ describe('TenantExtension', () => {
 
     it('应该对不需要租户隔离的模型返回原始记录', () => {
       TenantContext.run({ tenantId: '100001' }, () => {
-        const record = { tenantId: 1, companyName: 'test', tenantId: '100002' };
+        const record = { id: 1, companyName: 'test', tenantId: '100002' };
         const result = validateTenantOwnership('SysTenant', record);
         expect(result).toEqual(record);
       });

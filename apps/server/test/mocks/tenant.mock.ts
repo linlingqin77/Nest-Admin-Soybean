@@ -10,7 +10,7 @@
 
 import { createMockPrisma, MockPrismaService, createModelMock } from './prisma.mock';
 import { createMockRedis, MockRedisService } from './redis.mock';
-import { createMockConfig, MockConfigService } from './platform/config.mock';
+import { createMockConfig, MockConfigService } from './config.mock';
 import { TenantContext, TenantContextData } from '../../src/core/tenancy/context/tenant.context';
 import { SUPER_TENANT_ID, TENANT_MODELS } from '../../src/core/tenancy/constants/tenant-models';
 

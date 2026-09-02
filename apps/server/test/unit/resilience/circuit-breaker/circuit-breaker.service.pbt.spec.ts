@@ -14,7 +14,7 @@
 
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CircuitBreakerService, BreakerState, CircuitBreakerOpenError } from '@/platform/platform/resilience/circuit-breaker/circuit-breaker.service';
+import { CircuitBreakerService, BreakerState, CircuitBreakerOpenError } from '@/platform/resilience/circuit-breaker/circuit-breaker.service';
 
 describe('CircuitBreakerService Property-Based Tests', () => {
   let service: CircuitBreakerService;

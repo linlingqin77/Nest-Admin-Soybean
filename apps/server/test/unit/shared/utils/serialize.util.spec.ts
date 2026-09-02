@@ -4,16 +4,16 @@ import { toDto, toDtoList, toDtoPage } from '@/shared/utils/serialize.util';
 // 测试用 DTO 类
 class TestResponseDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  name: string;
+  name!: string;
 
   @Exclude()
-  password: string;
+  password!: string;
 
   @Exclude()
-  delFlag: string;
+  delFlag!: string;
 }
 
 describe('serialize.util', () => {
@@ -30,10 +30,10 @@ describe('serialize.util', () => {
       const result = toDto(TestResponseDto, plain);
 
       expect(result).toBeDefined();
-      expect(result.id).toBe(1);
-      expect(result.name).toBe('test');
-      expect(result.password).toBeUndefined();
-      expect(result.delFlag).toBeUndefined();
+      expect(result!.id).toBe(1);
+      expect(result!.name).toBe('test');
+      expect(result!.password).toBeUndefined();
+      expect(result!.delFlag).toBeUndefined();
       expect((result as any).extraField).toBeUndefined();
     });
 
@@ -94,10 +94,10 @@ describe('serialize.util', () => {
 
       const result = toDtoPage(TestResponseDto, pageData);
 
-      expect(result.total).toBe(100);
-      expect(result.rows).toHaveLength(2);
-      expect(result.rows[0].id).toBe(1);
-      expect(result.rows[0].password).toBeUndefined();
+      expect(result!.total).toBe(100);
+      expect(result!.rows).toHaveLength(2);
+      expect(result!.rows[0].id).toBe(1);
+      expect(result!.rows[0].password).toBeUndefined();
     });
 
     it('should return empty result when data is null', () => {
@@ -122,10 +122,10 @@ describe('serialize.util', () => {
 
       const result = toDto(TestResponseDto, plain);
 
-      expect(result.id).toBe(1);
-      expect(result.name).toBe('test');
-      expect(result.password).toBeUndefined();
-      expect(result.delFlag).toBeUndefined();
+      expect(result!.id).toBe(1);
+      expect(result!.name).toBe('test');
+      expect(result!.password).toBeUndefined();
+      expect(result!.delFlag).toBeUndefined();
     });
   });
 });

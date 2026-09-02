@@ -127,7 +127,7 @@ describe('Auth Integration Tests', () => {
       expect(loginResult.data).toHaveProperty('token');
       expect(loginResult.msg).toBe('登录成功');
 
-      const token = loginResult.data.token;
+      const token = loginResult.data!.token;
 
       // Step 2: Verify token can be parsed
       const parsedToken = userAuthService.parseToken(token);
@@ -297,7 +297,7 @@ describe('Auth Integration Tests', () => {
       const loginResult = await userAuthService.login(loginDto, clientInfo);
       expect(loginResult.code).toBe(200);
 
-      const token = loginResult.data.token;
+      const token = loginResult.data!.token;
       const parsedToken = userAuthService.parseToken(token);
       const redisKey = `${CacheEnum.LOGIN_TOKEN_KEY}${parsedToken.uuid}`;
 

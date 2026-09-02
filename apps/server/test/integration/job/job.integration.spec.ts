@@ -193,7 +193,7 @@ describe('Job Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should filter job logs by jobName', async () => {
@@ -216,7 +216,7 @@ describe('Job Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((log: any) => {
+      result.data!.rows.forEach((log: any) => {
         expect(log.jobName).toContain('FilterTestJob');
       });
 
@@ -237,7 +237,7 @@ describe('Job Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((log: any) => {
+      result.data!.rows.forEach((log: any) => {
         expect(log.jobGroup).toBe('DEFAULT');
       });
     });
@@ -252,7 +252,7 @@ describe('Job Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((log: any) => {
+      result.data!.rows.forEach((log: any) => {
         expect(log.status).toBe(StatusEnum.NORMAL);
       });
     });
@@ -270,7 +270,7 @@ describe('Job Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should filter jobs by jobName', async () => {
@@ -296,7 +296,7 @@ describe('Job Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((job: any) => {
+      result.data!.rows.forEach((job: any) => {
         expect(job.jobGroup).toBe('DEFAULT');
       });
     });
@@ -311,7 +311,7 @@ describe('Job Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((job: any) => {
+      result.data!.rows.forEach((job: any) => {
         expect(job.status).toBe(StatusEnum.NORMAL);
       });
     });
@@ -325,11 +325,11 @@ describe('Job Integration Tests', () => {
         take: 1,
       } as any);
 
-      if (listResult.data.rows.length > 0) {
-        const jobId = listResult.data.rows[0].jobId;
+      if (listResult.data!.rows.length > 0) {
+        const jobId = listResult.data!.rows[0].jobId;
         const result = await jobService.findOne(jobId);
         expect(result.code).toBe(200);
-        expect(result.data.jobId).toBe(jobId);
+        expect(result.data!.jobId).toBe(jobId);
       }
     });
 

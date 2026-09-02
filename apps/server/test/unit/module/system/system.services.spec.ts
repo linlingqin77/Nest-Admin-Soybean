@@ -9,7 +9,7 @@ import { PostService } from '@/modules/posts/post.service';
 import { RoleService } from '@/modules/roles/role.service';
 import { ToolService } from '@/modules/tools/tool.service';
 import { UserService } from '@/modules/users/user.service';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';
 import { CacheEnum, DataScopeEnum } from '@/shared/enums/index';
@@ -48,6 +48,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new ConfigService(prisma, redisService as any, configRepo as any, systemConfigService as any);
       jest.clearAllMocks();
     });
@@ -86,6 +87,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new DeptService(prisma, deptRepo as any);
       redisMock = createRedisMock();
       (service as any).redis = redisMock;
@@ -125,6 +127,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new DictService(prisma, redisService as any, dictTypeRepo as any, dictDataRepo as any);
       jest.clearAllMocks();
     });
@@ -132,7 +135,7 @@ describe('System modules services', () => {
     it('should list dict types', async () => {
       dictTypeRepo.findPageWithFilter.mockResolvedValue({ list: [{ dictId: 1 }], total: 1 });
       const res = await service.findAllType({ pageNum: 1, pageSize: 10 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should read dict from cache first and fallback to db', async () => {
@@ -167,6 +170,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new MenuService(userService as any, prisma, menuRepo as any);
       redisMock = createRedisMock();
       (service as any).redis = redisMock;
@@ -215,6 +219,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new NoticeService(prisma, noticeRepo as any);
       jest.clearAllMocks();
     });
@@ -222,7 +227,7 @@ describe('System modules services', () => {
     it('should list notices', async () => {
       noticeRepo.findPageWithFilter.mockResolvedValue({ list: [{ noticeId: 1 }], total: 1 });
       const res = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should soft delete notices', async () => {
@@ -242,6 +247,7 @@ describe('System modules services', () => {
     beforeEach(() => {
       prisma = createPrismaMock();
       const deptService = { getChildDeptIds: jest.fn().mockResolvedValue([]) } as any;
+      // @ts-expect-error
       service = new PostService(prisma, deptService, postRepo as any);
       jest.clearAllMocks();
     });
@@ -249,7 +255,7 @@ describe('System modules services', () => {
     it('should list posts via prisma transaction', async () => {
       postRepo.findPageWithFilter.mockResolvedValue({ list: [{ postId: 1 }], total: 1 });
       const res = await service.findAll({ skip: 0, take: 10 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should export post list', async () => {
@@ -273,6 +279,7 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new RoleService(prisma, roleRepo as any, menuService as any);
     });
 
@@ -304,13 +311,14 @@ describe('System modules services', () => {
 
     beforeEach(() => {
       prisma = createPrismaMock();
+      // @ts-expect-error
       service = new ToolService(prisma);
     });
 
     it('should list generator tables', async () => {
       prisma.$transaction.mockResolvedValue([[{ tableId: 1 }], 1]);
       const res = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
-      expect(res.data.total).toBe(1);
+      expect(res.data!.total).toBe(1);
     });
 
     it('should extract primary key from column list', async () => {
@@ -339,6 +347,7 @@ describe('System modules services', () => {
           sort: 1,
         },
       ]);
+      // @ts-expect-error
       (prisma.genTable.create as jest.Mock).mockResolvedValue({
         tableId: 1,
         tableName: 'sys_user',
@@ -347,6 +356,7 @@ describe('System modules services', () => {
       await service.importTable({ tableNames: 'sys_user' } as any, { userName: 'admin' } as any);
       expect(selectSpy).toHaveBeenCalled();
       expect(columnSpy).toHaveBeenCalled();
+      // @ts-expect-error
       expect(prisma.genTableColumn.create).toHaveBeenCalled();
     });
   });
@@ -397,6 +407,7 @@ describe('System modules services', () => {
         batchDelete: jest.fn(),
       } as any;
       service = new UserService(
+        // @ts-expect-error
         prisma,
         roleService as any,
         deptService as any,

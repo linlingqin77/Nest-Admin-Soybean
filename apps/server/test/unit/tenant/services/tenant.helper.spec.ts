@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantHelper, SUPER_TENANT_ID, hasTenantField } from '@/core/tenancy/services/tenant.helper';
 import { TenantContext } from '@/core/tenancy/context/tenant.context';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 
 describe('TenantHelper', () => {
   let tenantHelper: TenantHelper;

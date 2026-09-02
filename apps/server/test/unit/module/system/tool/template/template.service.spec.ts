@@ -512,8 +512,8 @@ describe('TemplateService', () => {
 
       const result = service.validateTemplate(dto as any);
 
-      expect(result.data.valid).toBe(true);
-      expect(result.data.variables).toContain('className');
+      expect(result.data!.valid).toBe(true);
+      expect(result.data!.variables).toContain('className');
     });
 
     it('应该检测未闭合的变量表达式', () => {
@@ -521,8 +521,8 @@ describe('TemplateService', () => {
 
       const result = service.validateTemplate(dto as any);
 
-      expect(result.data.valid).toBe(false);
-      expect(result.data.message).toContain('未闭合');
+      expect(result.data!.valid).toBe(false);
+      expect((result.data as any).message).toContain('未闭合');
     });
 
     it('应该警告未知变量', () => {
@@ -530,9 +530,9 @@ describe('TemplateService', () => {
 
       const result = service.validateTemplate(dto as any);
 
-      expect(result.data.valid).toBe(true);
-      expect(result.data.warnings).toHaveLength(1);
-      expect(result.data.warnings[0]).toContain('未知变量');
+      expect(result.data!.valid).toBe(true);
+      expect(result.data!.warnings).toHaveLength(1);
+      expect(result.data!.warnings[0]).toContain('未知变量');
     });
   });
 
@@ -582,7 +582,7 @@ describe('TemplateService', () => {
       };
 
       mockPrismaService.genTemplateGroup.findFirst.mockResolvedValue(null);
-      mockPrismaService.$transaction.mockImplementation(async (callback) => {
+      mockPrismaService.$transaction.mockImplementation(async (callback: (tx: any) => Promise<unknown>) => {
         const tx = {
           genTemplateGroup: {
             create: jest.fn().mockResolvedValue({ id: 1, ...dto }),
@@ -653,7 +653,7 @@ describe('TemplateService', () => {
       });
 
       mockPrismaService.genTemplateGroup.findFirst.mockResolvedValue(null);
-      mockPrismaService.$transaction.mockImplementation(async (callback) => {
+      mockPrismaService.$transaction.mockImplementation(async (callback: (tx: any) => Promise<unknown>) => {
         const tx = {
           genTemplateGroup: {
             create: jest.fn().mockResolvedValue({ id: 1, name: 'imported-group' }),

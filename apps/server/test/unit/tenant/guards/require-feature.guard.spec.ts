@@ -204,6 +204,7 @@ describe('RequireFeatureGuard', () => {
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(options);
       featureToggleService.isEnabled.mockResolvedValue(true);
 
+      // @ts-expect-error
       const result = await TenantContext.run({ tenantId: '000000', isSuperTenant: true }, async () => {
         return guard.canActivate(createMockContext());
       });

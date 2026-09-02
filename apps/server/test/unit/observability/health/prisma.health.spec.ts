@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaHealthIndicator } from '@/core/core/observability/health/prisma.health';
+import { PrismaHealthIndicator } from '@/core/observability/health/prisma.health';
 import { PrismaService } from '@/platform/prisma';
 import { HealthCheckError } from '@nestjs/terminus';
 
@@ -61,7 +61,7 @@ describe('PrismaHealthIndicator', () => {
         fail('Expected HealthCheckError to be thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(HealthCheckError);
-        expect(error.causes).toEqual({
+        expect((error as { causes?: unknown }).causes).toEqual({
           database: {
             status: 'down',
             message: errorMessage,

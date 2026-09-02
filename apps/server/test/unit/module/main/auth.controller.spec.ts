@@ -7,7 +7,7 @@ import { AuthController } from '@/modules/auth/auth.controller';
 import { MainService } from '@/modules/auth/main.service';
 import { RedisService } from '@/platform/redis/redis.service';
 import { ConfigService as SysConfigService } from '@/modules/configs/config.service';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 import { PrismaService } from '@/platform/prisma';
 import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 import { Result, ResponseCode } from '@/shared/response';

@@ -4,7 +4,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from 'src/app.module';
-import { TenantDashboardService } from 'src/modules/tenant-dashboards/tenant-dashboard.service';
+import { TenantDashboardService } from 'src/modules/tenants/dashboard/tenant-dashboard.service';
 
 describe('Tenant Dashboard Integration Tests', () => {
   let app: INestApplication;
@@ -43,7 +43,7 @@ describe('Tenant Dashboard Integration Tests', () => {
       const result = await tenantDashboardService.getStats();
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
-      expect(typeof result.data.totalTenants).toBe('number');
+      expect(typeof result.data!.totalTenants).toBe('number');
     });
   });
 

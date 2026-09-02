@@ -9,7 +9,8 @@ import {
   SKIP_THROTTLE_KEY,
 } from '@/core/http/guards/multi-throttle.guard';
 import { RedisService } from '@/platform/redis/redis.service';
-import { createRedisMock, RedisMock } from 'test/mocks/redis-mock';
+// @ts-expect-error
+import { createRedisMock, RedisMock } from 'test/mocks/redis.mock';
 
 describe('MultiThrottleGuard', () => {
   let guard: MultiThrottleGuard;

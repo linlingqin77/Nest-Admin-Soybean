@@ -15,7 +15,7 @@
  */
 
 import { NoticeService } from '@/modules/notices/notice.service';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { Result } from '@/shared/response';
 
 describe('NoticeService', () => {
@@ -31,6 +31,7 @@ describe('NoticeService', () => {
 
   beforeEach(() => {
     prisma = createPrismaMock();
+    // @ts-expect-error
     service = new NoticeService(prisma, noticeRepo as any);
     jest.clearAllMocks();
   });
@@ -82,8 +83,8 @@ describe('NoticeService', () => {
       const result = await service.findAll({ pageNum: 1, pageSize: 10, skip: 0, take: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(2);
-      expect(result.data.rows).toHaveLength(2);
+      expect(result.data!.total).toBe(2);
+      expect(result.data!.rows).toHaveLength(2);
     });
 
     it('should filter by noticeTitle', async () => {
@@ -101,7 +102,7 @@ describe('NoticeService', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(1);
+      expect(result.data!.total).toBe(1);
       expect(noticeRepo.findPageWithFilter).toHaveBeenCalledWith(
         expect.objectContaining({
           noticeTitle: { contains: '系统' },
@@ -198,8 +199,8 @@ describe('NoticeService', () => {
       const result = await service.findAll({ pageNum: 1, pageSize: 10, skip: 0, take: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(0);
-      expect(result.data.rows).toHaveLength(0);
+      expect(result.data!.total).toBe(0);
+      expect(result.data!.rows).toHaveLength(0);
     });
   });
 

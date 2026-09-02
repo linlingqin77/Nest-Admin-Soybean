@@ -98,6 +98,7 @@ describe('GenTableService - Property Tests', () => {
               );
 
               // 模拟 Prisma 查询行为
+              // @ts-expect-error
               mockPrismaService.genTable.findMany.mockImplementation(({ where }) => {
                 return Promise.resolve(
                   allTables.filter((t) => {
@@ -110,6 +111,7 @@ describe('GenTableService - Property Tests', () => {
                 );
               });
 
+              // @ts-expect-error
               mockPrismaService.genTable.count.mockImplementation(({ where }) => {
                 return Promise.resolve(
                   allTables.filter((t) => {
@@ -163,6 +165,7 @@ describe('GenTableService - Property Tests', () => {
             };
 
             // 模拟 Prisma 查询
+            // @ts-expect-error
             mockPrismaService.genTable.findFirst.mockImplementation(({ where }) => {
               // 只有当租户ID匹配时才返回数据
               if (where.tenantId && where.tenantId !== tableOfTenantA.tenantId) {

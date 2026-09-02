@@ -71,7 +71,7 @@ describe('IdempotentInterceptor Property-Based Tests', () => {
     };
 
     mockRedisService = {
-      get: jest.fn().mockImplementation(async (key) => {
+      get: jest.fn().mockImplementation(async (key: string) => {
         const data = storedKeys.get(key);
         return data ? data.value : null;
       }),
@@ -79,7 +79,7 @@ describe('IdempotentInterceptor Property-Based Tests', () => {
         storedKeys.set(key, { value, ttl });
         return 'OK';
       }),
-      del: jest.fn().mockImplementation(async (key) => {
+      del: jest.fn().mockImplementation(async (key: string) => {
         redisKeyDeleted = true;
         storedKeys.delete(key);
         return 1;
@@ -451,7 +451,7 @@ describe('IdempotentInterceptor Property-Based Tests', () => {
           jest.spyOn(reflector, 'get').mockReturnValue(defaultOptions);
 
           // Reset mock
-          mockRedisService.get.mockImplementation(async (key) => {
+          mockRedisService.get.mockImplementation(async (key: string) => {
             const data = storedKeys.get(key);
             return data ? data.value : null;
           });

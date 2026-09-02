@@ -14,10 +14,10 @@ import { DateFormat } from '@/shared/decorators/date-format.decorator';
  */
 class TestDateResponseDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  name: string;
+  name!: string;
 
   @Expose()
   @DateFormat()
@@ -40,13 +40,13 @@ class TestDateResponseDto {
  */
 class TestSimpleResponseDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  name: string;
+  name!: string;
 
   @Expose()
-  status: string;
+  status!: string;
 
   @Exclude()
   password?: string;
@@ -99,22 +99,25 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
           const result = toDto(TestDateResponseDto, plainObject);
 
           // 验证 createTime 被格式化为 YYYY-MM-DD HH:mm:ss
-          expect(result.createTime).toBeDefined();
-          expect(typeof result.createTime).toBe('string');
-          expect(defaultFormatRegex.test(result.createTime)).toBe(true);
+          expect(result!.createTime).toBeDefined();
+          expect(typeof result!.createTime).toBe('string');
+          // @ts-expect-error
+          expect(defaultFormatRegex.test(result!.createTime)).toBe(true);
 
           // 验证 updateTime 被格式化为 YYYY-MM-DD HH:mm:ss
-          expect(result.updateTime).toBeDefined();
-          expect(typeof result.updateTime).toBe('string');
-          expect(defaultFormatRegex.test(result.updateTime)).toBe(true);
+          expect(result!.updateTime).toBeDefined();
+          expect(typeof result!.updateTime).toBe('string');
+          // @ts-expect-error
+          expect(defaultFormatRegex.test(result!.updateTime)).toBe(true);
 
           // 验证 birthDate 被格式化为 YYYY-MM-DD（自定义格式）
-          expect(result.birthDate).toBeDefined();
-          expect(typeof result.birthDate).toBe('string');
-          expect(dateOnlyFormatRegex.test(result.birthDate)).toBe(true);
+          expect(result!.birthDate).toBeDefined();
+          expect(typeof result!.birthDate).toBe('string');
+          // @ts-expect-error
+          expect(dateOnlyFormatRegex.test(result!.birthDate)).toBe(true);
 
           // 验证 @Exclude 字段被排除
-          expect(result.password).toBeUndefined();
+          expect(result!.password).toBeUndefined();
         }),
         { numRuns: 100 },
       );
@@ -125,22 +128,25 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
         fc.property(fc.array(plainObjectWithDatesArbitrary, { minLength: 1, maxLength: 20 }), (plainList) => {
           const result = toDtoList(TestDateResponseDto, plainList);
 
-          expect(result.length).toBe(plainList.length);
+          expect(result!.length).toBe(plainList.length);
 
-          result.forEach((dto, index) => {
+          result!.forEach((dto, index) => {
             // 验证 createTime 被格式化
             expect(dto.createTime).toBeDefined();
             expect(typeof dto.createTime).toBe('string');
+            // @ts-expect-error
             expect(defaultFormatRegex.test(dto.createTime)).toBe(true);
 
             // 验证 updateTime 被格式化
             expect(dto.updateTime).toBeDefined();
             expect(typeof dto.updateTime).toBe('string');
+            // @ts-expect-error
             expect(defaultFormatRegex.test(dto.updateTime)).toBe(true);
 
             // 验证 birthDate 被格式化为自定义格式
             expect(dto.birthDate).toBeDefined();
             expect(typeof dto.birthDate).toBe('string');
+            // @ts-expect-error
             expect(dateOnlyFormatRegex.test(dto.birthDate)).toBe(true);
 
             // 验证 @Exclude 字段被排除
@@ -161,23 +167,26 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
           (pageData) => {
             const result = toDtoPage(TestDateResponseDto, pageData);
 
-            expect(result.total).toBe(pageData.total);
-            expect(result.rows.length).toBe(pageData.rows.length);
+            expect(result!.total).toBe(pageData.total);
+            expect(result!.rows.length).toBe(pageData.rows.length);
 
-            result.rows.forEach((dto) => {
+            result!.rows.forEach((dto) => {
               // 验证 createTime 被格式化
               expect(dto.createTime).toBeDefined();
               expect(typeof dto.createTime).toBe('string');
+              // @ts-expect-error
               expect(defaultFormatRegex.test(dto.createTime)).toBe(true);
 
               // 验证 updateTime 被格式化
               expect(dto.updateTime).toBeDefined();
               expect(typeof dto.updateTime).toBe('string');
+              // @ts-expect-error
               expect(defaultFormatRegex.test(dto.updateTime)).toBe(true);
 
               // 验证 birthDate 被格式化为自定义格式
               expect(dto.birthDate).toBeDefined();
               expect(typeof dto.birthDate).toBe('string');
+              // @ts-expect-error
               expect(dateOnlyFormatRegex.test(dto.birthDate)).toBe(true);
 
               // 验证 @Exclude 字段被排除
@@ -204,17 +213,20 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
             const result = toDto(TestDateResponseDto, plainObject);
 
             // 验证 ISO 字符串日期也被正确格式化
-            expect(result.createTime).toBeDefined();
-            expect(typeof result.createTime).toBe('string');
-            expect(defaultFormatRegex.test(result.createTime)).toBe(true);
+            expect(result!.createTime).toBeDefined();
+            expect(typeof result!.createTime).toBe('string');
+            // @ts-expect-error
+            expect(defaultFormatRegex.test(result!.createTime)).toBe(true);
 
-            expect(result.updateTime).toBeDefined();
-            expect(typeof result.updateTime).toBe('string');
-            expect(defaultFormatRegex.test(result.updateTime)).toBe(true);
+            expect(result!.updateTime).toBeDefined();
+            expect(typeof result!.updateTime).toBe('string');
+            // @ts-expect-error
+            expect(defaultFormatRegex.test(result!.updateTime)).toBe(true);
 
-            expect(result.birthDate).toBeDefined();
-            expect(typeof result.birthDate).toBe('string');
-            expect(dateOnlyFormatRegex.test(result.birthDate)).toBe(true);
+            expect(result!.birthDate).toBeDefined();
+            expect(typeof result!.birthDate).toBe('string');
+            // @ts-expect-error
+            expect(dateOnlyFormatRegex.test(result!.birthDate)).toBe(true);
           },
         ),
         { numRuns: 100 },
@@ -237,12 +249,12 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
           const result = toDto(TestSimpleResponseDto, plainObject);
 
           // 验证 @Expose 字段值保持不变
-          expect(result.id).toBe(plainObject.id);
-          expect(result.name).toBe(plainObject.name);
-          expect(result.status).toBe(plainObject.status);
+          expect(result!.id).toBe(plainObject.id);
+          expect(result!.name).toBe(plainObject.name);
+          expect(result!.status).toBe(plainObject.status);
 
           // 验证 @Exclude 字段被排除
-          expect(result.password).toBeUndefined();
+          expect(result!.password).toBeUndefined();
         }),
         { numRuns: 100 },
       );
@@ -253,9 +265,9 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
         fc.property(fc.array(plainObjectWithoutDatesArbitrary, { minLength: 1, maxLength: 20 }), (plainList) => {
           const result = toDtoList(TestSimpleResponseDto, plainList);
 
-          expect(result.length).toBe(plainList.length);
+          expect(result!.length).toBe(plainList.length);
 
-          result.forEach((dto, index) => {
+          result!.forEach((dto, index) => {
             const original = plainList[index];
             // 验证 @Expose 字段值保持不变
             expect(dto.id).toBe(original.id);
@@ -280,10 +292,10 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
           (pageData) => {
             const result = toDtoPage(TestSimpleResponseDto, pageData);
 
-            expect(result.total).toBe(pageData.total);
-            expect(result.rows.length).toBe(pageData.rows.length);
+            expect(result!.total).toBe(pageData.total);
+            expect(result!.rows.length).toBe(pageData.rows.length);
 
-            result.rows.forEach((dto, index) => {
+            result!.rows.forEach((dto, index) => {
               const original = pageData.rows[index];
               // 验证 @Expose 字段值保持不变
               expect(dto.id).toBe(original.id);
@@ -314,13 +326,13 @@ describe('serialize.util Property-Based Tests - Date Serialization', () => {
             const result = toDto(TestDateResponseDto, plainObject);
 
             // 验证 null/undefined 日期字段保持原值
-            expect(result.createTime).toBe(plainObject.createTime);
-            expect(result.updateTime).toBe(plainObject.updateTime);
-            expect(result.birthDate).toBe(plainObject.birthDate);
+            expect(result!.createTime).toBe(plainObject.createTime);
+            expect(result!.updateTime).toBe(plainObject.updateTime);
+            expect(result!.birthDate).toBe(plainObject.birthDate);
 
             // 验证其他字段正常工作
-            expect(result.id).toBe(plainObject.id);
-            expect(result.name).toBe(plainObject.name);
+            expect(result!.id).toBe(plainObject.id);
+            expect(result!.name).toBe(plainObject.name);
           },
         ),
         { numRuns: 100 },

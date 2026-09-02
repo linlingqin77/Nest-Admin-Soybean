@@ -16,7 +16,7 @@
  */
 
 import { PostService } from '@/modules/posts/post.service';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { Result } from '@/shared/response';
 import { ExportTable } from '@/shared/utils/export';
 
@@ -42,6 +42,7 @@ describe('PostService', () => {
 
   beforeEach(() => {
     prisma = createPrismaMock();
+    // @ts-expect-error
     service = new PostService(prisma, deptService as any, postRepo as any);
     jest.clearAllMocks();
   });
@@ -125,8 +126,8 @@ describe('PostService', () => {
       const result = await service.findAll({ pageNum: 1, pageSize: 10, skip: 0, take: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(2);
-      expect(result.data.rows).toHaveLength(2);
+      expect(result.data!.total).toBe(2);
+      expect(result.data!.rows).toHaveLength(2);
     });
 
     it('should filter by postName', async () => {
@@ -144,7 +145,7 @@ describe('PostService', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(1);
+      expect(result.data!.total).toBe(1);
       expect(postRepo.findPageWithFilter).toHaveBeenCalledWith(
         expect.objectContaining({
           postName: { contains: '经理' },
@@ -237,8 +238,8 @@ describe('PostService', () => {
       const result = await service.findAll({ pageNum: 1, pageSize: 10, skip: 0, take: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.total).toBe(0);
-      expect(result.data.rows).toHaveLength(0);
+      expect(result.data!.total).toBe(0);
+      expect(result.data!.rows).toHaveLength(0);
     });
   });
 

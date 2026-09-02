@@ -80,8 +80,8 @@ describe('ToolService', () => {
       const result = await service.findAll(query as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(2);
-      expect(result.data.total).toBe(2);
+      expect(result.data!.rows).toHaveLength(2);
+      expect(result.data!.total).toBe(2);
     });
 
     it('应该支持按表名筛选', async () => {
@@ -122,8 +122,10 @@ describe('ToolService', () => {
       const result = await service.findOne(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.info.tableId).toBe(1);
-      expect(result.data.info.columns).toHaveLength(2);
+      // @ts-expect-error
+      expect(result.data!.info.tableId).toBe(1);
+      // @ts-expect-error
+      expect(result.data!.info.columns).toHaveLength(2);
     });
 
     it('应该在表不存在时返回空', async () => {
@@ -132,7 +134,7 @@ describe('ToolService', () => {
       const result = await service.findOne(999);
 
       expect(result.code).toBe(200);
-      expect(result.data.info).toBeNull();
+      expect(result.data!.info).toBeNull();
     });
   });
 
@@ -228,8 +230,8 @@ describe('ToolService', () => {
       const result = await service.genDbList(query as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.list).toHaveLength(1);
-      expect(result.data.total).toBe(1);
+      expect(result.data!.list).toHaveLength(1);
+      expect(result.data!.total).toBe(1);
     });
 
     it('应该支持按表名筛选', async () => {
@@ -279,7 +281,7 @@ describe('ToolService', () => {
       const result = await service.preview(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.files).toHaveLength(1);
+      expect(result.data!.files).toHaveLength(1);
       expect(mockPreviewService.createPreviewResponse).toHaveBeenCalled();
     });
 

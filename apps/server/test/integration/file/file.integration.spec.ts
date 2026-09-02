@@ -97,12 +97,12 @@ describe('File Integration Tests', () => {
       const result = await fileManagerService.createFolder({ folderName, parentId: 0 }, testUsername);
 
       expect(result.code).toBe(200);
-      expect(result.data.folderName).toBe(folderName);
-      createdFolderIds.push(result.data.folderId);
+      expect(result.data!.folderName).toBe(folderName);
+      createdFolderIds.push(result.data!.folderId);
 
       // Verify in database
       const dbFolder = await prisma.sysFileFolder.findUnique({
-        where: { folderId: result.data.folderId },
+        where: { folderId: result.data!.folderId },
       });
       expect(dbFolder).toBeDefined();
       expect(dbFolder?.folderName).toBe(folderName);
@@ -116,18 +116,18 @@ describe('File Integration Tests', () => {
         testUsername,
       );
       expect(parentResult.code).toBe(200);
-      createdFolderIds.push(parentResult.data.folderId);
+      createdFolderIds.push(parentResult.data!.folderId);
 
       // Create child folder
       const childResult = await fileManagerService.createFolder(
-        { folderName: `child_${Date.now()}`, parentId: parentResult.data.folderId },
+        { folderName: `child_${Date.now()}`, parentId: parentResult.data!.folderId },
         testUsername,
       );
       expect(childResult.code).toBe(200);
-      createdFolderIds.push(childResult.data.folderId);
+      createdFolderIds.push(childResult.data!.folderId);
 
       // Verify folder path
-      expect(childResult.data.folderPath).toContain(parentResult.data.folderName);
+      expect(childResult.data!.folderPath).toContain(parentResult.data!.folderName);
     });
 
     it('should list folders with filters', async () => {
@@ -224,6 +224,7 @@ describe('File Integration Tests', () => {
     });
 
     it('should list files in recycle bin', async () => {
+      // @ts-expect-error
       const result = await fileManagerService.getRecycleList({
         pageNum: 1,
         pageSize: 10,
@@ -311,9 +312,9 @@ describe('File Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.shareId).toBeDefined();
-      expect(result.data.shareUrl).toBeDefined();
-      testShareId = result.data.shareId;
+      expect(result.data!.shareId).toBeDefined();
+      expect(result.data!.shareUrl).toBeDefined();
+      testShareId = result.data!.shareId;
       createdShareIds.push(testShareId);
     });
 
@@ -324,8 +325,8 @@ describe('File Integration Tests', () => {
       });
 
       expect(result.code).toBe(200);
-      expect(result.data.shareInfo).toBeDefined();
-      expect(result.data.fileInfo).toBeDefined();
+      expect(result.data!.shareInfo).toBeDefined();
+      expect(result.data!.fileInfo).toBeDefined();
     });
 
     it('should reject share access with wrong code', async () => {
@@ -379,7 +380,7 @@ describe('File Integration Tests', () => {
         { folderName: `ops_folder_${Date.now()}`, parentId: 0 },
         testUsername,
       );
-      testFolderId = folderResult.data.folderId;
+      testFolderId = folderResult.data!.folderId;
       createdFolderIds.push(testFolderId);
 
       // Create test file
@@ -411,6 +412,7 @@ describe('File Integration Tests', () => {
     });
 
     it('should list files with pagination', async () => {
+      // @ts-expect-error
       const result = await fileManagerService.listFiles({
         pageNum: 1,
         pageSize: 10,
@@ -454,7 +456,7 @@ describe('File Integration Tests', () => {
       const result = await fileManagerService.getFileDetail(testFileId);
 
       expect(result.code).toBe(200);
-      expect(result.data.uploadId).toBe(testFileId);
+      expect(result.data!.uploadId).toBe(testFileId);
     });
   });
 

@@ -13,7 +13,7 @@
  */
 
 import { DictService } from '@/modules/dicts/dict.service';
-import { createPrismaMock, PrismaMock } from 'test/mocks/prisma-mock';
+import { createPrismaMock, PrismaMock } from 'test/mocks/prisma.mock';
 import { CacheEnum, DelFlagEnum } from '@/shared/enums/index';
 
 describe('DictService', () => {
@@ -47,6 +47,7 @@ describe('DictService', () => {
 
   beforeEach(() => {
     prisma = createPrismaMock();
+    // @ts-expect-error
     service = new DictService(prisma, redisService as any, dictTypeRepo as any, dictDataRepo as any);
     jest.clearAllMocks();
   });
@@ -122,8 +123,8 @@ describe('DictService', () => {
         const result = await service.findAllType(query as any);
 
         expect(result.code).toBe(200);
-        expect(result.data.rows).toHaveLength(2);
-        expect(result.data.total).toBe(2);
+        expect(result.data!.rows).toHaveLength(2);
+        expect(result.data!.total).toBe(2);
       });
 
       it('should filter by dictName', async () => {
@@ -342,8 +343,8 @@ describe('DictService', () => {
         const result = await service.findAllData(query as any);
 
         expect(result.code).toBe(200);
-        expect(result.data.rows).toHaveLength(2);
-        expect(result.data.total).toBe(2);
+        expect(result.data!.rows).toHaveLength(2);
+        expect(result.data!.total).toBe(2);
       });
 
       it('should filter by dictLabel', async () => {

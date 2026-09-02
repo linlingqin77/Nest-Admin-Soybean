@@ -299,7 +299,8 @@ describe('UserService', () => {
 
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
-      expect(result.data.data.userId).toBe(1);
+      // @ts-expect-error
+      expect(result.data!.data.userId).toBe(1);
       expect(userCrudService.findOne).toHaveBeenCalledWith(1);
     });
 
@@ -367,7 +368,7 @@ describe('UserService', () => {
       const result = await service.login(loginDto, clientInfo);
 
       expect(result.code).toBe(200);
-      expect(result.data.token).toBeDefined();
+      expect(result.data!.token).toBeDefined();
     });
 
     it('should fail with wrong password', async () => {
@@ -446,7 +447,7 @@ describe('UserService', () => {
       const result = await service.remove([2, 3]);
 
       expect(result.code).toBe(200);
-      expect(result.data.count).toBe(1);
+      expect(result.data!.count).toBe(1);
       expect(userCrudService.remove).toHaveBeenCalledWith([2, 3]);
     });
   });
@@ -550,8 +551,8 @@ describe('UserService', () => {
       const result = await service.findAll(query, currentUser as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(2);
-      expect(result.data.total).toBe(2);
+      expect(result.data!.rows).toHaveLength(2);
+      expect(result.data!.total).toBe(2);
     });
 
     it('should delegate to userCrudService for filtering', async () => {
@@ -571,8 +572,8 @@ describe('UserService', () => {
       const result = await service.findAll(query, currentUser as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(0);
-      expect(result.data.total).toBe(0);
+      expect(result.data!.rows).toHaveLength(0);
+      expect(result.data!.total).toBe(0);
     });
   });
 
@@ -613,8 +614,8 @@ describe('UserService', () => {
       const result = await service.findPostAndRoleAll();
 
       expect(result.code).toBe(200);
-      expect(result.data.posts).toEqual(mockPosts);
-      expect(result.data.roles).toEqual([mockRole]);
+      expect(result.data!.posts).toEqual(mockPosts);
+      expect(result.data!.roles).toEqual([mockRole]);
     });
   });
 
@@ -656,13 +657,13 @@ describe('UserService', () => {
       expect(result.code).toBe(200);
       // After serialization, sensitive fields are excluded and dates are formatted
       expect(result.data).toHaveLength(1);
-      expect(result.data[0].userId).toBe(mockUser.userId);
-      expect(result.data[0].userName).toBe(mockUser.userName);
+      expect(result.data![0].userId).toBe(mockUser.userId);
+      expect(result.data![0].userName).toBe(mockUser.userName);
       // Sensitive fields should be excluded (password, tenantId, delFlag)
       // Note: createBy and updateBy are exposed in BaseResponseDto
-      expect(result.data[0]).not.toHaveProperty('tenantId');
-      expect(result.data[0]).not.toHaveProperty('delFlag');
-      expect(result.data[0]).not.toHaveProperty('password');
+      expect(result.data![0]).not.toHaveProperty('tenantId');
+      expect(result.data![0]).not.toHaveProperty('delFlag');
+      expect(result.data![0]).not.toHaveProperty('password');
     });
   });
 
@@ -724,6 +725,7 @@ describe('UserService', () => {
       const mockProfile = { user: mockUser };
       userProfileService.profile.mockResolvedValue({ code: 200, data: mockProfile });
 
+      // @ts-expect-error
       await service.profile(mockProfile);
 
       expect(userProfileService.profile).toHaveBeenCalledWith(mockProfile);
@@ -866,9 +868,9 @@ describe('UserService', () => {
       const result = await service.batchCreate(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(2);
-      expect(result.data.failedCount).toBe(0);
-      expect(result.data.totalCount).toBe(2);
+      expect(result.data!.successCount).toBe(2);
+      expect(result.data!.failedCount).toBe(0);
+      expect(result.data!.totalCount).toBe(2);
       expect(userBatchService.batchCreate).toHaveBeenCalledWith(batchDto);
     });
 
@@ -890,10 +892,10 @@ describe('UserService', () => {
       const result = await service.batchCreate(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(0);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results[0].success).toBe(false);
-      expect(result.data.results[0].error).toContain('已存在');
+      expect(result.data!.successCount).toBe(0);
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results[0].success).toBe(false);
+      expect(result.data!.results[0].error).toContain('已存在');
     });
 
     it('should fail when phone number already exists', async () => {
@@ -921,8 +923,8 @@ describe('UserService', () => {
       const result = await service.batchCreate(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results[0].error).toContain('手机号');
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results[0].error).toContain('手机号');
     });
 
     it('should fail when email already exists', async () => {
@@ -950,8 +952,8 @@ describe('UserService', () => {
       const result = await service.batchCreate(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results[0].error).toContain('邮箱');
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results[0].error).toContain('邮箱');
     });
 
     it('should handle partial success', async () => {
@@ -980,9 +982,9 @@ describe('UserService', () => {
       const result = await service.batchCreate(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(2);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.totalCount).toBe(3);
+      expect(result.data!.successCount).toBe(2);
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.totalCount).toBe(3);
     });
   });
 
@@ -1009,9 +1011,9 @@ describe('UserService', () => {
       const result = await service.batchDelete(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(3);
-      expect(result.data.failedCount).toBe(0);
-      expect(result.data.totalCount).toBe(3);
+      expect(result.data!.successCount).toBe(3);
+      expect(result.data!.failedCount).toBe(0);
+      expect(result.data!.totalCount).toBe(3);
       expect(userBatchService.batchDelete).toHaveBeenCalledWith(batchDto);
     });
 
@@ -1034,9 +1036,9 @@ describe('UserService', () => {
       const result = await service.batchDelete(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(2);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results.find((r) => r.index === 0)?.error).toContain('系统管理员');
+      expect(result.data!.successCount).toBe(2);
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results.find((r) => r.index === 0)?.error).toContain('系统管理员');
     });
 
     it('should not delete system users', async () => {
@@ -1055,8 +1057,8 @@ describe('UserService', () => {
       const result = await service.batchDelete(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results[0].error).toContain('系统用户');
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results[0].error).toContain('系统用户');
     });
 
     it('should fail when user does not exist', async () => {
@@ -1075,8 +1077,8 @@ describe('UserService', () => {
       const result = await service.batchDelete(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.results[0].error).toContain('不存在');
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.results[0].error).toContain('不存在');
     });
 
     it('should handle partial success', async () => {
@@ -1099,9 +1101,9 @@ describe('UserService', () => {
       const result = await service.batchDelete(batchDto);
 
       expect(result.code).toBe(200);
-      expect(result.data.successCount).toBe(2);
-      expect(result.data.failedCount).toBe(1);
-      expect(result.data.totalCount).toBe(3);
+      expect(result.data!.successCount).toBe(2);
+      expect(result.data!.failedCount).toBe(1);
+      expect(result.data!.totalCount).toBe(3);
     });
   });
 });

@@ -283,9 +283,13 @@ export const createMockRedis = (): MockRedisService => {
     // 有序集合操作
     zadd: jest.fn((_key: string, ..._args: any[]) => Promise.resolve(1)),
     zrem: jest.fn((_key: string, ..._members: string[]) => Promise.resolve(1)),
+    // @ts-expect-error
     zrange: jest.fn(() => Promise.resolve([])),
+    // @ts-expect-error
     zrangebyscore: jest.fn(() => Promise.resolve([])),
+    // @ts-expect-error
     zscore: jest.fn(() => Promise.resolve(null)),
+    // @ts-expect-error
     zcard: jest.fn(() => Promise.resolve(0)),
 
     // 键操作
@@ -294,6 +298,7 @@ export const createMockRedis = (): MockRedisService => {
       const matchedKeys = Array.from(store.keys()).filter((key) => regex.test(key));
       return Promise.resolve(matchedKeys);
     }),
+    // @ts-expect-error
     scan: jest.fn(() => Promise.resolve(['0', []] as [string, string[]])),
     type: jest.fn((key: string) => {
       const value = store.get(key);
@@ -310,8 +315,11 @@ export const createMockRedis = (): MockRedisService => {
     }),
 
     // 发布订阅
+    // @ts-expect-error
     publish: jest.fn(() => Promise.resolve(0)),
+    // @ts-expect-error
     subscribe: jest.fn(() => Promise.resolve()),
+    // @ts-expect-error
     unsubscribe: jest.fn(() => Promise.resolve()),
 
     // 事务

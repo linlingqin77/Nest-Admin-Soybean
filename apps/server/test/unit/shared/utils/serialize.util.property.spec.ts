@@ -7,7 +7,7 @@
 import * as fc from 'fast-check';
 import { Expose, Exclude } from 'class-transformer';
 import { toDto, toDtoList, toDtoPage } from '@/shared/utils/serialize.util';
-import { BaseResponseDto } from '@/dto/base.response.dto';
+import { BaseResponseDto } from '@/shared/dto/base.response.dto';
 
 /**
  * Test DTO that extends BaseResponseDto
@@ -15,22 +15,22 @@ import { BaseResponseDto } from '@/dto/base.response.dto';
  */
 class TestUserResponseDto extends BaseResponseDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  username: string;
+  username!: string;
 
   @Expose()
-  email: string;
+  email!: string;
 
   @Expose()
-  status: string;
+  status!: string;
 
   @Exclude()
-  password: string;
+  password!: string;
 
   @Exclude()
-  secretKey: string;
+  secretKey!: string;
 }
 
 /**
@@ -73,16 +73,16 @@ describe('serialize.util Property-Based Tests', () => {
           const result = toDto(TestUserResponseDto, plainObject);
 
           // Verify @Exclude fields from TestUserResponseDto are filtered
-          expect(result.password).toBeUndefined();
-          expect(result.secretKey).toBeUndefined();
+          expect(result!.password).toBeUndefined();
+          expect(result!.secretKey).toBeUndefined();
 
           // Verify @Exclude fields from BaseResponseDto are filtered
-          expect(result.delFlag).toBeUndefined();
-          expect(result.tenantId).toBeUndefined();
+          expect(result!.delFlag).toBeUndefined();
+          expect(result!.tenantId).toBeUndefined();
 
           // Note: createBy and updateBy are @Expose fields in BaseResponseDto, so they should be preserved
-          expect(result.createBy).toBe(plainObject.createBy);
-          expect(result.updateBy).toBe(plainObject.updateBy);
+          expect(result!.createBy).toBe(plainObject.createBy);
+          expect(result!.updateBy).toBe(plainObject.updateBy);
 
           // Verify extra fields not in DTO are filtered
           expect((result as any).extraField).toBeUndefined();
@@ -97,9 +97,9 @@ describe('serialize.util Property-Based Tests', () => {
         fc.property(fc.array(plainObjectArbitrary, { minLength: 1, maxLength: 20 }), (plainList) => {
           const result = toDtoList(TestUserResponseDto, plainList);
 
-          expect(result.length).toBe(plainList.length);
+          expect(result!.length).toBe(plainList.length);
 
-          result.forEach((dto, index) => {
+          result!.forEach((dto, index) => {
             const original = plainList[index];
             // Verify @Exclude fields are filtered for each item
             expect(dto.password).toBeUndefined();
@@ -128,10 +128,10 @@ describe('serialize.util Property-Based Tests', () => {
           (pageData) => {
             const result = toDtoPage(TestUserResponseDto, pageData);
 
-            expect(result.total).toBe(pageData.total);
-            expect(result.rows.length).toBe(pageData.rows.length);
+            expect(result!.total).toBe(pageData.total);
+            expect(result!.rows.length).toBe(pageData.rows.length);
 
-            result.rows.forEach((dto, index) => {
+            result!.rows.forEach((dto, index) => {
               const original = pageData.rows[index];
               // Verify @Exclude fields are filtered for each item
               expect(dto.password).toBeUndefined();
@@ -167,10 +167,10 @@ describe('serialize.util Property-Based Tests', () => {
           const result = toDto(TestUserResponseDto, plainObject);
 
           // Verify @Expose fields have the same values as original
-          expect(result.id).toBe(plainObject.id);
-          expect(result.username).toBe(plainObject.username);
-          expect(result.email).toBe(plainObject.email);
-          expect(result.status).toBe(plainObject.status);
+          expect(result!.id).toBe(plainObject.id);
+          expect(result!.username).toBe(plainObject.username);
+          expect(result!.email).toBe(plainObject.email);
+          expect(result!.status).toBe(plainObject.status);
         }),
         { numRuns: 100 },
       );
@@ -181,9 +181,9 @@ describe('serialize.util Property-Based Tests', () => {
         fc.property(fc.array(plainObjectArbitrary, { minLength: 1, maxLength: 20 }), (plainList) => {
           const result = toDtoList(TestUserResponseDto, plainList);
 
-          expect(result.length).toBe(plainList.length);
+          expect(result!.length).toBe(plainList.length);
 
-          result.forEach((dto, index) => {
+          result!.forEach((dto, index) => {
             const original = plainList[index];
             // Verify @Expose fields have the same values as original
             expect(dto.id).toBe(original.id);
@@ -206,10 +206,10 @@ describe('serialize.util Property-Based Tests', () => {
           (pageData) => {
             const result = toDtoPage(TestUserResponseDto, pageData);
 
-            expect(result.total).toBe(pageData.total);
-            expect(result.rows.length).toBe(pageData.rows.length);
+            expect(result!.total).toBe(pageData.total);
+            expect(result!.rows.length).toBe(pageData.rows.length);
 
-            result.rows.forEach((dto, index) => {
+            result!.rows.forEach((dto, index) => {
               const original = pageData.rows[index];
               // Verify @Expose fields have the same values as original
               expect(dto.id).toBe(original.id);
@@ -234,12 +234,12 @@ describe('serialize.util Property-Based Tests', () => {
             const result = toDto(TestUserResponseDto, partialObject);
 
             // Present field should be preserved
-            expect(result.id).toBe(partialObject.id);
+            expect(result!.id).toBe(partialObject.id);
 
             // Missing @Expose fields should be undefined (not throw error)
-            expect(result.username).toBeUndefined();
-            expect(result.email).toBeUndefined();
-            expect(result.status).toBeUndefined();
+            expect(result!.username).toBeUndefined();
+            expect(result!.email).toBeUndefined();
+            expect(result!.status).toBeUndefined();
           },
         ),
         { numRuns: 100 },

@@ -127,9 +127,9 @@ describe('SMS Integration Tests', () => {
 
       const findResult = await smsChannelService.findOne(channel!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.name).toBe(name);
+      expect(findResult.data!.name).toBe(name);
       // 敏感信息应被隐藏
-      expect(findResult.data.apiSecret).toBe('******');
+      expect(findResult.data!.apiSecret).toBe('******');
     });
 
     it('should list SMS channels with pagination', async () => {
@@ -141,9 +141,9 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter SMS channels by name', async () => {
@@ -176,8 +176,8 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThan(0);
-      result.data.rows.forEach((row: any) => {
+      expect(result.data!.rows.length).toBeGreaterThan(0);
+      result.data!.rows.forEach((row: any) => {
         expect(row.name).toContain('筛选渠道');
       });
     });
@@ -251,7 +251,7 @@ describe('SMS Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
-      result.data.forEach((item: any) => {
+      result.data!.forEach((item: any) => {
         expect(item).toHaveProperty('id');
         expect(item).toHaveProperty('code');
         expect(item).toHaveProperty('name');
@@ -308,9 +308,9 @@ describe('SMS Integration Tests', () => {
 
       const findResult = await smsTemplateService.findOne(template!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.name).toBe(name);
+      expect(findResult.data!.name).toBe(name);
       // params is stored as JSON string, parse it to check contents
-      const params = JSON.parse(findResult.data.params || '[]');
+      const params = JSON.parse(findResult.data!.params || '[]');
       expect(params).toContain('code');
       expect(params).toContain('time');
     });
@@ -324,8 +324,8 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should filter SMS templates by channel', async () => {
@@ -338,7 +338,7 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.channelId).toBe(testChannelId);
       });
     });
@@ -388,9 +388,9 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter SMS logs by mobile', async () => {
@@ -416,7 +416,7 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.mobile).toContain('13800138000');
       });
     });
@@ -431,7 +431,7 @@ describe('SMS Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.sendStatus).toBe(1);
       });
     });

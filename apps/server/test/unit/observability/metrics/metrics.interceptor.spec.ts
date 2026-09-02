@@ -1,7 +1,7 @@
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
-import { MetricsInterceptor } from '@/core/core/observability/metrics/metrics.interceptor';
-import { MetricsService } from '@/core/core/observability/metrics/metrics.service';
+import { MetricsInterceptor } from '@/core/observability/metrics/metrics.interceptor';
+import { MetricsService } from '@/core/observability/metrics/metrics.service';
 
 describe('MetricsInterceptor', () => {
   let interceptor: MetricsInterceptor;

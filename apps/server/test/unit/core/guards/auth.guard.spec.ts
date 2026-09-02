@@ -3,7 +3,7 @@ import { ExecutionContext, ForbiddenException, UnauthorizedException } from '@ne
 import { Reflector } from '@nestjs/core';
 import { JwtAuthGuard } from '@/core/auth/guards/auth.guard';
 import { UserService } from '@/modules/users/user.service';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 
 describe('JwtAuthGuard', () => {

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { validate } from '@/config/env.validation';
+import { validate } from '@/platform/config/env.validation';
 
 describe('env.validation', () => {
   describe('validate', () => {

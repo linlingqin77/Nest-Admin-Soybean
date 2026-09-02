@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoginSecurityService } from '@/core/auth/login-core.service';
+import { LoginSecurityService } from '@/core/auth/login-security.service';
 import { RedisService } from '@/platform/redis/redis.service';
 import { CacheEnum } from '@/shared/enums/index';
 

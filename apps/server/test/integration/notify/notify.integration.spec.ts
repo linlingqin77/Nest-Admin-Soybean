@@ -118,9 +118,9 @@ describe('Notify Integration Tests', () => {
 
       const findResult = await notifyTemplateService.findOne(template!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.name).toBe(name);
+      expect(findResult.data!.name).toBe(name);
       // params is stored as JSON string, parse it to check contents
-      const params = JSON.parse(findResult.data.params || '[]');
+      const params = JSON.parse(findResult.data!.params || '[]');
       expect(params).toContain('username');
       expect(params).toContain('message');
     });
@@ -134,9 +134,9 @@ describe('Notify Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter notify templates by name', async () => {
@@ -169,8 +169,8 @@ describe('Notify Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThan(0);
-      result.data.rows.forEach((row: any) => {
+      expect(result.data!.rows.length).toBeGreaterThan(0);
+      result.data!.rows.forEach((row: any) => {
         expect(row.name).toContain('筛选站内信');
       });
     });
@@ -275,7 +275,7 @@ describe('Notify Integration Tests', () => {
       });
 
       expect(sendResult.code).toBe(200);
-      expect(sendResult.data.count).toBe(1);
+      expect(sendResult.data!.count).toBe(1);
 
       // 查找创建的消息
       const message = await prisma.sysNotifyMessage.findFirst({
@@ -300,9 +300,9 @@ describe('Notify Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter notify messages by user', async () => {
@@ -315,7 +315,7 @@ describe('Notify Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.userId).toBe(testUserId);
       });
     });
@@ -324,7 +324,7 @@ describe('Notify Integration Tests', () => {
       const result = await notifyMessageService.getUnreadCount(testUserId);
 
       expect(result.code).toBe(200);
-      expect(typeof result.data.count).toBe('number');
+      expect(typeof result.data!.count).toBe('number');
     });
 
     it('should mark message as read', async () => {

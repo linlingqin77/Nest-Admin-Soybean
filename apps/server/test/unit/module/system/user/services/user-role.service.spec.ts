@@ -84,8 +84,8 @@ describe('UserRoleService', () => {
       const result = await service.authRole(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.user.userId).toBe(1);
-      expect(result.data.roles).toHaveLength(2);
+      expect(result.data!.user.userId).toBe(1);
+      expect(result.data!.roles).toHaveLength(2);
     });
 
     it('should handle user without dept', async () => {
@@ -96,7 +96,7 @@ describe('UserRoleService', () => {
       const result = await service.authRole(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.user.dept).toBeNull();
+      expect(result.data!.user.dept).toBeNull();
     });
   });
 
@@ -133,7 +133,7 @@ describe('UserRoleService', () => {
       const result = await service.allocatedList({ roleId: '1', pageNum: 1, pageSize: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toEqual([]);
+      expect(result.data!.rows).toEqual([]);
     });
 
     it('should return allocated users', async () => {
@@ -144,7 +144,7 @@ describe('UserRoleService', () => {
       const result = await service.allocatedList({ roleId: '1', pageNum: 1, pageSize: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(1);
+      expect(result.data!.rows).toHaveLength(1);
     });
 
     it('should filter by userName', async () => {

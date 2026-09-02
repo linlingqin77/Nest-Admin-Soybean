@@ -37,7 +37,7 @@ import { UserRepository } from '@/modules/users/user.repository';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '@/platform/redis/redis.service';
 import { RoleService } from '@/modules/roles/role.service';
-import { LoginSecurityService } from '@/core/auth/login-core.service';
+import { LoginSecurityService } from '@/core/auth/login-security.service';
 import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
 
 describe('UserAuthService', () => {
@@ -220,7 +220,7 @@ describe('UserAuthService', () => {
       const result = await service.login(mockLoginDto, mockClientInfo);
 
       expect(result.code).toBe(200);
-      expect(result.data.token).toBe('jwt-token');
+      expect(result.data!.token).toBe('jwt-token');
       expect(loginSecurityServiceMock.clearFailedAttempts).toHaveBeenCalledWith('admin');
     });
 

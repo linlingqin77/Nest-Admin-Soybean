@@ -127,9 +127,9 @@ describe('Mail Integration Tests', () => {
 
       const findResult = await mailAccountService.findOne(account!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.mail).toBe(mail);
+      expect(findResult.data!.mail).toBe(mail);
       // 密码应被隐藏
-      expect(findResult.data.password).toBe('******');
+      expect(findResult.data!.password).toBe('******');
     });
 
     it('should list mail accounts with pagination', async () => {
@@ -141,9 +141,9 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter mail accounts by mail address', async () => {
@@ -176,8 +176,8 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThan(0);
-      result.data.rows.forEach((row: any) => {
+      expect(result.data!.rows.length).toBeGreaterThan(0);
+      result.data!.rows.forEach((row: any) => {
         expect(row.mail).toContain('filter_');
       });
     });
@@ -251,7 +251,7 @@ describe('Mail Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
-      result.data.forEach((item: any) => {
+      result.data!.forEach((item: any) => {
         expect(item).toHaveProperty('id');
         expect(item).toHaveProperty('mail');
         expect(item).toHaveProperty('username');
@@ -309,9 +309,9 @@ describe('Mail Integration Tests', () => {
 
       const findResult = await mailTemplateService.findOne(template!.id);
       expect(findResult.code).toBe(200);
-      expect(findResult.data.name).toBe(name);
+      expect(findResult.data!.name).toBe(name);
       // params is stored as JSON string, parse it to check contents
-      const params = JSON.parse(findResult.data.params || '[]');
+      const params = JSON.parse(findResult.data!.params || '[]');
       expect(params).toContain('username');
       expect(params).toContain('code');
     });
@@ -325,8 +325,8 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should filter mail templates by account', async () => {
@@ -339,7 +339,7 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.accountId).toBe(testAccountId);
       });
     });
@@ -389,9 +389,9 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toBeDefined();
-      expect(Array.isArray(result.data.rows)).toBe(true);
-      expect(typeof result.data.total).toBe('number');
+      expect(result.data!.rows).toBeDefined();
+      expect(Array.isArray(result.data!.rows)).toBe(true);
+      expect(typeof result.data!.total).toBe('number');
     });
 
     it('should filter mail logs by recipient', async () => {
@@ -419,7 +419,7 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.toMail).toContain('recipient@test.com');
       });
     });
@@ -434,7 +434,7 @@ describe('Mail Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((row: any) => {
+      result.data!.rows.forEach((row: any) => {
         expect(row.sendStatus).toBe(1);
       });
     });

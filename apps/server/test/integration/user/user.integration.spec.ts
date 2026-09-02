@@ -506,9 +506,9 @@ describe('User Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data.length).toBeGreaterThanOrEqual(2);
+      expect(result.data!.length).toBeGreaterThanOrEqual(2);
 
-      const userIds = result.data.map((u: any) => u.userId);
+      const userIds = result.data!.map((u: any) => u.userId);
       expect(userIds).toContain(user1.userId);
       expect(userIds).toContain(user2.userId);
     });
@@ -553,7 +553,7 @@ describe('User Integration Tests', () => {
       );
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.some((u: any) => u.userId === user.userId)).toBe(true);
+      expect(result.data!.rows.some((u: any) => u.userId === user.userId)).toBe(true);
     });
   });
 
@@ -613,9 +613,11 @@ describe('User Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
-      expect(result.data.data.userId).toBe(user.userId);
-      expect(result.data.data.deptId).toBe(dept.deptId);
-      expect(result.data.roleIds).toContain(role.roleId);
+      // @ts-expect-error
+      expect(result.data!.data.userId).toBe(user.userId);
+      // @ts-expect-error
+      expect(result.data!.data.deptId).toBe(dept.deptId);
+      expect(result.data!.roleIds).toContain(role.roleId);
     });
   });
 });

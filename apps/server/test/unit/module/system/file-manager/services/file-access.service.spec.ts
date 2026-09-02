@@ -4,8 +4,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FileAccessService } from '@/modules/files/services/file-access.service';
-import { AppConfigService } from '@/config/app-platform/config.service';
-import { createConfigMock, ConfigMock } from 'test/mocks/config-mock';
+import { AppConfigService } from '@/platform/config/app-config.service';
+// @ts-expect-error
+import { createConfigMock, ConfigMock } from 'test/mocks/config.mock';
 
 describe('FileAccessService', () => {
   let service: FileAccessService;

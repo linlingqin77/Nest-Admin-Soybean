@@ -12,7 +12,7 @@
 
 import * as fc from 'fast-check';
 import { RequestIdMiddleware } from '@/core/http/middleware/request-id.middleware';
-import { getRequestId } from '@/platform/logger/pino-logger.platform/config';
+import { getRequestId } from '@/platform/logger/pino-logger.config';
 import { Request, Response, NextFunction } from 'express';
 import { ClsService } from 'nestjs-cls';
 
@@ -116,6 +116,7 @@ describe('Request Tracing Property-Based Tests', () => {
           expect(responseHeaderValue).toBe(existingRequestId);
 
           // Property: Request object should have the same requestId
+          // @ts-expect-error
           expect(mockRequest['requestId']).toBe(existingRequestId);
           expect(mockRequest['id']).toBe(existingRequestId);
         }),
@@ -258,6 +259,7 @@ describe('Request Tracing Property-Based Tests', () => {
           middlewareWithTracking.use(mockRequest as Request, mockResponse as Response, mockNext);
 
           // Property: All three locations should have the same Request ID
+          // @ts-expect-error
           const requestRequestId = mockRequest['requestId'];
 
           expect(requestRequestId).toBeDefined();

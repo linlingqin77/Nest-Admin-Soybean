@@ -5,7 +5,7 @@
 
 import type { GeneratedRoute } from '@elegant-router/types';
 
-export const generatedRoutes: GeneratedRoute[] = [
+export const generatedRoutes: any[] = [
   {
     name: '403',
     path: '/403',

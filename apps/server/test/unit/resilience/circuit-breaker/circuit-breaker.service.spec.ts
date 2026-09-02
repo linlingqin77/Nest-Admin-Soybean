@@ -4,7 +4,7 @@ import {
   BreakerState,
   CircuitBreakerOpenError,
   CircuitBreakerIsolatedError,
-} from '@/platform/platform/resilience/circuit-breaker/circuit-breaker.service';
+} from '@/platform/resilience/circuit-breaker/circuit-breaker.service';
 
 describe('CircuitBreakerService', () => {
   let service: CircuitBreakerService;

@@ -3,7 +3,7 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { TenantGuard } from '@/core/tenancy/guards/tenant.guard';
 import { TenantContext } from '@/core/tenancy/context/tenant.context';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 import { IGNORE_TENANT_KEY } from '@/core/tenancy/decorators/tenant.decorator';
 
 describe('TenantGuard', () => {
@@ -217,6 +217,7 @@ describe('TenantGuard', () => {
     it('超级租户使用 @IgnoreTenant 时应正常工作', () => {
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
 
+      // @ts-expect-error
       const testResult = TenantContext.run({ tenantId: '000000', ignoreTenant: false, isSuperTenant: true }, () => {
         guard.canActivate(createMockContext());
         return {

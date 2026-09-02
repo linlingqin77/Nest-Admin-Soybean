@@ -437,7 +437,7 @@ describe('Tenant Lifecycle Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBe(0);
+      expect(result.data!.rows.length).toBe(0);
     });
   });
 });

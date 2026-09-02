@@ -340,7 +340,7 @@ describe('Property 5: CRUD Idempotency for Read Operations', () => {
           return true;
         } catch (error) {
           // Skip on network errors
-          console.log(`Network error for ${endpoint.description}:`, error.message);
+          console.log(`Network error for ${endpoint.description}:`, (error as Error).message);
           return true;
         }
       }),

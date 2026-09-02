@@ -168,8 +168,8 @@ describe('Dept Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // Each department should have required fields
-      if (result.data.length > 0) {
-        const dept = result.data[0];
+      if (result.data!.length > 0) {
+        const dept = result.data![0];
         expect(dept).toHaveProperty('deptId');
         expect(dept).toHaveProperty('deptName');
         expect(dept).toHaveProperty('parentId');
@@ -252,7 +252,7 @@ describe('Dept Integration Tests', () => {
       expect(result.code).toBe(200);
 
       // Find our test departments in the result
-      const testDepts = result.data.filter((d: any) => [dept1.deptId, dept2.deptId, dept3.deptId].includes(d.deptId));
+      const testDepts = result.data!.filter((d: any) => [dept1.deptId, dept2.deptId, dept3.deptId].includes(d.deptId));
 
       // They should be ordered by orderNum
       if (testDepts.length === 3) {
@@ -339,11 +339,11 @@ describe('Dept Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // Parent should not be in the list
-      const parentInList = result.data.find((d: any) => d.deptId === parentDept.deptId);
+      const parentInList = result.data!.find((d: any) => d.deptId === parentDept.deptId);
       expect(parentInList).toBeUndefined();
 
       // Child should not be in the list (it's a descendant)
-      const childInList = result.data.find((d: any) => d.deptId === childDept.deptId);
+      const childInList = result.data!.find((d: any) => d.deptId === childDept.deptId);
       expect(childInList).toBeUndefined();
     });
   });
@@ -368,11 +368,11 @@ describe('Dept Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // Active department should be in the list
-      const activeInList = result.data.find((d: any) => d.deptId === activeDept.deptId);
+      const activeInList = result.data!.find((d: any) => d.deptId === activeDept.deptId);
       expect(activeInList).toBeDefined();
 
       // Disabled department should not be in the list
-      const disabledInList = result.data.find((d: any) => d.deptId === disabledDept.deptId);
+      const disabledInList = result.data!.find((d: any) => d.deptId === disabledDept.deptId);
       expect(disabledInList).toBeUndefined();
     });
   });
@@ -387,8 +387,8 @@ describe('Dept Integration Tests', () => {
       const result = await deptService.findAll({ deptName: uniqueName } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.length).toBeGreaterThanOrEqual(1);
-      expect(result.data.some((d: any) => d.deptName === uniqueName)).toBe(true);
+      expect(result.data!.length).toBeGreaterThanOrEqual(1);
+      expect(result.data!.some((d: any) => d.deptName === uniqueName)).toBe(true);
     });
 
     it('should filter departments by status', async () => {
@@ -398,7 +398,7 @@ describe('Dept Integration Tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
 
       // All returned departments should have normal status
-      result.data.forEach((dept: any) => {
+      result.data!.forEach((dept: any) => {
         expect(dept.status).toBe(StatusEnum.NORMAL);
       });
     });

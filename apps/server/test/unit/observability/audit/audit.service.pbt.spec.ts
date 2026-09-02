@@ -78,7 +78,7 @@ describe('AuditService Property-Based Tests', () => {
    * Property 6a: Audit Log Contains Required Fields
    *
    * For any audit log operation, the log record should contain all required fields:
-   * action, modules, status, tenantId, ip.
+   * action, module: 'audit', status, tenantId, ip.
    *
    * **Validates: Requirements 4.4, 4.5**
    */
@@ -86,16 +86,16 @@ describe('AuditService Property-Based Tests', () => {
     await fc.assert(
       fc.asyncProperty(
         fc.constantFrom('CREATE', 'UPDATE', 'DELETE', 'QUERY', 'LOGIN', 'LOGOUT'),
-        fc.constantFrom('system', 'monitor', 'upload', 'resource', 'auth'),
+        fc.constantFrom('audit'),
         fc.constantFrom('0', '1') as fc.Arbitrary<'0' | '1'>,
         fc.stringMatching(/^[0-9]{6}$/),
         fc.ipV4(),
-        async (action, modules, status, tenantId, ip) => {
+        async (action, module: 'audit', status, tenantId, ip) => {
           clsStore.set('user', { tenantId, userId: 1, userName: 'testuser' });
           clsStore.set('request', { ip, headers: { 'user-agent': 'test-agent' } });
           clsStore.set('requestId', 'test-request-id');
 
-          const auditData: AuditLogData = { action, modules, status };
+          const auditData: AuditLogData = { action, module: 'audit', status };
           await service.logSync(auditData);
 
           if (capturedLogs.length === 0) return false;
@@ -103,7 +103,7 @@ describe('AuditService Property-Based Tests', () => {
 
           return (
             log.action === action &&
-            log.modules === modules &&
+            log.module === 'audit' &&
             log.status === status &&
             log.tenantId === tenantId &&
             log.ip === ip
@@ -130,8 +130,7 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'UPDATE',
-            modules: 'system',
+            action: 'UPDATE', module: 'system',
             targetType,
             targetId,
             status: '0',
@@ -172,8 +171,7 @@ describe('AuditService Property-Based Tests', () => {
           const newValueStr = JSON.stringify(newValue);
 
           const auditData: AuditLogData = {
-            action: 'UPDATE',
-            modules: 'system',
+            action: 'UPDATE', module: 'system',
             oldValue: oldValueStr,
             newValue: newValueStr,
             status: '0',
@@ -204,8 +202,7 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'DELETE',
-            modules: 'system',
+            action: 'DELETE', module: 'system',
             status: '1',
             errorMsg,
           };
@@ -233,8 +230,7 @@ describe('AuditService Property-Based Tests', () => {
         clsStore.set('requestId', 'test-request-id');
 
         const auditData: AuditLogData = {
-          action: 'QUERY',
-          modules: 'system',
+          action: 'QUERY', module: 'system',
           status: '0',
           duration,
         };
@@ -261,8 +257,7 @@ describe('AuditService Property-Based Tests', () => {
         clsStore.set('requestId', requestId);
 
         const auditData: AuditLogData = {
-          action: 'CREATE',
-          modules: 'system',
+          action: 'CREATE', module: 'system',
           status: '0',
         };
 
@@ -295,8 +290,7 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'LOGIN',
-            modules: 'auth',
+            action: 'LOGIN', module: 'auth',
             status: '0',
           };
 

@@ -109,7 +109,7 @@ describe('Config Integration Tests', () => {
         configKey: 'sys.index',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((mockConfig: any) => {
+      result.data!.rows.forEach((mockConfig: any) => {
         expect(mockConfig.configKey.toLowerCase()).toContain('sys.index');
       });
     });
@@ -123,7 +123,7 @@ describe('Config Integration Tests', () => {
         configType: 'Y',
       } as any);
       expect(result.code).toBe(200);
-      result.data.rows.forEach((mockConfig: any) => {
+      result.data!.rows.forEach((mockConfig: any) => {
         expect(mockConfig.configType).toBe('Y');
       });
     });
@@ -132,11 +132,11 @@ describe('Config Integration Tests', () => {
   describe('Config findOne Integration', () => {
     it('should return platform/config by id', async () => {
       const listResult = await configService.findAll({ pageNum: 1, pageSize: 1, skip: 0, take: 1 } as any);
-      expect(listResult.data.rows.length).toBeGreaterThan(0);
-      const configId = listResult.data.rows[0].configId;
+      expect(listResult.data!.rows.length).toBeGreaterThan(0);
+      const configId = listResult.data!.rows[0].configId;
       const result = await configService.findOne(configId);
       expect(result.code).toBe(200);
-      expect(result.data.configId).toBe(configId);
+      expect(result.data!.configId).toBe(configId);
     });
   });
 });

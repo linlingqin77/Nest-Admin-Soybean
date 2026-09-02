@@ -98,6 +98,7 @@ describe('DataSourceService', () => {
       };
 
       mockPrismaService.genDataSource.findFirst.mockResolvedValue(null);
+      // @ts-expect-error
       mockPrismaService.genDataSource.create.mockImplementation(({ data }) => {
         // 验证密码已被加密（包含冒号分隔符）
         expect(data.password).toContain(':');
@@ -156,6 +157,7 @@ describe('DataSourceService', () => {
       const dto = { password: 'newPassword' };
 
       mockPrismaService.genDataSource.findFirst.mockResolvedValue({ id: 1, name: 'test-db' });
+      // @ts-expect-error
       mockPrismaService.genDataSource.update.mockImplementation(({ data }) => {
         expect(data.password).toContain(':');
         expect(data.password).not.toBe('newPassword');

@@ -54,16 +54,16 @@ describe('Dict Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
       // sys_normal_disable should have at least 1 option
-      expect(result.data.length).toBeGreaterThanOrEqual(1);
+      expect(result.data!.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should return dict data sorted by dictSort', async () => {
       const result = await dictService.findOneDataType(existingDictType);
       expect(result.code).toBe(200);
-      if (result.data.length > 1) {
+      if (result.data!.length > 1) {
         // Verify sorting - each item's dictSort should be <= next item's dictSort
-        for (let i = 0; i < result.data.length - 1; i++) {
-          expect(result.data[i].dictSort!).toBeLessThanOrEqual(result.data[i + 1].dictSort!);
+        for (let i = 0; i < result.data!.length - 1; i++) {
+          expect(result.data![i].dictSort!).toBeLessThanOrEqual(result.data![i + 1].dictSort!);
         }
       }
     });
@@ -78,8 +78,8 @@ describe('Dict Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThanOrEqual(1);
-      result.data.rows.forEach((item: any) => {
+      expect(result.data!.rows.length).toBeGreaterThanOrEqual(1);
+      result.data!.rows.forEach((item: any) => {
         expect(item.dictType).toBe(existingDictType);
       });
     });
@@ -95,7 +95,7 @@ describe('Dict Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should return dict type by id', async () => {
@@ -107,12 +107,12 @@ describe('Dict Integration Tests', () => {
         take: 1,
       } as any);
 
-      expect(listResult.data.rows.length).toBeGreaterThan(0);
-      const dictTypeId = listResult.data.rows[0].dictId;
+      expect(listResult.data!.rows.length).toBeGreaterThan(0);
+      const dictTypeId = listResult.data!.rows[0].dictId;
 
       const result = await dictService.findOneType(dictTypeId);
       expect(result.code).toBe(200);
-      expect(result.data.dictId).toBe(dictTypeId);
+      expect(result.data!.dictId).toBe(dictTypeId);
     });
   });
 

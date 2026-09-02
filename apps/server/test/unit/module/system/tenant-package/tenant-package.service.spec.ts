@@ -99,8 +99,8 @@ describe('TenantPackageService', () => {
       const result = await service.findAll(createListDto({ pageNum: 1, pageSize: 10 }));
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(2);
-      expect(result.data.total).toBe(2);
+      expect(result.data!.rows).toHaveLength(2);
+      expect(result.data!.total).toBe(2);
     });
 
     it('should filter by packageName', async () => {
@@ -141,7 +141,7 @@ describe('TenantPackageService', () => {
       const result = await service.findOne(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.packageId).toBe(1);
+      expect(result.data!.packageId).toBe(1);
     });
 
     it('should throw error when package not found', async () => {

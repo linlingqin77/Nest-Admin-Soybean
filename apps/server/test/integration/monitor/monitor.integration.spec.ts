@@ -89,10 +89,10 @@ describe('Monitor Integration Tests', () => {
       expect(result).toBeDefined();
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
-      expect(result.data.infoId).toBeDefined();
-      expect(result.data.userName).toBe(logData.userName);
-      expect(result.data.ipaddr).toBe(logData.ipaddr);
-      createdLogId = result.data.infoId;
+      expect(result.data!.infoId).toBeDefined();
+      expect(result.data!.userName).toBe(logData.userName);
+      expect(result.data!.ipaddr).toBe(logData.ipaddr);
+      createdLogId = result.data!.infoId;
     });
 
     it('should query login logs with pagination', async () => {
@@ -106,7 +106,7 @@ describe('Monitor Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should filter login logs by userName', async () => {
@@ -119,7 +119,7 @@ describe('Monitor Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((log: any) => {
+      result.data!.rows.forEach((log: any) => {
         expect(log.userName.toLowerCase()).toContain('admin');
       });
     });
@@ -134,7 +134,7 @@ describe('Monitor Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      result.data.rows.forEach((log: any) => {
+      result.data!.rows.forEach((log: any) => {
         expect(log.status).toBe('0');
       });
     });
@@ -155,10 +155,10 @@ describe('Monitor Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data.length).toBeGreaterThan(0);
+      expect(result.data!.length).toBeGreaterThan(0);
 
       // Verify cache name structure
-      const cacheItem = result.data[0];
+      const cacheItem = result.data![0];
       expect(cacheItem).toHaveProperty('cacheName');
       expect(cacheItem).toHaveProperty('remark');
     });
@@ -242,7 +242,7 @@ describe('Monitor Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(Array.isArray(result.data.rows)).toBe(true);
+      expect(Array.isArray(result.data!.rows)).toBe(true);
     });
 
     it('should handle empty online user list', async () => {
@@ -256,7 +256,7 @@ describe('Monitor Integration Tests', () => {
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
       // Total should be >= 0
-      expect(result.data.total).toBeGreaterThanOrEqual(0);
+      expect(result.data!.total).toBeGreaterThanOrEqual(0);
     });
 
     it('should delete online user session', async () => {

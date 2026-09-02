@@ -14,16 +14,16 @@ describe('BaseResponseDto Unit Tests', () => {
   // 测试用子类
   class TestUserResponseDto extends BaseResponseDto {
     @Expose()
-    userId: number;
+    userId!: number;
 
     @Expose()
-    userName: string;
+    userName!: string;
   }
 
   // 带额外日期字段的子类
   class TestLoginResponseDto extends BaseResponseDto {
     @Expose()
-    userId: number;
+    userId!: number;
 
     @Expose()
     loginTime?: string;

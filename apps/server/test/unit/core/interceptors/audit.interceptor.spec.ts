@@ -92,7 +92,7 @@ describe('AuditInterceptor', () => {
     it('should log audit on successful operation', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        modules: 'system',
+        module: 'system',
         targetType: 'User',
         recordNewValue: true,
         recordOldValue: false,
@@ -123,7 +123,7 @@ describe('AuditInterceptor', () => {
     it('should log audit on failed operation', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.DELETE,
-        modules: 'system',
+        module: 'system',
         targetType: 'User',
         recordNewValue: false,
         recordOldValue: false,
@@ -152,7 +152,7 @@ describe('AuditInterceptor', () => {
     it('should extract target ID from params', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.UPDATE,
-        modules: 'system',
+        module: 'system',
         targetType: 'User',
         targetIdParam: 'userId',
         recordNewValue: false,
@@ -180,7 +180,7 @@ describe('AuditInterceptor', () => {
     it('should extract target ID from body', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        modules: 'system',
+        module: 'system',
         targetType: 'User',
         targetIdBody: 'id',
         recordNewValue: false,
@@ -208,7 +208,7 @@ describe('AuditInterceptor', () => {
     it('should sanitize sensitive fields in request body', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.CREATE,
-        modules: 'auth',
+        module: 'auth',
         targetType: 'User',
         recordNewValue: true,
         recordOldValue: false,
@@ -233,7 +233,7 @@ describe('AuditInterceptor', () => {
     it('should get client IP from x-forwarded-for header', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.LOGIN,
-        modules: 'auth',
+        module: 'auth',
         recordNewValue: false,
         recordOldValue: false,
       };
@@ -263,7 +263,7 @@ describe('AuditInterceptor', () => {
     it('should record old value when configured', (done) => {
       const auditConfig: AuditConfig = {
         action: AuditAction.UPDATE,
-        modules: 'system',
+        module: 'system',
         targetType: 'User',
         recordOldValue: true,
         recordNewValue: false,

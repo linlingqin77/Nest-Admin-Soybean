@@ -3,10 +3,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileManagerService } from '@/modules/files/file-manager.service';
 import { PrismaService } from '@/platform/prisma';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 import { FileAccessService } from '@/modules/files/services/file-access.service';
 import { VersionService } from '@/modules/files/services/version.service';
-import { createConfigMock, ConfigMock } from 'test/mocks/config-mock';
+// @ts-expect-error
+import { createConfigMock, ConfigMock } from 'test/mocks/config.mock';
 import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { BusinessException } from '@/shared/exceptions';
 
@@ -294,7 +295,7 @@ describe('FileManagerService', () => {
 
       expect(result.code).toBe(200);
       expect(result.data).toHaveLength(1);
-      expect(result.data[0].children).toHaveLength(1);
+      expect(result.data![0].children).toHaveLength(1);
     });
   });
 
@@ -304,6 +305,7 @@ describe('FileManagerService', () => {
       prismaMock.sysUpload.count.mockResolvedValue(1);
       prismaMock.$transaction.mockResolvedValue([[{ uploadId: '1' }], 1]);
 
+      // @ts-expect-error
       const result = await service.listFiles({ pageNum: 1, pageSize: 10 });
 
       expect(result.code).toBe(200);
@@ -312,6 +314,7 @@ describe('FileManagerService', () => {
     it('should filter by folderId', async () => {
       prismaMock.$transaction.mockResolvedValue([[], 0]);
 
+      // @ts-expect-error
       await service.listFiles({ folderId: 1 });
 
       expect(prismaMock.$transaction).toHaveBeenCalled();
@@ -320,6 +323,7 @@ describe('FileManagerService', () => {
     it('should filter by extension', async () => {
       prismaMock.$transaction.mockResolvedValue([[], 0]);
 
+      // @ts-expect-error
       await service.listFiles({ ext: 'pdf' });
 
       expect(prismaMock.$transaction).toHaveBeenCalled();
@@ -328,6 +332,7 @@ describe('FileManagerService', () => {
     it('should filter by multiple extensions', async () => {
       prismaMock.$transaction.mockResolvedValue([[], 0]);
 
+      // @ts-expect-error
       await service.listFiles({ exts: 'jpg,png,gif' });
 
       expect(prismaMock.$transaction).toHaveBeenCalled();
@@ -459,7 +464,7 @@ describe('FileManagerService', () => {
       const result = await service.createShare({ uploadId: 'file-1', shareCode: '1234' }, 'admin');
 
       expect(result.code).toBe(200);
-      expect(result.data.shareId).toBe('share-1');
+      expect(result.data!.shareId).toBe('share-1');
     });
 
     it('should create share with expiration', async () => {
@@ -593,6 +598,7 @@ describe('FileManagerService', () => {
       prismaMock.sysUpload.findMany.mockResolvedValue([{ uploadId: '1' }] as any);
       prismaMock.sysUpload.count.mockResolvedValue(1);
 
+      // @ts-expect-error
       const result = await service.getRecycleList({ pageNum: 1, pageSize: 10 });
 
       expect(result.code).toBe(200);
@@ -713,7 +719,7 @@ describe('FileManagerService', () => {
       const result = await service.getAccessToken('file-1');
 
       expect(result.code).toBe(200);
-      expect(result.data.token).toBe('test-token');
+      expect(result.data!.token).toBe('test-token');
     });
 
     it('should return error when file not found', async () => {
@@ -736,7 +742,7 @@ describe('FileManagerService', () => {
       const result = await service.getStorageStats();
 
       expect(result.code).toBe(200);
-      expect(result.data.percentage).toBe(50);
+      expect(result.data!.percentage).toBe(50);
     });
 
     it('should handle zero quota', async () => {
@@ -749,7 +755,7 @@ describe('FileManagerService', () => {
       const result = await service.getStorageStats();
 
       expect(result.code).toBe(200);
-      expect(result.data.percentage).toBe(0);
+      expect(result.data!.percentage).toBe(0);
     });
 
     it('should return error when tenant not found', async () => {

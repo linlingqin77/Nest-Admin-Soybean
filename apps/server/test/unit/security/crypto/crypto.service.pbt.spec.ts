@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CryptoService } from '@/core/crypto/crypto.service';
-import { AppConfigService } from '@/config/app-platform/config.service';
+import { AppConfigService } from '@/platform/config/app-config.service';
 import { RedisService } from '@/platform/redis/redis.service';
 
 /**

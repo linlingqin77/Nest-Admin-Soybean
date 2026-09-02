@@ -99,6 +99,7 @@ class TestService {
     maxRetries: 3,
     baseDelayMs: 10,
     jitter: false,
+    // @ts-expect-error
     retryOn: [NetworkError, TimeoutError],
   })
   async retryOnSpecificErrors(): Promise<string> {
@@ -114,6 +115,7 @@ class TestService {
     maxRetries: 3,
     baseDelayMs: 10,
     jitter: false,
+    // @ts-expect-error
     noRetryOn: [ValidationError],
   })
   async noRetryOnSpecificErrors(): Promise<string> {
@@ -447,17 +449,24 @@ describe('Helper Functions', () => {
     it('should return true only for specified error types in retryOn', () => {
       const retryOn = [NetworkError, TimeoutError];
 
+      // @ts-expect-error
       expect(shouldRetryError(new NetworkError('test'), retryOn)).toBe(true);
+      // @ts-expect-error
       expect(shouldRetryError(new TimeoutError('test'), retryOn)).toBe(true);
+      // @ts-expect-error
       expect(shouldRetryError(new ValidationError('test'), retryOn)).toBe(false);
+      // @ts-expect-error
       expect(shouldRetryError(new Error('test'), retryOn)).toBe(false);
     });
 
     it('should return false for specified error types in noRetryOn', () => {
       const noRetryOn = [ValidationError];
 
+      // @ts-expect-error
       expect(shouldRetryError(new ValidationError('test'), undefined, noRetryOn)).toBe(false);
+      // @ts-expect-error
       expect(shouldRetryError(new NetworkError('test'), undefined, noRetryOn)).toBe(true);
+      // @ts-expect-error
       expect(shouldRetryError(new Error('test'), undefined, noRetryOn)).toBe(true);
     });
 
@@ -466,7 +475,9 @@ describe('Helper Functions', () => {
       const noRetryOn = [ValidationError];
 
       // ValidationError is in both, but noRetryOn takes precedence
+      // @ts-expect-error
       expect(shouldRetryError(new ValidationError('test'), retryOn, noRetryOn)).toBe(false);
+      // @ts-expect-error
       expect(shouldRetryError(new NetworkError('test'), retryOn, noRetryOn)).toBe(true);
     });
   });

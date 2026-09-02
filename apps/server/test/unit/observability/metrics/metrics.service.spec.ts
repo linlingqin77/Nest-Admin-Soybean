@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetricsService } from '@/core/core/observability/metrics/metrics.service';
+import { MetricsService } from '@/core/observability/metrics/metrics.service';
 
 describe('MetricsService', () => {
   let service: MetricsService;

@@ -102,6 +102,7 @@ describe('RequireQuotaGuard', () => {
       const options: RequireQuotaOptions = { resource: QuotaResource.USERS };
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(options);
 
+      // @ts-expect-error
       const result = await TenantContext.run({ tenantId: '000000', isSuperTenant: true }, async () => {
         return guard.canActivate(createMockContext());
       });
@@ -114,6 +115,7 @@ describe('RequireQuotaGuard', () => {
       const options: RequireQuotaOptions = { resource: QuotaResource.USERS };
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(options);
 
+      // @ts-expect-error
       const result = await TenantContext.run({ tenantId: '000000', isSuperTenant: true }, async () => {
         return guard.canActivate(createMockContext());
       });

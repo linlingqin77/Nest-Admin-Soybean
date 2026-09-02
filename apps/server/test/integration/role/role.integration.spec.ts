@@ -415,7 +415,7 @@ describe('Role Integration Tests', () => {
 
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
-      expect(result.data.roleId).toBe(role.roleId);
+      expect(result.data!.roleId).toBe(role.roleId);
 
       // Verify menu associations exist in database
       const roleMenus = await prisma.sysRoleMenu.findMany({
@@ -457,9 +457,9 @@ describe('Role Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('rows');
       expect(result.data).toHaveProperty('total');
-      expect(result.data.total).toBeGreaterThanOrEqual(2);
+      expect(result.data!.total).toBeGreaterThanOrEqual(2);
 
-      const userIds = result.data.rows.map((u: any) => u.userId);
+      const userIds = result.data!.rows.map((u: any) => u.userId);
       expect(userIds).toContain(user1.userId);
       expect(userIds).toContain(user2.userId);
     });
@@ -488,7 +488,7 @@ describe('Role Integration Tests', () => {
       expect(result.data).toHaveProperty('total');
 
       // The created user should be in unallocated list
-      const userIds = result.data.rows.map((u: any) => u.userId);
+      const userIds = result.data!.rows.map((u: any) => u.userId);
       expect(userIds).toContain(user.userId);
     });
 
@@ -634,8 +634,8 @@ describe('Role Integration Tests', () => {
       } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows.length).toBeGreaterThanOrEqual(1);
-      expect(result.data.rows.some((u: any) => u.userId === user1.userId)).toBe(true);
+      expect(result.data!.rows.length).toBeGreaterThanOrEqual(1);
+      expect(result.data!.rows.some((u: any) => u.userId === user1.userId)).toBe(true);
     });
   });
 
@@ -716,12 +716,12 @@ describe('Role Integration Tests', () => {
       expect(result.code).toBe(200);
       expect(result.data).toHaveProperty('depts');
       expect(result.data).toHaveProperty('checkedKeys');
-      expect(Array.isArray(result.data.depts)).toBe(true);
-      expect(Array.isArray(result.data.checkedKeys)).toBe(true);
+      expect(Array.isArray(result.data!.depts)).toBe(true);
+      expect(Array.isArray(result.data!.checkedKeys)).toBe(true);
 
       // Verify checked keys contain our dept IDs
       deptIds.forEach((deptId) => {
-        expect(result.data.checkedKeys).toContain(deptId);
+        expect(result.data!.checkedKeys).toContain(deptId);
       });
     });
   });

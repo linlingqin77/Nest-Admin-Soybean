@@ -9,7 +9,7 @@ import * as fc from 'fast-check';
 import { controllerTem } from '@/modules/tools/template/nestjs/controller';
 import { serviceTem } from '@/modules/tools/template/nestjs/service';
 import { dtoTem } from '@/modules/tools/template/nestjs/dto';
-import { moduleTem } from '@/modules/tools/template/nestjs/modules';
+import { moduleTem } from '@/modules/tools/template/nestjs/module';
 import { entityTem } from '@/modules/tools/template/nestjs/entity';
 
 describe('NestJS Code Generation - Property Tests', () => {

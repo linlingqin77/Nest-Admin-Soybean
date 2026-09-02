@@ -93,7 +93,7 @@ describe('RoleService', () => {
       const result = await service.findAll({ pageNum: 1, pageSize: 10 } as any);
 
       expect(result.code).toBe(200);
-      expect(result.data.rows).toHaveLength(1);
+      expect(result.data!.rows).toHaveLength(1);
     });
 
     it('should filter by roleName', async () => {
@@ -203,7 +203,7 @@ describe('RoleService', () => {
       const result = await service.deptTree(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.checkedKeys).toContain(100);
+      expect(result.data!.checkedKeys).toContain(100);
     });
   });
 
@@ -382,8 +382,8 @@ describe('RoleService', () => {
       const result = await service.deptTree(1);
 
       expect(result.code).toBe(200);
-      expect(result.data.depts).toEqual([]);
-      expect(result.data.checkedKeys).toEqual([]);
+      expect(result.data!.depts).toEqual([]);
+      expect(result.data!.checkedKeys).toEqual([]);
     });
   });
 });
