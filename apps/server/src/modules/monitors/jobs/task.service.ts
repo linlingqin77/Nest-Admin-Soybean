@@ -129,19 +129,29 @@ export class TaskService implements OnModuleInit {
       return [];
     }
 
-    try {
-      // 将单引号替换为双引号
-      const normalizedStr = paramsStr
-        .replace(/'/g, '"')
-        // 处理未加引号的字符串
-        .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
+    const tryParse = (raw: string): unknown => {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return undefined;
+      }
+    };
 
-      // 尝试解析为 JSON
-      return Function(`return [${normalizedStr}]`)();
-    } catch (error) {
-      this.logger.error(`解析参数失败: ${error instanceof Error ? error.message : String(error)}`);
-      return [];
+    // 优先尝试把整段解析为 JSON 数组
+    const arrDirect = tryParse(`[${paramsStr}]`);
+    if (Array.isArray(arrDirect)) {
+      return arrDirect;
     }
+
+    // 否则尝试把整段解析为单个 JSON 值（数字/字符串/布尔/null）
+    const single = tryParse(paramsStr);
+    if (single !== undefined) {
+      return [single];
+    }
+
+    // 既不是合法 JSON 数组也不是合法 JSON 值 —— 拒绝执行
+    this.logger.error(`解析参数失败:不是有效的 JSON 输入 - ${paramsStr.slice(0, 64)}`);
+    throw new Error('调用参数格式错误，必须是合法 JSON');
   }
 
   @Task({

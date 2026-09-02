@@ -154,6 +154,26 @@ export class RedisService implements OnModuleDestroy {
   }
 
   /**
+   * 原子递增（用于计数器，不存在则自动初始化为 1）
+   * @param key 存储 key 值
+   * @returns 递增后的值
+   */
+  async incr(key: string): Promise<number> {
+    if (!key) return 0;
+    return await this.client.incr(key);
+  }
+
+  /**
+   * 对 key 设置过期时间（TTL），单位 秒
+   * @param key 存储 key 值
+   * @param ttl 过期时间，单位 秒
+   */
+  async expire(key: string, ttl: number): Promise<number> {
+    if (!key || ttl <= 0) return 0;
+    return await this.client.expire(key, ttl);
+  }
+
+  /**
    * 获取对象keys
    * @param key
    */

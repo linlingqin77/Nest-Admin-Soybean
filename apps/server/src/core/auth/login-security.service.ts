@@ -128,7 +128,7 @@ export class LoginSecurityService {
   }
 
   /**
-   * 记录登录失败
+   * 记录登录失败（原子操作，防止竞争条件）
    *
    * @param username 用户名
    * @param config 可选配置
@@ -138,12 +138,13 @@ export class LoginSecurityService {
     const mergedConfig = { ...this.defaultConfig, ...config };
     const countKey = this.getFailedCountKey(username);
 
-    // 获取当前失败次数
-    let currentCount = await this.getFailedAttempts(username);
-    currentCount += 1;
+    // 原子递增：不存在时自动初始化为 1（Redis INCR 的行为）
+    const currentCount = await this.redisService.incr(countKey);
 
-    // 更新失败次数
-    await this.redisService.set(countKey, currentCount, mergedConfig.failedCountTtlMs);
+    // 首次计数时设置过期时间
+    if (currentCount === 1) {
+      await this.redisService.expire(countKey, Math.ceil(mergedConfig.failedCountTtlMs / 1000));
+    }
 
     this.logger.warn(`Login failed for user: ${username}, attempt: ${currentCount}/${mergedConfig.maxFailedAttempts}`);
 

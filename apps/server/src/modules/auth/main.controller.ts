@@ -21,6 +21,7 @@ import { ClientInfo, ClientInfoDto } from 'src/core/auth/decorators/common.decor
 import { NotRequireAuth, User, UserDto } from 'src/modules/users/user.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { RouterResponseDto } from 'src/modules/menus/dto/responses';
+import { TokenBlacklistService } from 'src/core/auth/token-blacklist.service';
 
 @ApiTags('根目录')
 @Controller('/')
@@ -32,6 +33,7 @@ export class MainController {
     private readonly mainService: MainService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    private readonly tokenBlacklistService: TokenBlacklistService,
   ) {}
 
   @Api({
@@ -50,15 +52,21 @@ export class MainController {
 
   @Api({
     summary: '退出登录',
-    description: '退出当前登录状态，清除登录令牌',
+    description: '退出当前登录状态，将 token 加入黑名单并清除登录缓存',
     type: LogoutResponseDto,
   })
   @NotRequireAuth()
   @Post('/logout')
   @HttpCode(200)
   async logout(@User() user: UserDto, @ClientInfo() clientInfo: ClientInfoDto) {
+    // C3 安全修复：登出时必须把 token 加入黑名单 + 删除登录缓存，
+    // 否则被盗用的 JWT 在自然过期前一直可用。
+    // 保留 @NotRequireAuth 是必要的 —— 否则无 token 的客户端无法登出。
     if (user?.token) {
-      await this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`);
+      await Promise.all([
+        this.tokenBlacklistService.addToBlacklist(user.token),
+        this.redisService.del(`${CacheEnum.LOGIN_TOKEN_KEY}${user.token}`),
+      ]);
     }
     return this.mainService.logout(clientInfo);
   }

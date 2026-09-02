@@ -6,22 +6,22 @@ import { TenantContext } from '../context/tenant.context';
  * HTTP 请求租户中间件
  *
  * 从 HTTP 请求中提取租户信息并初始化租户上下文
- * 支持从以下来源获取租户ID：
- * 1. JWT Token 中的 tenantId 字段
- * 2. 请求头 X-Tenant-Id
- * 3. 查询参数 tenantId
+ *
+ * 重要（C1 安全修复）：只从 JWT Token 解析出的 req.user.tenantId 提取租户 ID，
+ * 严禁信任请求头 X-Tenant-Id 或查询参数 tenantId —— 否则任意已认证用户
+ * 都能通过传入 ?tenantId=other_tenant 触发跨租户 IDOR。
  */
 @Injectable()
 export class TenantHttpMiddleware implements NestMiddleware {
   private readonly logger = new Logger(TenantHttpMiddleware.name);
 
   /**
-   * 请求头名称
+   * 仅用于日志记录的 header 名（不再参与租户识别）
    */
   private static readonly TENANT_HEADER = 'x-tenant-id';
 
   /**
-   * 查询参数名称
+   * 仅用于日志记录的 query 名（不再参与租户识别）
    */
   private static readonly TENANT_QUERY_PARAM = 'tenantId';
 
@@ -41,7 +41,7 @@ export class TenantHttpMiddleware implements NestMiddleware {
         },
       );
     } else {
-      // 没有租户ID时，使用超级租户上下文
+      // 没有租户ID时，使用超级租户上下文（ignoreTenant=true 表示跳过 tenant 过滤）
       TenantContext.run(
         {
           tenantId: TenantContext.SUPER_TENANT_ID,
@@ -58,25 +58,13 @@ export class TenantHttpMiddleware implements NestMiddleware {
   /**
    * 从请求中提取租户ID
    *
-   * 优先级：JWT > Header > Query
+   * 安全：只从 JWT 解析出的 req.user.tenantId 取值。
+   * 请求头和查询参数都可能被前端或攻击者任意注入，信任它们就会造成跨租户越权。
    */
   private extractTenantId(req: Request): string | undefined {
-    // 1. 从 JWT Token 中获取（如果已解析）
     const user = (req as Request & { user?: { tenantId?: string } }).user;
     if (user?.tenantId) {
       return user.tenantId;
-    }
-
-    // 2. 从请求头获取
-    const headerTenantId = req.headers[TenantHttpMiddleware.TENANT_HEADER] as string;
-    if (headerTenantId) {
-      return headerTenantId;
-    }
-
-    // 3. 从查询参数获取
-    const queryTenantId = req.query[TenantHttpMiddleware.TENANT_QUERY_PARAM] as string;
-    if (queryTenantId) {
-      return queryTenantId;
     }
 
     return undefined;
