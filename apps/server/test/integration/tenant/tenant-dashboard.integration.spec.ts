@@ -3,7 +3,7 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.modules';
+import { AppModule } from 'src/app.module';
 import { TenantDashboardService } from 'src/modules/tenant-dashboards/tenant-dashboard.service';
 
 describe('Tenant Dashboard Integration Tests', () => {

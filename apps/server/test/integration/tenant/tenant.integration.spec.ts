@@ -11,7 +11,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { AppModule } from 'src/app.modules';
+import { AppModule } from 'src/app.module';
 import { PrismaService } from 'src/platform/prisma';
 import { TenantService } from 'src/modules/tenants/tenant.service';
 import { TenantPackageService } from 'src/modules/tenant-packages/tenant-package.service';

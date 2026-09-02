@@ -35,12 +35,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from 'src/app.modules';
+import { AppModule } from 'src/app.module';
 import { PrismaService } from 'src/platform/prisma';
 import { ClsService } from 'nestjs-cls';
 import { GlobalExceptionFilter } from 'src/core/http/filters/global-exception.filter';
 import { ResponseInterceptor } from 'src/core/http/interceptors/response.interceptor';
-import { LoginSecurityService } from 'src/core/auth/login-core.service';
+import { LoginSecurityService } from 'src/core/auth/login-security.service';
 
 /**
  * 测试配置接口
