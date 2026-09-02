@@ -15,6 +15,7 @@ import {
   DbTableDto,
   DbColumnDto,
 } from './dto';
+import { validateTarget } from '../utils/ssrf';
 
 // 数据源密码加密密钥（生产环境应从配置中读取）
 const ENCRYPTION_KEY = process.env.DATASOURCE_PASSWORD_KEY || 'datasource-password-encryption-32b';
@@ -303,6 +304,17 @@ export class DataSourceService {
    * Requirements: 1.2, 1.5
    */
   async testConnection(dto: TestConnectionDto): Promise<Result<boolean>> {
+    // C5.7 SSRF 防护：在连接前校验目标地址
+    try {
+      await validateTarget(dto.host, dto.port, {
+        allowedPorts: [5432, 3306, 1433, 27017, 6379, 9042, 5984],
+        resolveDns: false,
+      });
+    } catch (error) {
+      this.logger.warn(`SSRF 防护拒绝连接: ${dto.host}:${dto.port} — ${error instanceof Error ? error.message : String(error)}`);
+      throw new BusinessException(ResponseCode.FORBIDDEN, error instanceof Error ? error.message : '目标地址不允许连接');
+    }
+
     try {
       const connectionString = this.buildConnectionString(dto);
       const testResult = await this.executeConnectionTest(dto.type, connectionString);
