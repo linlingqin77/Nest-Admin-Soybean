@@ -41,15 +41,17 @@ const SAFE_DATA_IFRAME_REGEX = /^data:image\/(png|jpe?g|gif|webp|svg\+xml);/i;
  */
 export function sanitizeHtml(html: string): string {
   if (!html || typeof html !== 'string') return '';
-  return html
-    // 1. 移除危险标签（script/style/iframe/object/embed/link/meta/base/form）
-    .replace(DANGEROUS_TAGS_REGEX, '')
-    // 2. 移除事件处理器属性（onclick, onerror, onload 等）
-    .replace(ON_EVENT_REGEX, '')
-    // 3. 移除 javascript: 协议
-    .replace(JS_PROTOCOL_REGEX, '')
-    // 4. 移除 vbscript: 协议
-    .replace(VB_PROTOCOL_REGEX, '');
+  return (
+    html
+      // 1. 移除危险标签（script/style/iframe/object/embed/link/meta/base/form）
+      .replace(DANGEROUS_TAGS_REGEX, '')
+      // 2. 移除事件处理器属性（onclick, onerror, onload 等）
+      .replace(ON_EVENT_REGEX, '')
+      // 3. 移除 javascript: 协议
+      .replace(JS_PROTOCOL_REGEX, '')
+      // 4. 移除 vbscript: 协议
+      .replace(VB_PROTOCOL_REGEX, '')
+  );
 }
 
 /**

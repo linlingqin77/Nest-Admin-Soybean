@@ -4,9 +4,9 @@ import type { UploadFileInfo } from 'naive-ui';
 import { getToken } from '@/store/modules/auth/shared';
 import { useDownload } from '@/hooks/business/download';
 import { getServiceBaseURL } from '@/utils/service';
+import { sanitizeHtml } from '@/utils/sanitize';
 import type FileUpload from '@/components/custom/file-upload.vue';
 import { $t } from '@/locales';
-import { sanitizeHtml } from '@/utils/sanitize';
 
 defineOptions({
   name: 'UserImportModal'

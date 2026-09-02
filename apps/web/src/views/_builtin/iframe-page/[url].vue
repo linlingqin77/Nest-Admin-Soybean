@@ -14,7 +14,12 @@ const safeUrl = computed(() => (isSafeIframeUrl(props.url) ? props.url : 'about:
 
 <template>
   <div class="h-full">
-    <iframe id="iframePage" class="size-full" :src="safeUrl" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    <iframe
+      id="iframePage"
+      class="size-full"
+      :src="safeUrl"
+      sandbox="allow-scripts allow-same-origin allow-forms"
+    ></iframe>
   </div>
 </template>
 
