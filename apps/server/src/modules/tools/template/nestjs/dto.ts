@@ -1,5 +1,6 @@
 import * as Lodash from 'lodash';
 import { GenConstants } from 'src/shared/constants/gen.constant';
+import { assertIdentifier, escapeMultilineText, escapeStringLiteral } from '../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;
@@ -33,10 +34,23 @@ interface DtoOptions {
  * - 继承 PageQueryDto 实现分页
  * - 响应 DTO 用于 Swagger 文档
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过
+ * escapeStringLiteral / escapeMultilineText 做严格转义，
+ * 防止列注释/函数名/表注释中含特殊字符破坏生成的 TS 代码。
+ *
  * Requirements: 13.5, 13.6, 15.4, 15.5, 15.6
  */
 export const dtoTem = (options: DtoOptions) => {
   const { BusinessName, functionName, tableComment, columns, primaryKey } = options;
+
+  // 安全：BusinessName 必须为合法标识符
+  assertIdentifier(BusinessName, 'BusinessName');
+
+  // 安全：functionName / tableComment 转义后用于注释
+  const safeFunctionName = escapeMultilineText(functionName ?? '');
+  const safeTableComment = escapeMultilineText(tableComment ?? '');
+  const safeBusinessName = escapeMultilineText(BusinessName);
+
   const className = Lodash.upperFirst(BusinessName);
 
   const baseFields = generateBaseFields(options);
@@ -64,42 +78,42 @@ import { PageQueryDto } from 'src/shared/dto';
 import { Type } from 'class-transformer';
 
 /**
- * ${functionName || tableComment || BusinessName} 基础 DTO
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 基础 DTO
  */
 export class Base${className}Dto {
 ${baseFields}
 }
 
 /**
- * 创建${functionName || tableComment || BusinessName} DTO
+ * 创建${safeFunctionName || safeTableComment || safeBusinessName} DTO
  */
 export class Create${className}Dto {
 ${createFields}
 }
 
 /**
- * 更新${functionName || tableComment || BusinessName} DTO
+ * 更新${safeFunctionName || safeTableComment || safeBusinessName} DTO
  */
 export class Update${className}Dto {
 ${updateFields}
 }
 
 /**
- * 查询${functionName || tableComment || BusinessName} DTO
+ * 查询${safeFunctionName || safeTableComment || safeBusinessName} DTO
  */
 export class Query${className}Dto extends PageQueryDto {
 ${queryFields}
 }
 
 /**
- * ${functionName || tableComment || BusinessName} 响应 DTO
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 响应 DTO
  */
 export class ${className}ResponseDto {
 ${responseFields}
 }
 
 /**
- * ${functionName || tableComment || BusinessName} 列表响应 DTO
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 列表响应 DTO
  */
 export class ${className}ListResponseDto {
   @ApiProperty({ description: '数据列表', type: [${className}ResponseDto] })
@@ -126,8 +140,11 @@ const generateBaseFields = (options: DtoOptions) => {
   return columns
     .map((column: ColumnInfo) => {
       const { javaType, javaField, isRequired, columnComment, columnType, queryType, dictType } = column;
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
       const tsType = getTsType(javaType, queryType);
-      const comment = getCleanComment(columnComment);
+      // 安全：comment 用于单引号字符串，必须转义单引号
+      const comment = escapeStringLiteral(getCleanComment(columnComment));
       const decorators: string[] = [];
       const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
@@ -154,8 +171,11 @@ const generateCreateFields = (options: DtoOptions) => {
     .filter((column: ColumnInfo) => column.isInsert === '1' && column.isPk !== '1')
     .map((column: ColumnInfo) => {
       const { javaType, javaField, isRequired, columnComment, columnType, queryType, dictType } = column;
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
       const tsType = getTsType(javaType, queryType);
-      const comment = getCleanComment(columnComment);
+      // 安全：comment 用于单引号字符串，必须转义单引号
+      const comment = escapeStringLiteral(getCleanComment(columnComment));
       const decorators: string[] = [];
       const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
@@ -184,7 +204,10 @@ const generateUpdateFields = (options: DtoOptions) => {
   let result = '';
   if (pkColumn) {
     const pkType = getTsType(pkColumn.javaType, pkColumn.queryType);
-    const pkComment = getCleanComment(pkColumn.columnComment);
+    // 安全：pkComment 用于单引号字符串
+    const pkComment = escapeStringLiteral(getCleanComment(pkColumn.columnComment));
+    // 安全：primaryKey 必须为合法标识符
+    assertIdentifier(primaryKey ?? '', 'primaryKey');
     result += `  @ApiProperty({ description: '${pkComment}', example: 1 })\n`;
     result += `  @IsNotEmpty({ message: '${pkComment}不能为空' })\n`;
     result += `  ${getValidatorDecorator(pkColumn.javaType, pkColumn.queryType)}\n`;
@@ -194,8 +217,11 @@ const generateUpdateFields = (options: DtoOptions) => {
     .filter((column: ColumnInfo) => column.isEdit === '1' && column.isPk !== '1')
     .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, columnType, queryType, dictType } = column;
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
       const tsType = getTsType(javaType, queryType);
-      const comment = getCleanComment(columnComment);
+      // 安全：comment 用于单引号字符串
+      const comment = escapeStringLiteral(getCleanComment(columnComment));
       const decorators: string[] = [];
       const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
@@ -219,8 +245,11 @@ const generateQueryFields = (options: DtoOptions) => {
     .filter((column: ColumnInfo) => column.isQuery === '1')
     .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, queryType, dictType } = column;
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
       const tsType = getTsType(javaType, queryType);
-      const comment = getCleanComment(columnComment);
+      // 安全：comment 用于单引号字符串
+      const comment = escapeStringLiteral(getCleanComment(columnComment));
       const decorators: string[] = [];
       const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
@@ -242,8 +271,11 @@ const generateResponseFields = (options: DtoOptions) => {
     .filter((column: ColumnInfo) => column.isList === '1' || column.isPk === '1')
     .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, queryType, dictType } = column;
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
       const tsType = getTsType(javaType, queryType);
-      const comment = getCleanComment(columnComment);
+      // 安全：comment 用于单引号字符串
+      const comment = escapeStringLiteral(getCleanComment(columnComment));
       const apiPropertyOptions: string[] = [];
       apiPropertyOptions.push(`description: '${comment}'`);
       apiPropertyOptions.push(`example: ${getExampleValue(javaType, javaField)}`);

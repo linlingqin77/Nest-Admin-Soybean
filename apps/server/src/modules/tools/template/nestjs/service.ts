@@ -1,5 +1,6 @@
 import * as Lodash from 'lodash';
 import { GenConstants } from 'src/shared/constants/gen.constant';
+import { assertIdentifier, escapeMultilineText } from '../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;
@@ -43,6 +44,15 @@ export const serviceTem = (options: ServiceOptions) => {
     tenantAware = false,
   } = options;
 
+  // 安全：校验标识符
+  assertIdentifier(BusinessName, 'BusinessName');
+  if (businessName) assertIdentifier(businessName, 'businessName');
+  if (primaryKey) assertIdentifier(primaryKey, 'primaryKey');
+
+  // 安全：functionName / tableComment 用于日志模板字符串
+  const safeFunctionName = escapeMultilineText(functionName ?? '');
+  const safeTableComment = escapeMultilineText(tableComment ?? '');
+
   const modelName = className || Lodash.upperFirst(BusinessName);
   const delegateName = lowercaseFirst(modelName);
   const primaryKeyType = getPrimaryKeyType(options);
@@ -68,9 +78,9 @@ ${tenantImport}import {
 } from './dto/${businessName}.dto';
 
 /**
- * ${functionName || tableComment || businessName}服务
+ * ${safeFunctionName || safeTableComment || businessName}服务
  *
- * @description 提供${functionName || tableComment || businessName}的业务逻辑处理
+ * @description 提供${safeFunctionName || safeTableComment || businessName}的业务逻辑处理
  */
 @Injectable()
 export class ${Lodash.upperFirst(BusinessName)}Service {
@@ -79,7 +89,7 @@ export class ${Lodash.upperFirst(BusinessName)}Service {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * 创建${functionName || businessName}
+   * 创建${safeFunctionName || safeTableComment || businessName}
    *
    * @param createDto 创建参数
    * @returns 创建结果
@@ -91,16 +101,16 @@ export class ${Lodash.upperFirst(BusinessName)}Service {
           ...createDto,
 ${tenantCreateData}        },
       });
-      this.logger.log(\`${functionName || businessName}创建成功: \${data.${primaryKey}}\`);
+      this.logger.log(\`${safeFunctionName || businessName}创建成功: \${data.${primaryKey}}\`);
       return Result.ok(data, '创建成功');
     } catch (error) {
-      this.logger.error(\`${functionName || businessName}创建失败: \${error.message}\`, error.stack);
+      this.logger.error(\`${safeFunctionName || businessName}创建失败: \${error instanceof Error ? error.message : String(error)}\`, error instanceof Error ? error.stack : undefined);
       return Result.fail(ResponseCode.OPERATION_FAILED, '创建失败');
     }
   }
 
   /**
-   * 分页查询${functionName || businessName}列表
+   * 分页查询${safeFunctionName || safeTableComment || businessName}列表
    *
    * @param query 查询参数
    * @returns 分页数据
@@ -137,7 +147,7 @@ ${selectLine}    };
   }
 
   /**
-   * 根据ID查询${functionName || businessName}详情
+   * 根据ID查询${safeFunctionName || safeTableComment || businessName}详情
    *
    * @param ${primaryKey} 主键ID
    * @returns 详情数据
@@ -158,7 +168,7 @@ ${tenantWhereClause}      },
   }
 
   /**
-   * 更新${functionName || businessName}
+   * 更新${safeFunctionName || safeTableComment || businessName}
    *
    * @param updateDto 更新参数
    * @returns 更新结果
@@ -181,16 +191,16 @@ ${tenantWhereClause}      },
         where: { ${primaryKey}: updateDto.${primaryKey} },
         data: updateDto,
       });
-      this.logger.log(\`${functionName || businessName}更新成功: \${data.${primaryKey}}\`);
+      this.logger.log(\`${safeFunctionName || businessName}更新成功: \${data.${primaryKey}}\`);
       return Result.ok(data, '更新成功');
     } catch (error) {
-      this.logger.error(\`${functionName || businessName}更新失败: \${error.message}\`, error.stack);
+      this.logger.error(\`${safeFunctionName || businessName}更新失败: \${error instanceof Error ? error.message : String(error)}\`, error instanceof Error ? error.stack : undefined);
       return Result.fail(ResponseCode.OPERATION_FAILED, '更新失败');
     }
   }
 
   /**
-   * 删除${functionName || businessName}（软删除）
+   * 删除${safeFunctionName || safeTableComment || businessName}（软删除）
    *
    * @param ${primaryKey}s 主键ID数组
    * @returns 删除结果
@@ -208,10 +218,10 @@ ${tenantWhereClause}        },
         return Result.fail(ResponseCode.DATA_NOT_FOUND, '数据不存在');
       }
 
-      this.logger.log(\`${functionName || businessName}删除成功: \${${primaryKey}s.join(',')}\`);
+      this.logger.log(\`${safeFunctionName || businessName}删除成功: \${${primaryKey}s.join(',')}\`);
       return Result.ok({ count: result.count }, '删除成功');
     } catch (error) {
-      this.logger.error(\`${functionName || businessName}删除失败: \${error.message}\`, error.stack);
+      this.logger.error(\`${safeFunctionName || businessName}删除失败: \${error instanceof Error ? error.message : String(error)}\`, error instanceof Error ? error.stack : undefined);
       return Result.fail(ResponseCode.OPERATION_FAILED, '删除失败');
     }
   }

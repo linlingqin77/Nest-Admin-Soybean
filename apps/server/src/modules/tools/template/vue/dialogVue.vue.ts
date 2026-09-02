@@ -7,10 +7,14 @@
  * - 支持 i18n 国际化
  * - 包含新增、编辑功能
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过 assertSafeText
+ * 校验，防止函数名/模块名/字段名中含特殊字符破坏生成的代码。
+ *
  * @modules vue/dialogVue
  */
 
 import { indexScriptDicts } from './indexVue.vue';
+import { assertSafeText } from '../utils/sanitize';
 
 export interface DialogVueTemplateOptions {
   /** 业务名称 (PascalCase) */
@@ -47,8 +51,22 @@ export interface DialogVueTemplateOptions {
  * 生成操作抽屉组件
  */
 export function dialogVue(options: DialogVueTemplateOptions): string {
-  const script = generateScript(options);
-  const template = generateTemplate(options);
+  // 安全：所有标识符类输入必须校验
+  assertSafeText(options.BusinessName, 'BusinessName', 64);
+  assertSafeText(options.businessName, 'businessName', 64);
+  assertSafeText(options.moduleName, 'moduleName', 64);
+  assertSafeText(options.primaryKey, 'primaryKey', 64);
+  // 安全：functionName 用于 i18n key 等字符串拼接，必须不含破坏性字符
+  const safeFunctionName = assertSafeText(options.functionName, 'functionName', 100);
+
+  // 安全：所有字段名必须校验
+  options.columns.forEach((col) => {
+    assertSafeText(col.javaField, `javaField[${col.javaField}]`, 64);
+  });
+
+  const safeOptions = { ...options, functionName: safeFunctionName };
+  const script = generateScript(safeOptions);
+  const template = generateTemplate(safeOptions);
   const style = generateStyle();
 
   return `${script}

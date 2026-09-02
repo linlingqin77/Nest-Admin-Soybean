@@ -1,4 +1,5 @@
 import * as Lodash from 'lodash';
+import { assertIdentifier, escapeMultilineText } from '../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;
@@ -24,10 +25,23 @@ interface EntityOptions {
  * - 类型定义
  * - 多租户支持 (tenantId 字段)
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过
+ * escapeMultilineText / assertIdentifier 做严格转义或校验，
+ * 防止列注释/函数名/表注释中含特殊字符（如 ` * / $ \n {} ）破坏生成的 TS 代码或注入新代码。
+ *
  * Requirements: 13.2, 13.11, 14.8
  */
 export const entityTem = (options: EntityOptions) => {
   const { BusinessName, tableComment, functionName, columns, tenantAware = false } = options;
+
+  // 安全：BusinessName 必须为合法标识符
+  assertIdentifier(BusinessName, 'BusinessName');
+
+  // 安全：functionName / tableComment 转义后用于注释/描述
+  const safeFunctionName = escapeMultilineText(functionName ?? '');
+  const safeTableComment = escapeMultilineText(tableComment ?? '');
+  const safeBusinessName = escapeMultilineText(BusinessName);
+
   const className = Lodash.upperFirst(BusinessName);
   const contentTem = generateContent(options);
 
@@ -35,21 +49,21 @@ export const entityTem = (options: EntityOptions) => {
   const hasTenantId = tenantAware || columns?.some((col: ColumnInfo) => col.javaField === 'tenantId');
 
   return `/**
- * ${functionName || tableComment || BusinessName} 实体类
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 实体类
  *
- * @description ${tableComment || functionName || BusinessName}的数据模型定义
+ * @description ${safeTableComment || safeFunctionName || safeBusinessName}的数据模型定义
  */
 export class ${className}Entity {
 ${contentTem}
 }
 
 /**
- * ${functionName || tableComment || BusinessName} 创建参数类型
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 创建参数类型
  */
 export type Create${className}Input = Omit<${className}Entity, 'createTime' | 'updateTime'${hasTenantId ? '' : " | 'tenantId'"}>;
 
 /**
- * ${functionName || tableComment || BusinessName} 更新参数类型
+ * ${safeFunctionName || safeTableComment || safeBusinessName} 更新参数类型
  */
 export type Update${className}Input = Partial<${className}Entity>;
 `;
@@ -72,9 +86,14 @@ const generateContent = (options: EntityOptions) => {
   return sortedColumns
     .map((column: ColumnInfo) => {
       const { javaType, javaField, columnComment, isRequired } = column;
+
+      // 安全：javaField 必须为合法标识符
+      assertIdentifier(javaField ?? '', 'javaField');
+
       const type = mapJavaTypeToTs(javaType);
       const optionalFlag = isRequired === '1' ? '' : '?';
-      const comment = columnComment || javaField;
+      // 安全：columnComment 转义后用于 JSDoc 注释
+      const comment = escapeMultilineText(columnComment || javaField || '');
 
       return `  /**
    * ${comment}

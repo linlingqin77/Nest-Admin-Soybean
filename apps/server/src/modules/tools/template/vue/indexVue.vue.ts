@@ -7,6 +7,9 @@
  * - 支持 i18n 国际化
  * - 包含搜索、分页、CRUD 操作
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过 assertSafeText
+ * 校验，防止函数名/模块名/字段名中含特殊字符破坏生成的代码。
+ *
  * @modules vue/indexVue
  */
 
@@ -41,10 +44,22 @@ export interface IndexVueTemplateOptions {
   }>;
 }
 
+import { assertSafeText } from '../utils/sanitize';
+
 /**
  * 生成列表页面
  */
 export function indexVue(options: IndexVueTemplateOptions): string {
+  // 安全：所有标识符类输入必须校验
+  assertSafeText(options.BusinessName, 'BusinessName', 64);
+  assertSafeText(options.businessName, 'businessName', 64);
+  assertSafeText(options.moduleName, 'moduleName', 64);
+  assertSafeText(options.primaryKey, 'primaryKey', 64);
+  // 安全：所有字段名必须校验
+  options.columns.forEach((col) => {
+    assertSafeText(col.javaField, `javaField[${col.javaField}]`, 64);
+  });
+
   const script = generateScript(options);
   const template = generateTemplate(options);
   const style = generateStyle();
@@ -61,7 +76,9 @@ ${style}
  * 生成 script 部分
  */
 function generateScript(options: IndexVueTemplateOptions): string {
-  const { BusinessName, businessName, moduleName, functionName, primaryKey, columns } = options;
+  const { BusinessName, businessName, moduleName, primaryKey, columns } = options;
+  // 安全：functionName 用于导出文件名，必须校验
+  const safeFunctionName = assertSafeText(options.functionName, 'functionName', 100);
 
   // 收集字典类型
   const dictTypes = new Set<string>();
@@ -230,7 +247,7 @@ function edit(${primaryKey}: CommonType.IdType) {
 
 /** 导出 */
 function handleExport() {
-  download('/${moduleName}/${businessName}/export', searchParams, \`${functionName}_\${new Date().getTime()}.xlsx\`);
+  download('/${moduleName}/${businessName}/export', searchParams, \`${safeFunctionName}_\${new Date().getTime()}.xlsx\`);
 }
 
 /** 重置搜索 */

@@ -5,8 +5,24 @@
  * - 支持批量分配权限
  * - 支持指定角色
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过 assertSafeText
+ * 校验，防止函数名/表注释中含 SQL 注入字符破坏生成的 SQL。
+ *
  * @modules sql/permission
  */
+
+import { assertSafeText } from '../utils/sanitize';
+
+/**
+ * SQL 字符串字面量转义（单引号、反斜杠、NULL 等）
+ * 避免 SQL 注入：把任意字符串变成安全的单引号字符串内容
+ */
+function escapeSqlString(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "''")
+    .replace(/\0/g, '');
+}
 
 export interface PermissionSqlTemplateOptions {
   /** 业务名称 (PascalCase) */
@@ -36,6 +52,10 @@ export function permissionSqlTemplate(options: PermissionSqlTemplateOptions): st
     tenantId = '000000',
   } = options;
 
+  // 安全：functionName 用于 SQL 注释，必须校验
+  const safeFunctionName = assertSafeText(functionName, 'functionName', 100);
+  const safeTenantId = escapeSqlString(tenantId);
+
   // 生成按钮菜单ID
   const queryBtnId = menuId + 1;
   const addBtnId = menuId + 2;
@@ -52,10 +72,10 @@ export function permissionSqlTemplate(options: PermissionSqlTemplateOptions): st
     .join('\n');
 
   return `-- ----------------------------
--- ${functionName}权限分配 SQL
+-- ${safeFunctionName}权限分配 SQL
 -- ----------------------------
 
--- 为角色分配${functionName}菜单权限
+-- 为角色分配${safeFunctionName}菜单权限
 ${insertStatements}
 `;
 }
@@ -65,6 +85,9 @@ ${insertStatements}
  */
 export function permissionDeleteSqlTemplate(options: PermissionSqlTemplateOptions): string {
   const { functionName, menuId } = options;
+
+  // 安全：functionName 用于 SQL 注释，必须校验
+  const safeFunctionName = assertSafeText(functionName, 'functionName', 100);
 
   // 生成按钮菜单ID
   const queryBtnId = menuId + 1;
@@ -76,7 +99,7 @@ export function permissionDeleteSqlTemplate(options: PermissionSqlTemplateOption
   const menuIds = [menuId, queryBtnId, addBtnId, editBtnId, removeBtnId, exportBtnId];
 
   return `-- ----------------------------
--- 删除${functionName}权限分配 SQL
+-- 删除${safeFunctionName}权限分配 SQL
 -- ----------------------------
 
 -- 删除角色-菜单关联
@@ -107,6 +130,14 @@ export function fullPermissionSqlTemplate(
     tenantId = '000000',
   } = options;
 
+  // 安全：所有进入 SQL 字符串的字段都必须校验 + 转义
+  assertSafeText(BusinessName, 'BusinessName', 64);
+  assertSafeText(businessName, 'businessName', 64);
+  assertSafeText(moduleName, 'moduleName', 64);
+  const safeFunctionName = assertSafeText(functionName, 'functionName', 100);
+  const safeTenantId = escapeSqlString(tenantId);
+  const safeMenuIcon = assertSafeText(menuIcon, 'menuIcon', 64);
+
   const permPrefix = `${moduleName}:${businessName}`;
   const componentPath = `${moduleName}/${businessName}/index`;
 
@@ -126,7 +157,7 @@ export function fullPermissionSqlTemplate(
     .join('\n');
 
   return `-- ----------------------------
--- ${functionName}完整权限初始化 SQL
+-- ${safeFunctionName}完整权限初始化 SQL
 -- ----------------------------
 
 -- =============================================
@@ -135,23 +166,23 @@ export function fullPermissionSqlTemplate(
 
 -- 1. 主菜单
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${menuId}, '${functionName}', ${parentMenuId}, ${orderNum}, '${businessName}', '${componentPath}', NULL, 1, 0, 'C', '0', '0', '${permPrefix}:list', '${menuIcon}', 'admin', NOW(), NULL, NULL, '${functionName}菜单', '${tenantId}');
+VALUES (${menuId}, '${escapeSqlString(safeFunctionName)}', ${parentMenuId}, ${orderNum}, '${businessName}', '${componentPath}', NULL, 1, 0, 'C', '0', '0', '${permPrefix}:list', '${safeMenuIcon}', 'admin', NOW(), NULL, NULL, '${escapeSqlString(safeFunctionName + '菜单')}', '${safeTenantId}');
 
 -- 2. 按钮权限
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${queryBtnId}, '${functionName}查询', ${menuId}, 1, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:query', '#', 'admin', NOW(), NULL, NULL, NULL, '${tenantId}');
+VALUES (${queryBtnId}, '${escapeSqlString(safeFunctionName + '查询')}', ${menuId}, 1, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:query', '#', 'admin', NOW(), NULL, NULL, NULL, '${safeTenantId}');
 
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${addBtnId}, '${functionName}新增', ${menuId}, 2, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:add', '#', 'admin', NOW(), NULL, NULL, NULL, '${tenantId}');
+VALUES (${addBtnId}, '${escapeSqlString(safeFunctionName + '新增')}', ${menuId}, 2, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:add', '#', 'admin', NOW(), NULL, NULL, NULL, '${safeTenantId}');
 
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${editBtnId}, '${functionName}修改', ${menuId}, 3, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:edit', '#', 'admin', NOW(), NULL, NULL, NULL, '${tenantId}');
+VALUES (${editBtnId}, '${escapeSqlString(safeFunctionName + '修改')}', ${menuId}, 3, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:edit', '#', 'admin', NOW(), NULL, NULL, NULL, '${safeTenantId}');
 
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${removeBtnId}, '${functionName}删除', ${menuId}, 4, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:remove', '#', 'admin', NOW(), NULL, NULL, NULL, '${tenantId}');
+VALUES (${removeBtnId}, '${escapeSqlString(safeFunctionName + '删除')}', ${menuId}, 4, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:remove', '#', 'admin', NOW(), NULL, NULL, NULL, '${safeTenantId}');
 
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, query_param, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark, tenant_id)
-VALUES (${exportBtnId}, '${functionName}导出', ${menuId}, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:export', '#', 'admin', NOW(), NULL, NULL, NULL, '${tenantId}');
+VALUES (${exportBtnId}, '${escapeSqlString(safeFunctionName + '导出')}', ${menuId}, 5, '', NULL, NULL, 1, 0, 'F', '0', '0', '${permPrefix}:export', '#', 'admin', NOW(), NULL, NULL, NULL, '${safeTenantId}');
 
 -- =============================================
 -- 第二部分：分配权限给角色

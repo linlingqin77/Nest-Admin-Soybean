@@ -57,3 +57,6 @@ export function convertToCamelCase(str: string) {
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+// 安全工具（模板注入防护）
+export * from './sanitize';

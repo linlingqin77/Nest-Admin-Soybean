@@ -1,4 +1,5 @@
 import * as Lodash from 'lodash';
+import { assertIdentifier, escapeMultilineText, escapeStringLiteral, isValidIdentifier } from '../utils/sanitize';
 
 interface ColumnInfo {
   javaField?: string;
@@ -25,6 +26,10 @@ interface ControllerOptions {
  * - 统一响应格式 (@ApiDataResponse)
  * - 多租户支持 (tenantId 字段处理)
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过
+ * escapeStringLiteral / escapeMultilineText / assertIdentifier 做严格转义或校验，
+ * 防止列注释/函数名/模块名中含特殊字符（如 ` ' " $ \n {} ）破坏生成的 TS 代码或注入新代码。
+ *
  * Requirements: 13.2, 13.4, 15.1-15.10
  */
 export const controllerTem = (options: ControllerOptions) => {
@@ -39,6 +44,13 @@ export const controllerTem = (options: ControllerOptions) => {
     tenantAware = false,
   } = options;
 
+  // 安全：businessName / moduleName / primaryKey 必须为合法标识符，否则直接抛错
+  assertIdentifier(businessName, 'businessName');
+  assertIdentifier(moduleName, 'moduleName');
+  if (primaryKey) {
+    assertIdentifier(primaryKey, 'primaryKey');
+  }
+
   const serviceName = `${Lodash.upperFirst(BusinessName)}Service`;
   const serviceInstance = `${businessName}Service`;
   const className = Lodash.upperFirst(BusinessName);
@@ -46,6 +58,11 @@ export const controllerTem = (options: ControllerOptions) => {
 
   // 检查是否有租户字段
   const hasTenantId = tenantAware || columns?.some((col: ColumnInfo) => col.javaField === 'tenantId');
+
+  // 安全：functionName / tableComment 转义后用于注释/描述
+  const safeFunctionName = escapeMultilineText(functionName ?? '');
+  const safeTableComment = escapeMultilineText(tableComment ?? '');
+  const safeBusinessName = escapeStringLiteral(businessName);
 
   return `import { Controller, Get, Post, Put, Body, Query, Param, Delete } from '@nestjs/common';
 import {
@@ -68,23 +85,23 @@ import {
 } from './dto/${businessName}.dto';
 
 /**
- * ${functionName || tableComment || businessName}控制器
+ * ${safeFunctionName || safeTableComment || safeBusinessName}控制器
  *
- * @description 提供${functionName || tableComment || businessName}的增删改查接口
+ * @description 提供${safeFunctionName || safeTableComment || safeBusinessName}的增删改查接口
  */
-@ApiTags('${functionName || tableComment || businessName}')
+@ApiTags('${safeFunctionName || safeTableComment || safeBusinessName}')
 @ApiBearerAuth('Authorization')
 @Controller('${moduleName}/${businessName}')
 export class ${className}Controller {
   constructor(private readonly ${serviceInstance}: ${serviceName}) {}
 
   /**
-   * 创建${functionName || businessName}
+   * 创建${safeFunctionName || safeBusinessName}
    */
   @Post()
   @ApiOperation({
-    summary: '${functionName || businessName}-创建',
-    description: '创建新的${functionName || tableComment || businessName}记录',
+    summary: '${safeFunctionName || safeBusinessName}-创建',
+    description: '创建新的${safeFunctionName || safeTableComment || safeBusinessName}记录',
   })
   @ApiResponse({ status: 200, description: '创建成功', type: ${className}ResponseDto })
   @ApiResponse({ status: 400, description: '参数错误' })
@@ -97,12 +114,12 @@ export class ${className}Controller {
   }
 
   /**
-   * 获取${functionName || businessName}列表
+   * 获取${safeFunctionName || safeBusinessName}列表
    */
   @Get('list')
   @ApiOperation({
-    summary: '${functionName || businessName}-列表',
-    description: '分页查询${functionName || tableComment || businessName}列表',
+    summary: '${safeFunctionName || safeBusinessName}-列表',
+    description: '分页查询${safeFunctionName || safeTableComment || safeBusinessName}列表',
   })
   @ApiResponse({ status: 200, description: '查询成功', type: ${className}ListResponseDto })
   @ApiResponse({ status: 401, description: '未授权' })
@@ -113,16 +130,16 @@ export class ${className}Controller {
   }
 
   /**
-   * 获取${functionName || businessName}详情
+   * 获取${safeFunctionName || safeBusinessName}详情
    */
   @Get(':${primaryKey}')
   @ApiOperation({
-    summary: '${functionName || businessName}-详情',
-    description: '根据ID获取${functionName || tableComment || businessName}详情',
+    summary: '${safeFunctionName || safeBusinessName}-详情',
+    description: '根据ID获取${safeFunctionName || safeTableComment || safeBusinessName}详情',
   })
   @ApiParam({
     name: '${primaryKey}',
-    description: '${functionName || businessName}ID',
+    description: '${safeFunctionName || safeBusinessName}ID',
     type: '${primaryKeyType === 'number' ? 'number' : 'string'}',
     required: true,
   })
@@ -135,14 +152,14 @@ export class ${className}Controller {
   }
 
   /**
-   * 更新${functionName || businessName}
+   * 更新${safeFunctionName || safeBusinessName}
    */
   @Put()
   @ApiOperation({
-    summary: '${functionName || businessName}-修改',
-    description: '更新${functionName || tableComment || businessName}信息',
+    summary: '${safeFunctionName || safeBusinessName}-修改',
+    description: '更新${safeFunctionName || safeTableComment || safeBusinessName}信息',
   })
-  @ApiResponse({ status: 200, description: '更新成功' })
+  @ApiResponse({ status: 200, description: '修改成功' })
   @ApiResponse({ status: 400, description: '参数错误' })
   @ApiResponse({ status: 404, description: '数据不存在' })
   @ApiDataResponse()
@@ -152,16 +169,16 @@ export class ${className}Controller {
   }
 
   /**
-   * 删除${functionName || businessName}
+   * 删除${safeFunctionName || safeBusinessName}
    */
   @Delete(':${primaryKey}')
   @ApiOperation({
-    summary: '${functionName || businessName}-删除',
-    description: '根据ID删除${functionName || tableComment || businessName}，支持批量删除（逗号分隔）',
+    summary: '${safeFunctionName || safeBusinessName}-删除',
+    description: '根据ID删除${safeFunctionName || safeTableComment || safeBusinessName}，支持批量删除（逗号分隔）',
   })
   @ApiParam({
     name: '${primaryKey}',
-    description: '${functionName || businessName}ID，多个用逗号分隔',
+    description: '${safeFunctionName || safeBusinessName}ID，多个用逗号分隔',
     type: 'string',
     required: true,
     example: '1,2,3',
@@ -216,3 +233,6 @@ const mapJavaTypeToTs = (javaType = 'String') => {
       return 'string';
   }
 };
+
+// 安全导出：外部代码可校验字符串是否适合用作标识符
+export { isValidIdentifier };

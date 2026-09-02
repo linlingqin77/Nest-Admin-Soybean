@@ -6,8 +6,13 @@
  * - 支持 i18n 国际化
  * - 包含搜索、重置功能
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过 assertSafeText
+ * 校验，防止函数名/模块名/字段名中含特殊字符破坏生成的代码。
+ *
  * @modules vue/searchVue
  */
+
+import { assertSafeText } from '../utils/sanitize';
 
 export interface SearchVueTemplateOptions {
   /** 业务名称 (PascalCase) */
@@ -42,6 +47,16 @@ export interface SearchVueTemplateOptions {
  * 生成搜索组件
  */
 export function searchVue(options: SearchVueTemplateOptions): string {
+  // 安全：所有标识符类输入必须校验
+  assertSafeText(options.BusinessName, 'BusinessName', 64);
+  assertSafeText(options.businessName, 'businessName', 64);
+  assertSafeText(options.moduleName, 'moduleName', 64);
+  assertSafeText(options.primaryKey, 'primaryKey', 64);
+  // 安全：所有字段名必须校验
+  options.columns.forEach((col) => {
+    assertSafeText(col.javaField, `javaField[${col.javaField}]`, 64);
+  });
+
   const script = generateScript(options);
   const template = generateTemplate(options);
   const style = generateStyle();

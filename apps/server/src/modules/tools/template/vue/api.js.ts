@@ -6,8 +6,13 @@
  * - 包含 TypeScript 类型定义
  * - 使用 @/service/request 请求工具
  *
+ * C5 安全修复：所有外部输入字符串在拼入模板前都通过 assertSafeText
+ * 校验，防止列注释/函数名中含特殊字符破坏生成的代码。
+ *
  * @modules vue/api
  */
+
+import { assertSafeText } from '../utils/sanitize';
 
 export interface ApiTemplateOptions {
   /** 业务名称 (PascalCase) */
@@ -45,8 +50,16 @@ export interface ApiTemplateOptions {
 export function apiTemplate(options: ApiTemplateOptions): string {
   const { BusinessName, moduleName, functionName, businessName, primaryKey, columns } = options;
 
+  // 安全：BusinessName / businessName / moduleName / primaryKey 必须为合法标识符
+  assertSafeText(BusinessName, 'BusinessName', 64);
+  assertSafeText(businessName, 'businessName', 64);
+  assertSafeText(moduleName, 'moduleName', 64);
+  assertSafeText(primaryKey, 'primaryKey', 64);
+  // 安全：functionName 用于注释，必须不含特殊字符
+  const safeFunctionName = assertSafeText(functionName, 'functionName', 100);
+
   // 生成类型定义
-  const typeDefinitions = generateTypeDefinitions(options);
+  const typeDefinitions = generateTypeDefinitions(options, safeFunctionName);
 
   // 生成查询参数类型
   const queryColumns = columns.filter((col) => col.isQuery === '1');
@@ -56,7 +69,7 @@ export function apiTemplate(options: ApiTemplateOptions): string {
 ${typeDefinitions}
 
 /**
- * 获取${functionName}列表
+ * 获取${safeFunctionName}列表
  */
 export function fetch${BusinessName}List(params?: ${BusinessName}SearchParams) {
   return request<${BusinessName}List>({
@@ -67,7 +80,7 @@ export function fetch${BusinessName}List(params?: ${BusinessName}SearchParams) {
 }
 
 /**
- * 获取${functionName}详情
+ * 获取${safeFunctionName}详情
  */
 export function fetch${BusinessName}Detail(${primaryKey}: CommonType.IdType) {
   return request<${BusinessName}Record>({
@@ -77,7 +90,7 @@ export function fetch${BusinessName}Detail(${primaryKey}: CommonType.IdType) {
 }
 
 /**
- * 新增${functionName}
+ * 新增${safeFunctionName}
  */
 export function fetchCreate${BusinessName}(data: Create${BusinessName}Params) {
   return request<boolean>({
@@ -88,7 +101,7 @@ export function fetchCreate${BusinessName}(data: Create${BusinessName}Params) {
 }
 
 /**
- * 修改${functionName}
+ * 修改${safeFunctionName}
  */
 export function fetchUpdate${BusinessName}(data: Update${BusinessName}Params) {
   return request<boolean>({
@@ -99,7 +112,7 @@ export function fetchUpdate${BusinessName}(data: Update${BusinessName}Params) {
 }
 
 /**
- * 删除${functionName}
+ * 删除${safeFunctionName}
  */
 export function fetchDelete${BusinessName}(${primaryKey}: CommonType.IdType | CommonType.IdType[]) {
   const ids = Array.isArray(${primaryKey}) ? ${primaryKey}.join(',') : ${primaryKey};
@@ -110,7 +123,7 @@ export function fetchDelete${BusinessName}(${primaryKey}: CommonType.IdType | Co
 }
 
 /**
- * 导出${functionName}
+ * 导出${safeFunctionName}
  */
 export function fetchExport${BusinessName}(params?: ${BusinessName}SearchParams) {
   return request<Blob>({
@@ -126,8 +139,12 @@ export function fetchExport${BusinessName}(params?: ${BusinessName}SearchParams)
 /**
  * 生成 TypeScript 类型定义
  */
-function generateTypeDefinitions(options: ApiTemplateOptions): string {
+function generateTypeDefinitions(options: ApiTemplateOptions, safeFunctionName: string): string {
   const { BusinessName, columns, primaryKey } = options;
+
+  // 安全：BusinessName / primaryKey 必须为合法标识符
+  assertSafeText(BusinessName, 'BusinessName', 64);
+  assertSafeText(primaryKey, 'primaryKey', 64);
 
   // 列表字段
   const listColumns = columns.filter((col) => col.isList === '1' || col.isPk === '1');
@@ -154,10 +171,24 @@ function generateTypeDefinitions(options: ApiTemplateOptions): string {
     }
   };
 
+  // 清理并转义 JSDoc 注释（移除括号及内容，防止 */ 等破坏注释块）
+  const cleanComment = (comment: string | undefined): string => {
+    if (!comment) return '';
+    // 截取括号前内容
+    let cleaned = comment.split('（')[0].split('(')[0];
+    // 移除可能破坏注释块的字符
+    cleaned = cleaned.replace(/\*\//g, '* /');
+    // 限制长度
+    if (cleaned.length > 100) cleaned = cleaned.substring(0, 100);
+    return cleaned;
+  };
+
   // 生成记录类型
   const recordFields = listColumns
     .map((col) => {
-      const comment = col.columnComment.split('（')[0].split('(')[0];
+      // 安全：javaField 必须为合法标识符
+      assertSafeText(col.javaField, 'javaField', 64);
+      const comment = cleanComment(col.columnComment);
       const type = generateFieldType(col);
       return `  /** ${comment} */\n  ${col.javaField}${col.isRequired === '1' ? '' : '?'}: ${type};`;
     })
@@ -166,7 +197,9 @@ function generateTypeDefinitions(options: ApiTemplateOptions): string {
   // 生成查询参数类型
   const searchFields = queryColumns
     .map((col) => {
-      const comment = col.columnComment.split('（')[0].split('(')[0];
+      // 安全：javaField 必须为合法标识符
+      assertSafeText(col.javaField, 'javaField', 64);
+      const comment = cleanComment(col.columnComment);
       const type = generateFieldType(col);
       // 查询参数都是可选的
       return `  /** ${comment} */\n  ${col.javaField}?: ${type};`;
@@ -176,7 +209,9 @@ function generateTypeDefinitions(options: ApiTemplateOptions): string {
   // 生成新增参数类型
   const createFields = insertColumns
     .map((col) => {
-      const comment = col.columnComment.split('（')[0].split('(')[0];
+      // 安全：javaField 必须为合法标识符
+      assertSafeText(col.javaField, 'javaField', 64);
+      const comment = cleanComment(col.columnComment);
       const type = generateFieldType(col);
       return `  /** ${comment} */\n  ${col.javaField}${col.isRequired === '1' ? '' : '?'}: ${type};`;
     })
@@ -185,19 +220,21 @@ function generateTypeDefinitions(options: ApiTemplateOptions): string {
   // 生成更新参数类型
   const updateFields = editColumns
     .map((col) => {
-      const comment = col.columnComment.split('（')[0].split('(')[0];
+      // 安全：javaField 必须为合法标识符
+      assertSafeText(col.javaField, 'javaField', 64);
+      const comment = cleanComment(col.columnComment);
       const type = generateFieldType(col);
       // 主键必填，其他可选
       return `  /** ${comment} */\n  ${col.javaField}${col.isPk === '1' ? '' : '?'}: ${type};`;
     })
     .join('\n');
 
-  return `/** ${options.functionName}记录 */
+  return `/** ${safeFunctionName}记录 */
 export interface ${BusinessName}Record {
 ${recordFields}
 }
 
-/** ${options.functionName}列表 */
+/** ${safeFunctionName}列表 */
 export interface ${BusinessName}List {
   rows: ${BusinessName}Record[];
   total: number;
@@ -206,7 +243,7 @@ export interface ${BusinessName}List {
   pages: number;
 }
 
-/** ${options.functionName}查询参数 */
+/** ${safeFunctionName}查询参数 */
 export interface ${BusinessName}SearchParams {
   /** 页码 */
   pageNum?: number;
@@ -215,12 +252,12 @@ export interface ${BusinessName}SearchParams {
 ${searchFields}
 }
 
-/** 新增${options.functionName}参数 */
+/** 新增${safeFunctionName}参数 */
 export interface Create${BusinessName}Params {
 ${createFields}
 }
 
-/** 更新${options.functionName}参数 */
+/** 更新${safeFunctionName}参数 */
 export interface Update${BusinessName}Params {
 ${updateFields}
 }`;
