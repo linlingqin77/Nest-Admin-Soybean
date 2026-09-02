@@ -414,6 +414,10 @@ export class TenantQuotaService {
   /**
    * 增加配额使用量
    * 用于内部调用，如创建用户时增加用户使用量
+   *
+   * TODO: 用户配额（'user'）当前未做实际写入，因为用户数量由 sysUser 表实时统计。
+   * 配额校验通过 checkQuota() 实时 COUNT 实现，详见 findAll/findOne 中 userUsed 的计算。
+   * 在彻底移除 user 类型之前，调用方应仅依赖 checkQuota 拒绝超额请求。
    */
   @IgnoreTenant()
   async incrementUsage(dto: IncrementQuotaUsageDto): Promise<Result<void>> {
@@ -444,7 +448,11 @@ export class TenantQuotaService {
         break;
 
       case 'user':
-        // 用户数量由实际用户记录决定，不需要手动增加
+        // 用户数量由 sysUser 表实时 COUNT 决定，此处无需（也无法）维护持久化计数器。
+        // 调用方必须在创建/删除用户前通过 checkQuota('user') 校验是否超限。
+        this.logger.warn(
+          `incrementUsage('user') is a no-op; user quota is enforced via checkQuota('user') instead. tenantId=${dto.tenantId}, increment=${dto.increment}`,
+        );
         break;
 
       default:

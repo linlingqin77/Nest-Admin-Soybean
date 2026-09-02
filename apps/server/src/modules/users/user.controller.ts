@@ -11,6 +11,7 @@ import {
   Request,
   UploadedFile,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -309,7 +310,10 @@ export class UserController {
   @Operlog({ businessType: BusinessType.DELETE })
   @Delete(':id')
   remove(@Param('id') ids: string) {
-    const menuIds = ids.split(',').map((id) => +id);
+    const menuIds = ids.split(',').map((s) => Number(s.trim()));
+    if (menuIds.some((n) => !Number.isFinite(n))) {
+      throw new BadRequestException('Invalid ID format');
+    }
     return this.userService.remove(menuIds);
   }
 

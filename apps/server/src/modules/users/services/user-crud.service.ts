@@ -259,9 +259,7 @@ export class UserCrudService {
   async findOne(userId: number) {
     const data = await this.userRepo.findById(userId);
 
-    if (!data) {
-      return Result.ok(null);
-    }
+    BusinessException.throwIfNull(data, '用户不存在', ResponseCode.DATA_NOT_FOUND);
 
     const [dept, postList, roleIds] = await Promise.all([
       data?.deptId

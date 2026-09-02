@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
-import { Result } from 'src/shared/response';
+import { Result, ResponseCode } from 'src/shared/response';
+import { BusinessException } from 'src/shared/exceptions';
 import { CacheEnum, DelFlagEnum } from 'src/shared/enums/index';
 import { Cacheable } from 'src/core/auth/decorators/redis.decorator';
 import { ExportTable } from 'src/shared/utils/export';
@@ -79,6 +80,7 @@ export class DictService {
 
   async findOneType(dictId: number) {
     const data = await this.dictTypeRepo.findById(dictId);
+    BusinessException.throwIfNull(data, '字典类型不存在', ResponseCode.DATA_NOT_FOUND);
     return Result.ok(toDto(DictTypeResponseDto, data));
   }
 
@@ -158,6 +160,7 @@ export class DictService {
 
   async findOneDictData(dictCode: number) {
     const data = await this.dictDataRepo.findById(dictCode);
+    BusinessException.throwIfNull(data, '字典数据不存在', ResponseCode.DATA_NOT_FOUND);
     return Result.ok(toDto(DictDataResponseDto, data));
   }
 

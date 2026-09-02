@@ -14,6 +14,9 @@ export class RolesGuard implements CanActivate {
 
     //不需要鉴权
     if (role) {
+      if (!req.user) {
+        return false;
+      }
       return this.hasRole(role, req.user.roles);
     }
 

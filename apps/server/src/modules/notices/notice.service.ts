@@ -65,7 +65,11 @@ export class NoticeService {
   }
 
   async update(updateNoticeDto: UpdateNoticeDto) {
-    await this.noticeRepo.update(updateNoticeDto.noticeId, updateNoticeDto);
+    const result = await this.noticeRepo.updateMany(
+      { noticeId: updateNoticeDto.noticeId, delFlag: '0' } as any,
+      updateNoticeDto,
+    );
+    BusinessException.throwIf(result.count === 0, '通知不存在', ResponseCode.DATA_NOT_FOUND);
     return Result.ok();
   }
 

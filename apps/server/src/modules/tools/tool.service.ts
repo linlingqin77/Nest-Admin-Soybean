@@ -321,7 +321,11 @@ export class ToolService {
       }
     }
     const { columns, ...tableData } = genTableUpdate;
-    await this.prisma.genTable.update({ where: { tableId: +genTableUpdate.tableId }, data: tableData });
+    // delFlag 过滤作为防御层，避免误更新已软删除的记录
+    await this.prisma.genTable.updateMany({
+      where: { tableId: +genTableUpdate.tableId, delFlag: '0' },
+      data: tableData,
+    });
     return Result.ok({ genTableUpdate });
   }
 

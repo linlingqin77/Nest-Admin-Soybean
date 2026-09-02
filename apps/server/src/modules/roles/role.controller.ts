@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Query, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Query, Delete, Res, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { Response } from 'express';
@@ -148,7 +148,10 @@ export class RoleController {
   @Operlog({ businessType: BusinessType.DELETE })
   @Delete(':id')
   remove(@Param('id') ids: string) {
-    const menuIds = ids.split(',').map((id) => +id);
+    const menuIds = ids.split(',').map((s) => Number(s.trim()));
+    if (menuIds.some((n) => !Number.isFinite(n))) {
+      throw new BadRequestException('Invalid ID format');
+    }
     return this.roleService.remove(menuIds);
   }
 
