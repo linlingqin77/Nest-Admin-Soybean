@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TenantHelper } from './services/tenant.helper';
 import { TenantGuard } from './guards/tenant.guard';
 import { FeatureToggleService } from './services/feature-toggle.service';

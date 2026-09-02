@@ -7,32 +7,32 @@ import { Type } from 'class-transformer';
 export class PostgresqlConfig {
   @IsString()
   @IsNotEmpty()
-  host!:  string;
+  host!: string;
 
   @IsNumber()
   @Min(1)
   @Max(65535)
-  port!:  number;
+  port!: number;
 
   @IsString()
   @IsNotEmpty()
-  username!:  string;
+  username!: string;
 
   @IsString()
   @IsOptional()
-  password!:  string;
+  password!: string;
 
   @IsString()
   @IsNotEmpty()
-  database!:  string;
+  database!: string;
 
   @IsString()
   @IsOptional()
-  schema!:  string;
+  schema!: string;
 
   @IsBoolean()
   @IsOptional()
-  ssl!:  boolean;
+  ssl!: boolean;
 }
 
 /**
@@ -41,5 +41,5 @@ export class PostgresqlConfig {
 export class DatabaseConfig {
   @ValidateNested()
   @Type(() => PostgresqlConfig)
-  postgresql!:  PostgresqlConfig;
+  postgresql!: PostgresqlConfig;
 }

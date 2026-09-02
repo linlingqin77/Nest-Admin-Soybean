@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, HttpStatus } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { GlobalExceptionFilter } from '@/core/http/filters/global-exception.filter';
 import {
-  BusinessException,
   AuthenticationException,
   AuthorizationException,
+  BusinessException,
   ValidationException,
 } from '@/shared/exceptions/business.exception';
 import { ResponseCode } from '@/shared/response/response.interface';
-import { Controller, Get, Module, BadRequestException, HttpException } from '@nestjs/common';
+import { BadRequestException, Controller, Get, HttpException, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { ClsService, ClsModule } from 'nestjs-cls';
+import { ClsModule, ClsService } from 'nestjs-cls';
 
 // 测试用控制器
 @Controller('test')

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumber, Min } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -8,7 +8,7 @@ import { Type } from 'class-transformer';
 export class UpdateTenantQuotaRequestDto {
   @ApiProperty({ description: '租户ID' })
   @IsString()
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiPropertyOptional({ description: '用户数量配额，-1表示不限' })
   @IsOptional()

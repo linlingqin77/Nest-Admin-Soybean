@@ -1,6 +1,6 @@
-import { SetMetadata, applyDecorators } from '@nestjs/common';
-import { Throttle as NestThrottle, SkipThrottle as NestSkipThrottle } from '@nestjs/throttler';
-import { MultiThrottleConfig, THROTTLE_KEY, SKIP_THROTTLE_KEY } from 'src/core/http/guards/multi-throttle.guard';
+import { applyDecorators, SetMetadata } from '@nestjs/common';
+import { SkipThrottle as NestSkipThrottle, Throttle as NestThrottle } from '@nestjs/throttler';
+import { MultiThrottleConfig, SKIP_THROTTLE_KEY, THROTTLE_KEY } from 'src/core/http/guards/multi-throttle.guard';
 
 /**
  * 限流配置选项（用于 @nestjs/throttler）

@@ -1,8 +1,8 @@
-import { IsString, IsOptional, IsInt, IsEnum, IsArray, ValidateNested, ValidateIf, IsNotEmpty } from 'class-validator';
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { PageQueryDto } from 'src/shared/dto';
-import { IsPascalCase, IsKebabCase } from 'src/shared/validators';
+import { IsKebabCase, IsPascalCase } from 'src/shared/validators';
 import { GenTableColumnUpdateDto } from './gen-table-column.dto';
 
 /**
@@ -43,45 +43,45 @@ export class CreateGenTableDto {
   @ApiProperty({ description: '表名称', example: 'sys_user' })
   @IsString()
   @IsNotEmpty({ message: '表名称不能为空' })
-  tableName!:  string;
+  tableName!: string;
 
   @ApiProperty({ description: '表描述', example: '用户表' })
   @IsString()
   @IsNotEmpty({ message: '表描述不能为空' })
-  tableComment!:  string;
+  tableComment!: string;
 
   @ApiProperty({ description: '实体类名称（PascalCase）', example: 'SysUser' })
   @IsString()
   @IsNotEmpty({ message: '实体类名称不能为空' })
   @IsPascalCase({ message: 'className 必须符合 PascalCase 命名规范（首字母大写，如 UserInfo）' })
-  className!:  string;
+  className!: string;
 
   @ApiProperty({ description: '生成包路径', example: 'src/modules' })
   @IsString()
   @IsNotEmpty({ message: '生成包路径不能为空' })
-  packageName!:  string;
+  packageName!: string;
 
   @ApiProperty({ description: '生成模块名（kebab-case）', example: 'system' })
   @IsString()
   @IsNotEmpty({ message: '生成模块名不能为空' })
   @IsKebabCase({ message: 'moduleName 必须符合 kebab-case 命名规范（小写字母和连字符，如 user-info）' })
-  moduleName!:  string;
+  moduleName!: string;
 
   @ApiProperty({ description: '生成业务名（kebab-case）', example: 'user' })
   @IsString()
   @IsNotEmpty({ message: '生成业务名不能为空' })
   @IsKebabCase({ message: 'businessName 必须符合 kebab-case 命名规范（小写字母和连字符，如 user-info）' })
-  businessName!:  string;
+  businessName!: string;
 
   @ApiProperty({ description: '生成功能名', example: '用户管理' })
   @IsString()
   @IsNotEmpty({ message: '生成功能名不能为空' })
-  functionName!:  string;
+  functionName!: string;
 
   @ApiProperty({ description: '生成功能作者', example: 'admin' })
   @IsString()
   @IsNotEmpty({ message: '生成功能作者不能为空' })
-  functionAuthor!:  string;
+  functionAuthor!: string;
 
   @ApiPropertyOptional({ description: '数据源ID' })
   @IsOptional()
@@ -111,7 +111,7 @@ export class UpdateGenTableDto {
   @ApiProperty({ description: '表ID' })
   @Type(() => Number)
   @IsInt()
-  tableId!:  number;
+  tableId!: number;
 
   @ApiPropertyOptional({ description: '表名称' })
   @IsOptional()
@@ -299,7 +299,7 @@ export class ImportTablesDto {
   @ApiProperty({ description: '表名称列表（逗号分隔）', example: 'sys_user,sys_role' })
   @IsString()
   @IsNotEmpty({ message: '表名称列表不能为空' })
-  tableNames!:  string;
+  tableNames!: string;
 
   @ApiPropertyOptional({ description: '数据源ID' })
   @IsOptional()
@@ -323,7 +323,7 @@ export class TableIdsDto {
   @ApiProperty({ description: '表ID列表（逗号分隔）', example: '1,2,3' })
   @IsString()
   @IsNotEmpty({ message: '表ID列表不能为空' })
-  tableIds!:  string;
+  tableIds!: string;
 }
 
 /**
@@ -337,7 +337,7 @@ export class GenerateCodeDto {
   @IsArray()
   @IsInt({ each: true })
   @Type(() => Number)
-  tableIds!:  number[];
+  tableIds!: number[];
 
   @ApiPropertyOptional({ description: '模板组ID' })
   @IsOptional()
@@ -361,7 +361,7 @@ export class BatchGenCodeDto {
   @ApiProperty({ description: '表名称列表（逗号分隔）', example: 'sys_user,sys_role' })
   @IsString()
   @IsNotEmpty({ message: '表名称列表不能为空' })
-  tableNames!:  string;
+  tableNames!: string;
 
   @ApiPropertyOptional({ description: '项目名称（用于ZIP文件命名）', example: 'my-project' })
   @IsOptional()
@@ -379,5 +379,5 @@ export class SyncTableDto {
   @ApiProperty({ description: '表名称', example: 'sys_user' })
   @IsString()
   @IsNotEmpty({ message: '表名称不能为空' })
-  tableName!:  string;
+  tableName!: string;
 }

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import { BusinessException } from 'src/shared/exceptions';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 import { ResponseCode, Result } from 'src/shared/response';
 import { SUPER_ADMIN_USER_ID } from 'src/shared/constants/index';
 import { UserType } from '../dto/user';
-import { UpdateProfileRequestDto, UpdatePwdRequestDto, ResetPwdRequestDto } from '../dto/index';
+import { ResetPwdRequestDto, UpdateProfileRequestDto, UpdatePwdRequestDto } from '../dto/index';
 import { PrismaService } from 'src/platform/prisma';
 import { UserRepository } from '../user.repository';
 import { TokenBlacklistService } from 'src/core/auth/token-blacklist.service';
 import { Lock } from 'src/core/http/decorators/lock.decorator';
+import { PasswordService } from 'src/shared/services/password.service';
 
 /**
  * 用户个人资料服务
@@ -24,6 +24,7 @@ export class UserProfileService {
     private readonly userRepo: UserRepository,
     private readonly redisService: RedisService,
     private readonly tokenBlacklistService: TokenBlacklistService,
+    private readonly passwordService: PasswordService,
   ) {}
 
   /**
@@ -63,14 +64,13 @@ export class UserProfileService {
       ResponseCode.BUSINESS_ERROR,
     );
 
-    // 验证旧密码 - 需要用compareSync而不是直接比较
     BusinessException.throwIf(
-      !bcrypt.compareSync(updatePwdDto.oldPassword, user.user.password),
+      !(await this.passwordService.compare(updatePwdDto.oldPassword, user.user.password ?? null)),
       '修改密码失败，旧密码错误',
       ResponseCode.BUSINESS_ERROR,
     );
 
-    const password = bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10));
+    const password = await this.passwordService.hash(updatePwdDto.newPassword);
     await this.userRepo.resetPassword(user.user.userId, password);
 
     // 需求 4.9: 使该用户所有 Token 失效
@@ -89,9 +89,13 @@ export class UserProfileService {
     message: '密码正在重置中，请稍后重试',
   })
   async resetPwd(body: ResetPwdRequestDto) {
-    BusinessException.throwIf(body.userId === SUPER_ADMIN_USER_ID, '超级管理员密码不能通过此接口重置', ResponseCode.BUSINESS_ERROR);
+    BusinessException.throwIf(
+      body.userId === SUPER_ADMIN_USER_ID,
+      '超级管理员密码不能通过此接口重置',
+      ResponseCode.BUSINESS_ERROR,
+    );
     if (body.password) {
-      body.password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(10));
+      body.password = await this.passwordService.hash(body.password);
     }
     await this.userRepo.resetPassword(body.userId, body.password);
 

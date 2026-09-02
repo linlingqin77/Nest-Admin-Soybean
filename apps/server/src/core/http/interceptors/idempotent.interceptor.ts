@@ -1,11 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  CallHandler,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -43,7 +36,12 @@ export class IdempotentInterceptor implements NestInterceptor {
         throw new HttpException(options.message, HttpStatus.TOO_MANY_REQUESTS);
       }
       // 返回缓存的结果
-      return of(existingResult);
+      try {
+        // 尝试解析 JSON，如果失败则直接返回原值（兼容字符串结果）
+        return of(JSON.parse(existingResult));
+      } catch {
+        return of(existingResult);
+      }
     }
 
     // 使用 Redis SET NX (通过 ioredis client) 实现原子性设置
@@ -58,8 +56,10 @@ export class IdempotentInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(async (result) => {
         // 执行成功，存储结果
+        // 需要将结果序列化为 JSON 字符串以便后续读取时能正确反序列化
+        const serializedResult = typeof result === 'string' ? result : JSON.stringify(result);
         // redisService.set 使用 PX（毫秒），所以 timeout（秒）需要 * 1000
-        await this.redisService.set(idempotentKey, result, options.timeout * 1000);
+        await this.redisService.set(idempotentKey, serializedResult, options.timeout * 1000);
       }),
       catchError((error) => {
         // 执行异常，根据配置决定是否删除Key

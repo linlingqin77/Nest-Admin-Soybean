@@ -19,7 +19,7 @@ import { UserExportService } from '@/modules/users/services/user-export.service'
 import { UserCrudService } from '@/modules/users/services/user-crud.service';
 import { UserBatchService } from '@/modules/users/services/user-batch.service';
 import { UserQueryService } from '@/modules/users/services/user-query.service';
-import { DelFlagEnum, StatusEnum, DataScopeEnum } from '@/shared/enums/index';
+import { DataScopeEnum, DelFlagEnum, StatusEnum } from '@/shared/enums/index';
 import * as bcrypt from 'bcryptjs';
 import { BusinessException } from '@/shared/exceptions';
 

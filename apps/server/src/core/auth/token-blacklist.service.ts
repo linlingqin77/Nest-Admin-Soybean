@@ -103,6 +103,10 @@ export class TokenBlacklistService {
   /**
    * 递增用户 Token 版本（使所有旧 Token 失效）
    *
+   * 使用 Redis INCR 原子操作避免并发竞态：
+   * - INCR 在不存在的 key 上自动初始化为 1
+   * - 通过 Lua 脚本或 EXPIRE NX 在首次递增时设置 TTL
+   *
    * @param userId 用户 ID
    * @param ttlMs 可选，过期时间（毫秒）
    * @returns 新的版本号
@@ -111,11 +115,15 @@ export class TokenBlacklistService {
     const key = this.getUserTokenVersionKey(userId);
     const ttl = ttlMs ?? this.defaultConfig.userTokenVersionTtlMs;
 
-    // 获取当前版本并递增
-    const currentVersion = await this.getUserTokenVersion(userId);
-    const newVersion = currentVersion + 1;
+    // 使用 INCR 进行原子递增
+    const newVersion = await this.redisService.incr(key);
 
-    await this.redisService.set(key, newVersion.toString(), ttl);
+    // 仅在首次递增时设置 TTL（newVersion === 1 表示是新创建的 key）
+    if (newVersion === 1 && ttl > 0) {
+      const client = this.redisService.getClient();
+      await client.pexpire(key, ttl);
+    }
+
     this.logger.log(`User token version incremented: userId=${userId}, version=${newVersion}`);
 
     return newVersion;

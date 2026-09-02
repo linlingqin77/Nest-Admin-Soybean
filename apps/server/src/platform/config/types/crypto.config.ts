@@ -1,19 +1,19 @@
-import { IsBoolean, IsOptional, IsString, IsNumber, Min } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 /**
  * 加密配置
  */
 export class CryptoConfig {
   @IsBoolean()
-  enabled!:  boolean;
+  enabled!: boolean;
 
   @IsString()
   @IsOptional()
-  rsaPublicKey!:  string;
+  rsaPublicKey!: string;
 
   @IsString()
   @IsOptional()
-  rsaPrivateKey!:  string;
+  rsaPrivateKey!: string;
 
   /**
    * Nonce过期时间（毫秒），默认5分钟

@@ -68,22 +68,25 @@ function createExtendedPrismaClient(
 
   // 使用 $extends 链式扩展替代已弃用的 $use 中间件
   // 顺序：软删除过滤 → 租户过滤 → 慢查询监控
-  return baseClient.$extends(createSoftDeleteExtension()).$extends(createTenantExtension()).$extends(
-    createSlowQueryExtension(
-      {
-        threshold: DEFAULT_SLOW_QUERY_THRESHOLD,
-        enabled: true,
-      },
-      (log) => {
-        // 存储慢查询日志用于监控和分析
-        slowQueryLogs.push(log);
-        // 保持最近 100 条慢查询记录
-        if (slowQueryLogs.length > 100) {
-          slowQueryLogs.shift();
-        }
-      },
-    ),
-  );
+  return baseClient
+    .$extends(createSoftDeleteExtension())
+    .$extends(createTenantExtension())
+    .$extends(
+      createSlowQueryExtension(
+        {
+          threshold: DEFAULT_SLOW_QUERY_THRESHOLD,
+          enabled: true,
+        },
+        (log) => {
+          // 存储慢查询日志用于监控和分析
+          slowQueryLogs.push(log);
+          // 保持最近 100 条慢查询记录
+          if (slowQueryLogs.length > 100) {
+            slowQueryLogs.shift();
+          }
+        },
+      ),
+    );
 }
 
 @Injectable()

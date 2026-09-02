@@ -168,7 +168,7 @@ describe('UserController', () => {
 
   describe('authRole', () => {
     it('should return auth role info', async () => {
-      const result = await controller.authRole('1');
+      const result = await controller.authRole(1);
 
       expect(result.code).toBe(200);
       expect(userServiceMock.authRole).toHaveBeenCalledWith(1);
@@ -188,10 +188,10 @@ describe('UserController', () => {
 
   describe('findOne', () => {
     it('should return user detail', async () => {
-      const result = await controller.findOne('1');
+      const result = await controller.findOne(1);
 
       expect(result.code).toBe(200);
-      expect(userServiceMock.findOne).toHaveBeenCalledWith(1);
+      expect(userServiceMock.findOne).toHaveBeenCalledWith(1, false);
     });
   });
 
@@ -270,7 +270,7 @@ describe('UserController', () => {
 
   describe('findByDeptId', () => {
     it('should return users by dept', async () => {
-      const result = await controller.findByDeptId('100');
+      const result = await controller.findByDeptId(100);
 
       expect(result.code).toBe(200);
       expect(userServiceMock.findByDeptId).toHaveBeenCalledWith(100);

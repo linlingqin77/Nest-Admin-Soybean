@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ClsModule as NestClsModule, ClsService } from 'nestjs-cls';
+import { ClsService, ClsModule as NestClsModule } from 'nestjs-cls';
 import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { v4 as uuidv4 } from 'uuid';

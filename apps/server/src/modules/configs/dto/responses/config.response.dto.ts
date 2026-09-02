@@ -9,19 +9,19 @@ import { ConfigTypeEnum, ConfigTypeEnumSchema } from 'src/shared/enums';
 export class ConfigResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '参数配置ID' })
-  configId!:  number;
+  configId!: number;
 
   @Expose()
   @ApiProperty({ description: '参数名称' })
-  configName!:  string;
+  configName!: string;
 
   @Expose()
   @ApiProperty({ description: '参数键名' })
-  configKey!:  string;
+  configKey!: string;
 
   @Expose()
   @ApiProperty({ description: '参数键值' })
-  configValue!:  string;
+  configValue!: string;
 
   @Expose()
   @ApiProperty({
@@ -30,7 +30,7 @@ export class ConfigResponseDto extends BaseResponseDto {
     enumName: 'ConfigTypeEnum',
     enumSchema: ConfigTypeEnumSchema,
   })
-  configType!:  string;
+  configType!: string;
 }
 
 /**
@@ -38,10 +38,10 @@ export class ConfigResponseDto extends BaseResponseDto {
  */
 export class ConfigListResponseDto {
   @ApiProperty({ description: '配置列表', type: [ConfigResponseDto] })
-  rows!:  ConfigResponseDto[];
+  rows!: ConfigResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }
 
 /**
@@ -50,5 +50,5 @@ export class ConfigListResponseDto {
 export class ConfigValueResponseDto {
   @Expose()
   @ApiProperty({ description: '配置值' })
-  configValue!:  string;
+  configValue!: string;
 }

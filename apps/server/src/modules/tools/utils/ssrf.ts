@@ -115,11 +115,7 @@ export class SsrfException extends BusinessException {
  * @param port 目标端口
  * @param options 校验选项
  */
-export async function validateTarget(
-  host: string,
-  port: number,
-  options: SsrfValidateOptions = {},
-): Promise<void> {
+export async function validateTarget(host: string, port: number, options: SsrfValidateOptions = {}): Promise<void> {
   const {
     allowedPorts = [5432, 3306, 1433, 27017, 6379],
     allowedHosts = [],
@@ -158,10 +154,7 @@ export async function validateTarget(
     // 不安全范围检查
     for (const range of UNSAFE_IP_RANGES) {
       if (isInCidr(ip, range)) {
-        throw new SsrfException(
-          host,
-          `IP 属于内网/保留地址段（${range.network >>> 0}.${range.mask}），不允许连接`,
-        );
+        throw new SsrfException(host, `IP 属于内网/保留地址段（${range.network >>> 0}.${range.mask}），不允许连接`);
       }
     }
 

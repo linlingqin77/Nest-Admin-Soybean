@@ -8,31 +8,31 @@ import { DateFormat } from 'src/shared/decorators';
  */
 export class TenantAuditLogVo {
   @ApiProperty({ description: '日志ID' })
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '租户ID' })
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '企业名称' })
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '操作人ID' })
-  operatorId!:  number;
+  operatorId!: number;
 
   @ApiProperty({ description: '操作人名称' })
-  operatorName!:  string;
+  operatorName!: string;
 
   @ApiProperty({ description: '操作类型' })
-  actionType!:  string;
+  actionType!: string;
 
   @ApiProperty({ description: '操作描述' })
-  actionDesc!:  string;
+  actionDesc!: string;
 
   @ApiProperty({ description: '模块' })
-  modules!:  string;
+  modules!: string;
 
   @ApiProperty({ description: 'IP地址' })
-  ipAddress!:  string;
+  ipAddress!: string;
 
   @ApiPropertyOptional({ description: '用户代理' })
   userAgent?: string;
@@ -44,7 +44,7 @@ export class TenantAuditLogVo {
   requestMethod?: string;
 
   @ApiProperty({ description: '操作时间' })
-  operateTime!:  Date;
+  operateTime!: Date;
 }
 
 /**
@@ -75,10 +75,10 @@ export class TenantAuditLogDetailVo extends TenantAuditLogVo {
  */
 export class TenantAuditLogListVo {
   @ApiProperty({ description: '日志记录' })
-  rows!:  TenantAuditLogVo[];
+  rows!: TenantAuditLogVo[];
 
   @ApiProperty({ description: '总数' })
-  total!:  number;
+  total!: number;
 }
 
 /**
@@ -87,7 +87,7 @@ export class TenantAuditLogListVo {
 export class TenantAuditLogResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '日志ID' })
   @Expose()
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '租户ID' })
   @Expose()
@@ -95,31 +95,31 @@ export class TenantAuditLogResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '企业名称' })
   @Expose()
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '操作人ID' })
   @Expose()
-  operatorId!:  number;
+  operatorId!: number;
 
   @ApiProperty({ description: '操作人名称' })
   @Expose()
-  operatorName!:  string;
+  operatorName!: string;
 
   @ApiProperty({ description: '操作类型' })
   @Expose()
-  actionType!:  string;
+  actionType!: string;
 
   @ApiProperty({ description: '操作描述' })
   @Expose()
-  actionDesc!:  string;
+  actionDesc!: string;
 
   @ApiProperty({ description: '模块' })
   @Expose()
-  modules!:  string;
+  modules!: string;
 
   @ApiProperty({ description: 'IP地址' })
   @Expose()
-  ipAddress!:  string;
+  ipAddress!: string;
 
   @ApiPropertyOptional({ description: '用户代理' })
   @Expose()
@@ -136,7 +136,7 @@ export class TenantAuditLogResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '操作时间' })
   @Expose()
   @DateFormat()
-  operateTime!:  string;
+  operateTime!: string;
 }
 
 /**
@@ -144,13 +144,13 @@ export class TenantAuditLogResponseDto extends BaseResponseDto {
  */
 export class TenantAuditLogStatsVo {
   @ApiProperty({ description: '今日操作数' })
-  todayCount!:  number;
+  todayCount!: number;
 
   @ApiProperty({ description: '本周操作数' })
-  weekCount!:  number;
+  weekCount!: number;
 
   @ApiProperty({ description: '本月操作数' })
-  monthCount!:  number;
+  monthCount!: number;
 
   @ApiProperty({ description: '按操作类型统计' })
   byActionType!: { actionType: string; count: number }[];
@@ -165,15 +165,15 @@ export class TenantAuditLogStatsVo {
 export class TenantAuditLogStatsResponseDto {
   @ApiProperty({ description: '今日操作数' })
   @Expose()
-  todayCount!:  number;
+  todayCount!: number;
 
   @ApiProperty({ description: '本周操作数' })
   @Expose()
-  weekCount!:  number;
+  weekCount!: number;
 
   @ApiProperty({ description: '本月操作数' })
   @Expose()
-  monthCount!:  number;
+  monthCount!: number;
 
   @ApiProperty({ description: '按操作类型统计' })
   @Expose()

@@ -2,16 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
 import { ExportTable } from 'src/shared/utils/export';
 import { toDto, toDtoList } from 'src/shared/utils/index';
-import { CreateConfigDto, UpdateConfigDto, ListConfigDto, ConfigResponseDto } from './dto/index';
+import { ConfigResponseDto, CreateConfigDto, ListConfigDto, UpdateConfigDto } from './dto/index';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum, DelFlagEnum } from 'src/shared/enums/index';
 import { Cacheable, CacheEvict } from 'src/core/auth/decorators/redis.decorator';
 import { ConfigRepository } from './config.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { SystemConfigService } from './system-config.service';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 
@@ -26,7 +30,9 @@ export class ConfigService {
   ) {
     this.logger.setContext(ConfigService.name);
   }
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
   async create(createConfigDto: CreateConfigDto) {
     await this.configRepo.create(createConfigDto);
     return Result.ok();

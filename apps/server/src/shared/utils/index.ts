@@ -261,3 +261,4 @@ export { PaginationHelper } from './pagination.helper';
 export { toDto, toDtoList, toDtoPage } from './serialize.util';
 export { Assert } from './assert.util';
 export { StaticLogger } from './static-logger.util';
+export { attachDeptInfo, type UserWithDept, type DeptLookupClient } from './user-dept.util';

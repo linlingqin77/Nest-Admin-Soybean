@@ -1,5 +1,5 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { SysDictType, SysDictData } from '@prisma/client';
+import { SysDictData, SysDictType } from '@prisma/client';
 import { PrismaService } from 'src/platform/prisma';
 import { BaseLoader } from './base.loader';
 import { DelFlagEnum } from 'src/shared/enums';

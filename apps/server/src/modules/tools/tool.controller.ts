@@ -1,13 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Request, Query, Put, Res, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, Res, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ToolService } from './tool.service';
 import {
-  ImportTablesDto as TableName,
+  BatchGenCodeDto,
   ListDbTableRequestDto as GenDbTableList,
+  GenerateCodeDto,
   ListGenTableRequestDto as GenTableList,
   UpdateGenTableDto as GenTableUpdate,
-  GenerateCodeDto,
-  BatchGenCodeDto,
+  ImportTablesDto as TableName,
 } from './dto';
 import { Response } from 'express';
 import { User, UserDto } from 'src/modules/users/user.decorator';

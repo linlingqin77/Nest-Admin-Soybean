@@ -9,7 +9,7 @@ import * as fc from 'fast-check';
 import { TemplateService } from '@/modules/tools/template/template.service';
 import { PrismaService } from '@/platform/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TemplateLanguage, ImportTemplateGroupDto, ExportTemplateGroupDto } from '@/modules/tools/template/dto';
+import { ExportTemplateGroupDto, ImportTemplateGroupDto, TemplateLanguage } from '@/modules/tools/template/dto';
 
 describe('TemplateService - Property Tests', () => {
   let service: TemplateService;

@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { PasswordValidator, PasswordValidationConfig } from '@/shared/validators/password.validator';
+import { PasswordValidationConfig, PasswordValidator } from '@/shared/validators/password.validator';
 
 /**
  * 密码验证器属性测试

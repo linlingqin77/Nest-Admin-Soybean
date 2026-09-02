@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Res, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Delete, Get, Param, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LoginlogService } from './loginlog.service';
 import { ListLoginlogRequestDto } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import {
-  LoginLogListResponseDto,
   ClearLogResultResponseDto,
   DeleteLogResultResponseDto,
+  LoginLogListResponseDto,
   UnlockUserResultResponseDto,
 } from 'src/modules/monitors/dto/responses';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';
@@ -78,8 +78,8 @@ export class LoginlogController {
   })
   @RequirePermission('system:config:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async export(@Res() res: Response, @Body() body: ListLoginlogRequestDto): Promise<void> {
-    return this.loginlogService.export(res, body);
+  @Get('/export')
+  async export(@Res() res: Response, @Query() query: ListLoginlogRequestDto): Promise<void> {
+    return this.loginlogService.export(res, query);
   }
 }

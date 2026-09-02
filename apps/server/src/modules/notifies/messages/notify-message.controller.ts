@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Query, Put, Delete } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { NotifyMessageService } from './notify-message.service';
-import { SendNotifyMessageDto, SendNotifyAllDto, ListNotifyMessageDto, ListMyNotifyMessageDto } from './dto/index';
+import { ListMyNotifyMessageDto, ListNotifyMessageDto, SendNotifyAllDto, SendNotifyMessageDto } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { NotifyMessageResponseDto, UnreadCountResponseDto } from './dto';

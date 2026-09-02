@@ -6,17 +6,17 @@ import { IsNotEmpty, IsString, Matches } from 'class-validator';
 export class JwtConfig {
   @IsString()
   @IsNotEmpty()
-  secretkey!:  string;
+  secretkey!: string;
 
   @IsString()
   @Matches(/^\d+[smhd]$/, {
     message: 'expiresin must be a valid time string (e.g., 1h, 30m, 7d)',
   })
-  expiresin!:  string;
+  expiresin!: string;
 
   @IsString()
   @Matches(/^\d+[smhd]$/, {
     message: 'refreshExpiresIn must be a valid time string (e.g., 2h, 1d)',
   })
-  refreshExpiresIn!:  string;
+  refreshExpiresIn!: string;
 }

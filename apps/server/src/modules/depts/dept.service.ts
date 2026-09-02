@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { Prisma } from '@prisma/client';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException, BusinessExceptionData } from 'src/shared/exceptions';
-import { CreateDeptDto, UpdateDeptDto, ListDeptDto } from './dto/index';
+import { CreateDeptDto, ListDeptDto, UpdateDeptDto } from './dto/index';
 import { DeptResponseDto } from './dto/responses/dept.response.dto';
 import { ListToTree } from 'src/shared/utils/index';
 import { toDto, toDtoList } from 'src/shared/utils/serialize.util';
 import { CacheEnum, DataScopeEnum, DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 import { Cacheable, CacheEvict } from 'src/core/auth/decorators/redis.decorator';
 import { DeptRepository } from './dept.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 
 @Injectable()
 export class DeptService {
@@ -21,7 +25,9 @@ export class DeptService {
   ) {
     this.logger.setContext(DeptService.name);
   }
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
 
   @CacheEvict(CacheEnum.SYS_DEPT_KEY, '*')
   @Transactional()

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 
 /**
@@ -8,31 +8,31 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class MailAccountResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '账号ID' })
   @Expose()
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '邮箱地址' })
   @Expose()
-  mail!:  string;
+  mail!: string;
 
   @ApiProperty({ description: '用户名' })
   @Expose()
-  username!:  string;
+  username!: string;
 
   @ApiProperty({ description: 'SMTP主机' })
   @Expose()
-  host!:  string;
+  host!: string;
 
   @ApiProperty({ description: 'SMTP端口' })
   @Expose()
-  port!:  number;
+  port!: number;
 
   @ApiProperty({ description: '是否启用SSL' })
   @Expose()
-  sslEnable!:  boolean;
+  sslEnable!: boolean;
 
   @ApiProperty({ description: '状态' })
   @Expose()
-  status!:  string;
+  status!: string;
 
   @ApiPropertyOptional({ description: '备注' })
   @Expose()

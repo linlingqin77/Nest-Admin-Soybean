@@ -1,17 +1,17 @@
-import { Controller, Get, Post, Body, HttpCode, Logger } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, Logger, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MainService } from './main.service';
 import { LoginRequestDto, RegisterRequestDto } from './dto/requests';
 import {
-  LoginResponseDto,
   CaptchaResponseDto,
   GetInfoResponseDto,
+  LoginResponseDto,
   LogoutResponseDto,
-  RegisterResultResponseDto,
   RegisterEnabledResponseDto,
+  RegisterResultResponseDto,
 } from './dto/responses';
 import { createMath } from 'src/shared/utils/captcha';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import { GenerateUUID } from 'src/shared/utils/index';
 import { RedisService } from 'src/platform/redis/redis.service';

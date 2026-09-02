@@ -1,6 +1,6 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, OmitType, IntersectionType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { PageQueryDto } from 'src/shared/dto/index';
 import { CharEnum } from 'src/shared/enums/index';
 

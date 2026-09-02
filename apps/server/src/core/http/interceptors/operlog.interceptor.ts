@@ -16,10 +16,9 @@ export class OperlogInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     // 安全获取 Swagger 元数据，避免解构 undefined 导致 TypeError
-    const apiOperation = this.reflector.getAllAndOverride<{ summary?: string } | undefined>(
-      'swagger/apiOperation',
-      [context.getHandler()],
-    );
+    const apiOperation = this.reflector.getAllAndOverride<{ summary?: string } | undefined>('swagger/apiOperation', [
+      context.getHandler(),
+    ]);
     const summary = apiOperation?.summary;
 
     const logConfig: OperlogConfig = this.reflector.get(METADATA_KEYS.OPERLOG, context.getHandler());

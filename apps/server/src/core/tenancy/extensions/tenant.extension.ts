@@ -1,12 +1,14 @@
 import { Prisma } from '@prisma/client';
-import { Logger, ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import { TenantContext } from '../context/tenant.context';
 import { hasTenantField, SUPER_TENANT_ID } from '../constants/tenant-models';
 
 const logger = new Logger('TenantExtension');
 
-// 使用 any 类型来避免 Prisma 复杂类型的兼容性问题
-type AnyRecord = any;
+// 使用 Record<string, unknown> 替代 any 类型，提供更好的类型安全
+// Prisma $extends API 是动态泛型，此类型用于内部辅助函数，
+// 调用方在赋值时通过类型断言重新转换为 Prisma 期望的类型
+type AnyRecord = Record<string, unknown>;
 
 /**
  * 判断是否应该应用租户过滤
@@ -133,28 +135,36 @@ export function createTenantExtension() {
     query: {
       $allModels: {
         // 查询操作：添加租户过滤
-        async findMany({ model, args, query }) {
+        async findMany({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async findFirst({ model, args, query }) {
+        async findFirst({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async findFirstOrThrow({ model, args, query }) {
+        async findFirstOrThrow({
+          model,
+          args,
+          query,
+        }: {
+          model: string;
+          args: any;
+          query: (args: any) => Promise<any>;
+        }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async findUnique({ model, args, query }) {
+        async findUnique({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           // 先执行查询，再验证租户归属
           // 注意：findUnique 的 where 条件必须是唯一键，无法直接添加 tenantId 过滤
           // 因此采用查询后验证的策略
@@ -165,7 +175,15 @@ export function createTenantExtension() {
           return validateTenantOwnership(model, result as AnyRecord | null);
         },
 
-        async findUniqueOrThrow({ model, args, query }) {
+        async findUniqueOrThrow({
+          model,
+          args,
+          query,
+        }: {
+          model: string;
+          args: any;
+          query: (args: any) => Promise<any>;
+        }) {
           const result = await query(args);
           if (!shouldApplyFilter(model)) {
             return result;
@@ -177,21 +195,21 @@ export function createTenantExtension() {
           return validated;
         },
 
-        async count({ model, args, query }) {
+        async count({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async aggregate({ model, args, query }) {
+        async aggregate({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async groupBy({ model, args, query }) {
+        async groupBy({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
@@ -199,21 +217,29 @@ export function createTenantExtension() {
         },
 
         // 创建操作：设置租户ID
-        async create({ model, args, query }) {
+        async create({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (hasTenantField(model)) {
             args.data = setTenantId(args.data);
           }
           return query(args);
         },
 
-        async createMany({ model, args, query }) {
+        async createMany({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (hasTenantField(model)) {
             args.data = setTenantIdForMany(args.data);
           }
           return query(args);
         },
 
-        async createManyAndReturn({ model, args, query }) {
+        async createManyAndReturn({
+          model,
+          args,
+          query,
+        }: {
+          model: string;
+          args: any;
+          query: (args: any) => Promise<any>;
+        }) {
           if (hasTenantField(model)) {
             args.data = setTenantIdForMany(args.data);
           }
@@ -221,14 +247,14 @@ export function createTenantExtension() {
         },
 
         // 更新操作：添加租户过滤
-        async update({ model, args, query }) {
+        async update({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async updateMany({ model, args, query }) {
+        async updateMany({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
@@ -236,14 +262,14 @@ export function createTenantExtension() {
         },
 
         // 删除操作：添加租户过滤
-        async delete({ model, args, query }) {
+        async delete({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
           return query(args);
         },
 
-        async deleteMany({ model, args, query }) {
+        async deleteMany({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (shouldApplyFilter(model)) {
             args.where = addTenantFilter(args.where);
           }
@@ -251,7 +277,7 @@ export function createTenantExtension() {
         },
 
         // upsert 操作
-        async upsert({ model, args, query }) {
+        async upsert({ model, args, query }: { model: string; args: any; query: (args: any) => Promise<any> }) {
           if (hasTenantField(model)) {
             args.create = setTenantId(args.create);
             if (shouldApplyFilter(model)) {

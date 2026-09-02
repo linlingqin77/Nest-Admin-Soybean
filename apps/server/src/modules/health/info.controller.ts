@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NotRequireAuth } from 'src/modules/users/user.decorator';
-import { InfoService, AppInfo } from './info.service';
+import { AppInfo, InfoService } from './info.service';
 
 /**
  * 应用信息控制器

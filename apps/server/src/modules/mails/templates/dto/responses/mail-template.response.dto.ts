@@ -8,19 +8,19 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class MailTemplateResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '模板ID' })
   @Expose()
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '模板名称' })
   @Expose()
-  name!:  string;
+  name!: string;
 
   @ApiProperty({ description: '模板编码' })
   @Expose()
-  code!:  string;
+  code!: string;
 
   @ApiProperty({ description: '发送账号ID' })
   @Expose()
-  accountId!:  number;
+  accountId!: number;
 
   @ApiPropertyOptional({ description: '发送账号邮箱' })
   @Expose()
@@ -28,15 +28,15 @@ export class MailTemplateResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '发送人昵称' })
   @Expose()
-  nickname!:  string;
+  nickname!: string;
 
   @ApiProperty({ description: '邮件标题' })
   @Expose()
-  title!:  string;
+  title!: string;
 
   @ApiProperty({ description: '邮件内容（HTML）' })
   @Expose()
-  content!:  string;
+  content!: string;
 
   @ApiPropertyOptional({ description: '参数列表' })
   @Expose()
@@ -44,7 +44,7 @@ export class MailTemplateResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '状态' })
   @Expose()
-  status!:  string;
+  status!: string;
 
   @ApiPropertyOptional({ description: '备注' })
   @Expose()

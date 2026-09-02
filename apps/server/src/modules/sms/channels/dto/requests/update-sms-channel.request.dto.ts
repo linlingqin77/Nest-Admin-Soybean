@@ -6,5 +6,5 @@ import { PartialType } from '@nestjs/swagger';
 export class UpdateSmsChannelRequestDto extends PartialType(CreateSmsChannelRequestDto) {
   @ApiProperty({ description: '渠道ID', example: 1 })
   @IsNumber()
-  id!:  number;
+  id!: number;
 }

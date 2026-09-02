@@ -5,7 +5,7 @@
  * **Validates: Requirements 4.5, 4.6**
  */
 import * as fc from 'fast-check';
-import { IsPascalCaseConstraint, IsKebabCaseConstraint, NamingUtils } from '@/shared/validators/naming.validator';
+import { IsKebabCaseConstraint, IsPascalCaseConstraint, NamingUtils } from '@/shared/validators/naming.validator';
 
 describe('Naming Validators - Property Tests', () => {
   const pascalCaseValidator = new IsPascalCaseConstraint();

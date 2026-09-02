@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PageQueryDto } from 'src/shared/dto/index';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';

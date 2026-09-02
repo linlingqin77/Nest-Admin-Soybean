@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DelFlagEnum } from 'src/shared/enums/index';
-import { Prisma, SysUser, SysDept } from '@prisma/client';
+import { Prisma, SysDept, SysUser } from '@prisma/client';
 import { SoftDeleteRepository } from 'src/platform/repository';
 import { PrismaService } from 'src/platform/prisma';
 
@@ -170,5 +170,19 @@ export class UserRepository extends SoftDeleteRepository<SysUser, Prisma.SysUser
     });
 
     return result.count;
+  }
+
+  /**
+   * 根据用户ID列表查询关联的角色ID（去重）
+   */
+  async findRoleIdsByUserIds(userIds: number[]): Promise<number[]> {
+    if (!userIds.length) {
+      return [];
+    }
+    const relations = await this.prisma.sysUserRole.findMany({
+      where: { userId: { in: userIds } },
+      select: { roleId: true },
+    });
+    return [...new Set(relations.map((r) => r.roleId))];
   }
 }

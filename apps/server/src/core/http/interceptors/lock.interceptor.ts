@@ -1,11 +1,11 @@
-import { Injectable, NestInterceptor, CallHandler, ExecutionContext, Logger } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { Request } from 'express';
 import * as crypto from 'crypto';
-import { LOCK_KEY, LockOptions, LockAcquireException } from 'src/core/http/decorators/lock.decorator';
+import { LOCK_KEY, LockAcquireException, LockOptions } from 'src/core/http/decorators/lock.decorator';
 
 /**
  * 分布式锁拦截器
@@ -99,7 +99,10 @@ export class LockInterceptor implements NestInterceptor {
       return result === 1;
     } catch (error) {
       // 释放锁失败，记录日志但不抛出异常
-      this.logger.error(`Failed to release lock ${key}: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `Failed to release lock ${key}: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       return false;
     }
   }

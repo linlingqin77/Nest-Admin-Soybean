@@ -1,33 +1,33 @@
-import { Controller, Get, Post, Put, Delete, Body, Query, Param, Res } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { FileManagerService } from './file-manager.service';
 import {
   CreateFolderRequestDto,
-  UpdateFolderRequestDto,
-  ListFolderRequestDto,
+  CreateShareRequestDto,
   ListFileRequestDto,
+  ListFolderRequestDto,
   MoveFileRequestDto,
   RenameFileRequestDto,
-  CreateShareRequestDto,
+  UpdateFolderRequestDto,
 } from './dto/requests';
-import { User, NotRequireAuth } from 'src/modules/users/user.decorator';
+import { NotRequireAuth, User } from 'src/modules/users/user.decorator';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';
 import { BusinessType } from 'src/shared/constants/business.constant';
 import {
-  FolderResponseDto,
-  FolderTreeNodeResponseDto,
+  AccessTokenResponseDto,
+  CreateShareResultResponseDto,
   FileListResponseDto,
   FileResponseDto,
   FileVersionListResponseDto,
+  FolderResponseDto,
+  FolderTreeNodeResponseDto,
   RestoreVersionResultResponseDto,
-  CreateShareResultResponseDto,
   ShareInfoResponseDto,
   ShareListResponseDto,
   StorageStatsResponseDto,
-  AccessTokenResponseDto,
 } from './dto/responses';
 
 @ApiTags('系统-文件管理')

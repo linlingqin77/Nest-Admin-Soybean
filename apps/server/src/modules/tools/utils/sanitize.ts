@@ -59,10 +59,7 @@ export function escapeStringLiteral(value: string): string {
  */
 export function escapeMultilineText(value: string): string {
   if (value === undefined || value === null) return '';
-  return String(value)
-    .replace(/\\/g, '\\\\')
-    .replace(/\*\//g, '* /')
-    .replace(/\$/g, '\\$');
+  return String(value).replace(/\\/g, '\\\\').replace(/\*\//g, '* /').replace(/\$/g, '\\$');
 }
 
 /**
@@ -77,9 +74,7 @@ export function assertSafeText(value: string, fieldName: string, maxLength = 100
     throw new Error(`代码生成失败：${fieldName} 长度超过 ${maxLength}`);
   }
   if (!SAFE_TEXT_REGEX.test(trimmed)) {
-    throw new Error(
-      `代码生成失败：${fieldName} 含有不允许的特殊字符（反引号、引号、反斜线、花括号、换行等）`,
-    );
+    throw new Error(`代码生成失败：${fieldName} 含有不允许的特殊字符（反引号、引号、反斜线、花括号、换行等）`);
   }
   return trimmed;
 }

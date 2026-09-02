@@ -1,7 +1,7 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { Result } from 'src/shared/response';
-import { SendMailDto, BatchSendMailDto, TestMailDto } from './dto/index';
+import { BatchSendMailDto, SendMailDto, TestMailDto } from './dto/index';
 import { MailTemplateService } from '../templates/mail-template.service';
 import { MailAccountService } from '../accounts/mail-account.service';
 import { MailLogRepository } from '../logs/mail-log.repository';

@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { REQUIRE_FEATURE_KEY, RequireFeatureOptions } from '../decorators/require-feature.decorator';
 import { FeatureToggleService } from '../services/feature-toggle.service';

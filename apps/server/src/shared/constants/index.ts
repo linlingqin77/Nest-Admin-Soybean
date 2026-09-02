@@ -32,3 +32,4 @@ export const enum SYS_USER_TYPE {
 export * from './api-version';
 export * from './business.constant';
 export * from './gen.constant';
+export * from './config-keys.constant';

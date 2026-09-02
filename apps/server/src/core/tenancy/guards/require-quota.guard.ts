@@ -1,6 +1,6 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger, SetMetadata } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Logger, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { TenantQuotaService, QuotaResource } from '../services/quota.service';
+import { QuotaResource, TenantQuotaService } from '../services/quota.service';
 import { TenantContext } from '../context/tenant.context';
 
 /**

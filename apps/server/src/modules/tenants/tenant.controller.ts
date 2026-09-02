@@ -1,23 +1,23 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Res, Query } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TenantService } from './tenant.service';
 import {
   CreateTenantRequestDto,
-  UpdateTenantRequestDto,
+  CreateTenantResultResponseDto,
+  DeleteTenantResultResponseDto,
   ListTenantRequestDto,
+  SyncTenantConfigResultResponseDto,
+  SyncTenantDictResultResponseDto,
   SyncTenantPackageRequestDto,
-  TenantResponseDto,
+  SyncTenantPackageResultResponseDto,
   TenantListResponseDto,
-  TenantSwitchResponseDto,
+  TenantResponseDto,
   TenantRestoreResponseDto,
   TenantSelectListResponseDto,
-  CreateTenantResultResponseDto,
-  UpdateTenantResultResponseDto,
-  DeleteTenantResultResponseDto,
-  SyncTenantDictResultResponseDto,
-  SyncTenantPackageResultResponseDto,
-  SyncTenantConfigResultResponseDto,
+  TenantSwitchResponseDto,
   TenantSwitchStatusResponseDto,
+  UpdateTenantRequestDto,
+  UpdateTenantResultResponseDto,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Response } from 'express';
@@ -143,8 +143,8 @@ export class TenantController {
   })
   @RequirePermission('system:tenant:query')
   @Get('/:id')
-  findOne(@Param('id') id: string) {
-    return this.tenantService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.tenantService.findOne(id);
   }
 
   @Api({
@@ -180,8 +180,8 @@ export class TenantController {
   })
   @RequirePermission('system:tenant:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  export(@Res() res: Response, @Body() body: ListTenantRequestDto) {
-    return this.tenantService.export(res, body);
+  @Get('/export')
+  export(@Res() res: Response, @Query() query: ListTenantRequestDto) {
+    return this.tenantService.export(res, query);
   }
 }

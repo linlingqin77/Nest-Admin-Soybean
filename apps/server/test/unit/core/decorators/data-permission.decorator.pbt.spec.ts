@@ -1,16 +1,16 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of } from 'rxjs';
 import {
-  DataPermissionInterceptor,
-  DATA_PERMISSION_KEY,
   DATA_PERMISSION_CONTEXT_KEY,
-  DataPermissionOptions,
-  DataScope,
+  DATA_PERMISSION_KEY,
   DataPermissionContext,
+  DataPermissionInterceptor,
+  DataPermissionOptions,
   DataPermissionSqlBuilder,
+  DataScope,
 } from '@/core/permissions/decorators/data-permission.decorator';
 
 /**

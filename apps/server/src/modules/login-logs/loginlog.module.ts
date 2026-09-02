@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { LoginlogService } from './loginlog.service';
 import { LoginlogController } from './loginlog.controller';
 import { LoginlogRepository } from './loginlog.repository';

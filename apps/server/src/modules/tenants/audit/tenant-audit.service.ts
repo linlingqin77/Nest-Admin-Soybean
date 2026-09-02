@@ -1,19 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/platform/prisma';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
 import { IgnoreTenant } from 'src/core/tenancy/decorators/tenant.decorator';
 import { toDtoList } from 'src/shared/utils/index';
 import {
-  ListTenantAuditLogDto,
   CreateTenantAuditLogDto,
   ExportTenantAuditLogDto,
-  TenantAuditLogResponseDto,
-  TenantAuditLogStatsResponseDto,
-  TenantAuditLogVo,
+  ListTenantAuditLogDto,
   TenantAuditLogDetailVo,
   TenantAuditLogListVo,
+  TenantAuditLogResponseDto,
+  TenantAuditLogStatsResponseDto,
   TenantAuditLogStatsVo,
+  TenantAuditLogVo,
 } from './dto/index';
 
 /**
@@ -65,7 +66,7 @@ export class TenantAuditService {
     this.logger.debug('查询租户审计日志列表', query);
 
     // 构建查询条件
-    const where: any = {};
+    const where: Prisma.SysTenantAuditLogWhereInput = {};
 
     if (query.tenantId) {
       where.tenantId = { contains: query.tenantId };
@@ -236,7 +237,7 @@ export class TenantAuditService {
     weekStart.setDate(today.getDate() - today.getDay());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const baseWhere: any = {};
+    const baseWhere: Prisma.SysTenantAuditLogWhereInput = {};
     if (tenantId) {
       baseWhere.tenantId = tenantId;
     }
@@ -295,7 +296,7 @@ export class TenantAuditService {
     this.logger.debug('导出审计日志', query);
 
     // 构建查询条件
-    const where: any = {};
+    const where: Prisma.SysTenantAuditLogWhereInput = {};
 
     if (query.tenantId) {
       where.tenantId = { contains: query.tenantId };

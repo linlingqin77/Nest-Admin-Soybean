@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
-import { DelFlagEnum, StatusEnum, CacheEnum } from 'src/shared/enums/index';
+import { CacheEnum, DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 import { Cacheable } from 'src/core/auth/decorators/redis.decorator';
-import { CreateMenuRequestDto, UpdateMenuRequestDto, ListMenuRequestDto } from './dto/requests';
+import { CreateMenuRequestDto, ListMenuRequestDto, UpdateMenuRequestDto } from './dto/requests';
 import { MenuResponseDto } from './dto/responses';
 import { ListToTree, Uniq } from 'src/shared/utils/index';
 import { toDto, toDtoList } from 'src/shared/utils/serialize.util';
@@ -20,7 +20,9 @@ export class MenuService {
     @InjectTransactionHost() private readonly txHost: PrismaTransactionHost,
     private readonly menuRepo: MenuRepository,
   ) {}
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
 
   async create(createMenuDto: CreateMenuRequestDto) {
     const res = await this.menuRepo.create({

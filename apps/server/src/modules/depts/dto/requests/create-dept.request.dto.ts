@@ -1,4 +1,4 @@
-import { IsString, IsEnum, Min, Length, IsOptional, IsNumber, IsEmail } from 'class-validator';
+import { IsEmail, IsEnum, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -8,7 +8,7 @@ export class CreateDeptRequestDto {
     description: '父部门ID',
   })
   @IsNumber()
-  parentId!:  number;
+  parentId!: number;
 
   @ApiProperty({
     required: true,
@@ -16,7 +16,7 @@ export class CreateDeptRequestDto {
   })
   @IsString()
   @Length(0, 30)
-  deptName!:  string;
+  deptName!: string;
 
   @ApiProperty({
     required: true,
@@ -24,7 +24,7 @@ export class CreateDeptRequestDto {
   })
   @IsNumber()
   @Min(0)
-  orderNum!:  number;
+  orderNum!: number;
 
   @ApiProperty({
     required: false,

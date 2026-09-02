@@ -1,24 +1,24 @@
-import { Controller, Get, Post, Body, Query, Put, Res, HttpCode, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DictService } from './dict.service';
 import {
-  CreateDictTypeRequestDto,
-  UpdateDictTypeRequestDto,
-  ListDictTypeRequestDto,
   CreateDictDataRequestDto,
-  UpdateDictDataRequestDto,
-  ListDictDataRequestDto,
-  DictTypeResponseDto,
-  DictTypeListResponseDto,
-  DictDataResponseDto,
-  DictDataListResponseDto,
-  CreateDictTypeResultResponseDto,
-  UpdateDictTypeResultResponseDto,
-  DeleteDictTypeResultResponseDto,
   CreateDictDataResultResponseDto,
-  UpdateDictDataResultResponseDto,
+  CreateDictTypeRequestDto,
+  CreateDictTypeResultResponseDto,
   DeleteDictDataResultResponseDto,
+  DeleteDictTypeResultResponseDto,
+  DictDataListResponseDto,
+  DictDataResponseDto,
+  DictTypeListResponseDto,
+  DictTypeResponseDto,
+  ListDictDataRequestDto,
+  ListDictTypeRequestDto,
   RefreshCacheResultResponseDto,
+  UpdateDictDataRequestDto,
+  UpdateDictDataResultResponseDto,
+  UpdateDictTypeRequestDto,
+  UpdateDictTypeResultResponseDto,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Response } from 'express';

@@ -1,5 +1,6 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { NextFunction, Request, Response } from 'express';
+import { randomUUID } from 'node:crypto';
 import { TenantContext } from '../context/tenant.context';
 
 /**
@@ -80,6 +81,6 @@ export class TenantHttpMiddleware implements NestMiddleware {
     }
 
     // 生成新的请求ID
-    return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    return randomUUID();
   }
 }

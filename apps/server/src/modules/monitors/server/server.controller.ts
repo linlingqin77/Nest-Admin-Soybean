@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ServerService } from './server.service';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { ServerInfoResponseDto } from 'src/modules/monitors/dto/responses';
 

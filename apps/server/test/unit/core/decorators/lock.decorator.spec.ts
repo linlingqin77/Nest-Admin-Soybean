@@ -1,8 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, CallHandler, Injectable } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, throwError } from 'rxjs';
-import { LockInterceptor, LOCK_KEY, LockOptions, Lock, LockAcquireException } from '@/core/http/decorators/lock.decorator';
+import {
+  Lock,
+  LOCK_KEY,
+  LockAcquireException,
+  LockInterceptor,
+  LockOptions,
+} from '@/core/http/decorators/lock.decorator';
 import { RedisService } from '@/platform/redis/redis.service';
 
 /**

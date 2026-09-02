@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, SysTenant } from '@prisma/client';
 import { PrismaService } from 'src/platform/prisma';
-import { StatusEnum, DelFlagEnum } from 'src/shared/enums';
+import { DelFlagEnum, StatusEnum } from 'src/shared/enums';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 
 /**

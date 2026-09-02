@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums';
 import { TenantContext } from 'src/tenant';
@@ -8,9 +8,9 @@ import { GenConstants } from 'src/shared/constants/gen.constant';
 import { FieldInferenceService, IInferredColumn } from './inference/field-inference.service';
 import { DataSourceService } from './datasource/datasource.service';
 import { DbColumnDto } from './datasource/dto';
-import { ImportTablesDto, ListGenTableRequestDto, UpdateGenTableDto, SyncTableDto } from './dto';
+import { ImportTablesDto, ListGenTableRequestDto, SyncTableDto, UpdateGenTableDto } from './dto';
 import { UserDto } from 'src/modules/users/user.decorator';
-import { Prisma, GenTable, GenTableColumn } from '@prisma/client';
+import { GenTable, GenTableColumn, Prisma } from '@prisma/client';
 import toolConfig from './config';
 import { StringUtils } from './utils';
 

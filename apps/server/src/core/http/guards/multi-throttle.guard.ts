@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { RedisService } from 'src/platform/redis/redis.service';
@@ -218,13 +218,7 @@ export class MultiThrottleGuard implements CanActivate {
     const client = this.redisService.getClient();
 
     // 使用 Lua 脚本原子执行 INCR + PEXPIRE + 限流判断
-    const result = await client.eval(
-      THROTTLE_LUA_SCRIPT,
-      1,
-      key,
-      String(config.limit),
-      String(config.ttl),
-    ) as number;
+    const result = (await client.eval(THROTTLE_LUA_SCRIPT, 1, key, String(config.limit), String(config.ttl))) as number;
 
     if (result > 0) {
       // 被限流，result 是剩余 TTL (毫秒)

@@ -1,4 +1,4 @@
-import { PasswordValidator, PasswordValidationConfig } from '@/shared/validators/password.validator';
+import { PasswordValidationConfig, PasswordValidator } from '@/shared/validators/password.validator';
 
 describe('PasswordValidator', () => {
   describe('validate', () => {

@@ -1,14 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NotRequireAuth } from 'src/modules/users/user.decorator';
 import { Result } from 'src/shared/response';
 import {
+  ErrorCodeCategory,
+  ErrorCodeInfo,
+  generateErrorCodeJson,
+  generateErrorCodeMarkdown,
   getAllErrorCodes,
   getErrorCodesByCategory,
-  generateErrorCodeMarkdown,
-  generateErrorCodeJson,
-  ErrorCodeInfo,
-  ErrorCodeCategory,
 } from 'src/shared/response/error-codes.doc';
 
 /**

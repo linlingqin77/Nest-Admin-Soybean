@@ -1,13 +1,13 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Res, Query } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TenantPackageService } from './tenant-package.service';
 import {
   CreateTenantPackageRequestDto,
-  UpdateTenantPackageRequestDto,
   ListTenantPackageRequestDto,
-  TenantPackageResponseDto,
   TenantPackageListResponseDto,
+  TenantPackageResponseDto,
   TenantPackageSelectResponseDto,
+  UpdateTenantPackageRequestDto,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Response } from 'express';
@@ -98,8 +98,8 @@ export class TenantPackageController {
   })
   @RequirePermission('system:tenantPackage:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  export(@Res() res: Response, @Body() body: ListTenantPackageRequestDto) {
-    return this.tenantPackageService.export(res, body);
+  @Get('/export')
+  export(@Res() res: Response, @Query() query: ListTenantPackageRequestDto) {
+    return this.tenantPackageService.export(res, query);
   }
 }

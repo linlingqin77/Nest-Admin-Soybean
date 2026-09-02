@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from './config.service';
 import {
-  CreateConfigDto,
-  UpdateConfigDto,
-  ListConfigDto,
-  ConfigResponseDto,
   ConfigListResponseDto,
+  ConfigResponseDto,
   ConfigValueResponseDto,
+  CreateConfigDto,
+  ListConfigDto,
+  UpdateConfigDto,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
@@ -125,8 +125,8 @@ export class ConfigController {
   })
   @RequirePermission('system:config:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async export(@Res() res: Response, @Body() body: ListConfigDto): Promise<void> {
-    return this.configService.export(res, body);
+  @Get('/export')
+  async export(@Res() res: Response, @Query() query: ListConfigDto): Promise<void> {
+    return this.configService.export(res, query);
   }
 }

@@ -3,7 +3,7 @@
  * @description Migrated from src/modules/health/info.service.spec.ts
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { InfoService, AppInfo } from '@/modules/health/info.service';
+import { AppInfo, InfoService } from '@/modules/health/info.service';
 
 describe('InfoService', () => {
   let service: InfoService;

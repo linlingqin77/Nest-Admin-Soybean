@@ -6,8 +6,8 @@ import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 export class ClientConfig {
   @IsString()
   @IsNotEmpty()
-  defaultClientId!:  string;
+  defaultClientId!: string;
 
   @IsIn(['password', 'authorization_code', 'client_credentials', 'refresh_token'])
-  defaultGrantType!:  string;
+  defaultGrantType!: string;
 }

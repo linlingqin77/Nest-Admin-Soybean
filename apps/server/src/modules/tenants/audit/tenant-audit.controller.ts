@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Query, Param, Body, Res } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { TenantAuditService } from './tenant-audit.service';
 import {
-  ListTenantAuditLogDto,
   ExportTenantAuditLogDto,
+  ListTenantAuditLogDto,
+  TenantAuditLogDetailVo,
+  TenantAuditLogListVo,
   TenantAuditLogResponseDto,
   TenantAuditLogStatsResponseDto,
-  TenantAuditLogListVo,
-  TenantAuditLogDetailVo,
   TenantAuditLogStatsVo,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
@@ -64,8 +64,8 @@ export class TenantAuditController {
     description: '导出审计日志为Excel格式',
   })
   @RequirePermission('system:tenant:audit:export')
-  @Post('/export')
-  async export(@Body() query: ExportTenantAuditLogDto, @Res() res: Response) {
+  @Get('/export')
+  async export(@Query() query: ExportTenantAuditLogDto, @Res() res: Response) {
     const data = await this.auditService.export(query);
 
     // 设置响应头

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { BaseRepository, PrismaDelegate, FindOptions, QueryOptions } from './base.repository';
+import { BaseRepository, FindOptions, PrismaDelegate, QueryOptions } from './base.repository';
 import { PrismaService } from 'src/platform/prisma';
 import { IPaginatedData } from 'src/shared/response/response.interface';
 import { BusinessException } from 'src/shared/exceptions';

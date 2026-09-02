@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuditService, AuditLogData, AuditLogRecord } from '@/core/audit/audit.service';
+import { AuditLogData, AuditLogRecord, AuditService } from '@/core/audit/audit.service';
 import { PrismaService } from '@/platform/prisma/prisma.service';
 import { ClsService } from 'nestjs-cls';
 
@@ -130,7 +130,8 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'UPDATE', module: 'system',
+            action: 'UPDATE',
+            module: 'system',
             targetType,
             targetId,
             status: '0',
@@ -171,7 +172,8 @@ describe('AuditService Property-Based Tests', () => {
           const newValueStr = JSON.stringify(newValue);
 
           const auditData: AuditLogData = {
-            action: 'UPDATE', module: 'system',
+            action: 'UPDATE',
+            module: 'system',
             oldValue: oldValueStr,
             newValue: newValueStr,
             status: '0',
@@ -202,7 +204,8 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'DELETE', module: 'system',
+            action: 'DELETE',
+            module: 'system',
             status: '1',
             errorMsg,
           };
@@ -230,7 +233,8 @@ describe('AuditService Property-Based Tests', () => {
         clsStore.set('requestId', 'test-request-id');
 
         const auditData: AuditLogData = {
-          action: 'QUERY', module: 'system',
+          action: 'QUERY',
+          module: 'system',
           status: '0',
           duration,
         };
@@ -257,7 +261,8 @@ describe('AuditService Property-Based Tests', () => {
         clsStore.set('requestId', requestId);
 
         const auditData: AuditLogData = {
-          action: 'CREATE', module: 'system',
+          action: 'CREATE',
+          module: 'system',
           status: '0',
         };
 
@@ -290,7 +295,8 @@ describe('AuditService Property-Based Tests', () => {
           clsStore.set('requestId', 'test-request-id');
 
           const auditData: AuditLogData = {
-            action: 'LOGIN', module: 'auth',
+            action: 'LOGIN',
+            module: 'auth',
             status: '0',
           };
 

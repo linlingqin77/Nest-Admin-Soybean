@@ -9,14 +9,14 @@
 
 import { HttpStatus } from '@nestjs/common';
 import {
-  TenantException,
-  TenantNotFoundException,
-  TenantDisabledException,
-  TenantExpiredException,
-  TenantContextMissingException,
-  TenantQuotaExceededException,
-  TenantFeatureDisabledException,
   CrossTenantAccessException,
+  TenantContextMissingException,
+  TenantDisabledException,
+  TenantException,
+  TenantExpiredException,
+  TenantFeatureDisabledException,
+  TenantNotFoundException,
+  TenantQuotaExceededException,
 } from '@/core/tenancy/exceptions/tenant.exception';
 
 describe('TenantException', () => {

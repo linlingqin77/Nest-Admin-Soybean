@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 import { TenantContext } from '../context/tenant.context';
-import { TENANT_MODELS, hasTenantField, SUPER_TENANT_ID } from '../constants/tenant-models';
+import { hasTenantField, SUPER_TENANT_ID, TENANT_MODELS } from '../constants/tenant-models';
 import { PrismaQueryArgs } from '../types';
 
 // 重新导出常量，保持向后兼容

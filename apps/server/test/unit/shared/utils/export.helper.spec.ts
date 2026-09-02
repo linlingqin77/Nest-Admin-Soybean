@@ -1,4 +1,4 @@
-import { ExportHelper, ExportConfigFactory } from '@/shared/utils/export.helper';
+import { ExportConfigFactory, ExportHelper } from '@/shared/utils/export.helper';
 
 describe('ExportHelper', () => {
   describe('createStatusDict', () => {

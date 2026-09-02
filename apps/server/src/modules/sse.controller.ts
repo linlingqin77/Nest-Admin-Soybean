@@ -1,5 +1,5 @@
-import { Controller, Sse, Query, Req, Get, Post, Body, MessageEvent, SetMetadata, Logger } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Get, Logger, MessageEvent, Post, Query, Req, SetMetadata, Sse } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +38,9 @@ export class SseController {
 
     if (!token) {
       return new Observable<MessageEvent>((subscriber) => {
-        subscriber.next({ data: JSON.stringify({ type: 'error', message: 'Unauthorized: No token provided' }) } as MessageEvent);
+        subscriber.next({
+          data: JSON.stringify({ type: 'error', message: 'Unauthorized: No token provided' }),
+        } as MessageEvent);
         subscriber.complete();
       });
     }
@@ -49,7 +51,9 @@ export class SseController {
       const payload = this.jwtService.verify(token);
       if (!payload?.uuid || !payload?.userId) {
         return new Observable<MessageEvent>((subscriber) => {
-          subscriber.next({ data: JSON.stringify({ type: 'error', message: 'Unauthorized: Invalid token payload' }) } as MessageEvent);
+          subscriber.next({
+            data: JSON.stringify({ type: 'error', message: 'Unauthorized: Invalid token payload' }),
+          } as MessageEvent);
           subscriber.complete();
         });
       }
@@ -63,9 +67,13 @@ export class SseController {
         }
       });
     } catch (error) {
-      this.logger.warn(`SSE connection rejected: JWT verification failed - ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.warn(
+        `SSE connection rejected: JWT verification failed - ${error instanceof Error ? error.message : String(error)}`,
+      );
       return new Observable<MessageEvent>((subscriber) => {
-        subscriber.next({ data: JSON.stringify({ type: 'error', message: 'Unauthorized: Token expired or invalid' }) } as MessageEvent);
+        subscriber.next({
+          data: JSON.stringify({ type: 'error', message: 'Unauthorized: Token expired or invalid' }),
+        } as MessageEvent);
         subscriber.complete();
       });
     }

@@ -143,12 +143,7 @@ describe('DataSourceController', () => {
   describe('list - 查询数据源列表', () => {
     it('应该返回分页的数据源列表', async () => {
       const query = { pageNum: 1, pageSize: 10 };
-      const expectedResult = Result.page(
-        [{ id: 1, name: 'test-db', type: 'postgresql' }],
-        1,
-        1,
-        10,
-      );
+      const expectedResult = Result.page([{ id: 1, name: 'test-db', type: 'postgresql' }], 1, 1, 10);
       mockDataSourceService.findAll.mockResolvedValue(expectedResult);
 
       const result = await controller.list(query as any);

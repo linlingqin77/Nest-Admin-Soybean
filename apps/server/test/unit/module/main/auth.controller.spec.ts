@@ -10,7 +10,7 @@ import { ConfigService as SysConfigService } from '@/modules/configs/config.serv
 import { AppConfigService } from '@/platform/config/app-config.service';
 import { PrismaService } from '@/platform/prisma';
 import { TokenBlacklistService } from '@/core/auth/token-blacklist.service';
-import { Result, ResponseCode } from '@/shared/response';
+import { ResponseCode, Result } from '@/shared/response';
 
 describe('AuthController', () => {
   let controller: AuthController;

@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { MultiLevelCacheService } from './multi-level-cache.service';
 import { PrismaService } from 'src/platform/prisma';
 import { CacheEnum } from 'src/shared/enums';
@@ -255,7 +255,9 @@ export class CacheWarmupService implements OnModuleInit, OnModuleDestroy {
         await this.executeTask(task);
         this.logger.debug(`Refreshed warmup task: ${task.name}`);
       } catch (error) {
-        this.logger.error(`Failed to refresh warmup task "${task.name}": ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.error(
+          `Failed to refresh warmup task "${task.name}": ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }, task.refreshInterval);
 

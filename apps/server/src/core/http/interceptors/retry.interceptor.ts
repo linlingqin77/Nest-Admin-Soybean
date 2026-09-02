@@ -1,15 +1,15 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
-  RETRY_KEY,
-  RetryOptions,
-  RetryExhaustedError,
+  BackoffStrategy,
   calculateBackoffDelay,
+  RETRY_KEY,
+  RetryExhaustedError,
+  RetryOptions,
   shouldRetryError,
   sleep,
-  BackoffStrategy,
 } from 'src/core/http/decorators/retry.decorator';
 
 /**
@@ -51,9 +51,7 @@ export class RetryInterceptor implements NestInterceptor {
     const options = this.normalizeOptions(retryOptions);
     const methodName = `${context.getClass().name}.${context.getHandler().name}`;
 
-    return next.handle().pipe(
-      catchError((error) => this.handleRetry(error, methodName, options, next)),
-    );
+    return next.handle().pipe(catchError((error) => this.handleRetry(error, methodName, options, next)));
   }
 
   /**
@@ -71,9 +69,7 @@ export class RetryInterceptor implements NestInterceptor {
     for (let attempt = 1; attempt <= options.maxRetries; attempt++) {
       // 检查错误是否应该重试
       if (!shouldRetryError(lastError, options.retryOn, options.noRetryOn)) {
-        this.logger.debug(
-          `[${methodName}] Error type ${lastError.constructor.name} is not retryable, skipping retry`,
-        );
+        this.logger.debug(`[${methodName}] Error type ${lastError.constructor.name} is not retryable, skipping retry`);
         throw lastError;
       }
 

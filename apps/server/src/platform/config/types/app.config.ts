@@ -6,22 +6,22 @@ import { IsBoolean, IsIn, IsNumber, IsOptional, IsString, IsUrl, Max, Min, Valid
  */
 export class LoggerConfig {
   @IsString()
-  dir!:  string;
+  dir!: string;
 
   @IsIn(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
-  level!:  string;
+  level!: string;
 
   @IsBoolean()
-  prettyPrint!:  boolean;
+  prettyPrint!: boolean;
 
   @IsBoolean()
-  toFile!:  boolean;
+  toFile!: boolean;
 
   @IsString({ each: true })
-  excludePaths!:  string[];
+  excludePaths!: string[];
 
   @IsString({ each: true })
-  sensitiveFields!:  string[];
+  sensitiveFields!: string[];
 }
 
 /**
@@ -29,24 +29,24 @@ export class LoggerConfig {
  */
 export class FileConfig {
   @IsBoolean()
-  isLocal!:  boolean;
+  isLocal!: boolean;
 
   @IsString()
-  location!:  string;
+  location!: string;
 
   @IsUrl({ require_tld: false })
-  domain!:  string;
+  domain!: string;
 
   @IsString()
-  serveRoot!:  string;
+  serveRoot!: string;
 
   @IsNumber()
   @Min(1)
   @Max(200)
-  maxSize!:  number;
+  maxSize!: number;
 
   @IsBoolean()
-  thumbnailEnabled!:  boolean;
+  thumbnailEnabled!: boolean;
 }
 
 /**
@@ -54,21 +54,21 @@ export class FileConfig {
  */
 export class AppConfig {
   @IsIn(['development', 'test', 'production'])
-  env!:  string;
+  env!: string;
 
   @IsString()
-  prefix!:  string;
+  prefix!: string;
 
   @IsNumber()
   @Min(1)
   @Max(65535)
-  port!:  number;
+  port!: number;
 
   @ValidateNested()
   @Type(() => LoggerConfig)
-  logger!:  LoggerConfig;
+  logger!: LoggerConfig;
 
   @ValidateNested()
   @Type(() => FileConfig)
-  file!:  FileConfig;
+  file!: FileConfig;
 }

@@ -1,7 +1,7 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { Prisma } from '@prisma/client';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 import { SYS_USER_TYPE } from 'src/shared/constants/index';
 import { BusinessException } from 'src/shared/exceptions';
@@ -9,15 +9,19 @@ import { ExportTable } from 'src/shared/utils/export';
 import { Response } from 'express';
 import {
   CreateTenantRequestDto,
-  UpdateTenantRequestDto,
   ListTenantRequestDto,
   SyncTenantPackageRequestDto,
   TenantResponseDto,
+  UpdateTenantRequestDto,
 } from './dto/index';
 import { toDto, toDtoList } from 'src/shared/utils/serialize.util';
 import { IgnoreTenant } from 'src/core/tenancy/decorators/tenant.decorator';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { Idempotent } from 'src/core/http/decorators/idempotent.decorator';
 import { Lock } from 'src/core/http/decorators/lock.decorator';
 import { RedisService } from 'src/platform/redis/redis.service';
@@ -58,13 +62,29 @@ export class TenantService {
   ) {
     this.logger.setContext(TenantService.name);
   }
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
+
+  /**
+   * 自动生成下一个租户ID（6位数字，从100001开始）
+   * @returns 新生成的租户ID
+   */
+  private async generateNextTenantId(): Promise<string> {
+    const lastTenant = await this.prisma.sysTenant.findFirst({
+      where: { tenantId: { not: TenantContext.SUPER_TENANT_ID } },
+      orderBy: { id: 'desc' },
+    });
+    const lastId = lastTenant?.tenantId ? parseInt(lastTenant.tenantId) : 100000;
+    return String(lastId + 1).padStart(6, '0');
+  }
 
   /**
    * 创建新租户
    *
    * 创建租户记录并自动创建租户管理员账号。
    * 租户ID会自动生成（6位数字，从100001开始）。
+   * 实现了唯一约束冲突重试机制以处理并发创建场景。
    *
    * @param createTenantDto - 创建租户的数据传输对象
    * @returns 操作结果
@@ -92,76 +112,99 @@ export class TenantService {
   @Transactional()
   async create(createTenantDto: CreateTenantRequestDto) {
     // 自动生成租户ID（6位数字，从100001开始）
+    // Idempotent 装饰器已防止同一 companyName 的并发提交，
+    // 但不同 companyName 的并发仍可能产生 ID 冲突，这里捕获冲突并重试
     let tenantId = createTenantDto.tenantId;
-    if (!tenantId) {
-      const lastTenant = await this.prisma.sysTenant.findFirst({
-        where: { tenantId: { not: TenantContext.SUPER_TENANT_ID } }, // 排除超级管理员租户
-        orderBy: { id: 'desc' },
-      });
-      const lastId = lastTenant?.tenantId ? parseInt(lastTenant.tenantId) : 100000;
-      tenantId = String(lastId + 1).padStart(6, '0');
-    }
+    const maxRetries = 3;
+    let retryCount = 0;
 
-    // 检查租户ID是否已存在
-    const existTenant = await this.prisma.sysTenant.findUnique({
-      where: { tenantId },
-    });
+    while (retryCount < maxRetries) {
+      if (!tenantId) {
+        tenantId = await this.generateNextTenantId();
+      }
 
-    if (existTenant) {
-      throw new BusinessException(ResponseCode.BAD_REQUEST, '租户ID已存在');
-    }
-
-    // 检查企业名称是否已存在
-    const existCompany = await this.prisma.sysTenant.findFirst({
-      where: { companyName: createTenantDto.companyName, delFlag: '0' },
-    });
-
-    if (existCompany) {
-      throw new BusinessException(ResponseCode.BAD_REQUEST, '企业名称已存在');
-    }
-
-    // 加密密码
-    const hashedPassword = hashSync(createTenantDto.password, 10);
-
-    try {
-      // 创建租户
-      await this.prisma.sysTenant.create({
-        data: {
-          tenantId,
-          contactUserName: createTenantDto.contactUserName,
-          contactPhone: createTenantDto.contactPhone,
-          companyName: createTenantDto.companyName,
-          licenseNumber: createTenantDto.licenseNumber,
-          address: createTenantDto.address,
-          intro: createTenantDto.intro,
-          domain: createTenantDto.domain,
-          packageId: createTenantDto.packageId,
-          expireTime: createTenantDto.expireTime,
-          accountCount: createTenantDto.accountCount ?? -1,
-          status: createTenantDto.status ?? '0',
-          remark: createTenantDto.remark,
-          delFlag: '0',
-        },
+      // 检查租户ID是否已存在
+      const existTenant = await this.prisma.sysTenant.findUnique({
+        where: { tenantId },
       });
 
-      // 创建租户管理员账号
-      await this.prisma.sysUser.create({
-        data: {
-          tenantId,
-          userName: createTenantDto.username,
-          nickName: '租户管理员',
-          userType: SYS_USER_TYPE.SYS,
-          password: hashedPassword,
-          status: StatusEnum.NORMAL,
-          delFlag: '0',
-        },
+      if (existTenant) {
+        if (createTenantDto.tenantId) {
+          throw new BusinessException(ResponseCode.BAD_REQUEST, '租户ID已存在');
+        }
+        // 自动生成的ID冲突，重新生成
+        tenantId = await this.generateNextTenantId();
+        retryCount++;
+        continue;
+      }
+
+      // 检查企业名称是否已存在
+      const existCompany = await this.prisma.sysTenant.findFirst({
+        where: { companyName: createTenantDto.companyName, delFlag: '0' },
       });
 
-      return Result.ok();
-    } catch (error) {
-      this.logger.error('创建租户失败', { action: 'tenant.create' });
-      throw new HttpException('创建租户失败', HttpStatus.INTERNAL_SERVER_ERROR);
+      if (existCompany) {
+        throw new BusinessException(ResponseCode.BAD_REQUEST, '企业名称已存在');
+      }
+
+      // 加密密码
+      const hashedPassword = hashSync(createTenantDto.password, 10);
+
+      try {
+        // 创建租户
+        await this.prisma.sysTenant.create({
+          data: {
+            tenantId,
+            contactUserName: createTenantDto.contactUserName,
+            contactPhone: createTenantDto.contactPhone,
+            companyName: createTenantDto.companyName,
+            licenseNumber: createTenantDto.licenseNumber,
+            address: createTenantDto.address,
+            intro: createTenantDto.intro,
+            domain: createTenantDto.domain,
+            packageId: createTenantDto.packageId,
+            expireTime: createTenantDto.expireTime,
+            accountCount: createTenantDto.accountCount ?? -1,
+            status: createTenantDto.status ?? '0',
+            remark: createTenantDto.remark,
+            delFlag: '0',
+          },
+        });
+
+        // 创建租户管理员账号
+        await this.prisma.sysUser.create({
+          data: {
+            tenantId,
+            userName: createTenantDto.username,
+            nickName: '租户管理员',
+            userType: SYS_USER_TYPE.SYS,
+            password: hashedPassword,
+            status: StatusEnum.NORMAL,
+            delFlag: '0',
+          },
+        });
+
+        return Result.ok();
+      } catch (error) {
+        const isUniqueConstraintError = error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
+
+        if (isUniqueConstraintError && !createTenantDto.tenantId && retryCount < maxRetries - 1) {
+          this.logger.warn(`租户ID ${tenantId} 已被占用，重新生成 (retry ${retryCount + 1}/${maxRetries})`);
+          tenantId = await this.generateNextTenantId();
+          retryCount++;
+          continue;
+        }
+
+        this.logger.error('创建租户失败', {
+          action: 'tenant.create',
+          error: error instanceof Error ? error.message : String(error),
+        });
+        throw new HttpException('创建租户失败', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
+
+    this.logger.error(`创建租户失败：租户ID生成冲突重试 ${maxRetries} 次后仍失败`);
+    throw new HttpException('创建租户失败，请稍后重试', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   /**
@@ -224,7 +267,7 @@ export class TenantService {
       };
     }
 
-    const [list, total] = await this.prisma.$transaction([
+    const [list, total] = (await this.prisma.$transaction([
       this.prisma.sysTenant.findMany({
         where,
         skip: query.skip,
@@ -232,7 +275,7 @@ export class TenantService {
         orderBy: { createTime: 'desc' },
       }),
       this.prisma.sysTenant.count({ where }),
-    ]) as [Array<{ packageId: number | null; [key: string]: unknown }>, number];
+    ])) as [Array<{ packageId: number | null; [key: string]: unknown }>, number];
 
     // 优化：使用单次查询获取所有套餐名称，避免 N+1 问题
     const packageIds = list.map((item: { packageId: number | null }) => item.packageId).filter(Boolean);
@@ -346,8 +389,14 @@ export class TenantService {
    * 将超级管理员租户的字典类型和字典数据同步到所有普通租户。
    * 已存在的字典类型会被跳过，不会覆盖。
    *
+   * 优化要点：
+   * - 一次性加载超级租户的全部字典类型与字典数据，避免 N+1 查询；
+   * - 对每个普通租户使用 createMany({ skipDuplicates: true }) 批量插入，
+   *   单租户的同步在 $transaction 中原子化，失败不影响其他租户；
+   * - 单租户失败被捕获并记录，不会中断整个批量同步流程。
+   *
    * @returns 同步结果，包含同步的租户数、新增数和跳过数
-   * @throws {HttpException} 当同步过程发生错误时抛出异常
+   * @throws {HttpException} 当同步过程发生致命错误时抛出异常
    *
    * @example
    * ```typescript
@@ -361,104 +410,121 @@ export class TenantService {
     leaseTime: 120,
     message: '租户字典同步正在进行中，请稍后重试',
   })
-  @Transactional()
   async syncTenantDict() {
     this.logger.info({ action: 'tenant.syncDict.start', message: '开始同步租户字典' });
 
     try {
-      // 获取所有非超管租户
-      const tenants = await this.prisma.sysTenant.findMany({
-        where: {
-          status: StatusEnum.NORMAL,
-          delFlag: '0',
-          tenantId: { not: TenantContext.SUPER_TENANT_ID },
-        },
-        select: { tenantId: true, companyName: true },
+      // 一次性加载所有目标租户与超级租户的字典数据（避免嵌套循环中的 N+1 查询）
+      const [tenants, dictTypes, allDictRows] = await Promise.all([
+        this.prisma.sysTenant.findMany({
+          where: {
+            status: StatusEnum.NORMAL,
+            delFlag: '0',
+            tenantId: { not: TenantContext.SUPER_TENANT_ID },
+          },
+          select: { tenantId: true, companyName: true },
+        }),
+        this.prisma.sysDictType.findMany({
+          where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
+        }),
+        this.prisma.sysDictData.findMany({
+          where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
+        }),
+      ]);
+
+      this.logger.info({
+        action: 'tenant.syncDict.tenantsFound',
+        message: `找到 ${tenants.length} 个租户需要同步字典`,
+      });
+      this.logger.info({
+        action: 'tenant.syncDict.dictTypesFound',
+        message: `找到 ${dictTypes.length} 个字典类型需要同步`,
       });
 
-      this.logger.info({ action: 'tenant.syncDict.tenantsFound', message: `找到 ${tenants.length} 个租户需要同步字典` });
-
-      // 获取超级管理员租户的字典类型
-      const dictTypes = await this.prisma.sysDictType.findMany({
-        where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
-      });
-
-      this.logger.info({ action: 'tenant.syncDict.dictTypesFound', message: `找到 ${dictTypes.length} 个字典类型需要同步` });
+      // 按 dictType 预分组字典数据，便于后续批量插入
+      const dictDataByType = new Map<string, typeof allDictRows>();
+      for (const data of allDictRows) {
+        const list = dictDataByType.get(data.dictType) ?? [];
+        list.push(data);
+        dictDataByType.set(data.dictType, list);
+      }
 
       let syncedCount = 0;
       let skippedCount = 0;
 
-      // 为每个租户同步字典类型
+      // 为每个租户同步字典类型，每个租户独立 try/catch，单租户失败不影响其他租户
       for (const tenant of tenants) {
-        this.logger.info({ action: 'tenant.syncDict.syncing', message: `正在为租户 ${tenant.companyName}(${tenant.tenantId}) 同步字典` });
+        this.logger.info({
+          action: 'tenant.syncDict.syncing',
+          message: `正在为租户 ${tenant.companyName}(${tenant.tenantId}) 同步字典`,
+        });
 
-        for (const dictType of dictTypes) {
-          // 检查该租户是否已有此字典类型
-          const exist = await this.prisma.sysDictType.findFirst({
-            where: {
+        try {
+          // 使用 $transaction 保证单租户的字典类型与字典数据插入是原子的
+          await this.prisma.$transaction(async (tx) => {
+            // 批量插入字典类型，使用 skipDuplicates 跳过已存在的记录
+            const dictTypeRows = dictTypes.map((dt) => ({
               tenantId: tenant.tenantId,
-              dictType: dictType.dictType,
-            },
-          });
-
-          if (!exist) {
-            // 创建字典类型
-            await this.prisma.sysDictType.create({
-              data: {
-                tenantId: tenant.tenantId,
-                dictName: dictType.dictName,
-                dictType: dictType.dictType,
-                status: dictType.status,
-                remark: dictType.remark,
-                delFlag: '0',
-                createBy: 'system',
-                updateBy: 'system',
-              },
+              dictName: dt.dictName,
+              dictType: dt.dictType,
+              status: dt.status,
+              remark: dt.remark,
+              delFlag: '0',
+              createBy: 'system',
+              updateBy: 'system',
+            }));
+            const dictTypeResult = await tx.sysDictType.createMany({
+              data: dictTypeRows,
+              skipDuplicates: true,
             });
 
-            // 获取该字典类型下的所有字典数据
-            const dictDatas = await this.prisma.sysDictData.findMany({
-              where: {
-                tenantId: TenantContext.SUPER_TENANT_ID,
-                dictType: dictType.dictType,
-                delFlag: '0',
-              },
-            });
+            // 收集该租户需要新增的字典数据条目
+            const dictDataRows: Prisma.SysDictDataCreateManyInput[] = [];
 
-            // 为该租户创建字典数据（使用 createMany 跳过已存在的记录）
-            if (dictDatas.length > 0) {
-              try {
-                await this.prisma.sysDictData.createMany({
-                  data: dictDatas.map((dictData) => ({
-                    tenantId: tenant.tenantId,
-                    dictSort: dictData.dictSort,
-                    dictLabel: dictData.dictLabel,
-                    dictValue: dictData.dictValue,
-                    dictType: dictData.dictType,
-                    cssClass: dictData.cssClass,
-                    listClass: dictData.listClass,
-                    isDefault: dictData.isDefault,
-                    status: dictData.status,
-                    remark: dictData.remark,
-                    delFlag: '0',
-                    createBy: 'system',
-                    updateBy: 'system',
-                  })),
-                  skipDuplicates: true, // 跳过重复记录
+            for (const dt of dictTypes) {
+              const dictDatas = dictDataByType.get(dt.dictType) ?? [];
+              if (dictDatas.length === 0) continue;
+              for (const dictData of dictDatas) {
+                dictDataRows.push({
+                  tenantId: tenant.tenantId,
+                  dictSort: dictData.dictSort ?? undefined,
+                  dictLabel: dictData.dictLabel,
+                  dictValue: dictData.dictValue,
+                  dictType: dictData.dictType,
+                  cssClass: dictData.cssClass ?? undefined,
+                  listClass: dictData.listClass ?? undefined,
+                  isDefault: dictData.isDefault ?? undefined,
+                  status: dictData.status ?? undefined,
+                  remark: dictData.remark ?? undefined,
+                  delFlag: '0',
+                  createBy: 'system',
+                  updateBy: 'system',
                 });
-              } catch (dataError) {
-                this.logger.warn(`为租户 ${tenant.tenantId} 同步字典数据时出错: ${dataError instanceof Error ? dataError.message : String(dataError)}`, { action: 'tenant.syncDict.dataError' });
               }
             }
 
-            syncedCount++;
-          } else {
-            skippedCount++;
-          }
+            if (dictDataRows.length > 0) {
+              await tx.sysDictData.createMany({
+                data: dictDataRows,
+                skipDuplicates: true,
+              });
+            }
+
+            syncedCount += dictTypeResult.count;
+            skippedCount += dictTypeRows.length - dictTypeResult.count;
+          });
+        } catch (tenantError) {
+          this.logger.warn(
+            `为租户 ${tenant.tenantId} 同步字典失败: ${tenantError instanceof Error ? tenantError.message : String(tenantError)}`,
+            { action: 'tenant.syncDict.tenantError' },
+          );
         }
       }
 
-      this.logger.info({ action: 'tenant.syncDict.complete', message: `字典同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个` });
+      this.logger.info({
+        action: 'tenant.syncDict.complete',
+        message: `字典同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个`,
+      });
 
       return Result.ok({
         message: `同步完成`,
@@ -470,7 +536,10 @@ export class TenantService {
       });
     } catch (error) {
       this.logger.error('同步租户字典失败', { action: 'tenant.syncDict.failed' });
-      throw new HttpException(`同步租户字典失败: ${error instanceof Error ? error.message : String(error)}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `同步租户字典失败: ${error instanceof Error ? error.message : String(error)}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -520,13 +589,55 @@ export class TenantService {
 
       // 同步菜单权限
       if (tenantPackage.menuIds) {
-        const menuIds = tenantPackage.menuIds.split(',').map((id) => Number(id));
-        // 这里可以实现菜单权限同步逻辑
+        const menuIds = tenantPackage.menuIds
+          .split(',')
+          .map((id) => Number(id))
+          .filter((id) => Number.isFinite(id) && id > 0);
+
+        // 找到该租户域内优先级最高的角色，把套餐里的菜单赋给它。
+        // SysRoleMenu 是 (roleId, menuId) 复合主键，所以删除后再批量插入
+        // 是最简洁的"完全替换"语义。
+        const tenantRole = await this.prisma.sysRole.findFirst({
+          where: { tenantId },
+          orderBy: { roleId: 'asc' },
+        });
+
+        if (tenantRole && menuIds.length > 0) {
+          await this.prisma.sysRoleMenu.deleteMany({
+            where: { roleId: tenantRole.roleId },
+          });
+          await this.prisma.sysRoleMenu.createMany({
+            data: menuIds.map((menuId) => ({
+              roleId: tenantRole.roleId,
+              menuId,
+            })),
+            skipDuplicates: true,
+          });
+
+          this.logger.info({
+            action: 'tenant.syncPackage.menus',
+            message: `已为租户 ${tenantId} 同步套餐菜单权限`,
+            detail: {
+              tenantId,
+              packageId,
+              roleId: tenantRole.roleId,
+              menuCount: menuIds.length,
+            },
+          });
+        } else if (menuIds.length > 0) {
+          // 没有可绑定的角色 —— 不要静默吞掉，至少要记录。
+          this.logger.warn(
+            `租户 ${tenantId} 未找到可绑定的角色，套餐菜单权限未同步 (packageId=${packageId}, menuCount=${menuIds.length})`,
+          );
+        }
       }
 
       return Result.ok();
     } catch (error) {
-      this.logger.error('同步租户套餐失败', { action: 'tenant.syncPackage.failed' });
+      this.logger.error('同步租户套餐失败', {
+        action: 'tenant.syncPackage.failed',
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw new HttpException('同步租户套餐失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -561,21 +672,30 @@ export class TenantService {
         select: { tenantId: true, companyName: true },
       });
 
-      this.logger.info({ action: 'tenant.syncConfig.tenantsFound', message: `找到 ${tenants.length} 个租户需要同步配置` });
+      this.logger.info({
+        action: 'tenant.syncConfig.tenantsFound',
+        message: `找到 ${tenants.length} 个租户需要同步配置`,
+      });
 
       // 获取超级管理员租户的配置
       const configs = await this.prisma.sysConfig.findMany({
         where: { tenantId: TenantContext.SUPER_TENANT_ID, delFlag: '0' },
       });
 
-      this.logger.info({ action: 'tenant.syncConfig.configsFound', message: `找到 ${configs.length} 个配置项需要同步` });
+      this.logger.info({
+        action: 'tenant.syncConfig.configsFound',
+        message: `找到 ${configs.length} 个配置项需要同步`,
+      });
 
       let syncedCount = 0;
       const skippedCount = 0;
 
       // 为每个租户同步配置（使用批量操作）
       for (const tenant of tenants) {
-        this.logger.info({ action: 'tenant.syncConfig.syncing', message: `正在为租户 ${tenant.companyName}(${tenant.tenantId}) 同步配置` });
+        this.logger.info({
+          action: 'tenant.syncConfig.syncing',
+          message: `正在为租户 ${tenant.companyName}(${tenant.tenantId}) 同步配置`,
+        });
 
         // 批量创建配置（跳过已存在的）
         try {
@@ -596,14 +716,20 @@ export class TenantService {
 
           syncedCount += result.count;
         } catch (configError) {
-          this.logger.warn(`为租户 ${tenant.tenantId} 同步配置时出错: ${configError instanceof Error ? configError.message : String(configError)}`, { action: 'tenant.syncConfig.error' });
+          this.logger.warn(
+            `为租户 ${tenant.tenantId} 同步配置时出错: ${configError instanceof Error ? configError.message : String(configError)}`,
+            { action: 'tenant.syncConfig.error' },
+          );
         }
 
         // 清除租户配置缓存
         await this.redisService.del(`${CacheEnum.SYS_CONFIG_KEY}${tenant.tenantId}`);
       }
 
-      this.logger.info({ action: 'tenant.syncConfig.complete', message: `配置同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个` });
+      this.logger.info({
+        action: 'tenant.syncConfig.complete',
+        message: `配置同步完成: 新增 ${syncedCount} 个，跳过 ${skippedCount} 个`,
+      });
 
       return Result.ok({
         message: '同步完成',
@@ -615,7 +741,10 @@ export class TenantService {
       });
     } catch (error) {
       this.logger.error('同步租户配置失败', { action: 'tenant.syncConfig.failed' });
-      throw new HttpException(`同步租户配置失败: ${error instanceof Error ? error.message : String(error)}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `同步租户配置失败: ${error instanceof Error ? error.message : String(error)}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -741,7 +870,10 @@ export class TenantService {
       await this.redisService.set(loginKey, userData);
     }
 
-    this.logger.info({ action: 'tenant.switch', message: `用户 ${user.userName} 从租户 ${originalTenantId} 切换到租户 ${targetTenantId}` });
+    this.logger.info({
+      action: 'tenant.switch',
+      message: `用户 ${user.userName} 从租户 ${originalTenantId} 切换到租户 ${targetTenantId}`,
+    });
 
     return Result.ok({
       success: true,
@@ -783,7 +915,10 @@ export class TenantService {
     // 删除切换记录
     await this.redisService.del(redisKey);
 
-    this.logger.info({ action: 'tenant.restore', message: `用户 ${user.userName} 恢复到原租户 ${switchOriginal.originalTenantId}` });
+    this.logger.info({
+      action: 'tenant.restore',
+      message: `用户 ${user.userName} 恢复到原租户 ${switchOriginal.originalTenantId}`,
+    });
 
     return Result.ok({
       success: true,

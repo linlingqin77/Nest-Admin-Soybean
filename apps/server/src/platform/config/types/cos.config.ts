@@ -6,25 +6,25 @@ import { IsOptional, IsString } from 'class-validator';
 export class CosConfig {
   @IsString()
   @IsOptional()
-  secretId!:  string;
+  secretId!: string;
 
   @IsString()
   @IsOptional()
-  secretKey!:  string;
+  secretKey!: string;
 
   @IsString()
   @IsOptional()
-  bucket!:  string;
+  bucket!: string;
 
   @IsString()
   @IsOptional()
-  region!:  string;
+  region!: string;
 
   @IsString()
   @IsOptional()
-  domain!:  string;
+  domain!: string;
 
   @IsString()
   @IsOptional()
-  location!:  string;
+  location!: string;
 }

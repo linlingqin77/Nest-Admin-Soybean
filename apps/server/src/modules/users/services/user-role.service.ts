@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { BusinessException } from 'src/shared/exceptions';
-import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
+import { StatusEnum } from 'src/shared/enums/index';
 import { ResponseCode, Result } from 'src/shared/response';
 import { toDtoList } from 'src/shared/utils/serialize.util';
 import { PaginationHelper } from 'src/shared/utils/pagination.helper';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { AllocatedListRequestDto } from '../dto/index';
 import { UserResponseDto } from '../dto/responses';
-import { AuthUserCancelDto, AuthUserCancelAllDto, AuthUserSelectAllDto } from 'src/modules/roles/dto/index';
+import { AuthUserCancelAllDto, AuthUserCancelDto, AuthUserSelectAllDto } from 'src/modules/roles/dto/index';
 import { UserRepository } from '../user.repository';
 import { RoleService } from 'src/modules/roles/role.service';
-import { SysDept, SysRole, SysUser, Prisma } from '@prisma/client';
+import { Prisma, SysDept, SysRole, SysUser } from '@prisma/client';
+import { attachDeptInfo } from 'src/shared/utils/user-dept.util';
 
 type UserWithDept = SysUser & { dept?: SysDept | null };
 type UserWithRelations = UserWithDept & { roles?: SysRole[] };
@@ -27,52 +32,8 @@ export class UserRoleService {
     private readonly userRepo: UserRepository,
     private readonly roleService: RoleService,
   ) {}
-  private get prisma() { return this.txHost.tx; }
-
-  /**
-   * 附加部门信息到用户列表
-   */
-  private async attachDeptInfo(users: SysUser[]): Promise<UserWithDept[]> {
-    if (!users.length) {
-      return users;
-    }
-    const deptIds = Array.from(
-      new Set(
-        users
-          .map((item) => item.deptId)
-          .filter((deptId): deptId is number => typeof deptId === 'number' && !Number.isNaN(deptId)),
-      ),
-    );
-    if (!deptIds.length) {
-      return users;
-    }
-    const depts = await this.prisma.sysDept.findMany({
-      where: {
-        deptId: { in: deptIds },
-        delFlag: '0',
-      },
-    });
-    const deptMap = new Map<number, SysDept>(depts.map((dept) => [dept.deptId, dept]));
-    return users.map((item) => ({
-      ...item,
-      dept: deptMap.get(item.deptId ?? -1) ?? null,
-    }));
-  }
-
-  /**
-   * 获取用户角色ID列表
-   */
-  private async getRoleIds(userIds: Array<number>) {
-    if (!userIds.length) {
-      return [];
-    }
-    const roleList = await this.prisma.sysUserRole.findMany({
-      where: {
-        userId: { in: userIds },
-      },
-      select: { roleId: true },
-    });
-    return [...new Set(roleList.map((item) => item.roleId))];
+  private get prisma() {
+    return this.txHost.tx;
   }
 
   /**
@@ -91,17 +52,15 @@ export class UserRoleService {
     const dept = user.deptId
       ? await this.prisma.sysDept.findFirst({ where: { delFlag: '0', deptId: user.deptId } })
       : null;
-    const roleIds = await this.getRoleIds([userId]);
+    const roleIds = await this.userRepo.findRoleIdsByUserIds([userId]);
 
     const enrichedUser: UserWithRelations = {
       ...user,
       dept,
-      roles: allRoles.filter((item) => {
-        if (roleIds.includes(item.roleId)) {
-          (item as any).flag = true;
-        }
-        return true;
-      }),
+      roles: allRoles.map((item) => ({
+        ...item,
+        flag: roleIds.includes(item.roleId),
+      })),
     };
 
     return Result.ok({
@@ -160,7 +119,7 @@ export class UserRoleService {
       this.prisma.sysUser.count({ where }),
     ]);
 
-    const listWithDept = await this.attachDeptInfo(list);
+    const listWithDept = await attachDeptInfo(this.prisma, list);
 
     return Result.page(toDtoList(UserResponseDto, listWithDept), total, query.pageNum, query.pageSize);
   }
@@ -200,7 +159,7 @@ export class UserRoleService {
       this.prisma.sysUser.count({ where }),
     ]);
 
-    const listWithDept = await this.attachDeptInfo(list);
+    const listWithDept = await attachDeptInfo(this.prisma, list);
 
     return Result.page(toDtoList(UserResponseDto, listWithDept), total, query.pageNum, query.pageSize);
   }

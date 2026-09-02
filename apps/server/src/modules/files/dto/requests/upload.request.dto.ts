@@ -1,32 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class ChunkFileDto {
   @ApiProperty({ description: '上传ID' })
   @IsString()
   @IsNotEmpty()
-  uploadId!:  string;
+  uploadId!: string;
 
   @ApiProperty({ description: '文件名' })
   @IsString()
   @IsNotEmpty()
-  fileName!:  string;
+  fileName!: string;
 
   @ApiProperty({ description: '分片索引' })
   @IsNumber()
-  index!:  number;
+  index!: number;
 }
 
 export class ChunkMergeFileDto {
   @ApiProperty({ description: '上传ID' })
   @IsString()
   @IsNotEmpty()
-  uploadId!:  string;
+  uploadId!: string;
 
   @ApiProperty({ description: '文件名' })
   @IsString()
   @IsNotEmpty()
-  fileName!:  string;
+  fileName!: string;
 }
 
 export class FileUploadDto {
@@ -42,5 +42,5 @@ export class uploadIdDto {
   @ApiProperty({ description: '上传ID' })
   @IsString()
   @IsNotEmpty()
-  uploadId!:  string;
+  uploadId!: string;
 }

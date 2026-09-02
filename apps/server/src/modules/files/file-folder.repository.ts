@@ -15,12 +15,7 @@ export class FileFolderRepository extends BaseRepository<SysFileFolder, Prisma.S
   /**
    * 检查同级目录下是否存在同名文件夹
    */
-  async existsByName(
-    folderName: string,
-    parentId: number,
-    tenantId: string,
-    excludeId?: number,
-  ): Promise<boolean> {
+  async existsByName(folderName: string, parentId: number, tenantId: string, excludeId?: number): Promise<boolean> {
     const where: Prisma.SysFileFolderWhereInput = {
       folderName,
       parentId,

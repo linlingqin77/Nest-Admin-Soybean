@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { TenantContext } from '../context/tenant.context';
-import { SUPER_TENANT_ID, hasTenantField } from '../constants/tenant-models';
+import { hasTenantField, SUPER_TENANT_ID } from '../constants/tenant-models';
 
 // 重新导出常量，保持向后兼容
 export { SUPER_TENANT_ID, hasTenantField };

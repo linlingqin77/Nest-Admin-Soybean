@@ -10,7 +10,7 @@ import { ToolService } from '@/modules/tools/tool.service';
 import { Response } from 'express';
 import { Result } from '@/shared/response';
 import { Reflector } from '@nestjs/core';
-import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 // Mock MultiThrottleGuard
 jest.mock('@/core/http/guards/multi-throttle.guard', () => ({
@@ -73,12 +73,7 @@ describe('ToolController', () => {
   describe('findAll - 数据表列表', () => {
     it('应该返回分页的数据表列表', async () => {
       const query = { pageNum: 1, pageSize: 10 };
-      const expectedResult = Result.page(
-        [{ tableId: 1, tableName: 'sys_user', tableComment: '用户表' }],
-        1,
-        1,
-        10,
-      );
+      const expectedResult = Result.page([{ tableId: 1, tableName: 'sys_user', tableComment: '用户表' }], 1, 1, 10);
       mockToolService.findAll.mockResolvedValue(expectedResult);
 
       const result = await controller.findAll(query as any);
@@ -265,11 +260,7 @@ describe('ToolController', () => {
 
       await controller.batchGenCodeByIds(dto as any, mockResponse as Response);
 
-      expect(mockToolService.batchGenCodeByIds).toHaveBeenCalledWith(
-        dto.tableIds,
-        mockResponse,
-        dto.projectName,
-      );
+      expect(mockToolService.batchGenCodeByIds).toHaveBeenCalledWith(dto.tableIds, mockResponse, dto.projectName);
     });
   });
 
@@ -277,9 +268,7 @@ describe('ToolController', () => {
     it('应该返回预览的代码内容', async () => {
       const id = '1';
       const expectedResult = Result.ok({
-        files: [
-          { name: 'user.controller.ts', path: 'src/controller/user.controller.ts', content: '...' },
-        ],
+        files: [{ name: 'user.controller.ts', path: 'src/controller/user.controller.ts', content: '...' }],
         fileTree: [],
         totalFiles: 1,
         totalLines: 100,

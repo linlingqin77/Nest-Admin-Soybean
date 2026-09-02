@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsArray, IsOptional, ArrayMinSize } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
@@ -9,11 +9,11 @@ export class SendNotifyMessageRequestDto {
   @IsArray()
   @ArrayMinSize(1)
   @IsNumber({}, { each: true })
-  userIds!:  number[];
+  userIds!: number[];
 
   @ApiProperty({ description: '模板编码', example: 'system_notify' })
   @IsString()
-  templateCode!:  string;
+  templateCode!: string;
 
   @ApiPropertyOptional({ description: '模板参数', example: { content: '系统升级通知' } })
   @IsOptional()
@@ -26,7 +26,7 @@ export class SendNotifyMessageRequestDto {
 export class SendNotifyAllRequestDto {
   @ApiProperty({ description: '模板编码', example: 'system_notify' })
   @IsString()
-  templateCode!:  string;
+  templateCode!: string;
 
   @ApiPropertyOptional({ description: '模板参数', example: { content: '系统升级通知' } })
   @IsOptional()

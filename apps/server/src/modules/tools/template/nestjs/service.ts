@@ -236,7 +236,9 @@ const getListSelectDefinition = (options: ServiceOptions, modelName: string) => 
   const { columns } = options;
   if (!columns) return '';
 
-  const fields = columns.filter((column: ColumnInfo) => column.isList === '1').map((column: ColumnInfo) => column.javaField);
+  const fields = columns
+    .filter((column: ColumnInfo) => column.isList === '1')
+    .map((column: ColumnInfo) => column.javaField);
   if (!fields.length) {
     return '';
   }

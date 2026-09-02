@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
-import { SysAuditLog, Prisma } from '@prisma/client';
+import { Prisma, SysAuditLog } from '@prisma/client';
 import { PrismaService } from '../../platform/prisma/prisma.service';
 import { TenantContext } from '../../core/tenancy/context/tenant.context';
 
@@ -97,7 +97,10 @@ export class AuditService implements OnModuleDestroy {
         data: record,
       });
     } catch (error) {
-      this.logger.error(`Failed to write audit log: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `Failed to write audit log: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 
@@ -127,7 +130,10 @@ export class AuditService implements OnModuleDestroy {
   private startFlushTimer(): void {
     this.flushTimer = setInterval(() => {
       this.flush().catch((error) => {
-        this.logger.error(`Failed to flush audit logs: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+        this.logger.error(
+          `Failed to flush audit logs: ${error instanceof Error ? error.message : String(error)}`,
+          error instanceof Error ? error.stack : String(error),
+        );
       });
     }, this.FLUSH_INTERVAL);
   }
@@ -148,7 +154,10 @@ export class AuditService implements OnModuleDestroy {
       });
       this.logger.debug(`Flushed ${records.length} audit logs`);
     } catch (error) {
-      this.logger.error(`Failed to batch write audit logs: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `Failed to batch write audit logs: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       // 将失败的记录放回队列头部
       this.writeQueue.unshift(...records);
     }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, SysDictType, SysDictData } from '@prisma/client';
+import { Prisma, SysDictData, SysDictType } from '@prisma/client';
 import { SoftDeleteRepository } from 'src/platform/repository';
 import { PrismaService } from 'src/platform/prisma';
 

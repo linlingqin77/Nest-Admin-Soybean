@@ -13,12 +13,12 @@ export class SocialLoginRequestDto {
   @ApiProperty({ description: '社交平台来源', required: true })
   @IsNotEmpty()
   @IsString()
-  source!:  string;
+  source!: string;
 
   @ApiProperty({ description: '社交平台授权码', required: true })
   @IsNotEmpty()
   @IsString()
-  socialCode!:  string;
+  socialCode!: string;
 
   @ApiProperty({ description: '社交平台状态码', required: false })
   @IsOptional()

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ResponseCode, ResponseMessage, IResponse, IPaginatedData, getResponseMessage } from './response.interface';
+import { getResponseMessage, IPaginatedData, IResponse, ResponseCode, ResponseMessage } from './response.interface';
 
 /**
  * 统一响应结果类

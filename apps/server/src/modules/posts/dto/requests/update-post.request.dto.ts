@@ -8,5 +8,5 @@ export class UpdatePostRequestDto extends CreatePostRequestDto {
     description: '岗位ID',
   })
   @IsNumber()
-  postId!:  number;
+  postId!: number;
 }

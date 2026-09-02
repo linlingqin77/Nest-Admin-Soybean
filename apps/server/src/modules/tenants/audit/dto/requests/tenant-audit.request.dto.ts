@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumber, IsDateString, IsEnum } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PageQueryDto } from 'src/shared/dto/base.dto';
 
@@ -59,32 +59,32 @@ export class ListTenantAuditLogRequestDto extends PageQueryDto {
 export class CreateTenantAuditLogRequestDto {
   @ApiProperty({ description: '租户ID' })
   @IsString()
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '操作人ID' })
   @IsNumber()
   @Type(() => Number)
-  operatorId!:  number;
+  operatorId!: number;
 
   @ApiProperty({ description: '操作人姓名' })
   @IsString()
-  operatorName!:  string;
+  operatorName!: string;
 
   @ApiProperty({ description: '操作类型', enum: AuditActionType })
   @IsEnum(AuditActionType)
-  actionType!:  AuditActionType;
+  actionType!: AuditActionType;
 
   @ApiProperty({ description: '操作描述' })
   @IsString()
-  actionDesc!:  string;
+  actionDesc!: string;
 
   @ApiProperty({ description: '操作模块' })
   @IsString()
-  modules!:  string;
+  modules!: string;
 
   @ApiProperty({ description: 'IP地址' })
   @IsString()
-  ipAddress!:  string;
+  ipAddress!: string;
 
   @ApiPropertyOptional({ description: 'User Agent' })
   @IsOptional()

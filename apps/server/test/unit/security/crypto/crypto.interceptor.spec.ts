@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of } from 'rxjs';
 import { DecryptInterceptor } from '@/core/crypto/crypto.interceptor';
@@ -188,9 +188,7 @@ describe('DecryptInterceptor', () => {
       mockCryptoService.isEnabled.mockReturnValue(true);
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
       // 模拟异步方法抛出错误
-      mockCryptoService.decryptRequest.mockImplementation(() =>
-        Promise.reject(new Error('Decryption failed')),
-      );
+      mockCryptoService.decryptRequest.mockImplementation(() => Promise.reject(new Error('Decryption failed')));
 
       const originalBody = {
         encryptedKey: 'invalid-key',

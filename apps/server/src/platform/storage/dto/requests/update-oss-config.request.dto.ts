@@ -1,11 +1,11 @@
-import { IsString, IsEnum, Length, IsOptional, IsInt } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema, YesNo } from 'src/shared/enums';
 
 export class UpdateOssConfigRequestDto {
   @ApiProperty({ required: true, description: 'OSS配置ID' })
   @IsInt()
-  ossConfigId!:  number;
+  ossConfigId!: number;
 
   @ApiProperty({ required: false, description: '配置名称' })
   @IsOptional()
@@ -88,7 +88,7 @@ export class UpdateOssConfigRequestDto {
 export class ChangeOssConfigStatusRequestDto {
   @ApiProperty({ required: true, description: 'OSS配置ID' })
   @IsInt()
-  ossConfigId!:  number;
+  ossConfigId!: number;
 
   @ApiProperty({
     enum: StatusEnum,
@@ -99,5 +99,5 @@ export class ChangeOssConfigStatusRequestDto {
   })
   @IsString()
   @IsEnum(StatusEnum)
-  status!:  string;
+  status!: string;
 }

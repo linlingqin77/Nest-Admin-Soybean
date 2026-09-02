@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 
 /**
@@ -8,19 +8,19 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class SmsChannelResponseDto extends BaseResponseDto {
   @ApiProperty({ description: '渠道ID' })
   @Expose()
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '渠道编码' })
   @Expose()
-  code!:  string;
+  code!: string;
 
   @ApiProperty({ description: '渠道名称' })
   @Expose()
-  name!:  string;
+  name!: string;
 
   @ApiProperty({ description: '签名' })
   @Expose()
-  signature!:  string;
+  signature!: string;
 
   @ApiPropertyOptional({ description: 'API Key' })
   @Expose()
@@ -35,7 +35,7 @@ export class SmsChannelResponseDto extends BaseResponseDto {
 
   @ApiProperty({ description: '状态' })
   @Expose()
-  status!:  string;
+  status!: string;
 
   @ApiPropertyOptional({ description: '备注' })
   @Expose()

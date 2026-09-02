@@ -2,9 +2,9 @@ import * as fc from 'fast-check';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Reflector } from '@nestjs/core';
 import {
+  TenantJobContext,
   TenantJobExecutor,
   TenantJobOptions,
-  TenantJobContext,
   TenantJobResult,
 } from '@/core/tenancy/decorators/tenant-job.decorator';
 import { PrismaService } from '@/platform/prisma';

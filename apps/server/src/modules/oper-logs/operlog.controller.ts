@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Delete, Query, Post, Res, Body } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query, Res } from '@nestjs/common';
 import { OperlogService } from './operlog.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
@@ -8,10 +8,10 @@ import { BaseOperLogDto, ListOperLogRequestDto } from './dto/operLog.dto';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { Response } from 'express';
 import {
-  OperLogListResponseDto,
-  OperLogResponseDto,
   ClearLogResultResponseDto,
   DeleteLogResultResponseDto,
+  OperLogListResponseDto,
+  OperLogResponseDto,
 } from 'src/modules/monitors/dto/responses';
 
 @ApiTags('操作日志')
@@ -76,8 +76,8 @@ export class OperlogController {
   })
   @RequirePermission('monitor:operlog:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async exportData(@Res() res: Response, @Body() body: ListOperLogRequestDto): Promise<void> {
-    return this.operlogService.export(res, body);
+  @Get('/export')
+  async exportData(@Res() res: Response, @Query() query: ListOperLogRequestDto): Promise<void> {
+    return this.operlogService.export(res, query);
   }
 }

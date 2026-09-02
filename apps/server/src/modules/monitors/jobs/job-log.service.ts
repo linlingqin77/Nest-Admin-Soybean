@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ListJobLogRequestDto } from './dto/create-job.dto';
 import { JobLogResponseDto } from './dto/job.response.dto';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { ExportTable } from 'src/shared/utils/export';
 import { toDtoList } from 'src/shared/utils';
 import { Response } from 'express';

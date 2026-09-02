@@ -1,16 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsOptional,
-  IsInt,
-  IsString,
-  IsEnum,
-  Min,
-  Max,
-  IsDateString,
-  ValidateNested,
   IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
 } from 'class-validator';
-import { Type, Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 /**
  * 排序方向枚举
@@ -396,7 +396,7 @@ export class IdsDto {
   @ApiProperty({ description: 'ID 数组', example: [1, 2, 3], type: [Number] })
   @IsInt({ each: true })
   @Type(() => Number)
-  ids!:  number[];
+  ids!: number[];
 }
 
 /**
@@ -405,7 +405,7 @@ export class IdsDto {
 export class StringIdsDto {
   @ApiProperty({ description: 'ID 数组', example: ['1', '2', '3'], type: [String] })
   @IsString({ each: true })
-  ids!:  string[];
+  ids!: string[];
 }
 
 /**
@@ -415,7 +415,7 @@ export class IdParamDto {
   @ApiProperty({ description: 'ID', example: 1 })
   @Type(() => Number)
   @IsInt()
-  id!:  number;
+  id!: number;
 }
 
 /**

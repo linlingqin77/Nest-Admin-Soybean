@@ -1,4 +1,4 @@
-import { Module, Global, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppConfigService } from './platform/config/app-config.service';
 import { ThrottlerModule } from '@nestjs/throttler';

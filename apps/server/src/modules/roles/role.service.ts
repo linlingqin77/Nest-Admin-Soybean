@@ -1,21 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
 import { ListToTree } from 'src/shared/utils/index';
 import { ExportTable } from 'src/shared/utils/export';
 import { toDto, toDtoList } from 'src/shared/utils/serialize.util';
 
 import { DataScopeEnum, DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { MenuService } from '../menus/menu.service';
 import {
-  CreateRoleRequestDto,
-  UpdateRoleRequestDto,
-  ListRoleRequestDto,
   ChangeRoleStatusRequestDto,
+  CreateRoleRequestDto,
+  ListRoleRequestDto,
   RoleResponseDto,
+  UpdateRoleRequestDto,
 } from './dto/index';
 import { RoleRepository } from './role.repository';
 import { Uniq } from 'src/shared/utils/index';
@@ -40,7 +44,9 @@ export class RoleService {
     private readonly roleRepo: RoleRepository,
     private readonly menuService: MenuService,
   ) {}
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
 
   /**
    * 创建新角色

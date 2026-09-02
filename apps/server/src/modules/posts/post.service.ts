@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
 import { DelFlagEnum } from 'src/shared/enums/index';
 import { ExportTable } from 'src/shared/utils/export';
 import { Response } from 'express';
-import { CreatePostRequestDto, UpdatePostRequestDto, ListPostRequestDto, PostResponseDto } from './dto/index';
+import { CreatePostRequestDto, ListPostRequestDto, PostResponseDto, UpdatePostRequestDto } from './dto/index';
 import { DeptService } from '../depts/dept.service';
 import { PostRepository } from './post.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { toDto, toDtoList } from 'src/shared/utils/serialize.util';
 
 @Injectable()
@@ -18,7 +22,9 @@ export class PostService {
     private readonly deptService: DeptService,
     private readonly postRepo: PostRepository,
   ) {}
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
   async create(createPostDto: CreatePostRequestDto) {
     await this.postRepo.create({
       ...createPostDto,

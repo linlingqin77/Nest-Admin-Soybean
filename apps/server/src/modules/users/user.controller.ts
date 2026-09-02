@@ -1,43 +1,44 @@
 import {
-  Controller,
-  Get,
-  Post,
+  BadRequestException,
   Body,
-  Put,
-  Param,
-  Query,
-  Res,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
   Request,
+  Res,
   UploadedFile,
   UseInterceptors,
-  BadRequestException,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { Response } from 'express';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { RequireRole } from 'src/core/http/decorators/require-role.decorator';
 import { UploadService } from 'src/modules/files/upload.service';
 import {
-  CreateUserRequestDto,
-  UpdateUserRequestDto,
-  ListUserRequestDto,
-  ChangeUserStatusRequestDto,
-  ResetPwdRequestDto,
-  UpdateProfileRequestDto,
-  UpdatePwdRequestDto,
+  AuthRoleResponseDto,
   BatchCreateUserRequestDto,
   BatchDeleteUserRequestDto,
   BatchResultResponseDto,
-  UserResponseDto,
-  UserListResponseDto,
-  UserDetailResponseDto,
-  UserProfileResponseDto,
-  UserAvatarResponseDto,
-  AuthRoleResponseDto,
+  ChangeUserStatusRequestDto,
+  CreateUserRequestDto,
   CurrentUserInfoResponseDto,
+  ListUserRequestDto,
+  ResetPwdRequestDto,
+  UpdateProfileRequestDto,
+  UpdatePwdRequestDto,
+  UpdateUserRequestDto,
+  UserAvatarResponseDto,
+  UserDetailResponseDto,
+  UserListResponseDto,
   UserOptionSelectResponseDto,
+  UserProfileResponseDto,
+  UserResponseDto,
 } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Result } from 'src/shared/response';
@@ -213,8 +214,8 @@ export class UserController {
   })
   @RequireRole('admin')
   @Get('authRole/:id')
-  authRole(@Param('id') id: string) {
-    return this.userService.authRole(+id);
+  authRole(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.authRole(id);
   }
 
   @Api({
@@ -248,8 +249,8 @@ export class UserController {
     type: UserListResponseDto,
   })
   @Get('list/dept/:deptId')
-  findByDeptId(@Param('deptId') deptId: string) {
-    return this.userService.findByDeptId(+deptId);
+  findByDeptId(@Param('deptId', ParseIntPipe) deptId: number) {
+    return this.userService.findByDeptId(deptId);
   }
 
   @Api({
@@ -260,8 +261,8 @@ export class UserController {
   })
   @RequirePermission('system:user:query')
   @Get(':userId')
-  findOne(@Param('userId') userId: string) {
-    return this.userService.findOne(+userId);
+  findOne(@Param('userId', ParseIntPipe) userId: number, @Query('withReferenceData') withReferenceData?: string) {
+    return this.userService.findOne(userId, withReferenceData === 'true');
   }
 
   @Api({
@@ -325,8 +326,8 @@ export class UserController {
   })
   @RequirePermission('system:user:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async export(@Res() res: Response, @Body() body: ListUserRequestDto, @User() user: UserDto): Promise<void> {
-    return this.userService.export(res, body, user.user);
+  @Get('/export')
+  async export(@Res() res: Response, @Query() query: ListUserRequestDto, @User() user: UserDto): Promise<void> {
+    return this.userService.export(res, query, user.user);
   }
 }

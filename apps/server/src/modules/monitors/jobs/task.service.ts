@@ -5,7 +5,7 @@ import { JobLogService } from './job-log.service';
 import { BusinessException } from 'src/shared/exceptions/index';
 import { ResponseCode } from 'src/shared/response';
 import { PrismaService } from 'src/platform/prisma';
-import { StatusEnum, DelFlagEnum } from 'src/shared/enums/index';
+import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 import { IgnoreTenant } from 'src/core/tenancy/decorators/tenant.decorator';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { NoticeService } from 'src/modules/notices/notice.service';
@@ -228,17 +228,18 @@ export class TaskService implements OnModuleInit {
       let alertCount = 0;
 
       for (const tenant of tenants) {
-        const { tenantId, companyName, storageQuota, storageUsed, contactUserName } = tenant;
+        try {
+          const { tenantId, companyName, storageQuota, storageUsed, contactUserName } = tenant;
 
-        // 计算使用百分比
-        const percentage = storageQuota > 0 ? (storageUsed / storageQuota) * 100 : 0;
+          // 计算使用百分比
+          const percentage = storageQuota > 0 ? (storageUsed / storageQuota) * 100 : 0;
 
-        // 如果使用超过80%，发送预警通知
-        if (percentage >= 80) {
-          const remaining = storageQuota - storageUsed;
-          const status = percentage >= 95 ? '严重预警' : '预警';
+          // 如果使用超过80%，发送预警通知
+          if (percentage >= 80) {
+            const remaining = storageQuota - storageUsed;
+            const status = percentage >= 95 ? '严重预警' : '预警';
 
-          const noticeContent = `
+            const noticeContent = `
 您好，${contactUserName || '管理员'}！
 
 您的存储空间使用情况需要关注：
@@ -256,24 +257,36 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
 3. 联系管理员扩容存储空间
           `.trim();
 
-          // 在对应租户上下文中创建系统通知
-          await TenantContext.run({ tenantId }, async () => {
-            await this.noticeService.create({
-              noticeTitle: `存储空间${status}`,
-              noticeType: '1', // 系统通知
-              noticeContent,
-              status: StatusEnum.NORMAL,
+            // 在对应租户上下文中创建系统通知
+            await TenantContext.run({ tenantId }, async () => {
+              await this.noticeService.create({
+                noticeTitle: `存储空间${status}`,
+                noticeType: '1', // 系统通知
+                noticeContent,
+                status: StatusEnum.NORMAL,
+              });
             });
-          });
 
-          alertCount++;
-          this.logger.warn(`租户 ${tenantId}(${companyName}) 存储空间使用率 ${percentage.toFixed(2)}%，已发送预警通知`);
+            alertCount++;
+            this.logger.warn(
+              `租户 ${tenantId}(${companyName}) 存储空间使用率 ${percentage.toFixed(2)}%，已发送预警通知`,
+            );
+          }
+        } catch (err) {
+          // One tenant's alert must not abort the batch — log and move on.
+          this.logger.error(
+            `租户 ${tenant.tenantId}(${tenant.companyName}) 存储配额预警失败: ${err instanceof Error ? err.message : String(err)}`,
+            err instanceof Error ? err.stack : String(err),
+          );
         }
       }
 
       this.logger.log(`存储配额预警任务执行完成，共发送 ${alertCount} 条预警通知`);
     } catch (error) {
-      this.logger.error(`存储配额预警任务执行失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `存储配额预警任务执行失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw error;
     }
   }
@@ -366,7 +379,9 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
               totalCleaned++;
               this.logger.log(`已清理版本: ${version.uploadId}, 文件: ${version.fileName}, 版本号: ${version.version}`);
             } catch (error) {
-              this.logger.error(`清理版本失败: ${version.uploadId}, 错误: ${error instanceof Error ? error.message : String(error)}`);
+              this.logger.error(
+                `清理版本失败: ${version.uploadId}, 错误: ${error instanceof Error ? error.message : String(error)}`,
+              );
             }
           }
         }
@@ -374,7 +389,10 @@ ${percentage >= 95 ? '⚠️ 存储空间即将耗尽，请立即清理文件！
 
       this.logger.log(`清理旧文件版本任务执行完成，共清理 ${totalCleaned} 个旧版本`);
     } catch (error) {
-      this.logger.error(`清理旧文件版本任务执行失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `清理旧文件版本任务执行失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw error;
     }
   }

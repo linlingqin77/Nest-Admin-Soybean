@@ -13,7 +13,7 @@ import { DeptTreeNodeResponseDto } from 'src/shared/dto/dept-tree-node.response.
 export class DeptResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '部门ID' })
-  deptId!:  number;
+  deptId!: number;
 
   @Expose()
   @ApiPropertyOptional({ description: '父部门ID' })
@@ -25,7 +25,7 @@ export class DeptResponseDto extends BaseResponseDto {
 
   @Expose()
   @ApiProperty({ description: '部门名称' })
-  deptName!:  string;
+  deptName!: string;
 
   @Expose()
   @ApiPropertyOptional({ description: '显示顺序' })
@@ -60,7 +60,7 @@ export class DeptResponseDto extends BaseResponseDto {
  */
 export class DeptListResponseDto {
   @ApiProperty({ description: '部门列表', type: [DeptResponseDto] })
-  list!:  DeptResponseDto[];
+  list!: DeptResponseDto[];
 }
 
 /**
@@ -68,7 +68,7 @@ export class DeptListResponseDto {
  */
 export class DeptTreeResponseDto {
   @ApiProperty({ description: '部门树数据', type: [DeptTreeNodeResponseDto] })
-  data!:  DeptTreeNodeResponseDto[];
+  data!: DeptTreeNodeResponseDto[];
 }
 
 /**
@@ -76,7 +76,7 @@ export class DeptTreeResponseDto {
  */
 export class DeptTreeSelectResponseDto {
   @ApiProperty({ description: '部门下拉树数据', type: [DeptTreeNodeResponseDto] })
-  data!:  DeptTreeNodeResponseDto[];
+  data!: DeptTreeNodeResponseDto[];
 }
 
 /**
@@ -84,10 +84,10 @@ export class DeptTreeSelectResponseDto {
  */
 export class RoleDeptTreeSelectResponseDto {
   @ApiProperty({ description: '已选中的部门ID列表', type: [Number] })
-  checkedKeys!:  number[];
+  checkedKeys!: number[];
 
   @ApiProperty({ description: '部门树数据', type: [DeptTreeNodeResponseDto] })
-  depts!:  DeptTreeNodeResponseDto[];
+  depts!: DeptTreeNodeResponseDto[];
 }
 
 /**
@@ -95,7 +95,7 @@ export class RoleDeptTreeSelectResponseDto {
  */
 export class CreateDeptResultResponseDto {
   @ApiProperty({ description: '创建的部门ID', example: 1 })
-  deptId!:  number;
+  deptId!: number;
 }
 
 /**
@@ -103,7 +103,7 @@ export class CreateDeptResultResponseDto {
  */
 export class UpdateDeptResultResponseDto {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -111,5 +111,5 @@ export class UpdateDeptResultResponseDto {
  */
 export class DeleteDeptResultResponseDto {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected!:  number;
+  affected!: number;
 }

@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { ClsService } from 'nestjs-cls';
 

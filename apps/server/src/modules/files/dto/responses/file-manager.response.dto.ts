@@ -10,23 +10,23 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class FolderResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '文件夹ID' })
-  folderId!:  number;
+  folderId!: number;
 
   @Expose()
   @ApiProperty({ description: '父文件夹ID' })
-  parentId!:  number;
+  parentId!: number;
 
   @Expose()
   @ApiProperty({ description: '文件夹名称' })
-  folderName!:  string;
+  folderName!: string;
 
   @Expose()
   @ApiProperty({ description: '文件夹路径' })
-  folderPath!:  string;
+  folderPath!: string;
 
   @Expose()
   @ApiProperty({ description: '排序' })
-  orderNum!:  number;
+  orderNum!: number;
 }
 
 /**
@@ -35,23 +35,23 @@ export class FolderResponseDto extends BaseResponseDto {
 export class FolderTreeNodeResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '文件夹ID' })
-  folderId!:  number;
+  folderId!: number;
 
   @Expose()
   @ApiProperty({ description: '父文件夹ID' })
-  parentId!:  number;
+  parentId!: number;
 
   @Expose()
   @ApiProperty({ description: '文件夹名称' })
-  folderName!:  string;
+  folderName!: string;
 
   @Expose()
   @ApiProperty({ description: '文件夹路径' })
-  folderPath!:  string;
+  folderPath!: string;
 
   @Expose()
   @ApiProperty({ description: '排序' })
-  orderNum!:  number;
+  orderNum!: number;
 
   @Expose()
   @Type(() => FolderTreeNodeResponseDto)
@@ -64,10 +64,10 @@ export class FolderTreeNodeResponseDto extends BaseResponseDto {
  */
 export class FolderListResponseDto {
   @ApiProperty({ description: '文件夹列表', type: [FolderResponseDto] })
-  rows!:  FolderResponseDto[];
+  rows!: FolderResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }
 
 // ==================== 文件相关 Response DTO ====================
@@ -78,59 +78,59 @@ export class FolderListResponseDto {
 export class FileResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '上传ID' })
-  uploadId!:  string;
+  uploadId!: string;
 
   @Expose()
   @ApiProperty({ description: '原始文件名' })
-  fileName!:  string;
+  fileName!: string;
 
   @Expose()
   @ApiProperty({ description: '存储文件名' })
-  newFileName!:  string;
+  newFileName!: string;
 
   @Expose()
   @ApiProperty({ description: '文件大小（字节）' })
-  size!:  number;
+  size!: number;
 
   @Expose()
   @ApiProperty({ description: '文件MIME类型' })
-  mimeType!:  string;
+  mimeType!: string;
 
   @Expose()
   @ApiProperty({ description: '文件扩展名' })
-  ext!:  string;
+  ext!: string;
 
   @Expose()
   @ApiProperty({ description: '所属文件夹ID' })
-  folderId!:  number;
+  folderId!: number;
 
   @Expose()
   @ApiProperty({ description: '文件访问URL' })
-  url!:  string;
+  url!: string;
 
   @Expose()
   @ApiProperty({ description: '缩略图URL', required: false })
-  thumbnail!:  string;
+  thumbnail!: string;
 
   @Expose()
   @ApiProperty({ description: '存储类型' })
-  storageType!:  string;
+  storageType!: string;
 
   @Expose()
   @ApiProperty({ description: '文件MD5' })
-  fileMd5!:  string;
+  fileMd5!: string;
 
   @Expose()
   @ApiProperty({ description: '版本号' })
-  version!:  number;
+  version!: number;
 
   @Expose()
   @ApiProperty({ description: '是否最新版本' })
-  isLatest!:  boolean;
+  isLatest!: boolean;
 
   @Expose()
   @ApiProperty({ description: '下载次数' })
-  downloadCount!:  number;
+  downloadCount!: number;
 }
 
 /**
@@ -138,10 +138,10 @@ export class FileResponseDto extends BaseResponseDto {
  */
 export class FileListResponseDto {
   @ApiProperty({ description: '文件列表', type: [FileResponseDto] })
-  rows!:  FileResponseDto[];
+  rows!: FileResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }
 
 // ==================== 文件版本相关 Response DTO ====================
@@ -152,35 +152,35 @@ export class FileListResponseDto {
 export class FileVersionResponseDto {
   @Expose()
   @ApiProperty({ description: '上传ID' })
-  uploadId!:  string;
+  uploadId!: string;
 
   @Expose()
   @ApiProperty({ description: '文件名' })
-  fileName!:  string;
+  fileName!: string;
 
   @Expose()
   @ApiProperty({ description: '文件大小' })
-  size!:  number;
+  size!: number;
 
   @Expose()
   @ApiProperty({ description: '版本号' })
-  version!:  number;
+  version!: number;
 
   @Expose()
   @ApiProperty({ description: '是否最新版本' })
-  isLatest!:  boolean;
+  isLatest!: boolean;
 
   @Expose()
   @ApiProperty({ description: '文件扩展名' })
-  ext!:  string;
+  ext!: string;
 
   @Expose()
   @ApiProperty({ description: '文件URL' })
-  url!:  string;
+  url!: string;
 
   @Expose()
   @ApiProperty({ description: '创建者' })
-  createBy!:  string;
+  createBy!: string;
 }
 
 /**
@@ -188,10 +188,10 @@ export class FileVersionResponseDto {
  */
 export class FileVersionListResponseDto {
   @ApiProperty({ description: '当前版本号' })
-  currentVersion!:  number;
+  currentVersion!: number;
 
   @ApiProperty({ description: '版本列表', type: [FileVersionResponseDto] })
-  versions!:  FileVersionResponseDto[];
+  versions!: FileVersionResponseDto[];
 }
 
 /**
@@ -200,11 +200,11 @@ export class FileVersionListResponseDto {
 export class RestoreVersionResultResponseDto {
   @Expose()
   @ApiProperty({ description: '新版本号' })
-  newVersion!:  number;
+  newVersion!: number;
 
   @Expose()
   @ApiProperty({ description: '新上传ID' })
-  uploadId!:  string;
+  uploadId!: string;
 }
 
 // ==================== 分享相关 Response DTO ====================
@@ -215,31 +215,31 @@ export class RestoreVersionResultResponseDto {
 export class ShareResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '分享ID' })
-  shareId!:  string;
+  shareId!: string;
 
   @Expose()
   @ApiProperty({ description: '上传ID' })
-  uploadId!:  string;
+  uploadId!: string;
 
   @Expose()
   @ApiProperty({ description: '分享码', required: false })
-  shareCode!:  string;
+  shareCode!: string;
 
   @Expose()
   @ApiProperty({ description: '过期时间', required: false })
-  expireTime!:  Date;
+  expireTime!: Date;
 
   @Expose()
   @ApiProperty({ description: '最大下载次数' })
-  maxDownload!:  number;
+  maxDownload!: number;
 
   @Expose()
   @ApiProperty({ description: '下载次数' })
-  downloadCount!:  number;
+  downloadCount!: number;
 
   @Expose()
   @ApiProperty({ description: '状态' })
-  status!:  string;
+  status!: string;
 
   @Expose()
   @Type(() => FileResponseDto)
@@ -253,19 +253,19 @@ export class ShareResponseDto extends BaseResponseDto {
 export class CreateShareResultResponseDto {
   @Expose()
   @ApiProperty({ description: '分享ID' })
-  shareId!:  string;
+  shareId!: string;
 
   @Expose()
   @ApiProperty({ description: '分享链接' })
-  shareUrl!:  string;
+  shareUrl!: string;
 
   @Expose()
   @ApiProperty({ description: '分享码', required: false })
-  shareCode!:  string;
+  shareCode!: string;
 
   @Expose()
   @ApiProperty({ description: '过期时间', required: false })
-  expireTime!:  Date;
+  expireTime!: Date;
 }
 
 /**
@@ -273,10 +273,10 @@ export class CreateShareResultResponseDto {
  */
 export class ShareInfoResponseDto {
   @ApiProperty({ description: '分享信息' })
-  shareInfo!:  ShareResponseDto;
+  shareInfo!: ShareResponseDto;
 
   @ApiProperty({ description: '文件信息', type: FileResponseDto })
-  fileInfo!:  FileResponseDto;
+  fileInfo!: FileResponseDto;
 }
 
 /**
@@ -284,10 +284,10 @@ export class ShareInfoResponseDto {
  */
 export class ShareListResponseDto {
   @ApiProperty({ description: '分享列表', type: [ShareResponseDto] })
-  rows!:  ShareResponseDto[];
+  rows!: ShareResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }
 
 // ==================== 存储统计相关 Response DTO ====================
@@ -298,23 +298,23 @@ export class ShareListResponseDto {
 export class StorageStatsResponseDto {
   @Expose()
   @ApiProperty({ description: '已使用存储空间（MB）' })
-  used!:  number;
+  used!: number;
 
   @Expose()
   @ApiProperty({ description: '总存储空间（MB）' })
-  quota!:  number;
+  quota!: number;
 
   @Expose()
   @ApiProperty({ description: '使用百分比' })
-  percentage!:  number;
+  percentage!: number;
 
   @Expose()
   @ApiProperty({ description: '剩余空间（MB）' })
-  remaining!:  number;
+  remaining!: number;
 
   @Expose()
   @ApiProperty({ description: '公司名称' })
-  companyName!:  string;
+  companyName!: string;
 }
 
 // ==================== 文件下载相关 Response DTO ====================
@@ -325,9 +325,9 @@ export class StorageStatsResponseDto {
 export class AccessTokenResponseDto {
   @Expose()
   @ApiProperty({ description: '访问令牌' })
-  token!:  string;
+  token!: string;
 
   @Expose()
   @ApiProperty({ description: '过期时间（秒）' })
-  expiresIn!:  number;
+  expiresIn!: number;
 }

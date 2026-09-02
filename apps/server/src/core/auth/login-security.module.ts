@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { LoginSecurityService } from './login-security.service';
 import { TokenBlacklistService } from './token-blacklist.service';
 

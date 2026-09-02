@@ -83,7 +83,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
     orderBy?: Prisma.SysRoleOrderByWithRelationInput,
   ): Promise<{ list: SysRole[]; total: number }> {
     // 先查询角色列表
-    const [roles, total] = await this.prisma.$transaction([
+    const [roles, total] = (await this.prisma.$transaction([
       this.prisma.sysRole.findMany({
         where,
         skip,
@@ -91,7 +91,7 @@ export class RoleRepository extends SoftDeleteRepository<SysRole, Prisma.SysRole
         orderBy: orderBy || { createTime: 'desc' },
       }),
       this.prisma.sysRole.count({ where }),
-    ]) as [SysRole[], number];
+    ])) as [SysRole[], number];
 
     // 再查询每个角色的菜单数量
     const roleIds = roles.map((role: SysRole) => role.roleId);

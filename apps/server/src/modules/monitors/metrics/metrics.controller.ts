@@ -1,5 +1,5 @@
 import { Controller, Get, Res } from '@nestjs/common';
-import { ApiTags, ApiExcludeEndpoint } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { PrometheusController } from '@willsoto/nestjs-prometheus';
 import { NotRequireAuth } from 'src/modules/users/user.decorator';
 import { Response } from 'express';

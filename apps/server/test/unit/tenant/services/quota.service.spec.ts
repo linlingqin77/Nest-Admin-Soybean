@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TenantQuotaService, QuotaResource, QuotaCheckResult } from '@/core/tenancy/services/quota.service';
+import { QuotaCheckResult, QuotaResource, TenantQuotaService } from '@/core/tenancy/services/quota.service';
 import { PrismaService } from '@/platform/prisma';
 import { RedisService } from '@/platform/redis/redis.service';
 import { BusinessException } from '@/shared/exceptions';

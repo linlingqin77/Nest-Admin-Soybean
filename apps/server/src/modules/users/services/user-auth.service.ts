@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
 import { BusinessException } from 'src/shared/exceptions';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum, DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
@@ -11,7 +10,7 @@ import { GenerateUUID } from 'src/shared/utils/index';
 import { LoginRequestDto, RegisterRequestDto } from 'src/modules/auth/dto/requests';
 import { UserType } from '../dto/user';
 import { ClientInfoDto } from 'src/core/auth/decorators/common.decorator';
-import { CacheEvict, Cacheable } from 'src/core/auth/decorators/redis.decorator';
+import { Cacheable, CacheEvict } from 'src/core/auth/decorators/redis.decorator';
 import { Captcha } from 'src/core/auth/decorators/captcha.decorator';
 import { PrismaService } from 'src/platform/prisma';
 import { UserRepository } from '../user.repository';
@@ -21,6 +20,7 @@ import { Uniq } from 'src/shared/utils/index';
 import { RoleService } from 'src/modules/roles/role.service';
 import { LoginSecurityService } from 'src/core/auth/login-security.service';
 import { TokenBlacklistService } from 'src/core/auth/token-blacklist.service';
+import { PasswordService } from 'src/shared/services/password.service';
 
 type UserWithDept = SysUser & { dept?: SysDept | null };
 type UserWithRelations = UserWithDept & { roles?: SysRole[]; posts?: SysPost[] };
@@ -40,6 +40,7 @@ export class UserAuthService {
     private readonly roleService: RoleService,
     private readonly loginSecurityService: LoginSecurityService,
     private readonly tokenBlacklistService: TokenBlacklistService,
+    private readonly passwordService: PasswordService,
     private readonly logger: StructuredLoggerService,
   ) {
     this.logger.setContext(UserAuthService.name);
@@ -59,7 +60,7 @@ export class UserAuthService {
 
     const data = await this.userRepo.findByUserName(user.userName);
 
-    if (!(data && bcrypt.compareSync(user.password, data.password))) {
+    if (!(data && (await this.passwordService.compare(user.password, data.password ?? null)))) {
       // 记录登录失败
       const securityStatus = await this.loginSecurityService.recordLoginFailure(user.userName);
 
@@ -151,10 +152,7 @@ export class UserAuthService {
    */
   async register(user: RegisterRequestDto) {
     const loginDate = new Date();
-    const salt = bcrypt.genSaltSync(10);
-    if (user.password) {
-      user.password = bcrypt.hashSync(user.password, salt);
-    }
+    const hashedPassword = user.password ? await this.passwordService.hash(user.password) : undefined;
     const checkUserNameUnique = await this.userRepo.findByUserName(user.userName);
     if (checkUserNameUnique) {
       throw new BusinessException(ResponseCode.BUSINESS_ERROR, `保存用户'${user.userName}'失败，注册账号已存在`);
@@ -162,7 +160,7 @@ export class UserAuthService {
     await this.userRepo.create({
       userName: user.userName,
       nickName: user.userName,
-      password: user.password,
+      password: hashedPassword ?? '',
       loginDate,
       userType: SYS_USER_TYPE.CUSTOM,
       phonenumber: '',
@@ -193,7 +191,9 @@ export class UserAuthService {
       const payload = this.jwtService.verify(token.replace('Bearer ', ''));
       return payload;
     } catch (error) {
-      this.logger.debug(`JWT token validation failed: ${error instanceof Error ? error.message : String(error)}`, { action: 'auth.parseToken' });
+      this.logger.debug(`JWT token validation failed: ${error instanceof Error ? error.message : String(error)}`, {
+        action: 'auth.parseToken',
+      });
       return null;
     }
   }
@@ -235,20 +235,10 @@ export class UserAuthService {
   }
 
   /**
-   * 获取用户角色ID列表
+   * 获取用户角色ID列表（委托给 UserRepository）
    */
   async getRoleIds(userIds: Array<number>) {
-    if (!userIds.length) {
-      return [];
-    }
-    const roleList = await this.prisma.sysUserRole.findMany({
-      where: {
-        userId: { in: userIds },
-      },
-      select: { roleId: true },
-    });
-    const roleIds = roleList.map((item) => item.roleId);
-    return Uniq(roleIds);
+    return this.userRepo.findRoleIdsByUserIds(userIds);
   }
 
   /**

@@ -3,22 +3,31 @@ import { BusinessException } from 'src/shared/exceptions';
 import { ResponseCode } from 'src/shared/response';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
 import { isNotEmpty } from 'class-validator';
-import { ImportTablesDto as TableName, ListDbTableRequestDto as GenDbTableList, ListGenTableRequestDto as GenTableList, UpdateGenTableDto as GenTableUpdate } from './dto';
+import {
+  ListDbTableRequestDto as GenDbTableList,
+  ListGenTableRequestDto as GenTableList,
+  UpdateGenTableDto as GenTableUpdate,
+  ImportTablesDto as TableName,
+} from './dto';
 import { Result } from 'src/shared/response';
 import { GetNowDate } from 'src/shared/utils/index';
 import { toDtoList, toDtoPage } from 'src/shared/utils/serialize.util';
-import { GenTableResponseDto, DbTableResponseDto } from './dto/responses';
+import { DbTableResponseDto, GenTableResponseDto } from './dto/responses';
 import toolConfig from './config';
 import { GenConstants } from 'src/shared/constants/gen.constant';
 import { camelCase, toLower } from 'lodash';
-import { arraysContains, getColumnLength, StringUtils, capitalize } from './utils/index';
+import { arraysContains, capitalize, getColumnLength, StringUtils } from './utils/index';
 import { index as templateIndex, TemplateOptions } from './template/index';
 import archiver from 'archiver';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { UserDto } from 'src/modules/users/user.decorator';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
-import { Prisma, GenTable, GenTableColumn } from '@prisma/client';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
+import { GenTable, GenTableColumn, Prisma } from '@prisma/client';
 import { Response } from 'express';
 import { PreviewService } from './preview/preview.service';
 

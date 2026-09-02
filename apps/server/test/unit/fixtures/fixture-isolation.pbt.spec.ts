@@ -9,9 +9,9 @@
  */
 
 import * as fc from 'fast-check';
-import { createUserFixture, createBatchUsers } from 'test/fixtures/user.fixture';
-import { createRoleFixture, createBatchRoles } from 'test/fixtures/role.fixture';
-import { createTenantFixture, createBatchTenants } from 'test/fixtures/tenant.fixture';
+import { createBatchUsers, createUserFixture } from 'test/fixtures/user.fixture';
+import { createBatchRoles, createRoleFixture } from 'test/fixtures/role.fixture';
+import { createBatchTenants, createTenantFixture } from 'test/fixtures/tenant.fixture';
 
 describe('Fixture 工厂 - 属性测试', () => {
   describe('Property 3: 测试数据隔离', () => {

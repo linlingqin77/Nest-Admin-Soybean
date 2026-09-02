@@ -3,6 +3,7 @@ import { CacheEnum } from '../../../shared/enums';
 import { ResponseCode } from '../../../shared/response';
 import { BusinessException } from '../../../shared/exceptions/business.exception';
 import { ConfigService } from '../../../modules/configs/config.service';
+import { CONFIG_KEY_ACCOUNT_CAPTCHA_ENABLED } from '../../../shared/constants';
 import { RedisService } from '../../../platform/redis/redis.service';
 
 /**
@@ -37,7 +38,7 @@ export function Captcha(paramIndex: number = 0) {
     ) {
       // 使用 getSystemConfigValue 而非 getConfigValue
       // 因为登录时租户上下文可能尚未建立，需要使用不依赖租户的配置方法
-      const enable = await this.configService.getSystemConfigValue('sys.account.captchaEnabled');
+      const enable = await this.configService.getSystemConfigValue(CONFIG_KEY_ACCOUNT_CAPTCHA_ENABLED);
       const captchaEnabled: boolean = enable === 'true';
 
       if (captchaEnabled) {

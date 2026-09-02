@@ -23,11 +23,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   ) {
     super();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.globalWhiteList = ([].concat((this.config.perm.router as any).whitelist || []) as RouteWhitelistItem[]);
+    this.globalWhiteList = [].concat((this.config.perm.router as any).whitelist || []) as RouteWhitelistItem[];
   }
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    const notRequireAuth = this.reflector.getAllAndOverride(METADATA_KEYS.NOT_REQUIRE_AUTH, [ctx.getClass(), ctx.getHandler()]);
+    const notRequireAuth = this.reflector.getAllAndOverride(METADATA_KEYS.NOT_REQUIRE_AUTH, [
+      ctx.getClass(),
+      ctx.getHandler(),
+    ]);
 
     if (notRequireAuth) {
       await this.jumpActivate(ctx);

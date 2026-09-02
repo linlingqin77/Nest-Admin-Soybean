@@ -18,10 +18,7 @@ import { assertSafeText } from '../../utils/sanitize';
  * 避免 SQL 注入：把任意字符串变成安全的单引号字符串内容
  */
 function escapeSqlString(value: string): string {
-  return value
-    .replace(/\\/g, '\\\\')
-    .replace(/'/g, "''")
-    .replace(/\0/g, '');
+  return value.replace(/\\/g, '\\\\').replace(/'/g, "''").replace(/\0/g, '');
 }
 
 export interface PermissionSqlTemplateOptions {

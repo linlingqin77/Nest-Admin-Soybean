@@ -47,9 +47,11 @@ describe('DataSource Integration Tests', () => {
   afterAll(async () => {
     // 清理测试数据
     if (createdDataSourceId) {
-      await prisma.genDataSource.delete({
-        where: { id: createdDataSourceId },
-      }).catch(() => {});
+      await prisma.genDataSource
+        .delete({
+          where: { id: createdDataSourceId },
+        })
+        .catch(() => {});
     }
     await app.close();
   });

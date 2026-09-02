@@ -14,14 +14,14 @@ import { moduleTem } from './nestjs/module';
 import { serviceTem } from './nestjs/service';
 
 // Vue3 模板
-import { apiTemplate, apiTempalte } from './vue/api.js';
+import { apiTempalte, apiTemplate } from './vue/api.js';
 import { indexVue } from './vue/indexVue.vue';
 import { dialogVue } from './vue/dialogVue.vue';
 import { searchVue } from './vue/searchVue.vue';
 
 // SQL 模板
-import { menuSqlTemplate, menuDeleteSqlTemplate } from './sql/menu.sql';
-import { permissionSqlTemplate, permissionDeleteSqlTemplate, fullPermissionSqlTemplate } from './sql/permission.sql';
+import { menuDeleteSqlTemplate, menuSqlTemplate } from './sql/menu.sql';
+import { fullPermissionSqlTemplate, permissionDeleteSqlTemplate, permissionSqlTemplate } from './sql/permission.sql';
 
 // 工具函数
 export * from './utils';
@@ -106,7 +106,11 @@ export const index = (options: TemplateOptions): Record<string, string> => {
     try {
       result[path] = templateFunc(options as any);
     } catch (error) {
-      StaticLogger.error(`Error generating template ${path}: ${error}`, error instanceof Error ? error.stack : undefined, 'TemplateGenerator');
+      StaticLogger.error(
+        `Error generating template ${path}: ${error}`,
+        error instanceof Error ? error.stack : undefined,
+        'TemplateGenerator',
+      );
       result[path] = `// Error generating template: ${error}`;
     }
   }

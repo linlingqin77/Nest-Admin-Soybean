@@ -173,12 +173,7 @@ describe('TemplateController', () => {
   describe('listGroups - 查询模板组列表', () => {
     it('应该返回分页的模板组列表', async () => {
       const query = { pageNum: 1, pageSize: 10 };
-      const expectedResult = Result.page(
-        [{ id: 1, name: 'group1', templates: [] }],
-        1,
-        1,
-        10,
-      );
+      const expectedResult = Result.page([{ id: 1, name: 'group1', templates: [] }], 1, 1, 10);
       mockTemplateService.findAllGroups.mockResolvedValue(expectedResult);
 
       const result = await controller.listGroups(query as any);
@@ -399,12 +394,7 @@ describe('TemplateController', () => {
   describe('listTemplates - 查询模板列表', () => {
     it('应该返回分页的模板列表', async () => {
       const query = { pageNum: 1, pageSize: 10 };
-      const expectedResult = Result.page(
-        [{ id: 1, name: 'template1', language: 'typescript' }],
-        1,
-        1,
-        10,
-      );
+      const expectedResult = Result.page([{ id: 1, name: 'template1', language: 'typescript' }], 1, 1, 10);
       mockTemplateService.findAllTemplates.mockResolvedValue(expectedResult);
 
       const result = await controller.listTemplates(query as any);

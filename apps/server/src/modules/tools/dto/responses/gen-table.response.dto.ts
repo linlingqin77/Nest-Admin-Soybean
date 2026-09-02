@@ -9,15 +9,15 @@ import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 export class GenTableColumnResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '列ID' })
-  columnId!:  number;
+  columnId!: number;
 
   @Expose()
   @ApiProperty({ description: '表ID' })
-  tableId!:  number;
+  tableId!: number;
 
   @Expose()
   @ApiProperty({ description: '列名称' })
-  columnName!:  string;
+  columnName!: string;
 
   @Expose()
   @ApiPropertyOptional({ description: '列描述' })
@@ -92,11 +92,11 @@ export class GenTableColumnResponseDto extends BaseResponseDto {
 export class GenTableResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '表ID' })
-  tableId!:  number;
+  tableId!: number;
 
   @Expose()
   @ApiProperty({ description: '表名称' })
-  tableName!:  string;
+  tableName!: string;
 
   @Expose()
   @ApiPropertyOptional({ description: '表描述' })
@@ -167,10 +167,10 @@ export class GenTableResponseDto extends BaseResponseDto {
  */
 export class GenTableListResponseDto {
   @ApiProperty({ description: '表列表', type: [GenTableResponseDto] })
-  rows!:  GenTableResponseDto[];
+  rows!: GenTableResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }
 
 /**
@@ -179,7 +179,7 @@ export class GenTableListResponseDto {
 export class DbTableResponseDto {
   @Expose()
   @ApiProperty({ description: '表名称' })
-  tableName!:  string;
+  tableName!: string;
 
   @Expose()
   @ApiPropertyOptional({ description: '表描述' })
@@ -201,8 +201,8 @@ export class DbTableResponseDto {
  */
 export class DbTableListResponseDto {
   @ApiProperty({ description: '表列表', type: [DbTableResponseDto] })
-  list!:  DbTableResponseDto[];
+  list!: DbTableResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }

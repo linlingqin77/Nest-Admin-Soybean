@@ -1,4 +1,4 @@
-import { Result, ResponseCode } from '../response';
+import { ResponseCode, Result } from '../response';
 
 /**
  * 批量操作结果项

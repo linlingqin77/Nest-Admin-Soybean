@@ -352,12 +352,27 @@ export class FieldInferenceService {
   }
 
   /**
-   * 将下划线命名转换为驼峰命名
+   * 将下划线命名转换为驼峰命名，并保证结果是合法的 JS/TS 标识符：
+   * - 不以数字开头
+   * - 不包含连字符、点、空格等非法字符
+   * - 空字符串会被替换为下划线，避免下游生成 `field: ""` 之类的无效字段
    *
    * @param str 下划线命名字符串
-   * @returns 驼峰命名字符串
+   * @returns 合法的驼峰标识符字符串
    */
   private toCamelCase(str: string): string {
-    return str.toLowerCase().replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+    const camel = str
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, '_') // 把连字符/点/空格等非标识符字符替换成 _
+      .replace(/_([a-z0-9])/g, (_, ch: string) => ch.toUpperCase())
+      .replace(/^_+|_+$/g, ''); // 去掉首尾残留的下划线
+
+    if (!camel) return '_';
+
+    // 标识符不能以数字开头 — 在前面补一个下划线。
+    if (/^[0-9]/.test(camel)) {
+      return `_${camel}`;
+    }
+    return camel;
   }
 }

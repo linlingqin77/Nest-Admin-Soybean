@@ -1,4 +1,4 @@
-import { IsString, IsEnum, Length, IsOptional, IsBoolean, IsArray } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -6,7 +6,7 @@ export class CreateTenantPackageRequestDto {
   @ApiProperty({ required: true, description: '套餐名称' })
   @IsString()
   @Length(1, 50)
-  packageName!:  string;
+  packageName!: string;
 
   @ApiProperty({ required: false, description: '关联的菜单ID列表', type: [Number] })
   @IsOptional()

@@ -14,12 +14,12 @@ export class AuthLoginRequestDto {
   @ApiProperty({ description: '用户名', required: true })
   @IsNotEmpty({ message: '用户名不能为空' })
   @IsString()
-  username!:  string;
+  username!: string;
 
   @ApiProperty({ description: '密码', required: true })
   @IsNotEmpty({ message: '密码不能为空' })
   @IsString()
-  password!:  string;
+  password!: string;
 
   @ApiProperty({ description: '验证码', required: false })
   @IsOptional()

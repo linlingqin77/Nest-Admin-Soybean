@@ -1,25 +1,25 @@
-import { Controller, Get, Post, Body, Put, Param, Query, Delete, Res, BadRequestException } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { Response } from 'express';
 import {
-  CreateRoleRequestDto,
-  UpdateRoleRequestDto,
-  ListRoleRequestDto,
-  ChangeRoleStatusRequestDto,
-  AuthUserCancelRequestDto,
-  AuthUserCancelAllRequestDto,
-  AuthUserSelectAllRequestDto,
-  RoleResponseDto,
-  RoleListResponseDto,
-  RoleDeptTreeResponseDto,
   AllocatedUserListResponseDto,
-  CreateRoleResultResponseDto,
-  UpdateRoleResultResponseDto,
-  ChangeRoleStatusResultResponseDto,
-  DeleteRoleResultResponseDto,
-  DataScopeResultResponseDto,
+  AuthUserCancelAllRequestDto,
+  AuthUserCancelRequestDto,
   AuthUserResultResponseDto,
+  AuthUserSelectAllRequestDto,
+  ChangeRoleStatusRequestDto,
+  ChangeRoleStatusResultResponseDto,
+  CreateRoleRequestDto,
+  CreateRoleResultResponseDto,
+  DataScopeResultResponseDto,
+  DeleteRoleResultResponseDto,
+  ListRoleRequestDto,
+  RoleDeptTreeResponseDto,
+  RoleListResponseDto,
+  RoleResponseDto,
+  UpdateRoleRequestDto,
+  UpdateRoleResultResponseDto,
 } from './dto/index';
 import { AllocatedListRequestDto } from '../users/dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
@@ -224,8 +224,8 @@ export class RoleController {
   })
   @RequirePermission('system:role:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async export(@Res() res: Response, @Body() body: ListRoleRequestDto): Promise<void> {
-    return this.roleService.export(res, body);
+  @Get('/export')
+  async export(@Res() res: Response, @Query() query: ListRoleRequestDto): Promise<void> {
+    return this.roleService.export(res, query);
   }
 }

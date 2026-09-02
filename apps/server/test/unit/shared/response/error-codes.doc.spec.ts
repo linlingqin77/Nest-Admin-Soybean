@@ -2,11 +2,11 @@
  * 错误码文档生成器单元测试
  */
 import {
+  ErrorCodeCategory,
+  generateErrorCodeJson,
+  generateErrorCodeMarkdown,
   getAllErrorCodes,
   getErrorCodesByCategory,
-  generateErrorCodeMarkdown,
-  generateErrorCodeJson,
-  ErrorCodeCategory,
 } from '@/shared/response/error-codes.doc';
 import { ResponseCode } from '@/shared/response';
 

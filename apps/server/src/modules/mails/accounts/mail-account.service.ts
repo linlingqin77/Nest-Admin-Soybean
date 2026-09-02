@@ -1,11 +1,15 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Result } from 'src/shared/response';
 import { DelFlagEnum } from 'src/shared/enums/index';
 import { toDtoList } from 'src/shared/utils/index';
-import { CreateMailAccountDto, UpdateMailAccountDto, ListMailAccountDto, MailAccountResponseDto } from './dto/index';
+import { CreateMailAccountDto, ListMailAccountDto, MailAccountResponseDto, UpdateMailAccountDto } from './dto/index';
 import { MailAccountRepository } from './mail-account.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import * as crypto from 'crypto';
 
 // 简单的密码加密密钥（生产环境应从配置中读取）

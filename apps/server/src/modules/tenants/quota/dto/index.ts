@@ -5,13 +5,7 @@ export * from './requests';
 export * from './responses';
 
 // 内部使用的类型（从原始VO迁移）
-export { 
-  QuotaStatus, 
-  TenantQuotaVo, 
-  TenantQuotaDetailVo, 
-  QuotaChangeRecordVo, 
-  QuotaCheckResultVo 
-} from './responses';
+export { QuotaStatus, TenantQuotaVo, TenantQuotaDetailVo, QuotaChangeRecordVo, QuotaCheckResultVo } from './responses';
 
 // 向后兼容别名
 export { ListTenantQuotaRequestDto as ListTenantQuotaDto } from './requests';

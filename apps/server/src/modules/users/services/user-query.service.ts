@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, SysDept, SysUser } from '@prisma/client';
-import { toDtoList } from 'src/shared/utils/index';
+import { Prisma, SysUser } from '@prisma/client';
+import { attachDeptInfo, toDtoList } from 'src/shared/utils/index';
 import { PaginationHelper } from 'src/shared/utils/pagination.helper';
 import { UserResponseDto } from '../dto/responses';
 
-import { DelFlagEnum, DataScopeEnum } from 'src/shared/enums/index';
+import { DataScopeEnum } from 'src/shared/enums/index';
 import { Result } from 'src/shared/response';
 import { ListUserRequestDto } from '../dto/index';
 
 import { DeptService } from 'src/modules/depts/dept.service';
 import { UserType } from '../dto/user';
 import { PrismaService } from 'src/platform/prisma';
-
-/** 用户实体与部门信息的联合类型 */
-type UserWithDept = SysUser & { dept?: SysDept | null };
 
 /**
  * 用户查询服务
@@ -31,36 +28,6 @@ export class UserQueryService {
     private readonly prisma: PrismaService,
     private readonly deptService: DeptService,
   ) {}
-
-  /**
-   * 为用户列表附加部门信息
-   */
-  async attachDeptInfo(users: SysUser[]): Promise<UserWithDept[]> {
-    if (!users.length) {
-      return users;
-    }
-    const deptIds = Array.from(
-      new Set(
-        users
-          .map((item) => item.deptId)
-          .filter((deptId): deptId is number => typeof deptId === 'number' && !Number.isNaN(deptId)),
-      ),
-    );
-    if (!deptIds.length) {
-      return users;
-    }
-    const depts = await this.prisma.sysDept.findMany({
-      where: {
-        deptId: { in: deptIds },
-        delFlag: '0',
-      },
-    });
-    const deptMap = new Map<number, SysDept>(depts.map((dept) => [dept.deptId, dept]));
-    return users.map((item) => ({
-      ...item,
-      dept: deptMap.get(item.deptId ?? -1) ?? null,
-    }));
-  }
 
   /**
    * 构建数据权限过滤条件
@@ -178,7 +145,7 @@ export class UserQueryService {
       { where },
     );
 
-    const listWithDept = await this.attachDeptInfo(list);
+    const listWithDept = await attachDeptInfo(this.prisma, list);
 
     const rows = listWithDept.map((user) => ({
       ...user,

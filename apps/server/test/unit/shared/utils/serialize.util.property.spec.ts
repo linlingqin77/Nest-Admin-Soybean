@@ -5,7 +5,7 @@
  * These tests validate the correctness properties defined in the design document.
  */
 import * as fc from 'fast-check';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { toDto, toDtoList, toDtoPage } from '@/shared/utils/serialize.util';
 import { BaseResponseDto } from '@/shared/dto/base.response.dto';
 

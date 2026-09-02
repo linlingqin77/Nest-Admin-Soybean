@@ -1,21 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { StructuredLoggerService } from 'src/platform/logger/structured-logger.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Prisma } from '@prisma/client';
 import { CreateJobDto, ListJobRequestDto } from './dto/create-job.dto';
 import { JobResponseDto } from './dto/job.response.dto';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions';
-import { toDtoList, toDto } from 'src/shared/utils';
+import { toDto, toDtoList } from 'src/shared/utils';
 import { TaskService } from './task.service';
 import { ExportTable } from 'src/shared/utils/export';
 import { StatusEnum } from 'src/shared/enums/index';
 import { Response } from 'express';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
+
+/**
+ * Module-scoped state for one-shot job initialization.
+ *  - `jobsInitialized` becomes true after a successful boot-time load.
+ *  - `jobsInitFailed` is set if the boot-time load threw; this triggers a
+ *    single retry the next time {@link ensureJobsInitialized} is called.
+ */
+let jobsInitialized = false;
+let jobsInitInFlight = false;
+let jobsInitFailed = false;
 
 @Injectable()
-export class JobService {
+export class JobService implements OnModuleInit {
   constructor(
     private schedulerRegistry: SchedulerRegistry,
     @InjectTransactionHost() private readonly txHost: PrismaTransactionHost,
@@ -23,7 +37,38 @@ export class JobService {
     private readonly logger: StructuredLoggerService,
   ) {
     this.logger.setContext(JobService.name);
-    void this.initializeJobs();
+  }
+
+  async onModuleInit(): Promise<void> {
+    // Fire-and-forget init at startup.  We deliberately do not throw — failing
+    // startup because the database is briefly unreachable is worse than
+    // running with no scheduled jobs and retrying lazily on the next call.
+    void this.initializeJobs().catch((err) => {
+      this.logger.error(`初始化定时任务失败，将在下次调用时重试: ${err instanceof Error ? err.message : String(err)}`);
+      jobsInitFailed = true;
+    });
+  }
+
+  /**
+   * Idempotent retry entry point.  Safe to call from any request path.  If
+   * the boot-time load failed (e.g. DB unreachable), the next call here will
+   * try once and either succeed (jobs stay loaded) or fail (next call will
+   * try again).
+   */
+  private async ensureJobsInitialized(): Promise<void> {
+    if (jobsInitialized) return;
+    if (jobsInitInFlight) return;
+    if (!jobsInitFailed) return;
+    jobsInitInFlight = true;
+    try {
+      await this.initializeJobs();
+      jobsInitFailed = false;
+    } catch (err) {
+      this.logger.warn(`定时任务初始化重试失败: ${err instanceof Error ? err.message : String(err)}`);
+      // Leave jobsInitialized=false so future calls retry.
+    } finally {
+      jobsInitInFlight = false;
+    }
   }
 
   private get prisma() {
@@ -34,12 +79,18 @@ export class JobService {
   private async initializeJobs() {
     const jobs = await this.prisma.sysJob.findMany({ where: { status: StatusEnum.NORMAL } });
     jobs.forEach((job) => {
-      this.addCronJob(job.jobName, job.cronExpression ?? "", job.invokeTarget ?? "");
+      try {
+        this.addCronJob(job.jobName, job.cronExpression ?? '', job.invokeTarget ?? '');
+      } catch (err) {
+        this.logger.error(`注册定时任务 ${job.jobName} 失败: ${err instanceof Error ? err.message : String(err)}`);
+      }
     });
+    jobsInitialized = true;
   }
 
   // 查询任务列表
   async findAll(query: ListJobRequestDto) {
+    await this.ensureJobsInitialized();
     const where: Prisma.SysJobWhereInput = {};
 
     if (query.jobName) {
@@ -69,6 +120,7 @@ export class JobService {
 
   // 获取单个任务
   async findOne(jobId: number) {
+    await this.ensureJobsInitialized();
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
     BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
     return Result.ok(toDto(JobResponseDto, job));
@@ -77,6 +129,7 @@ export class JobService {
   // 创建任务
   @Transactional()
   async create(createJobDto: CreateJobDto, userName: string) {
+    await this.ensureJobsInitialized();
     const job = await this.prisma.sysJob.create({
       data: {
         ...createJobDto,
@@ -96,6 +149,7 @@ export class JobService {
   @Transactional()
   // 更新任务
   async update(jobId: number, updateJobDto: Partial<CreateJobDto>, userName: string) {
+    await this.ensureJobsInitialized();
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
     BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
@@ -133,6 +187,7 @@ export class JobService {
   @Transactional()
   // 删除任务
   async remove(jobIds: number | number[]) {
+    await this.ensureJobsInitialized();
     const ids = Array.isArray(jobIds) ? jobIds : [jobIds];
     const jobs = await this.prisma.sysJob.findMany({ where: { jobId: { in: ids } } });
 
@@ -158,6 +213,7 @@ export class JobService {
 
   // 改变任务状态
   async changeStatus(jobId: number, status: string, userName: string) {
+    await this.ensureJobsInitialized();
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
     BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
@@ -166,7 +222,7 @@ export class JobService {
     if (status === StatusEnum.NORMAL) {
       // 启用
       if (!cronJob) {
-        this.addCronJob(job.jobName, job.cronExpression ?? "", job.invokeTarget ?? "");
+        this.addCronJob(job.jobName, job.cronExpression ?? '', job.invokeTarget ?? '');
       } else {
         cronJob.start();
       }
@@ -191,6 +247,7 @@ export class JobService {
 
   // 立即执行一次
   async run(jobId: number) {
+    await this.ensureJobsInitialized();
     const job = await this.prisma.sysJob.findUnique({ where: { jobId: Number(jobId) } });
     BusinessException.throwIfNull(job, '任务不存在', ResponseCode.DATA_NOT_FOUND);
 
@@ -203,8 +260,16 @@ export class JobService {
   private addCronJob(name: string, cronTime: string, invokeTarget: string) {
     cronTime = cronTime.replace('?', '*'); // 不支持问号，则将cron的问号转成*
     const job = new CronJob(cronTime, async () => {
-      this.logger.info({ action: 'job.executing', message: `定时任务 ${name} 正在执行`, invokeTarget });
-      await this.taskService.executeTask(invokeTarget, name);
+      try {
+        this.logger.info({ action: 'job.executing', message: `定时任务 ${name} 正在执行`, invokeTarget });
+        await this.taskService.executeTask(invokeTarget, name);
+      } catch (err) {
+        // Don't let one task's failure escape into the cron runtime — that
+        // would kill the scheduler for *all* jobs.  `executeTask` already
+        // records a job-log entry on failure, so we just log here for
+        // observability of the surrounding plumbing.
+        this.logger.error(`定时任务 ${name} 调度回调异常: ${err instanceof Error ? err.message : String(err)}`);
+      }
     });
 
     // CronJob 类型与 @nestjs/schedule 的 CronJob 类型不完全兼容

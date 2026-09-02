@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
+  CursorPageResponseDto,
   CursorPaginationDto,
   CursorPaginationMeta,
-  CursorPageResponseDto,
   PageQueryDto,
   PageResponseDto,
   SortOrder,

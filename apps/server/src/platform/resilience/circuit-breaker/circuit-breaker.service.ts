@@ -1,11 +1,11 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import {
-  handleAll,
+  BrokenCircuitError,
   circuitBreaker,
   CircuitBreakerPolicy,
-  ConsecutiveBreaker,
   CircuitState,
-  BrokenCircuitError,
+  ConsecutiveBreaker,
+  handleAll,
   IsolatedCircuitError,
 } from 'cockatiel';
 import { BusinessException } from 'src/shared/exceptions';
@@ -185,7 +185,10 @@ export class CircuitBreakerService implements OnModuleDestroy {
   async execute<T>(name: string, fn: () => Promise<T>): Promise<T> {
     const breaker = this.breakers.get(name);
     if (!breaker) {
-      throw new BusinessException(ResponseCode.INTERNAL_SERVER_ERROR, `Circuit breaker "${name}" not found. Please create it first using createBreaker().`);
+      throw new BusinessException(
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        `Circuit breaker "${name}" not found. Please create it first using createBreaker().`,
+      );
     }
 
     try {

@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PageQueryDto } from 'src/shared/dto/index';
 

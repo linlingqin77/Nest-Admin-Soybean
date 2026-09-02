@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNotEmpty, IsInt, IsEnum, Min, Max, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PageQueryDto } from 'src/shared/dto';
 
@@ -29,7 +29,7 @@ export class CreateDataSourceDto {
   @IsNotEmpty({ message: '数据源名称不能为空' })
   @MinLength(1, { message: '数据源名称至少1个字符' })
   @MaxLength(100, { message: '数据源名称最多100个字符' })
-  name!:  string;
+  name!: string;
 
   @ApiProperty({
     description: '数据库类型',
@@ -37,7 +37,7 @@ export class CreateDataSourceDto {
     example: DatabaseType.POSTGRESQL,
   })
   @IsEnum(DatabaseType, { message: '数据库类型必须是 postgresql、mysql 或 sqlite' })
-  type!:  DatabaseType;
+  type!: DatabaseType;
 
   @ApiProperty({
     description: '主机地址',
@@ -47,7 +47,7 @@ export class CreateDataSourceDto {
   @IsString()
   @IsNotEmpty({ message: '主机地址不能为空' })
   @MaxLength(255, { message: '主机地址最多255个字符' })
-  host!:  string;
+  host!: string;
 
   @ApiProperty({
     description: '端口号',
@@ -59,7 +59,7 @@ export class CreateDataSourceDto {
   @IsInt({ message: '端口必须是整数' })
   @Min(1, { message: '端口号最小为1' })
   @Max(65535, { message: '端口号最大为65535' })
-  port!:  number;
+  port!: number;
 
   @ApiProperty({
     description: '数据库名称',
@@ -69,7 +69,7 @@ export class CreateDataSourceDto {
   @IsString()
   @IsNotEmpty({ message: '数据库名称不能为空' })
   @MaxLength(100, { message: '数据库名称最多100个字符' })
-  database!:  string;
+  database!: string;
 
   @ApiProperty({
     description: '用户名',
@@ -79,7 +79,7 @@ export class CreateDataSourceDto {
   @IsString()
   @IsNotEmpty({ message: '用户名不能为空' })
   @MaxLength(100, { message: '用户名最多100个字符' })
-  username!:  string;
+  username!: string;
 
   @ApiProperty({
     description: '密码',
@@ -87,7 +87,7 @@ export class CreateDataSourceDto {
   })
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })
-  password!:  string;
+  password!: string;
 
   @ApiPropertyOptional({
     description: '备注',
@@ -246,7 +246,7 @@ export class TestConnectionDto {
     example: DatabaseType.POSTGRESQL,
   })
   @IsEnum(DatabaseType, { message: '数据库类型必须是 postgresql、mysql 或 sqlite' })
-  type!:  DatabaseType;
+  type!: DatabaseType;
 
   @ApiProperty({
     description: '主机地址',
@@ -256,7 +256,7 @@ export class TestConnectionDto {
   @IsString()
   @IsNotEmpty({ message: '主机地址不能为空' })
   @MaxLength(255, { message: '主机地址最多255个字符' })
-  host!:  string;
+  host!: string;
 
   @ApiProperty({
     description: '端口号',
@@ -268,7 +268,7 @@ export class TestConnectionDto {
   @IsInt({ message: '端口必须是整数' })
   @Min(1, { message: '端口号最小为1' })
   @Max(65535, { message: '端口号最大为65535' })
-  port!:  number;
+  port!: number;
 
   @ApiProperty({
     description: '数据库名称',
@@ -278,7 +278,7 @@ export class TestConnectionDto {
   @IsString()
   @IsNotEmpty({ message: '数据库名称不能为空' })
   @MaxLength(100, { message: '数据库名称最多100个字符' })
-  database!:  string;
+  database!: string;
 
   @ApiProperty({
     description: '用户名',
@@ -288,7 +288,7 @@ export class TestConnectionDto {
   @IsString()
   @IsNotEmpty({ message: '用户名不能为空' })
   @MaxLength(100, { message: '用户名最多100个字符' })
-  username!:  string;
+  username!: string;
 
   @ApiProperty({
     description: '密码',
@@ -296,7 +296,7 @@ export class TestConnectionDto {
   })
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })
-  password!:  string;
+  password!: string;
 }
 
 /**
@@ -307,37 +307,37 @@ export class TestConnectionDto {
  */
 export class DataSourceResponseDto {
   @ApiProperty({ description: '数据源ID', example: 1 })
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '租户ID', example: '000000' })
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '数据源名称', example: '开发环境数据库' })
-  name!:  string;
+  name!: string;
 
   @ApiProperty({ description: '数据库类型', enum: DatabaseType, example: DatabaseType.POSTGRESQL })
-  type!:  string;
+  type!: string;
 
   @ApiProperty({ description: '主机地址', example: 'localhost' })
-  host!:  string;
+  host!: string;
 
   @ApiProperty({ description: '端口号', example: 5432 })
-  port!:  number;
+  port!: number;
 
   @ApiProperty({ description: '数据库名称', example: 'nest_admin' })
-  database!:  string;
+  database!: string;
 
   @ApiProperty({ description: '用户名', example: 'postgres' })
-  username!:  string;
+  username!: string;
 
   @ApiProperty({ description: '状态（0正常 1停用）', example: '0' })
-  status!:  string;
+  status!: string;
 
   @ApiPropertyOptional({ description: '备注', example: '开发环境使用的数据库' })
   remark?: string;
 
   @ApiProperty({ description: '创建时间', example: '2024-01-01T00:00:00.000Z' })
-  createTime!:  Date;
+  createTime!: Date;
 
   @ApiPropertyOptional({ description: '更新时间', example: '2024-01-01T00:00:00.000Z' })
   updateTime?: Date;
@@ -351,10 +351,10 @@ export class DataSourceResponseDto {
  */
 export class DbTableDto {
   @ApiProperty({ description: '表名', example: 'sys_user' })
-  tableName!:  string;
+  tableName!: string;
 
   @ApiProperty({ description: '表注释', example: '用户表' })
-  tableComment!:  string;
+  tableComment!: string;
 
   @ApiPropertyOptional({ description: '创建时间' })
   createTime?: Date;
@@ -371,22 +371,22 @@ export class DbTableDto {
  */
 export class DbColumnDto {
   @ApiProperty({ description: '列名', example: 'user_id' })
-  columnName!:  string;
+  columnName!: string;
 
   @ApiProperty({ description: '列注释', example: '用户ID' })
-  columnComment!:  string;
+  columnComment!: string;
 
   @ApiProperty({ description: '列类型', example: 'int' })
-  columnType!:  string;
+  columnType!: string;
 
   @ApiProperty({ description: '是否主键', example: true })
-  isPrimaryKey!:  boolean;
+  isPrimaryKey!: boolean;
 
   @ApiProperty({ description: '是否自增', example: true })
-  isAutoIncrement!:  boolean;
+  isAutoIncrement!: boolean;
 
   @ApiProperty({ description: '是否可空', example: false })
-  isNullable!:  boolean;
+  isNullable!: boolean;
 
   @ApiPropertyOptional({ description: '默认值', example: '0' })
   defaultValue?: string;

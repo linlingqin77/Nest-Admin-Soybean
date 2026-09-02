@@ -208,7 +208,12 @@ export function maskObjectDeep(obj: unknown, sensitiveFields: string[]): unknown
  * 优先级: req.requestId > req.id > req.headers['x-request-id']
  */
 export function getRequestId(req: Request): string {
-  return ((req as unknown) as Record<string, unknown>)['requestId'] as string || ((req as unknown) as Record<string, unknown>)['id'] as string || (req.headers['x-request-id'] as string) || 'unknown';
+  return (
+    ((req as unknown as Record<string, unknown>)['requestId'] as string) ||
+    ((req as unknown as Record<string, unknown>)['id'] as string) ||
+    (req.headers['x-request-id'] as string) ||
+    'unknown'
+  );
 }
 
 /**
@@ -330,7 +335,9 @@ export function createPinoConfig(
 
       // 自定义请求日志格式 - 包含 Request ID 用于追踪
       customProps: (req: Request, _res: Response) => {
-        const user = (req as unknown as Record<string, unknown>)['user'] as { userId?: number; userName?: string; user?: { userId?: number; userName?: string } } | undefined;
+        const user = (req as unknown as Record<string, unknown>)['user'] as
+          | { userId?: number; userName?: string; user?: { userId?: number; userName?: string } }
+          | undefined;
         const requestId = getRequestId(req);
         return {
           requestId,

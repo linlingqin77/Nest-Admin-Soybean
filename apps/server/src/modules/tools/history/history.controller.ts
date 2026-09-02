@@ -1,26 +1,26 @@
-import { Controller, Get, Delete, Query, Param, ParseIntPipe, Res, Body, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import {
-  ApiTags,
   ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiQuery,
   ApiBody,
+  ApiOperation,
+  ApiParam,
   ApiProperty,
   ApiPropertyOptional,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { HistoryService, QueryHistoryDto } from './history.service';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';
 import { BusinessType } from 'src/shared/constants/business.constant';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import archiver from 'archiver';
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { IsOptional, IsInt, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -56,7 +56,7 @@ class QueryHistoryParamsDto {
  */
 class BatchDeleteDto {
   @ApiProperty({ description: '历史记录ID列表', example: [1, 2, 3], type: [Number] })
-  historyIds!:  number[];
+  historyIds!: number[];
 }
 
 /**

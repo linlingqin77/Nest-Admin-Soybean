@@ -58,7 +58,10 @@ export class VersionService {
         this.logger.log(`清理了 ${versionsToDelete.length} 个旧版本，文件: ${parentFileId}`);
       }
     } catch (error) {
-      this.logger.error(`清理旧版本失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `清理旧版本失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 
@@ -77,7 +80,10 @@ export class VersionService {
 
       this.logger.log(`已删除版本: ${version.uploadId}, version: ${version.version}`);
     } catch (error) {
-      this.logger.error(`删除版本失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `删除版本失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 
@@ -120,7 +126,10 @@ export class VersionService {
         this.logger.log(`COS文件删除功能待实现: ${file.newFileName}`);
       }
     } catch (error) {
-      this.logger.error(`删除物理文件失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `删除物理文件失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 

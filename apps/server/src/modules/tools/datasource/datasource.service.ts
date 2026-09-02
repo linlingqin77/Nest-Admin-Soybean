@@ -1,19 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums';
-import { Prisma, GenDataSource } from '@prisma/client';
+import { GenDataSource, Prisma } from '@prisma/client';
 import * as crypto from 'crypto';
 import {
   CreateDataSourceDto,
-  UpdateDataSourceDto,
+  DatabaseType,
+  DbColumnDto,
+  DbTableDto,
   ListDataSourceRequestDto,
   TestConnectionDto,
-  DatabaseType,
-  DbTableDto,
-  DbColumnDto,
+  UpdateDataSourceDto,
 } from './dto';
 import { validateTarget } from '../utils/ssrf';
 
@@ -113,7 +113,10 @@ export class DataSourceService {
       this.logger.log(`数据源创建成功: ${dataSource.name} (ID: ${dataSource.id})`);
       return Result.ok(dataSource, '创建成功');
     } catch (error) {
-      this.logger.error(`数据源创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `数据源创建失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建数据源失败');
     }
   }
@@ -176,7 +179,10 @@ export class DataSourceService {
       this.logger.log(`数据源更新成功: ${dataSource.name} (ID: ${dataSource.id})`);
       return Result.ok(dataSource, '更新成功');
     } catch (error) {
-      this.logger.error(`数据源更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `数据源更新失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新数据源失败');
     }
   }
@@ -225,7 +231,10 @@ export class DataSourceService {
       this.logger.log(`数据源删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`数据源删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `数据源删除失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除数据源失败');
     }
   }
@@ -311,8 +320,13 @@ export class DataSourceService {
         resolveDns: false,
       });
     } catch (error) {
-      this.logger.warn(`SSRF 防护拒绝连接: ${dto.host}:${dto.port} — ${error instanceof Error ? error.message : String(error)}`);
-      throw new BusinessException(ResponseCode.FORBIDDEN, error instanceof Error ? error.message : '目标地址不允许连接');
+      this.logger.warn(
+        `SSRF 防护拒绝连接: ${dto.host}:${dto.port} — ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw new BusinessException(
+        ResponseCode.FORBIDDEN,
+        error instanceof Error ? error.message : '目标地址不允许连接',
+      );
     }
 
     try {
@@ -325,7 +339,10 @@ export class DataSourceService {
         throw new BusinessException(ResponseCode.OPERATION_FAILED, testResult.message);
       }
     } catch (error) {
-      this.logger.error(`连接测试失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `连接测试失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }
@@ -384,7 +401,10 @@ export class DataSourceService {
       const tables = await this.fetchTables(dataSource);
       return Result.ok(tables);
     } catch (error) {
-      this.logger.error(`获取表列表失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `获取表列表失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }
@@ -412,7 +432,10 @@ export class DataSourceService {
       const columns = await this.fetchColumns(dataSource, tableName);
       return Result.ok(columns);
     } catch (error) {
-      this.logger.error(`获取列信息失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `获取列信息失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, this.getConnectionErrorMessage(error as Error));
     }
   }

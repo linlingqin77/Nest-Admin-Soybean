@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { OssService } from './oss.service';
-import { ListOssDto, OssResponseDto, OssListResponseDto } from './dto/index';
+import { ListOssDto, OssListResponseDto, OssResponseDto } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';

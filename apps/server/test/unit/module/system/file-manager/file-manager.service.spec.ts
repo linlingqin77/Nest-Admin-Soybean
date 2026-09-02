@@ -7,7 +7,7 @@ import { AppConfigService } from '@/platform/config/app-config.service';
 import { FileAccessService } from '@/modules/files/services/file-access.service';
 import { VersionService } from '@/modules/files/services/version.service';
 // @ts-expect-error
-import { createConfigMock, ConfigMock } from 'test/mocks/config.mock';
+import { ConfigMock, createConfigMock } from 'test/mocks/config.mock';
 import { TenantContext } from '@/core/tenancy/context/tenant.context';
 import { BusinessException } from '@/shared/exceptions';
 

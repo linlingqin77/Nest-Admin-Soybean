@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
-import { Subject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface SseMessage {

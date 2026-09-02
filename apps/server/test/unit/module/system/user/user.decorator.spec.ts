@@ -4,7 +4,7 @@
  * Unit tests for User decorators
  */
 import { ExecutionContext } from '@nestjs/common';
-import { User, NotRequireAuth, UserTool } from '@/modules/users/user.decorator';
+import { NotRequireAuth, User, UserTool } from '@/modules/users/user.decorator';
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 
 describe('User Decorators', () => {

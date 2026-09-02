@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AppConfigService } from 'src/platform/config/app-config.service';
-import { UnauthorizedException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { CacheEnum } from 'src/shared/enums/index';
 

@@ -1,4 +1,4 @@
-import { QueryBuilder, createWhereWithDelFlag, buildListQuery } from '@/shared/utils/query-builder.helper';
+import { buildListQuery, createWhereWithDelFlag, QueryBuilder } from '@/shared/utils/query-builder.helper';
 
 describe('QueryBuilder', () => {
   describe('create', () => {

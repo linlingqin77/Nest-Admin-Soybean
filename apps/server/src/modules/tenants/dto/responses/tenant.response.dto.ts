@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { DateFormat } from 'src/shared/decorators';
 
 /**
@@ -10,11 +10,11 @@ import { DateFormat } from 'src/shared/decorators';
 export class TenantResponseDto {
   @Expose()
   @ApiProperty({ description: '租户ID' })
-  id!:  number;
+  id!: number;
 
   @Expose()
   @ApiProperty({ description: '租户编号' })
-  tenantId!:  string;
+  tenantId!: string;
 
   @Expose()
   @ApiProperty({ description: '联系人' })
@@ -26,7 +26,7 @@ export class TenantResponseDto {
 
   @Expose()
   @ApiProperty({ description: '企业名称' })
-  companyName!:  string;
+  companyName!: string;
 
   @Expose()
   @ApiProperty({ description: '统一社会信用代码' })
@@ -59,21 +59,21 @@ export class TenantResponseDto {
 
   @Expose()
   @ApiProperty({ description: '账号数量' })
-  accountCount!:  number;
+  accountCount!: number;
 
   @Expose()
   @ApiProperty({ description: '状态(0正常 1停用)' })
-  status!:  string;
+  status!: string;
 
   @Expose()
   @ApiProperty({ description: '创建时间' })
   @DateFormat()
-  createTime!:  string;
+  createTime!: string;
 
   @Expose()
   @ApiProperty({ description: '更新时间' })
   @DateFormat()
-  updateTime!:  string;
+  updateTime!: string;
 
   @Expose()
   @ApiProperty({ description: '备注' })
@@ -95,10 +95,10 @@ export class TenantResponseDto {
  */
 export class TenantListResponseDto {
   @ApiProperty({ type: [TenantResponseDto], description: '租户列表' })
-  rows!:  TenantResponseDto[];
+  rows!: TenantResponseDto[];
 
   @ApiProperty({ description: '总数' })
-  total!:  number;
+  total!: number;
 }
 
 /**
@@ -106,13 +106,13 @@ export class TenantListResponseDto {
  */
 export class TenantSwitchResponseDto {
   @ApiProperty({ description: '是否成功' })
-  success!:  boolean;
+  success!: boolean;
 
   @ApiProperty({ description: '目标租户ID' })
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '企业名称' })
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '原租户ID', required: false })
   originalTenantId?: string;
@@ -123,13 +123,13 @@ export class TenantSwitchResponseDto {
  */
 export class TenantRestoreResponseDto {
   @ApiProperty({ description: '是否成功' })
-  success!:  boolean;
+  success!: boolean;
 
   @ApiProperty({ description: '原租户ID' })
-  originalTenantId!:  string;
+  originalTenantId!: string;
 
   @ApiProperty({ description: '原企业名称' })
-  originalCompanyName!:  string;
+  originalCompanyName!: string;
 }
 
 /**
@@ -137,13 +137,13 @@ export class TenantRestoreResponseDto {
  */
 export class TenantSelectItemResponseDto {
   @ApiProperty({ description: '租户ID' })
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '企业名称' })
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '状态' })
-  status!:  string;
+  status!: string;
 }
 
 /**
@@ -151,7 +151,7 @@ export class TenantSelectItemResponseDto {
  */
 export class TenantSelectListResponseDto {
   @ApiProperty({ type: [TenantSelectItemResponseDto], description: '可切换租户列表' })
-  list!:  TenantSelectItemResponseDto[];
+  list!: TenantSelectItemResponseDto[];
 }
 
 /**
@@ -159,10 +159,10 @@ export class TenantSelectListResponseDto {
  */
 export class CreateTenantResultResponseDto {
   @ApiProperty({ description: '创建的租户ID', example: 1 })
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '租户编号' })
-  tenantId!:  string;
+  tenantId!: string;
 }
 
 /**
@@ -170,7 +170,7 @@ export class CreateTenantResultResponseDto {
  */
 export class UpdateTenantResultResponseDto {
   @ApiProperty({ description: '更新是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -178,7 +178,7 @@ export class UpdateTenantResultResponseDto {
  */
 export class DeleteTenantResultResponseDto {
   @ApiProperty({ description: '删除的记录数', example: 1 })
-  affected!:  number;
+  affected!: number;
 }
 
 /**
@@ -186,7 +186,7 @@ export class DeleteTenantResultResponseDto {
  */
 export class SyncTenantDictResultResponseDto {
   @ApiProperty({ description: '同步是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -194,7 +194,7 @@ export class SyncTenantDictResultResponseDto {
  */
 export class SyncTenantPackageResultResponseDto {
   @ApiProperty({ description: '同步是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -202,7 +202,7 @@ export class SyncTenantPackageResultResponseDto {
  */
 export class SyncTenantConfigResultResponseDto {
   @ApiProperty({ description: '同步是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -210,7 +210,7 @@ export class SyncTenantConfigResultResponseDto {
  */
 export class TenantSwitchStatusResponseDto {
   @ApiProperty({ description: '是否已切换租户' })
-  isSwitched!:  boolean;
+  isSwitched!: boolean;
 
   @ApiProperty({ description: '当前租户ID', required: false })
   currentTenantId?: string;

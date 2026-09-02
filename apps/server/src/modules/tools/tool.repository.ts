@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, GenTable, GenTableColumn } from '@prisma/client';
+import { GenTable, GenTableColumn, Prisma } from '@prisma/client';
 import { SoftDeleteRepository } from 'src/platform/repository';
 import { PrismaService } from 'src/platform/prisma';
 

@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { UserService } from './user.service';

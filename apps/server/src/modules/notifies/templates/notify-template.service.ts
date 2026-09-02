@@ -1,16 +1,20 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Result } from 'src/shared/response';
 import { DelFlagEnum } from 'src/shared/enums/index';
 import { toDtoList } from 'src/shared/utils/index';
 import {
   CreateNotifyTemplateDto,
-  UpdateNotifyTemplateDto,
   ListNotifyTemplateDto,
   NotifyTemplateResponseDto,
+  UpdateNotifyTemplateDto,
 } from './dto/index';
 import { NotifyTemplateRepository } from './notify-template.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 
 @Injectable()
 export class NotifyTemplateService {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FeatureToggleService, FeatureConfig } from '@/core/tenancy/services/feature-toggle.service';
+import { FeatureConfig, FeatureToggleService } from '@/core/tenancy/services/feature-toggle.service';
 import { PrismaService } from '@/platform/prisma';
 import { RedisService } from '@/platform/redis/redis.service';
 

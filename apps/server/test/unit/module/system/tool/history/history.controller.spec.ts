@@ -100,9 +100,7 @@ describe('HistoryController', () => {
 
       await controller.list(query as any);
 
-      expect(mockHistoryService.getHistory).toHaveBeenCalledWith(
-        expect.objectContaining({ tableId: 1 }),
-      );
+      expect(mockHistoryService.getHistory).toHaveBeenCalledWith(expect.objectContaining({ tableId: 1 }));
     });
 
     it('应该支持按表名筛选', async () => {
@@ -111,9 +109,7 @@ describe('HistoryController', () => {
 
       await controller.list(query as any);
 
-      expect(mockHistoryService.getHistory).toHaveBeenCalledWith(
-        expect.objectContaining({ tableName: 'sys_user' }),
-      );
+      expect(mockHistoryService.getHistory).toHaveBeenCalledWith(expect.objectContaining({ tableName: 'sys_user' }));
     });
   });
 
@@ -155,9 +151,7 @@ describe('HistoryController', () => {
         id: 1,
         tableName: 'sys_user',
         snapshotData: {
-          files: [
-            { name: 'user.controller.ts', path: 'src/controller/user.controller.ts', content: 'content' },
-          ],
+          files: [{ name: 'user.controller.ts', path: 'src/controller/user.controller.ts', content: 'content' }],
         },
       };
       const mockResult = Result.ok(mockHistory);

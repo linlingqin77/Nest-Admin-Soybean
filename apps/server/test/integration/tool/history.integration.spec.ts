@@ -66,9 +66,11 @@ describe('History Integration Tests', () => {
   afterAll(async () => {
     // 清理测试数据
     if (testHistoryId) {
-      await prisma.genHistory.delete({
-        where: { id: testHistoryId },
-      }).catch(() => {});
+      await prisma.genHistory
+        .delete({
+          where: { id: testHistoryId },
+        })
+        .catch(() => {});
     }
     await app.close();
   });
@@ -231,7 +233,7 @@ describe('History Integration Tests', () => {
   });
 
   describe('批量删除历史记录', () => {
-    let batchDeleteIds: number[] = [];
+    const batchDeleteIds: number[] = [];
 
     beforeAll(async () => {
       // 创建用于批量删除测试的历史记录

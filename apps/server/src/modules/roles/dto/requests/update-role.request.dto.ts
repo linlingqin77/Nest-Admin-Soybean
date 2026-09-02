@@ -8,5 +8,5 @@ import { CreateRoleRequestDto } from './create-role.request.dto';
 export class UpdateRoleRequestDto extends CreateRoleRequestDto {
   @ApiProperty({ required: true, description: '角色ID' })
   @IsNumber()
-  roleId!:  number;
+  roleId!: number;
 }

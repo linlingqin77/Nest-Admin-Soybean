@@ -1,16 +1,16 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TenantDashboardService } from './tenant-dashboard.service';
 import {
+  DashboardDataResponseDto,
+  DashboardDataVo,
   DashboardTimeRangeQueryDto,
   ExpiringTenantsQueryDto,
-  DashboardDataResponseDto,
+  ExpiringTenantVo,
+  PackageDistributionVo,
+  QuotaTopTenantVo,
   TenantStatsVo,
   TenantTrendDataVo,
-  PackageDistributionVo,
-  ExpiringTenantVo,
-  QuotaTopTenantVo,
-  DashboardDataVo,
 } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';

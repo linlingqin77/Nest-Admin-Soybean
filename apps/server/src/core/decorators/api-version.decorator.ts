@@ -1,5 +1,5 @@
-import { SetMetadata, applyDecorators } from '@nestjs/common';
-import { ApiTags, ApiHeader, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { applyDecorators, SetMetadata } from '@nestjs/common';
+import { ApiBearerAuth, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { API_VERSION } from 'src/shared/constants/api-version';
 
 /**

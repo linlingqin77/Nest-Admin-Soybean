@@ -1,4 +1,4 @@
-import { SetMetadata, applyDecorators, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
+import { applyDecorators, HttpException, HttpStatus, SetMetadata, UseInterceptors } from '@nestjs/common';
 import { OptimisticLockInterceptor } from 'src/core/http/interceptors/optimistic-lock.interceptor';
 
 export const OPTIMISTIC_LOCK_KEY = 'OPTIMISTIC_LOCK';

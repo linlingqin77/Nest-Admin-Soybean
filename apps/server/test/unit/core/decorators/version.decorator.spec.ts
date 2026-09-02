@@ -1,9 +1,9 @@
 import { Controller, VERSION_NEUTRAL } from '@nestjs/common';
 import {
   API_VERSIONS,
+  MultiVersionController,
   VersionedController,
   VersionedControllerWithTag,
-  MultiVersionController,
   VersionNeutralController,
 } from '@/core/decorators/version.decorator';
 

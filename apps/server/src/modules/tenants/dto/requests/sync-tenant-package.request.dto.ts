@@ -1,13 +1,13 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SyncTenantPackageRequestDto {
   @ApiProperty({ required: true, description: '租户ID' })
   @IsString()
   @IsNotEmpty()
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ required: true, description: '套餐ID' })
   @IsNotEmpty()
-  packageId!:  number;
+  packageId!: number;
 }

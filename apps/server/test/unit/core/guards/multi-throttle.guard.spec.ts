@@ -2,11 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import {
-  MultiThrottleGuard,
-  ThrottleException,
   DEFAULT_THROTTLE_CONFIG,
-  THROTTLE_KEY,
+  MultiThrottleGuard,
   SKIP_THROTTLE_KEY,
+  THROTTLE_KEY,
+  ThrottleException,
 } from '@/core/http/guards/multi-throttle.guard';
 import { RedisService } from '@/platform/redis/redis.service';
 // @ts-expect-error

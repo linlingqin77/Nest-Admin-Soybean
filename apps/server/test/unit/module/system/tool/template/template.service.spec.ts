@@ -546,7 +546,14 @@ describe('TemplateService', () => {
         name: 'test-group',
         description: '测试模板组',
         templates: [
-          { name: 'template1', fileName: 'test.ts', filePath: 'src/', content: 'content', language: 'typescript', sort: 0 },
+          {
+            name: 'template1',
+            fileName: 'test.ts',
+            filePath: 'src/',
+            content: 'content',
+            language: 'typescript',
+            sort: 0,
+          },
         ],
       };
 
@@ -613,9 +620,7 @@ describe('TemplateService', () => {
     it('应该在模板语法错误时返回错误', async () => {
       const dto = {
         name: 'imported-group',
-        templates: [
-          { name: 'bad-template', content: '${unclosed' },
-        ],
+        templates: [{ name: 'bad-template', content: '${unclosed' }],
       };
 
       mockPrismaService.genTemplateGroup.findFirst.mockResolvedValue(null);
@@ -649,7 +654,9 @@ describe('TemplateService', () => {
     it('应该成功从 JSON 导入', async () => {
       const jsonString = JSON.stringify({
         name: 'imported-group',
-        templates: [{ name: 'template1', fileName: 'test.ts', filePath: 'src/', content: 'content', language: 'typescript' }],
+        templates: [
+          { name: 'template1', fileName: 'test.ts', filePath: 'src/', content: 'content', language: 'typescript' },
+        ],
       });
 
       mockPrismaService.genTemplateGroup.findFirst.mockResolvedValue(null);

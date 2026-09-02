@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  CircuitBreakerService,
   BreakerState,
-  CircuitBreakerOpenError,
   CircuitBreakerIsolatedError,
+  CircuitBreakerOpenError,
+  CircuitBreakerService,
 } from '@/platform/resilience/circuit-breaker/circuit-breaker.service';
 
 describe('CircuitBreakerService', () => {

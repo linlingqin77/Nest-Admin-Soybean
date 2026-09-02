@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of, throwError } from 'rxjs';
 import { AuditInterceptor } from '@/core/http/interceptors/audit.interceptor';
 import { AuditService } from '@/core/audit/audit.service';
 import { ClsService } from 'nestjs-cls';
-import { AUDIT_KEY, AuditConfig, AuditAction } from '@/core/audit/decorators/audit.decorator';
+import { AUDIT_KEY, AuditAction, AuditConfig } from '@/core/audit/decorators/audit.decorator';
 
 describe('AuditInterceptor', () => {
   let interceptor: AuditInterceptor;

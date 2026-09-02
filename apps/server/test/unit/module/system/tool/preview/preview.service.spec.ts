@@ -234,8 +234,22 @@ describe('PreviewService', () => {
 
     it('应该正确构建嵌套文件树', () => {
       const files = [
-        { name: 'controller.ts', path: 'src/controller/user.controller.ts', content: '', language: 'typescript', size: 0, lineCount: 0 },
-        { name: 'service.ts', path: 'src/service/user.service.ts', content: '', language: 'typescript', size: 0, lineCount: 0 },
+        {
+          name: 'controller.ts',
+          path: 'src/controller/user.controller.ts',
+          content: '',
+          language: 'typescript',
+          size: 0,
+          lineCount: 0,
+        },
+        {
+          name: 'service.ts',
+          path: 'src/service/user.service.ts',
+          content: '',
+          language: 'typescript',
+          size: 0,
+          lineCount: 0,
+        },
       ];
 
       const tree = service.buildFileTreeV2(files);
@@ -281,7 +295,14 @@ describe('PreviewService', () => {
     });
 
     it('应该正确关联文件节点', () => {
-      const file = { name: 'user.ts', path: 'src/user.ts', content: 'content', language: 'typescript', size: 7, lineCount: 1 };
+      const file = {
+        name: 'user.ts',
+        path: 'src/user.ts',
+        content: 'content',
+        language: 'typescript',
+        size: 7,
+        lineCount: 1,
+      };
       const files = [file];
 
       const tree = service.buildFileTreeV2(files);
@@ -327,9 +348,7 @@ describe('PreviewService', () => {
 
       const response = service.createPreviewResponse(templateOutput, 'User');
 
-      expect(response.totalSize).toBe(
-        Buffer.byteLength(content1, 'utf-8') + Buffer.byteLength(content2, 'utf-8'),
-      );
+      expect(response.totalSize).toBe(Buffer.byteLength(content1, 'utf-8') + Buffer.byteLength(content2, 'utf-8'));
     });
 
     it('应该处理空模板输出', () => {

@@ -7,7 +7,7 @@ import { Expose, Type } from 'class-transformer';
 export class LoginTokenResponseDto {
   @Expose()
   @ApiProperty({ description: '授权令牌' })
-  access_token!:  string;
+  access_token!: string;
 
   @Expose()
   @ApiProperty({ description: '刷新令牌' })
@@ -15,7 +15,7 @@ export class LoginTokenResponseDto {
 
   @Expose()
   @ApiProperty({ description: '令牌有效期(秒)' })
-  expire_in!:  number;
+  expire_in!: number;
 
   @Expose()
   @ApiProperty({ description: '刷新令牌有效期(秒)' })
@@ -40,7 +40,7 @@ export class LoginTokenResponseDto {
 export class PublicKeyResponseDto {
   @Expose()
   @ApiProperty({ description: 'RSA公钥', example: '-----BEGIN PUBLIC KEY-----...' })
-  publicKey!:  string;
+  publicKey!: string;
 }
 
 /**
@@ -49,7 +49,7 @@ export class PublicKeyResponseDto {
 export class AuthRegisterResultResponseDto {
   @Expose()
   @ApiProperty({ description: '注册是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 
   @Expose()
   @ApiProperty({ description: '提示消息', example: '注册成功', required: false })
@@ -62,7 +62,7 @@ export class AuthRegisterResultResponseDto {
 export class AuthLogoutResponseDto {
   @Expose()
   @ApiProperty({ description: '退出是否成功', example: true })
-  success!:  boolean;
+  success!: boolean;
 }
 
 /**
@@ -71,7 +71,7 @@ export class AuthLogoutResponseDto {
 export class SocialCallbackResponseDto {
   @Expose()
   @ApiProperty({ description: '登录是否成功', example: false })
-  success!:  boolean;
+  success!: boolean;
 
   @Expose()
   @ApiProperty({ description: '错误消息', example: '社交登录功能暂未实现', required: false })
@@ -118,15 +118,15 @@ class RoleInfoDto {
 class UserDetailDto {
   @Expose()
   @ApiProperty({ description: '用户ID' })
-  userId!:  number;
+  userId!: number;
 
   @Expose()
   @ApiProperty({ description: '用户名' })
-  userName!:  string;
+  userName!: string;
 
   @Expose()
   @ApiProperty({ description: '昵称' })
-  nickName!:  string;
+  nickName!: string;
 
   @Expose()
   @ApiProperty({ description: '邮箱' })
@@ -146,7 +146,7 @@ class UserDetailDto {
 
   @Expose()
   @ApiProperty({ description: '状态' })
-  status!:  string;
+  status!: string;
 
   @Expose()
   @ApiProperty({ description: '部门ID' })
@@ -174,13 +174,13 @@ export class UserInfoResponseDto {
   @Expose()
   @ApiProperty({ description: '用户信息', type: UserDetailDto })
   @Type(() => UserDetailDto)
-  user!:  UserDetailDto;
+  user!: UserDetailDto;
 
   @Expose()
   @ApiProperty({ description: '角色标识列表' })
-  roles!:  string[];
+  roles!: string[];
 
   @Expose()
   @ApiProperty({ description: '权限标识列表' })
-  permissions!:  string[];
+  permissions!: string[];
 }

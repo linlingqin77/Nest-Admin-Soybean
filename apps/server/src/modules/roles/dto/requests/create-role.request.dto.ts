@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsArray, Length, IsOptional, IsBoolean, IsNumber } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -22,12 +22,12 @@ export class CreateRoleRequestDto {
   @ApiProperty({ required: true, description: '角色名称', example: '普通角色' })
   @IsString()
   @Length(0, 30)
-  roleName!:  string;
+  roleName!: string;
 
   @ApiProperty({ required: true, description: '角色权限字符串', example: 'common' })
   @IsString()
   @Length(0, 100)
-  roleKey!:  string;
+  roleKey!: string;
 
   @ApiProperty({ required: false, description: '菜单ID列表', type: [Number], example: [1, 2, 3, 100, 101] })
   @IsOptional()
@@ -64,7 +64,7 @@ export class CreateRoleRequestDto {
   })
   @IsOptional()
   @IsString()
-  dataScope!:  string;
+  dataScope!: string;
 
   @ApiProperty({ required: false, description: '备注', example: '普通角色' })
   @IsOptional()

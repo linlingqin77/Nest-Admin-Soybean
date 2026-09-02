@@ -1,15 +1,15 @@
-import { Type, applyDecorators } from '@nestjs/common';
+import { applyDecorators, Type } from '@nestjs/common';
 import {
-  ApiOperation,
   ApiBody,
-  ApiExtraModels,
-  ApiOkResponse,
-  ApiResponse,
-  ApiParam,
-  ApiQuery,
-  ApiHeader,
   ApiConsumes,
+  ApiExtraModels,
+  ApiHeader,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
   ApiProduces,
+  ApiQuery,
+  ApiResponse,
   ApiSecurity,
   ApiTags,
   getSchemaPath,

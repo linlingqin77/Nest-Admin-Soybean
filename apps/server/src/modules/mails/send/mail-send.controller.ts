@@ -1,7 +1,7 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MailSendService } from './mail-send.service';
-import { SendMailDto, BatchSendMailDto, TestMailDto } from './dto/index';
+import { BatchSendMailDto, SendMailDto, TestMailDto } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';

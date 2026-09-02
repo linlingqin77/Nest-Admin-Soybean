@@ -181,7 +181,9 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
         await this.redisService.set(key, value as string, effectiveL2Ttl * 1000);
         this.logger.debug(`Set L2 cache for key: ${key}, ttl: ${effectiveL2Ttl}s`);
       } catch (error) {
-        this.logger.warn(`Failed to set L2 cache for key ${key}: ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.warn(
+          `Failed to set L2 cache for key ${key}: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }
   }
@@ -207,7 +209,9 @@ export class MultiLevelCacheService implements OnModuleInit, OnModuleDestroy {
       await this.redisService.del(keys);
       this.logger.debug(`Deleted L2 cache for keys: ${keys.join(', ')}`);
     } catch (error) {
-      this.logger.warn(`Failed to delete L2 cache for keys ${keys.join(', ')}: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.warn(
+        `Failed to delete L2 cache for keys ${keys.join(', ')}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 

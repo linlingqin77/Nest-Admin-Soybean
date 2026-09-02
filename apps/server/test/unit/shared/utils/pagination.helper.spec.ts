@@ -1,5 +1,5 @@
 import { PaginationHelper } from '@/shared/utils/pagination.helper';
-import { PageQueryDto, CursorPaginationDto } from '@/shared/dto/base.dto';
+import { CursorPaginationDto, PageQueryDto } from '@/shared/dto/base.dto';
 
 describe('PaginationHelper', () => {
   describe('getPagination', () => {

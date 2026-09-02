@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { RedisModule } from '../platform/redis/redis.module';
 import { AxiosModule } from '../modules/axios/axios.module';
 import { AppConfigService } from '../platform/config/app-config.service';

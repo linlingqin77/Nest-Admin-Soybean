@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ClientModule } from './clients/client.module';
 import { DeptModule } from './depts/dept.module';
@@ -28,12 +28,7 @@ import { MailLogModule } from './mails/logs/mail-log.module';
 // Sms 短信管理模块
 @Global()
 @Module({
-  imports: [
-    SmsChannelModule,
-    SmsTemplateModule,
-    SmsSendModule,
-    SmsLogModule,
-  ],
+  imports: [SmsChannelModule, SmsTemplateModule, SmsSendModule, SmsLogModule],
   exports: [SmsChannelModule, SmsTemplateModule, SmsSendModule, SmsLogModule],
 })
 export class SmsFeatureModule {}
@@ -41,12 +36,7 @@ export class SmsFeatureModule {}
 // Mail 邮件管理模块
 @Global()
 @Module({
-  imports: [
-    MailAccountModule,
-    MailTemplateModule,
-    MailSendModule,
-    MailLogModule,
-  ],
+  imports: [MailAccountModule, MailTemplateModule, MailSendModule, MailLogModule],
   exports: [MailAccountModule, MailTemplateModule, MailSendModule, MailLogModule],
 })
 export class MailFeatureModule {}

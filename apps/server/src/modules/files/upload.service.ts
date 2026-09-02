@@ -1,8 +1,8 @@
-import { Injectable, Inject, BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 
 interface ChunkCheckBody {
   uploadId: string;

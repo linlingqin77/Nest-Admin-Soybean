@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuditService, AuditLogData } from '@/core/audit/audit.service';
+import { AuditLogData, AuditService } from '@/core/audit/audit.service';
 import { PrismaService } from '@/platform/prisma/prisma.service';
 import { ClsService } from 'nestjs-cls';
 
@@ -68,7 +68,8 @@ describe('AuditService', () => {
       clsStore.set('requestId', 'req-123');
 
       const auditData: AuditLogData = {
-        action: 'CREATE', module: 'system',
+        action: 'CREATE',
+        module: 'system',
         targetType: 'User',
         targetId: '100',
         status: '0',
@@ -80,7 +81,8 @@ describe('AuditService', () => {
       expect(mockPrismaService.sysAuditLog.create).toHaveBeenCalledTimes(1);
       expect(capturedLogs).toHaveLength(1);
       expect(capturedLogs[0]).toMatchObject({
-        action: 'CREATE', module: 'system',
+        action: 'CREATE',
+        module: 'system',
         targetType: 'User',
         targetId: '100',
         status: '0',
@@ -96,14 +98,16 @@ describe('AuditService', () => {
 
     it('should use default values when CLS context is empty', async () => {
       const auditData: AuditLogData = {
-        action: 'QUERY', module: 'monitor',
+        action: 'QUERY',
+        module: 'monitor',
         status: '0',
       };
 
       await service.logSync(auditData);
 
       expect(capturedLogs[0]).toMatchObject({
-        action: 'QUERY', module: 'monitor',
+        action: 'QUERY',
+        module: 'monitor',
         status: '0',
         tenantId: '000000',
         ip: '0.0.0.0',
@@ -115,7 +119,8 @@ describe('AuditService', () => {
       clsStore.set('request', { ip: '127.0.0.1', headers: {} });
 
       const auditData: AuditLogData = {
-        action: 'DELETE', module: 'system',
+        action: 'DELETE',
+        module: 'system',
         status: '1',
         errorMsg: 'Permission denied',
       };
@@ -135,7 +140,8 @@ describe('AuditService', () => {
       clsStore.set('request', { ip: '127.0.0.1', headers: {} });
 
       const auditData: AuditLogData = {
-        action: 'UPDATE', module: 'system',
+        action: 'UPDATE',
+        module: 'system',
         status: '0',
       };
 

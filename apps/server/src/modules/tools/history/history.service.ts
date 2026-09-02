@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { GenHistory, Prisma } from '@prisma/client';
@@ -91,7 +91,10 @@ export class HistoryService {
 
       return Result.ok(history, '记录成功');
     } catch (error) {
-      this.logger.error(`生成历史记录失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `生成历史记录失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '记录生成历史失败');
     }
   }
@@ -227,7 +230,10 @@ export class HistoryService {
         snapshotData,
       });
     } catch (error) {
-      this.logger.error(`解析历史快照失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `解析历史快照失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '解析历史快照失败');
     }
   }
@@ -272,7 +278,10 @@ export class HistoryService {
       this.logger.log(`清理过期历史记录: 删除 ${result.count} 条 (${days} 天前)`);
       return Result.ok(result.count, `成功清理 ${result.count} 条过期记录`);
     } catch (error) {
-      this.logger.error(`清理过期历史记录失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `清理过期历史记录失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '清理过期历史记录失败');
     }
   }
@@ -303,7 +312,10 @@ export class HistoryService {
       this.logger.log(`删除历史记录成功: ID ${historyId}`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`删除历史记录失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `删除历史记录失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除历史记录失败');
     }
   }
@@ -328,7 +340,10 @@ export class HistoryService {
       this.logger.log(`批量删除历史记录成功: 删除 ${result.count} 条`);
       return Result.ok(result.count, `成功删除 ${result.count} 条记录`);
     } catch (error) {
-      this.logger.error(`批量删除历史记录失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `批量删除历史记录失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '批量删除历史记录失败');
     }
   }

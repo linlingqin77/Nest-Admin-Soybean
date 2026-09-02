@@ -8,5 +8,5 @@ export class UpdateDeptRequestDto extends CreateDeptRequestDto {
     description: '部门ID',
   })
   @IsNumber()
-  deptId!:  number;
+  deptId!: number;
 }

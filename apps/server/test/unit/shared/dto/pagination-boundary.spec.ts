@@ -1,4 +1,4 @@
-import { PageQueryDto, CursorPaginationDto, PageResponseDto, SortOrder } from '@/shared/dto/base.dto';
+import { CursorPaginationDto, PageQueryDto, PageResponseDto, SortOrder } from '@/shared/dto/base.dto';
 
 /**
  * Boundary Condition Tests for Pagination DTOs

@@ -1,4 +1,4 @@
-import { SysRole, SysRoleMenu, SysRoleDept } from '@prisma/client';
+import { SysRole, SysRoleDept, SysRoleMenu } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 /**

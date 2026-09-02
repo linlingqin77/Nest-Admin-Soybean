@@ -1,12 +1,12 @@
-import { Injectable, NestInterceptor, CallHandler, ExecutionContext } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 import {
-  DATA_PERMISSION_KEY,
   DATA_PERMISSION_CONTEXT_KEY,
-  DataPermissionOptions,
+  DATA_PERMISSION_KEY,
   DataPermissionContext,
+  DataPermissionOptions,
   DataScope,
 } from 'src/core/permissions/decorators/data-permission.decorator';
 
@@ -80,11 +80,13 @@ export class DataPermissionInterceptor implements NestInterceptor {
       return DataScope.ALL;
     }
 
-    // 从角色中获取最大的数据权限范围
+    // 从角色中获取最大的 dataScope 数值
+    // 注意：DataScope 枚举中 ALL=1 < SELF=5，数值越大代表越受限
+    // 这里取最大值，即最严格的权限范围
     let maxScope = DataScope.SELF;
     for (const role of user.roles || []) {
       const roleScope = role.dataScope || DataScope.SELF;
-      if (roleScope < maxScope) {
+      if (roleScope > maxScope) {
         maxScope = roleScope;
       }
     }

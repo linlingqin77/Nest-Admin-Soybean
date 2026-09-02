@@ -7,35 +7,35 @@ import { Expose } from 'class-transformer';
 export class TenantStatsResponseDto {
   @ApiProperty({ description: '租户总数' })
   @Expose()
-  totalTenants!:  number;
+  totalTenants!: number;
 
   @ApiProperty({ description: '活跃租户数' })
   @Expose()
-  activeTenants!:  number;
+  activeTenants!: number;
 
   @ApiProperty({ description: '新增租户数（本月）' })
   @Expose()
-  newTenants!:  number;
+  newTenants!: number;
 
   @ApiProperty({ description: '用户总数' })
   @Expose()
-  totalUsers!:  number;
+  totalUsers!: number;
 
   @ApiProperty({ description: '在线用户数' })
   @Expose()
-  onlineUsers!:  number;
+  onlineUsers!: number;
 
   @ApiProperty({ description: '今日登录用户数' })
   @Expose()
-  todayLoginUsers!:  number;
+  todayLoginUsers!: number;
 
   @ApiProperty({ description: '存储使用总量（MB）' })
   @Expose()
-  totalStorageUsed!:  number;
+  totalStorageUsed!: number;
 
   @ApiProperty({ description: 'API调用总量（今日）' })
   @Expose()
-  totalApiCalls!:  number;
+  totalApiCalls!: number;
 }
 
 /**
@@ -44,15 +44,15 @@ export class TenantStatsResponseDto {
 export class TenantTrendDataResponseDto {
   @ApiProperty({ description: '日期' })
   @Expose()
-  date!:  string;
+  date!: string;
 
   @ApiProperty({ description: '新增租户数' })
   @Expose()
-  newTenants!:  number;
+  newTenants!: number;
 
   @ApiProperty({ description: '累计租户数' })
   @Expose()
-  totalTenants!:  number;
+  totalTenants!: number;
 }
 
 /**
@@ -61,19 +61,19 @@ export class TenantTrendDataResponseDto {
 export class PackageDistributionResponseDto {
   @ApiProperty({ description: '套餐ID' })
   @Expose()
-  packageId!:  number;
+  packageId!: number;
 
   @ApiProperty({ description: '套餐名称' })
   @Expose()
-  packageName!:  string;
+  packageName!: string;
 
   @ApiProperty({ description: '租户数量' })
   @Expose()
-  count!:  number;
+  count!: number;
 
   @ApiProperty({ description: '占比' })
   @Expose()
-  percentage!:  number;
+  percentage!: number;
 }
 
 /**
@@ -82,31 +82,31 @@ export class PackageDistributionResponseDto {
 export class ExpiringTenantResponseDto {
   @ApiProperty({ description: '租户ID' })
   @Expose()
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '企业名称' })
   @Expose()
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '联系人' })
   @Expose()
-  contactUserName!:  string;
+  contactUserName!: string;
 
   @ApiProperty({ description: '联系电话' })
   @Expose()
-  contactPhone!:  string;
+  contactPhone!: string;
 
   @ApiProperty({ description: '到期时间' })
   @Expose()
-  expireTime!:  Date;
+  expireTime!: Date;
 
   @ApiProperty({ description: '剩余天数' })
   @Expose()
-  daysRemaining!:  number;
+  daysRemaining!: number;
 
   @ApiProperty({ description: '套餐名称' })
   @Expose()
-  packageName!:  string;
+  packageName!: string;
 }
 
 /**
@@ -115,27 +115,27 @@ export class ExpiringTenantResponseDto {
 export class QuotaTopTenantResponseDto {
   @ApiProperty({ description: '租户ID' })
   @Expose()
-  tenantId!:  string;
+  tenantId!: string;
 
   @ApiProperty({ description: '企业名称' })
   @Expose()
-  companyName!:  string;
+  companyName!: string;
 
   @ApiProperty({ description: '用户配额使用率' })
   @Expose()
-  userQuotaUsage!:  number;
+  userQuotaUsage!: number;
 
   @ApiProperty({ description: '存储配额使用率' })
   @Expose()
-  storageQuotaUsage!:  number;
+  storageQuotaUsage!: number;
 
   @ApiProperty({ description: 'API配额使用率' })
   @Expose()
-  apiQuotaUsage!:  number;
+  apiQuotaUsage!: number;
 
   @ApiProperty({ description: '综合使用率' })
   @Expose()
-  overallUsage!:  number;
+  overallUsage!: number;
 }
 
 /**
@@ -144,23 +144,23 @@ export class QuotaTopTenantResponseDto {
 export class DashboardDataResponseDto {
   @ApiProperty({ description: '统计卡片数据', type: TenantStatsResponseDto })
   @Expose()
-  stats!:  TenantStatsResponseDto;
+  stats!: TenantStatsResponseDto;
 
   @ApiProperty({ description: '租户增长趋势', type: [TenantTrendDataResponseDto] })
   @Expose()
-  trend!:  TenantTrendDataResponseDto[];
+  trend!: TenantTrendDataResponseDto[];
 
   @ApiProperty({ description: '套餐分布', type: [PackageDistributionResponseDto] })
   @Expose()
-  packageDistribution!:  PackageDistributionResponseDto[];
+  packageDistribution!: PackageDistributionResponseDto[];
 
   @ApiProperty({ description: '即将到期租户', type: [ExpiringTenantResponseDto] })
   @Expose()
-  expiringTenants!:  ExpiringTenantResponseDto[];
+  expiringTenants!: ExpiringTenantResponseDto[];
 
   @ApiProperty({ description: '配额使用TOP10', type: [QuotaTopTenantResponseDto] })
   @Expose()
-  quotaTopTenants!:  QuotaTopTenantResponseDto[];
+  quotaTopTenants!: QuotaTopTenantResponseDto[];
 }
 
 // 内部使用的Vo别名（向后兼容 - 使用重新导出）

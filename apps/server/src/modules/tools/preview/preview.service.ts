@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PreviewFileDto, FileTreeNodeDto, PreviewResponseDto } from '../dto/responses/preview.response.dto';
+import { FileTreeNodeDto, PreviewFileDto, PreviewResponseDto } from '../dto/responses/preview.response.dto';
 
 /**
  * 文件语言映射

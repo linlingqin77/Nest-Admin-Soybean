@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { DeepClone } from 'src/shared/utils/index';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 
 @Injectable()
 export class CacheService {
@@ -56,8 +56,12 @@ export class CacheService {
     return Result.ok(this.caches);
   }
 
+  /**
+   * 使用 SCAN 游标迭代获取匹配前缀的 key 列表，
+   * 避免在 keyspace 较大时 KEYS 命令阻塞 Redis 主线程。
+   */
   async getKeys(id: string) {
-    const data = await this.redisService.keys(id + '*');
+    const data = await this.redisService.scanAll(id + '*');
     return Result.ok(data);
   }
 
@@ -66,9 +70,11 @@ export class CacheService {
     return Result.ok(data);
   }
 
+  /**
+   * 使用 SCAN 游标迭代匹配并删除 key，避免阻塞 Redis。
+   */
   async clearCacheName(id: string) {
-    const keys = await this.redisService.keys(id + '*');
-    const data = await this.redisService.del(keys);
+    const data = await this.redisService.scanDelete(id + '*');
     return Result.ok(data);
   }
 
@@ -91,12 +97,16 @@ export class CacheService {
 
   /**
    * 缓存监控
+   *
+   * getInfo / getDbSize / commandStats 三个命令相互独立，并发执行可显著降低响应延迟。
    * @returns
    */
   async getInfo() {
-    const info = await this.redisService.getInfo();
-    const dbSize = await this.redisService.getDbSize();
-    const commandStats = await this.redisService.commandStats();
+    const [info, dbSize, commandStats] = await Promise.all([
+      this.redisService.getInfo(),
+      this.redisService.getDbSize(),
+      this.redisService.commandStats(),
+    ]);
     return Result.ok({
       dbSize: dbSize,
       info: info,

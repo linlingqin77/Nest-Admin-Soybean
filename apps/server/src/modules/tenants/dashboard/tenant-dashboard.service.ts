@@ -7,12 +7,12 @@ import { IgnoreTenant } from 'src/core/tenancy/decorators/tenant.decorator';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import {
   DashboardDataResponseDto,
+  DashboardDataVo,
+  ExpiringTenantVo,
+  PackageDistributionVo,
+  QuotaTopTenantVo,
   TenantStatsVo,
   TenantTrendDataVo,
-  PackageDistributionVo,
-  ExpiringTenantVo,
-  QuotaTopTenantVo,
-  DashboardDataVo,
 } from './dto/index';
 
 /**

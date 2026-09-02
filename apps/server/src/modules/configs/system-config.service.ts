@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SystemPrismaService } from 'src/platform/prisma';
 import { RedisService } from 'src/platform/redis/redis.service';
-import { SystemCacheable, ClearSystemCache } from 'src/core/http/decorators/system-cache.decorator';
+import { ClearSystemCache, SystemCacheable } from 'src/core/http/decorators/system-cache.decorator';
 import { SysSystemConfig } from '@prisma/client';
 
 /**

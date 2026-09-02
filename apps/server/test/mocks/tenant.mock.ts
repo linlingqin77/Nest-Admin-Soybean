@@ -8,7 +8,7 @@
  * @requirements 1.1, 2.1, 3.1
  */
 
-import { createMockPrisma, MockPrismaService, createModelMock } from './prisma.mock';
+import { createMockPrisma, createModelMock, MockPrismaService } from './prisma.mock';
 import { createMockRedis, MockRedisService } from './redis.mock';
 import { createMockConfig, MockConfigService } from './config.mock';
 import { TenantContext, TenantContextData } from '../../src/core/tenancy/context/tenant.context';

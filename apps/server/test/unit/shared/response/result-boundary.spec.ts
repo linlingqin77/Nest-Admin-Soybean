@@ -1,4 +1,4 @@
-import { Result, ResponseCode, ResponseMessage } from '@/shared/response';
+import { ResponseCode, ResponseMessage, Result } from '@/shared/response';
 
 /**
  * Boundary Condition Tests for Result class

@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { UserRoleBridgeService } from './user-role-bridge.service';
+import { PasswordService } from './password.service';
 
 /**
  * 共享服务模块
@@ -9,7 +10,7 @@ import { UserRoleBridgeService } from './user-role-bridge.service';
  */
 @Global()
 @Module({
-  providers: [UserRoleBridgeService],
-  exports: [UserRoleBridgeService],
+  providers: [UserRoleBridgeService, PasswordService],
+  exports: [UserRoleBridgeService, PasswordService],
 })
 export class SharedServicesModule {}

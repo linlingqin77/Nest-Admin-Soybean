@@ -223,9 +223,7 @@ describe('ToolService', () => {
         { tableName: 'new_table', tableComment: '新表', createTime: new Date(), updateTime: new Date() },
       ];
 
-      mockPrismaService.$queryRaw
-        .mockResolvedValueOnce(mockTables)
-        .mockResolvedValueOnce([{ total: BigInt(1) }]);
+      mockPrismaService.$queryRaw.mockResolvedValueOnce(mockTables).mockResolvedValueOnce([{ total: BigInt(1) }]);
 
       const result = await service.genDbList(query as any);
 
@@ -236,9 +234,7 @@ describe('ToolService', () => {
 
     it('应该支持按表名筛选', async () => {
       const query = { pageNum: 1, pageSize: 10, skip: 0, take: 10, tableName: 'sys' };
-      mockPrismaService.$queryRaw
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([{ total: BigInt(0) }]);
+      mockPrismaService.$queryRaw.mockResolvedValueOnce([]).mockResolvedValueOnce([{ total: BigInt(0) }]);
 
       await service.genDbList(query as any);
 
@@ -263,9 +259,7 @@ describe('ToolService', () => {
         businessName: 'user',
         delFlag: '0',
       };
-      const mockColumns = [
-        { columnId: 1, columnName: 'user_id', isPk: '1', javaField: 'userId' },
-      ];
+      const mockColumns = [{ columnId: 1, columnName: 'user_id', isPk: '1', javaField: 'userId' }];
       const mockPreviewResponse = {
         files: [{ name: 'user.controller.ts', path: 'src/controller/user.controller.ts', content: '...' }],
         fileTree: [],
@@ -305,9 +299,7 @@ describe('ToolService', () => {
     });
 
     it('应该在没有主键时返回 null', async () => {
-      const columns = [
-        { columnId: 1, columnName: 'user_name', isPk: '0', javaField: 'userName' },
-      ];
+      const columns = [{ columnId: 1, columnName: 'user_name', isPk: '0', javaField: 'userName' }];
 
       const result = await service.getPrimaryKey(columns as any);
 

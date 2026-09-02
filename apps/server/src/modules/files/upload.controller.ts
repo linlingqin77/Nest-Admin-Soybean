@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Query, UploadedFile, UseInterceptors, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
 import { Result } from 'src/shared/response';
 import { Api } from 'src/core/http/decorators/api.decorator';

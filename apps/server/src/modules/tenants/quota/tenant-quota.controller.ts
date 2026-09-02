@@ -1,7 +1,7 @@
-import { Controller, Get, Put, Post, Query, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TenantQuotaService } from './tenant-quota.service';
-import { ListTenantQuotaDto, UpdateTenantQuotaDto, CheckQuotaDto } from './dto/index';
+import { CheckQuotaDto, ListTenantQuotaDto, UpdateTenantQuotaDto } from './dto/index';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import { User } from 'src/modules/users/user.decorator';

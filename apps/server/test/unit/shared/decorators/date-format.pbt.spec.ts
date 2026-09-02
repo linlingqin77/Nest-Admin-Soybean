@@ -1,9 +1,5 @@
 import * as fc from 'fast-check';
-import {
-  formatDateValue,
-  DEFAULT_DATE_FORMAT,
-  DEFAULT_TIMEZONE,
-} from '@/shared/decorators/date-format.decorator';
+import { DEFAULT_DATE_FORMAT, DEFAULT_TIMEZONE, formatDateValue } from '@/shared/decorators/date-format.decorator';
 
 /**
  * Property-Based Tests for DateFormat Decorator

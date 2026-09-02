@@ -30,7 +30,9 @@ export class RedisService implements OnModuleDestroy {
         this.client.disconnect();
         this.logger.log('Redis connection forcefully disconnected.');
       } catch (disconnectError) {
-        this.logger.error(`Error forcefully disconnecting Redis: ${disconnectError instanceof Error ? disconnectError.message : String(disconnectError)}`);
+        this.logger.error(
+          `Error forcefully disconnecting Redis: ${disconnectError instanceof Error ? disconnectError.message : String(disconnectError)}`,
+        );
       }
     }
   }
@@ -174,11 +176,77 @@ export class RedisService implements OnModuleDestroy {
   }
 
   /**
-   * 获取对象keys
+   * 获取对象 keys（不推荐用于生产环境，会阻塞 Redis 主线程）
+   *
+   * @deprecated 在生产环境中应使用 {@link scan} 替代 KEYS。
+   *             该方法保留仅用于调试或在已知 key 数量极小的开发场景。
    * @param key
    */
   async keys(key?: string) {
     return await this.client.keys(key ?? '');
+  }
+
+  /**
+   * 基于 SCAN 游标的非阻塞迭代。
+   *
+   * 与 KEYS 不同，SCAN 在生产环境中是安全的，因为它使用游标分批迭代 keyspace，
+   * 不会长时间阻塞 Redis 主线程。每次调用返回一个 cursor，cursor === '0' 表示迭代结束。
+   *
+   * 推荐使用 {@link scanAll} 一次性收集所有匹配 key。
+   *
+   * @param pattern 匹配模式（glob 风格，如 `login_tokens:*`）
+   * @param cursor 游标位置（首次传 '0'）
+   * @param count 单次扫描建议数量（仅作为 hint，实际可能返回 0 或更多）
+   */
+  async scan(cursor: string = '0', pattern?: string, count: number = 100): Promise<{ cursor: string; keys: string[] }> {
+    const args: (string | number)[] = ['MATCH', pattern ?? '*', 'COUNT', count];
+    // 使用类型断言绕过 ioredis scan 的回调重载
+    const result = await (this.client.scan as (...args: unknown[]) => Promise<[string, string[]]>)(cursor, ...args);
+    const [nextCursor, keys] = result;
+    return { cursor: nextCursor, keys };
+  }
+
+  /**
+   * 使用 SCAN 游标迭代收集所有匹配 pattern 的 key。
+   *
+   * 通过多次调用 SCAN 累积结果，避免一次性 KEYS 阻塞 Redis。
+   *
+   * @param pattern 匹配模式（glob 风格）
+   * @param count 单次 SCAN 提示数量
+   */
+  async scanAll(pattern: string, count: number = 100): Promise<string[]> {
+    let cursor = '0';
+    const collected: string[] = [];
+    do {
+      const result = await this.scan(cursor, pattern, count);
+      if (result.keys.length) {
+        collected.push(...result.keys);
+      }
+      cursor = result.cursor;
+    } while (cursor !== '0');
+    return collected;
+  }
+
+  /**
+   * 使用 SCAN 迭代查找并删除所有匹配 pattern 的 key。
+   *
+   * 替代 KEYS+DELETE 组合，避免在 keyspace 较大时阻塞 Redis。
+   *
+   * @param pattern 匹配模式
+   * @param count 单次 SCAN 提示数量
+   * @returns 被删除的 key 数量
+   */
+  async scanDelete(pattern: string, count: number = 100): Promise<number> {
+    let cursor = '0';
+    let deleted = 0;
+    do {
+      const result = await this.scan(cursor, pattern, count);
+      if (result.keys.length) {
+        deleted += await this.client.del(...result.keys);
+      }
+      cursor = result.cursor;
+    } while (cursor !== '0');
+    return deleted;
   }
 
   /* ----------------------- hash ----------------------- */
@@ -344,7 +412,7 @@ export class RedisService implements OnModuleDestroy {
    */
   async lRightPush(key: string, ...val: string[]): Promise<number> {
     if (!key) return 0;
-    return await this.client.lpush(key, ...val);
+    return await this.client.rpush(key, ...val);
   }
 
   /**
@@ -364,7 +432,7 @@ export class RedisService implements OnModuleDestroy {
   async lLeftPop(key: string): Promise<string> {
     if (!key) return '';
     const result = await this.client.blpop(key);
-    return result && result.length > 0 ? result[0] : "";
+    return result && result.length > 0 ? result[0] : '';
   }
 
   /**
@@ -374,7 +442,7 @@ export class RedisService implements OnModuleDestroy {
   async lRightPop(key: string): Promise<string> {
     if (!key) return '';
     const result = await this.client.brpop(key);
-    return result && result.length > 0 ? result[0] : "";
+    return result && result.length > 0 ? result[0] : '';
   }
 
   /**
@@ -415,11 +483,10 @@ export class RedisService implements OnModuleDestroy {
   }
 
   /**
-   * 删除全部缓存
-   * @returns
+   * 删除全部缓存（基于游标迭代的安全删除）
+   * @returns 删除的 key 数量
    */
   async reset() {
-    const keys = await this.client.keys('*');
-    return this.client.del(keys);
+    return this.scanDelete('*');
   }
 }

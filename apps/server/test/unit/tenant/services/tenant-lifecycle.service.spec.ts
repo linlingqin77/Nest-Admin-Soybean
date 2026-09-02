@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  TenantLifecycleService,
   CreateTenantParams,
   TenantInitData,
+  TenantLifecycleService,
 } from '@/core/tenancy/services/tenant-lifecycle.service';
 import { PrismaService } from '@/platform/prisma';
 import { TenantStatus } from '@/shared/enums';

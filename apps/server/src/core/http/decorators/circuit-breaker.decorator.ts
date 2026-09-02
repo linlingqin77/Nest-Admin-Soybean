@@ -1,9 +1,9 @@
 import { SetMetadata } from '@nestjs/common';
 import {
-  CircuitBreakerService,
-  CircuitBreakerOptions,
-  CircuitBreakerOpenError,
   CircuitBreakerIsolatedError,
+  CircuitBreakerOpenError,
+  CircuitBreakerOptions,
+  CircuitBreakerService,
 } from 'src/platform/resilience/circuit-breaker/circuit-breaker.service';
 import { BrokenCircuitError, IsolatedCircuitError } from 'cockatiel';
 

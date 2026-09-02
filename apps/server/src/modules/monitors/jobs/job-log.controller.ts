@@ -1,11 +1,11 @@
-import { Controller, Get, Delete, Query, Post, Res, Body } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Delete, Get, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JobLogService } from './job-log.service';
 import { RequirePermission } from 'src/core/http/decorators/require-permission.decorator';
 import { ListJobLogRequestDto } from './dto/create-job.dto';
 import { Response } from 'express';
 import { Api } from 'src/core/http/decorators/api.decorator';
-import { JobLogListResponseDto, ClearLogResultResponseDto } from 'src/modules/monitors/dto/responses';
+import { ClearLogResultResponseDto, JobLogListResponseDto } from 'src/modules/monitors/dto/responses';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';
 import { BusinessType } from 'src/shared/constants/business.constant';
 
@@ -46,8 +46,8 @@ export class JobLogController {
   })
   @RequirePermission('monitor:job:export')
   @Operlog({ businessType: BusinessType.EXPORT })
-  @Post('/export')
-  async export(@Res() res: Response, @Body() body: ListJobLogRequestDto): Promise<void> {
-    return this.jobLogService.export(res, body);
+  @Get('/export')
+  async export(@Res() res: Response, @Query() query: ListJobLogRequestDto): Promise<void> {
+    return this.jobLogService.export(res, query);
   }
 }

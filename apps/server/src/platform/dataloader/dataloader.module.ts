@@ -1,10 +1,10 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UserLoader } from './user.loader';
 import { DeptLoader } from './dept.loader';
 import { RoleLoader } from './role.loader';
 import { MenuLoader } from './menu.loader';
 import { PostLoader } from './post.loader';
-import { DictTypeLoader, DictDataLoader } from './dict.loader';
+import { DictDataLoader, DictTypeLoader } from './dict.loader';
 import { PrismaModule } from 'src/platform/prisma';
 
 /**

@@ -235,7 +235,7 @@ export class TestHelper {
 
     const response = await request(this.app.getHttpServer())
       // @ts-expect-error
-      .post(`${this.platform/config.apiPrefix}/auth/login`)
+      .post(`${this.platform / config.apiPrefix}/auth/login`)
       .set('x-tenant-id', tenantId)
       .send({
         username,

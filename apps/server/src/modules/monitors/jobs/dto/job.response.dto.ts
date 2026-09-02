@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 
 /**
@@ -12,19 +12,19 @@ import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 export class JobResponseDto {
   @ApiProperty({ description: '任务ID' })
   @Expose()
-  jobId!:  number;
+  jobId!: number;
 
   @ApiProperty({ description: '任务名称' })
   @Expose()
-  jobName!:  string;
+  jobName!: string;
 
   @ApiProperty({ description: '任务组名' })
   @Expose()
-  jobGroup!:  string;
+  jobGroup!: string;
 
   @ApiProperty({ description: '调用目标字符串' })
   @Expose()
-  invokeTarget!:  string;
+  invokeTarget!: string;
 
   @ApiPropertyOptional({ description: 'cron执行表达式' })
   @Expose()
@@ -80,19 +80,19 @@ export class JobResponseDto {
 export class JobLogResponseDto {
   @ApiProperty({ description: '日志ID' })
   @Expose()
-  jobLogId!:  number;
+  jobLogId!: number;
 
   @ApiProperty({ description: '任务名称' })
   @Expose()
-  jobName!:  string;
+  jobName!: string;
 
   @ApiProperty({ description: '任务组名' })
   @Expose()
-  jobGroup!:  string;
+  jobGroup!: string;
 
   @ApiProperty({ description: '调用目标字符串' })
   @Expose()
-  invokeTarget!:  string;
+  invokeTarget!: string;
 
   @ApiPropertyOptional({ description: '日志信息' })
   @Expose()
@@ -100,7 +100,7 @@ export class JobLogResponseDto {
 
   @ApiProperty({ description: '执行状态（0正常 1失败）' })
   @Expose()
-  status!:  string;
+  status!: string;
 
   @ApiPropertyOptional({ description: '异常信息' })
   @Expose()
@@ -109,5 +109,5 @@ export class JobLogResponseDto {
   @ApiProperty({ description: '创建时间', example: '2025-01-01 00:00:00' })
   @Expose()
   @DateFormat()
-  createTime!:  string;
+  createTime!: string;
 }

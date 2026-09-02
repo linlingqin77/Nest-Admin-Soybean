@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -8,7 +8,7 @@ import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 export class ChangeRoleStatusRequestDto {
   @ApiProperty({ required: true, description: '角色ID' })
   @IsNumber()
-  roleId!:  number;
+  roleId!: number;
 
   @ApiProperty({
     required: true,
@@ -19,5 +19,5 @@ export class ChangeRoleStatusRequestDto {
   })
   @IsString()
   @IsEnum(StatusEnum)
-  status!:  string;
+  status!: string;
 }

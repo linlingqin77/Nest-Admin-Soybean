@@ -1,13 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
-import { DelFlagEnum } from 'src/shared/enums/index';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { Idempotent } from 'src/core/http/decorators/idempotent.decorator';
 import { SYS_USER_TYPE } from 'src/shared/constants/index';
 import { Result } from 'src/shared/response';
-import { BatchCreateUserRequestDto, BatchDeleteUserRequestDto, BatchResultResponseDto, BatchResultItemResponseDto } from '../dto/index';
+import {
+  BatchCreateUserRequestDto,
+  BatchDeleteUserRequestDto,
+  BatchResultItemResponseDto,
+  BatchResultResponseDto,
+} from '../dto/index';
 
 import { UserRepository } from '../user.repository';
+import { PasswordService } from 'src/shared/services/password.service';
 
 /**
  * 用户批量操作服务
@@ -23,8 +31,11 @@ export class UserBatchService {
   constructor(
     @InjectTransactionHost() private readonly txHost: PrismaTransactionHost,
     private readonly userRepo: UserRepository,
+    private readonly passwordService: PasswordService,
   ) {}
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
 
   /**
    * 批量创建用户
@@ -67,8 +78,7 @@ export class UserBatchService {
           }
         }
 
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(userDto.password, salt);
+        const hashedPassword = await this.passwordService.hash(userDto.password);
 
         const user = await this.userRepo.create({
           userName: userDto.userName,

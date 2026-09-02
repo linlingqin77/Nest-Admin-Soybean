@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import {
   AppConfig,
-  DatabaseConfig,
-  RedisConfig,
-  JwtConfig,
-  TenantConfig,
-  CryptoConfig,
-  CosConfig,
-  PermissionConfig,
-  GeneratorConfig,
-  UserConfig,
   ClientConfig,
   Configuration,
+  CosConfig,
+  CryptoConfig,
+  DatabaseConfig,
+  GeneratorConfig,
+  JwtConfig,
+  PermissionConfig,
+  RedisConfig,
+  TenantConfig,
+  UserConfig,
 } from './types';
 
 /**

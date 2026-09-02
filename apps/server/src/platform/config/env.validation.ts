@@ -5,11 +5,11 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
   Max,
   Min,
-  validateSync,
-  Matches,
   MinLength,
+  validateSync,
 } from 'class-validator';
 
 /**
@@ -30,10 +30,10 @@ class EnvironmentVariables {
   // ==================== 核心配置 ====================
 
   @IsIn(['development', 'test', 'production'])
-  NODE_ENV!:  string;
+  NODE_ENV!: string;
 
   @IsString()
-  DATABASE_URL!:  string;
+  DATABASE_URL!: string;
 
   // ==================== 应用配置 ====================
 

@@ -1,15 +1,15 @@
-import { IsString, IsEmail, IsOptional, IsArray, IsObject, Length } from 'class-validator';
+import { IsArray, IsEmail, IsObject, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SendMailDto {
   @ApiProperty({ description: '收件人邮箱', example: 'user@example.com' })
   @IsEmail()
-  toMail!:  string;
+  toMail!: string;
 
   @ApiProperty({ description: '模板编码', example: 'user_register_code' })
   @IsString()
   @Length(1, 100)
-  templateCode!:  string;
+  templateCode!: string;
 
   @ApiPropertyOptional({
     description: '模板参数',
@@ -27,12 +27,12 @@ export class BatchSendMailDto {
   })
   @IsArray()
   @IsEmail({}, { each: true })
-  toMails!:  string[];
+  toMails!: string[];
 
   @ApiProperty({ description: '模板编码', example: 'user_register_code' })
   @IsString()
   @Length(1, 100)
-  templateCode!:  string;
+  templateCode!: string;
 
   @ApiPropertyOptional({
     description: '模板参数',
@@ -46,10 +46,10 @@ export class BatchSendMailDto {
 export class TestMailDto {
   @ApiProperty({ description: '收件人邮箱', example: 'user@example.com' })
   @IsEmail()
-  toMail!:  string;
+  toMail!: string;
 
   @ApiProperty({ description: '邮箱账号ID', example: 1 })
-  accountId!:  number;
+  accountId!: number;
 
   @ApiPropertyOptional({ description: '邮件标题', example: '测试邮件' })
   @IsOptional()

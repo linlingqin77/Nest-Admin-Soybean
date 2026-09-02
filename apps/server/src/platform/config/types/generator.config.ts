@@ -6,20 +6,20 @@ import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 export class GeneratorConfig {
   @IsString()
   @IsNotEmpty()
-  author!:  string;
+  author!: string;
 
   @IsString()
   @IsNotEmpty()
-  packageName!:  string;
+  packageName!: string;
 
   @IsString()
   @IsNotEmpty()
-  moduleName!:  string;
+  moduleName!: string;
 
   @IsBoolean()
-  autoRemovePre!:  boolean;
+  autoRemovePre!: boolean;
 
   @IsArray()
   @IsString({ each: true })
-  tablePrefix!:  string[];
+  tablePrefix!: string[];
 }

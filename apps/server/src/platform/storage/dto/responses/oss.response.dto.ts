@@ -8,31 +8,31 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class OssResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '对象存储主键' })
-  ossId!:  number;
+  ossId!: number;
 
   @Expose()
   @ApiProperty({ description: '文件名' })
-  fileName!:  string;
+  fileName!: string;
 
   @Expose()
   @ApiProperty({ description: '原名' })
-  originalName!:  string;
+  originalName!: string;
 
   @Expose()
   @ApiProperty({ description: '文件后缀名' })
-  fileSuffix!:  string;
+  fileSuffix!: string;
 
   @Expose()
   @ApiProperty({ description: 'URL地址' })
-  url!:  string;
+  url!: string;
 
   @Expose()
   @ApiProperty({ description: '文件大小（字节）' })
-  size!:  number;
+  size!: number;
 
   @Expose()
   @ApiProperty({ description: '服务商' })
-  service!:  string;
+  service!: string;
 }
 
 /**
@@ -40,8 +40,8 @@ export class OssResponseDto extends BaseResponseDto {
  */
 export class OssListResponseDto {
   @ApiProperty({ description: 'OSS文件列表', type: [OssResponseDto] })
-  rows!:  OssResponseDto[];
+  rows!: OssResponseDto[];
 
   @ApiProperty({ description: '总数量' })
-  total!:  number;
+  total!: number;
 }

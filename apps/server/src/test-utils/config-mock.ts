@@ -1,19 +1,19 @@
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import {
   AppConfig,
-  DatabaseConfig,
-  RedisConfig,
-  JwtConfig,
-  TenantConfig,
-  CryptoConfig,
-  CosConfig,
-  PermissionConfig,
-  GeneratorConfig,
-  UserConfig,
   ClientConfig,
   Configuration,
-  LoggerConfig,
+  CosConfig,
+  CryptoConfig,
+  DatabaseConfig,
   FileConfig,
+  GeneratorConfig,
+  JwtConfig,
+  LoggerConfig,
+  PermissionConfig,
+  RedisConfig,
+  TenantConfig,
+  UserConfig,
 } from 'src/platform/config/types';
 
 /**

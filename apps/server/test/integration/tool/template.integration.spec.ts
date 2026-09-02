@@ -48,14 +48,18 @@ describe('Template Integration Tests', () => {
   afterAll(async () => {
     // 清理测试数据
     if (createdTemplateId) {
-      await prisma.genTemplate.delete({
-        where: { id: createdTemplateId },
-      }).catch(() => {});
+      await prisma.genTemplate
+        .delete({
+          where: { id: createdTemplateId },
+        })
+        .catch(() => {});
     }
     if (createdGroupId) {
-      await prisma.genTemplateGroup.delete({
-        where: { id: createdGroupId },
-      }).catch(() => {});
+      await prisma.genTemplateGroup
+        .delete({
+          where: { id: createdGroupId },
+        })
+        .catch(() => {});
     }
     await app.close();
   });

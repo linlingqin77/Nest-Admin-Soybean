@@ -1,4 +1,4 @@
-import { IsString, IsEnum, Length, IsOptional } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -19,27 +19,27 @@ export class CreateSmsChannelRequestDto {
   })
   @IsString()
   @Length(1, 50)
-  code!:  string;
+  code!: string;
 
   @ApiProperty({ description: '渠道名称', example: '阿里云短信' })
   @IsString()
   @Length(1, 100)
-  name!:  string;
+  name!: string;
 
   @ApiProperty({ description: '短信签名', example: '若依管理系统' })
   @IsString()
   @Length(1, 100)
-  signature!:  string;
+  signature!: string;
 
   @ApiProperty({ description: 'API Key', example: 'LTAI5tXXXXXXXXXXXXXX' })
   @IsString()
   @Length(1, 255)
-  apiKey!:  string;
+  apiKey!: string;
 
   @ApiProperty({ description: 'API Secret', example: 'XXXXXXXXXXXXXXXXXXXXXXXX' })
   @IsString()
   @Length(1, 255)
-  apiSecret!:  string;
+  apiSecret!: string;
 
   @ApiPropertyOptional({ description: '回调地址', example: 'https://example.com/callback' })
   @IsOptional()

@@ -1,22 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma';
-import { Result, ResponseCode } from 'src/shared/response';
+import { ResponseCode, Result } from 'src/shared/response';
 import { BusinessException } from 'src/shared/exceptions/business.exception';
 import { TenantContext } from 'src/core/tenancy/context/tenant.context';
 import { DelFlagEnum, StatusEnum } from 'src/shared/enums';
-import { Prisma, GenTemplateGroup, GenTemplate } from '@prisma/client';
+import { GenTemplate, GenTemplateGroup, Prisma } from '@prisma/client';
 import {
-  CreateTemplateGroupDto,
-  UpdateTemplateGroupDto,
-  ListTemplateGroupRequestDto,
   CreateTemplateDto,
-  UpdateTemplateDto,
-  ListTemplateRequestDto,
-  ValidateTemplateDto,
-  ImportTemplateGroupDto,
+  CreateTemplateGroupDto,
   ExportTemplateGroupDto,
-  TemplateLanguage,
+  ImportTemplateGroupDto,
+  ListTemplateGroupRequestDto,
+  ListTemplateRequestDto,
   TemplateContextDto,
+  TemplateLanguage,
+  UpdateTemplateDto,
+  UpdateTemplateGroupDto,
+  ValidateTemplateDto,
 } from './dto';
 
 /**
@@ -109,7 +109,10 @@ export class TemplateService {
       this.logger.log(`模板组创建成功: ${group.name} (ID: ${group.id})`);
       return Result.ok(group, '创建成功');
     } catch (error) {
-      this.logger.error(`模板组创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板组创建失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建模板组失败');
     }
   }
@@ -181,7 +184,10 @@ export class TemplateService {
       this.logger.log(`模板组更新成功: ${group.name} (ID: ${group.id})`);
       return Result.ok(group, '更新成功');
     } catch (error) {
-      this.logger.error(`模板组更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板组更新失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新模板组失败');
     }
   }
@@ -246,7 +252,10 @@ export class TemplateService {
       this.logger.log(`模板组删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`模板组删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板组删除失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除模板组失败');
     }
   }
@@ -409,7 +418,10 @@ export class TemplateService {
       this.logger.log(`模板创建成功: ${template.name} (ID: ${template.id})`);
       return Result.ok(template, '创建成功');
     } catch (error) {
-      this.logger.error(`模板创建失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板创建失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '创建模板失败');
     }
   }
@@ -462,7 +474,10 @@ export class TemplateService {
       this.logger.log(`模板更新成功: ${template.name} (ID: ${template.id})`);
       return Result.ok(template, '更新成功');
     } catch (error) {
-      this.logger.error(`模板更新失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板更新失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '更新模板失败');
     }
   }
@@ -506,7 +521,10 @@ export class TemplateService {
       this.logger.log(`模板删除成功: ${existing.name} (ID: ${id})`);
       return Result.ok(null, '删除成功');
     } catch (error) {
-      this.logger.error(`模板删除失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板删除失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '删除模板失败');
     }
   }
@@ -780,7 +798,10 @@ export class TemplateService {
     for (const template of dto.templates) {
       const validateResult = this.validateTemplateSyntax(template.content);
       if (!validateResult.valid) {
-        throw new BusinessException(ResponseCode.PARAM_INVALID, `模板 "${template.name}" 语法错误: ${validateResult.message}`);
+        throw new BusinessException(
+          ResponseCode.PARAM_INVALID,
+          `模板 "${template.name}" 语法错误: ${validateResult.message}`,
+        );
       }
     }
 
@@ -824,7 +845,10 @@ export class TemplateService {
       this.logger.log(`模板组导入成功: ${group.name} (ID: ${group.id}), 包含 ${dto.templates.length} 个模板`);
       return Result.ok(group, '导入成功');
     } catch (error) {
-      this.logger.error(`模板组导入失败: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `模板组导入失败: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       throw new BusinessException(ResponseCode.OPERATION_FAILED, '导入模板组失败');
     }
   }

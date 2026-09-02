@@ -13,7 +13,7 @@
 import * as fc from 'fast-check';
 import { RequestIdMiddleware } from '@/core/http/middleware/request-id.middleware';
 import { getRequestId } from '@/platform/logger/pino-logger.config';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ClsService } from 'nestjs-cls';
 
 describe('Request Tracing Property-Based Tests', () => {

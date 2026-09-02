@@ -1,17 +1,21 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Result } from 'src/shared/response';
 import { DelFlagEnum } from 'src/shared/enums/index';
 import { toDtoList } from 'src/shared/utils/index';
 import {
   CreateMailTemplateDto,
-  UpdateMailTemplateDto,
   ListMailTemplateDto,
   MailTemplateResponseDto,
+  UpdateMailTemplateDto,
 } from './dto/index';
 import { MailTemplateRepository } from './mail-template.repository';
 import { MailAccountRepository } from '../accounts/mail-account.repository';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 
 @Injectable()
 export class MailTemplateService {

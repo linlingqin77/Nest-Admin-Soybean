@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 
 /**
@@ -12,39 +12,39 @@ import { DateFormat } from 'src/shared/decorators/date-format.decorator';
 export class OperLogResponseDto {
   @ApiProperty({ description: '日志主键' })
   @Expose()
-  operId!:  number;
+  operId!: number;
 
   @ApiProperty({ description: '模块标题' })
   @Expose()
-  title!:  string;
+  title!: string;
 
   @ApiProperty({ description: '业务类型' })
   @Expose()
-  businessType!:  number;
+  businessType!: number;
 
   @ApiProperty({ description: '请求方式' })
   @Expose()
-  requestMethod!:  string;
+  requestMethod!: string;
 
   @ApiProperty({ description: '操作类别' })
   @Expose()
-  operatorType!:  number;
+  operatorType!: number;
 
   @ApiProperty({ description: '操作人员' })
   @Expose()
-  operName!:  string;
+  operName!: string;
 
   @ApiProperty({ description: '部门名称' })
   @Expose()
-  deptName!:  string;
+  deptName!: string;
 
   @ApiProperty({ description: '请求URL' })
   @Expose()
-  operUrl!:  string;
+  operUrl!: string;
 
   @ApiProperty({ description: '操作地点' })
   @Expose()
-  operLocation!:  string;
+  operLocation!: string;
 
   @ApiPropertyOptional({ description: '请求参数' })
   @Expose()
@@ -60,24 +60,24 @@ export class OperLogResponseDto {
 
   @ApiProperty({ description: '方法名称' })
   @Expose()
-  method!:  string;
+  method!: string;
 
   @ApiProperty({ description: '主机地址' })
   @Expose()
-  operIp!:  string;
+  operIp!: string;
 
   @ApiProperty({ description: '操作时间', example: '2025-01-01 00:00:00' })
   @Expose()
   @DateFormat()
-  operTime!:  string;
+  operTime!: string;
 
   @ApiProperty({ description: '操作状态（0正常 1异常）' })
   @Expose()
-  status!:  string;
+  status!: string;
 
   @ApiProperty({ description: '消耗时间（毫秒）' })
   @Expose()
-  costTime!:  number;
+  costTime!: number;
 
   /**
    * 租户ID - 不返回给前端

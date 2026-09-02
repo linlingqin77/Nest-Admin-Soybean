@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CryptoException } from 'src/shared/exceptions';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { RedisService } from 'src/platform/redis/redis.service';
@@ -14,6 +14,10 @@ import * as forge from 'node-forge';
  *
  * 与 Soybean 前端的 crypto.ts 保持一致
  */
+
+/** 默认 nonce / 时间戳容差的 TTL（毫秒），对应 5 分钟。 */
+const DEFAULT_CRYPTO_TTL_MS = 5 * 60 * 1000;
+
 @Injectable()
 export class CryptoService implements OnModuleInit {
   private readonly logger = new Logger(CryptoService.name);
@@ -157,7 +161,7 @@ export class CryptoService implements OnModuleInit {
       return forge.util.encode64(encrypted);
     } catch (error) {
       this.logger.error('RSA encrypt error:', error instanceof Error ? error.message : String(error));
-      throw new Error('RSA encrypt failed');
+      throw CryptoException.rsaEncryptFailed();
     }
   }
 
@@ -242,9 +246,12 @@ export class CryptoService implements OnModuleInit {
 
   /**
    * 生成随机 AES 密钥
+   *
+   * 返回 16 字节（128 位）的十六进制编码字符串，用于 AES-128。
+   * 注意：AES-128 要求密钥长度为 16 字节（128 位），即 32 个十六进制字符。
    */
   generateAesKey(): string {
-    return crypto.randomBytes(16).toString('hex').substring(0, 16);
+    return crypto.randomBytes(16).toString('hex');
   }
 
   /**
@@ -255,12 +262,12 @@ export class CryptoService implements OnModuleInit {
   private async validateNonce(nonce: string): Promise<void> {
     const nonceKey = `crypto:nonce:${nonce}`;
     const exists = await this.redisService.get(nonceKey);
-    
+
     if (exists) {
       this.logger.warn(`Replay attack detected: nonce ${nonce} already used`);
       throw new BadRequestException('请求已过期或重复，请重新提交');
     }
-    
+
     // 将nonce存储到Redis，设置TTL
     await this.redisService.set(nonceKey, '1', this.NONCE_TTL);
   }
@@ -273,7 +280,7 @@ export class CryptoService implements OnModuleInit {
   private validateTimestamp(timestamp: number): void {
     const now = Date.now();
     const diff = Math.abs(now - timestamp);
-    
+
     if (diff > this.TIMESTAMP_TOLERANCE) {
       this.logger.warn(`Timestamp out of range: ${timestamp}, current: ${now}, diff: ${diff}ms`);
       throw new BadRequestException('请求时间戳无效，请检查系统时间');

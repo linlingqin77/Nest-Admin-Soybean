@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { ISmsClient, SmsSendParams, SmsSendResult, SmsChannelConfig } from '../sms-client.interface';
+import { ISmsClient, SmsChannelConfig, SmsSendParams, SmsSendResult } from '../sms-client.interface';
 
 /**
  * 腾讯云短信客户端

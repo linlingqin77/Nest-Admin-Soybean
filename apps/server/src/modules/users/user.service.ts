@@ -2,26 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma, SysDept, SysPost, SysRole, SysUser } from '@prisma/client';
 import { toDtoList } from 'src/shared/utils/index';
-import { UserResponseDto, UserOptionResponseDto } from './dto/responses';
+import { UserOptionResponseDto, UserResponseDto } from './dto/responses';
 
 import { CacheEnum, DelFlagEnum, StatusEnum } from 'src/shared/enums/index';
-import { InjectTransactionHost, Transactional, PrismaTransactionHost } from 'src/core/http/decorators/transactional.decorator';
+import {
+  InjectTransactionHost,
+  PrismaTransactionHost,
+  Transactional,
+} from 'src/core/http/decorators/transactional.decorator';
 import { Result } from 'src/shared/response';
 import {
-  CreateUserRequestDto,
-  UpdateUserRequestDto,
-  ListUserRequestDto,
-  ChangeUserStatusRequestDto,
-  ResetPwdRequestDto,
   AllocatedListRequestDto,
-  UpdateProfileRequestDto,
-  UpdatePwdRequestDto,
   BatchCreateUserRequestDto,
   BatchDeleteUserRequestDto,
   BatchResultResponseDto,
+  ChangeUserStatusRequestDto,
+  CreateUserRequestDto,
+  ListUserRequestDto,
+  ResetPwdRequestDto,
+  UpdateProfileRequestDto,
+  UpdatePwdRequestDto,
+  UpdateUserRequestDto,
 } from './dto/index';
-import { RegisterRequestDto, LoginRequestDto } from 'src/modules/auth/dto/requests';
-import { AuthUserCancelDto, AuthUserCancelAllDto, AuthUserSelectAllDto } from '../roles/dto/index';
+import { LoginRequestDto, RegisterRequestDto } from 'src/modules/auth/dto/requests';
+import { AuthUserCancelAllDto, AuthUserCancelDto, AuthUserSelectAllDto } from '../roles/dto/index';
 
 import { RoleService } from '../roles/role.service';
 import { DeptService } from '../depts/dept.service';
@@ -70,7 +74,9 @@ export class UserService {
     private readonly userCrudService: UserCrudService,
     private readonly userBatchService: UserBatchService,
   ) {}
-  private get prisma() { return this.txHost.tx; }
+  private get prisma() {
+    return this.txHost.tx;
+  }
 
   // ==================== 用户 CRUD 操作 - 委托给 UserCrudService ====================
 
@@ -91,8 +97,8 @@ export class UserService {
   /**
    * 根据用户ID查询用户详情
    */
-  async findOne(userId: number) {
-    return this.userCrudService.findOne(userId);
+  async findOne(userId: number, withReferenceData = false) {
+    return this.userCrudService.findOne(userId, withReferenceData);
   }
 
   /**

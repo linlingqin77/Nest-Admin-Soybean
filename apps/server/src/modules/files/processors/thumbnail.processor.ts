@@ -1,4 +1,4 @@
-import { Process, Processor, OnQueueCompleted, OnQueueFailed, OnQueueActive } from '@nestjs/bull';
+import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { AppConfigService } from 'src/platform/config/app-config.service';
@@ -83,7 +83,10 @@ export class ThumbnailProcessor {
 
       this.logger.log(`缩略图生成成功: uploadId=${uploadId}, url=${thumbnailUrl}`);
     } catch (error) {
-      this.logger.error(`缩略图生成失败: uploadId=${uploadId}, error=${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `缩略图生成失败: uploadId=${uploadId}, error=${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
       // 不重新抛出异常，避免无限重试
     }
   }

@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsEnum, Length, IsOptional, IsArray } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 import { Type } from 'class-transformer';
@@ -16,21 +16,21 @@ export class CreateSmsTemplateRequestDto {
   @ApiProperty({ description: '渠道ID', example: 1 })
   @IsNumber()
   @Type(() => Number)
-  channelId!:  number;
+  channelId!: number;
 
   @ApiProperty({ description: '模板编码', example: 'SMS_LOGIN_CODE' })
   @IsString()
   @Length(1, 100)
-  code!:  string;
+  code!: string;
 
   @ApiProperty({ description: '模板名称', example: '登录验证码' })
   @IsString()
   @Length(1, 100)
-  name!:  string;
+  name!: string;
 
   @ApiProperty({ description: '模板内容', example: '您的验证码是${code}，有效期${time}分钟。' })
   @IsString()
-  content!:  string;
+  content!: string;
 
   @ApiPropertyOptional({
     description: '参数列表（JSON数组）',
@@ -44,7 +44,7 @@ export class CreateSmsTemplateRequestDto {
   @ApiProperty({ description: '第三方模板ID', example: 'SMS_123456789' })
   @IsString()
   @Length(1, 100)
-  apiTemplateId!:  string;
+  apiTemplateId!: string;
 
   @ApiProperty({
     description: '模板类型（1-验证码 2-通知 3-营销）',
@@ -54,7 +54,7 @@ export class CreateSmsTemplateRequestDto {
   @IsNumber()
   @Type(() => Number)
   @IsEnum(SmsTemplateTypeEnum)
-  type!:  number;
+  type!: number;
 
   @ApiPropertyOptional({
     enum: StatusEnum,

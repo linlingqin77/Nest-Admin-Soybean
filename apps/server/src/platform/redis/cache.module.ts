@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { MultiLevelCacheService } from './multi-level-cache.service';
 import { CacheWarmupService } from './cache-warmup.service';
 

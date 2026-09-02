@@ -5,10 +5,10 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 export class DeptTreeNodeResponseDto {
   @ApiProperty({ description: '部门ID' })
-  id!:  number;
+  id!: number;
 
   @ApiProperty({ description: '部门名称' })
-  label!:  string;
+  label!: string;
 
   @ApiProperty({ description: '子节点列表', type: [DeptTreeNodeResponseDto], required: false })
   children?: DeptTreeNodeResponseDto[];

@@ -39,6 +39,10 @@ export class LoginSecurityService {
   private readonly logger = new Logger(LoginSecurityService.name);
 
   /** 默认配置 */
+  // TODO: 把 maxFailedAttempts / lockDurationMs / failedCountTtlMs 移到
+  //   AppConfigService 下（参考 user / jwt 配置），用环境变量覆盖，避免硬编码。
+  //   在那之前，调用方仍可通过 {@link recordLoginFailure} 的 `config` 参数
+  //   临时覆盖单次调用的策略。
   private readonly defaultConfig: LoginSecurityConfig = {
     maxFailedAttempts: 5,
     lockDurationMs: 15 * 60 * 1000, // 15 分钟
@@ -98,7 +102,10 @@ export class LoginSecurityService {
   async getFailedAttempts(username: string): Promise<number> {
     const countKey = this.getFailedCountKey(username);
     const count = await this.redisService.get(countKey);
-    return count ? parseInt(count, 10) : 0;
+    if (!count) return 0;
+    const n = parseInt(count, 10);
+    // NaN-safe: 如果 Redis 里的值被外部进程改坏，不要把 NaN 抛给上层。
+    return Number.isNaN(n) ? 0 : n;
   }
 
   /**

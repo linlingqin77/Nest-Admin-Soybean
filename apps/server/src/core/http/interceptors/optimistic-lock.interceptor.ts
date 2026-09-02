@@ -1,18 +1,19 @@
 import {
-  Injectable,
-  NestInterceptor,
   CallHandler,
   ExecutionContext,
   HttpException,
   HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { PrismaService } from 'src/platform/prisma';
 import {
   OPTIMISTIC_LOCK_KEY,
-  OptimisticLockOptions,
   OptimisticLockException,
+  OptimisticLockOptions,
 } from 'src/core/decorators/optimistic-lock.decorator';
 
 /**
@@ -42,9 +43,14 @@ export class OptimisticLockInterceptor implements NestInterceptor {
     }
 
     // 检查当前版本
-    const model = (this.prisma as unknown as Record<string, { findUnique: (args: unknown) => Promise<unknown> }>)[options.model];
-    if (!model) {
-      throw new Error(`Model ${options.model} not found in Prisma client`);
+    // 通过运行时检查确保 model 在 Prisma client 中存在
+    const prismaClient = this.prisma as unknown as Record<
+      string,
+      { findUnique?: (args: unknown) => Promise<unknown> } | undefined
+    >;
+    const model = prismaClient[options.model];
+    if (!model || typeof model.findUnique !== 'function') {
+      throw new InternalServerErrorException(`Model ${options.model} not found in Prisma client`);
     }
 
     const current = await model.findUnique({
@@ -63,8 +69,7 @@ export class OptimisticLockInterceptor implements NestInterceptor {
 
     // 在请求中注入新版本号，供 Service 使用
     if (request.body) {
-      const newVersion =
-        typeof currentVersion === 'number' ? currentVersion + 1 : 1;
+      const newVersion = typeof currentVersion === 'number' ? currentVersion + 1 : 1;
       request.body[options.versionField] = newVersion;
     }
 

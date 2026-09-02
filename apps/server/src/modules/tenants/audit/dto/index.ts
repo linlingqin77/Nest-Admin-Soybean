@@ -5,12 +5,7 @@ export * from './requests';
 export * from './responses';
 
 // 内部使用的类型（从原始VO迁移）
-export {
-  TenantAuditLogVo,
-  TenantAuditLogDetailVo,
-  TenantAuditLogListVo,
-  TenantAuditLogStatsVo,
-} from './responses';
+export { TenantAuditLogVo, TenantAuditLogDetailVo, TenantAuditLogListVo, TenantAuditLogStatsVo } from './responses';
 
 // 向后兼容别名
 export { ListTenantAuditLogRequestDto as ListTenantAuditLogDto } from './requests';

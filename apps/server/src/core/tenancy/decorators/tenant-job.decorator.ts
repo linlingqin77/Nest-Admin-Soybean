@@ -1,4 +1,4 @@
-import { SetMetadata, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'src/platform/prisma';
 
@@ -171,7 +171,9 @@ export class TenantJobExecutor {
           duration: Date.now() - startTime,
         };
         results.push(result);
-        this.logger.error(`Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.error(
+          `Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
 
         if (!options.continueOnError) {
           this.logger.warn('Stopping execution due to error');
@@ -213,7 +215,9 @@ export class TenantJobExecutor {
             duration: Date.now() - startTime,
           } as TenantJobResult;
         } catch (error) {
-          this.logger.error(`Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`);
+          this.logger.error(
+            `Tenant ${tenant.tenantId} failed: ${error instanceof Error ? error.message : String(error)}`,
+          );
           return {
             tenantId: tenant.tenantId,
             success: false,

@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { ResponseCode, ResponseMessage, getResponseMessage } from '@/shared/response/response.interface';
+import { getResponseMessage, ResponseCode, ResponseMessage } from '@/shared/response/response.interface';
 
 /**
  * Property-Based Tests for ResponseCode and ResponseMessage

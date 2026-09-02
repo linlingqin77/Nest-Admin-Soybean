@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { RedisService } from 'src/platform/redis/redis.service';
 import { PrismaService } from 'src/platform/prisma';
 import { BusinessException } from 'src/shared/exceptions';
@@ -100,11 +101,7 @@ export class MfaService {
     const qrCode = await QRCode.toDataURL(otpauthUrl);
 
     // 临时保存密钥（验证后才正式绑定）
-    await this.redisService.set(
-      `${MFA_CACHE_PREFIX.SETUP}${userId}`,
-      secret.base32,
-      this.SETUP_TTL * 1000,
-    );
+    await this.redisService.set(`${MFA_CACHE_PREFIX.SETUP}${userId}`, secret.base32, this.SETUP_TTL * 1000);
 
     this.logger.log(`TOTP setup generated for userId=${userId}`);
 
@@ -176,17 +173,13 @@ export class MfaService {
    * @returns 验证码（仅开发环境返回，生产环境返回空）
    */
   async sendSmsCode(userId: number, phone: string): Promise<string | null> {
-    // 生成 6 位随机验证码
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    // 生成 6 位随机验证码（使用密码学安全的随机数）
+    const code = crypto.randomInt(100000, 1000000).toString();
 
     // 保存到 Redis
-    await this.redisService.set(
-      `${MFA_CACHE_PREFIX.SMS_CODE}${userId}`,
-      code,
-      this.SMS_CODE_TTL * 1000,
-    );
+    await this.redisService.set(`${MFA_CACHE_PREFIX.SMS_CODE}${userId}`, code, this.SMS_CODE_TTL * 1000);
 
-    this.logger.log(`SMS MFA code generated for userId=${userId}, phone=${phone}`);
+    this.logger.log(`SMS MFA code generated for userId=${userId}, phone=${this.maskPhone(phone)}`);
 
     // 注意：实际短信发送应通过 SmsSendService
     // 这里仅保存验证码，调用方负责发送
@@ -252,11 +245,7 @@ export class MfaService {
    * 设置 MFA 验证通过
    */
   private async setMfaVerified(userId: number): Promise<void> {
-    await this.redisService.set(
-      `${MFA_CACHE_PREFIX.VERIFIED}${userId}`,
-      'true',
-      this.VERIFIED_TTL * 1000,
-    );
+    await this.redisService.set(`${MFA_CACHE_PREFIX.VERIFIED}${userId}`, 'true', this.VERIFIED_TTL * 1000);
   }
 
   /**
@@ -296,5 +285,16 @@ export class MfaService {
       this.logger.warn(`TOTP verification error: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
+  }
+
+  /**
+   * 将手机号中间四位替换为 `*`，避免在日志中泄露完整 PII。
+   *
+   * 不抛异常 —— 输入为空 / 长度不足时返回原值，让上层日志自行判断。
+   */
+  private maskPhone(phone: string | undefined | null): string {
+    if (!phone) return '';
+    // 13xxxx / 14xxxx / 15xxxx / 17xxxx / 18xxxx → 138****8000
+    return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
   }
 }

@@ -4,8 +4,8 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
-import { trace, context, SpanStatusCode, Span } from '@opentelemetry/api';
+import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-node';
+import { context, Span, SpanStatusCode, trace } from '@opentelemetry/api';
 
 /**
  * 分布式追踪配置
@@ -106,7 +106,10 @@ export class TracingService implements OnModuleInit, OnModuleDestroy {
         `OpenTelemetry tracing initialized: service=${this.config.serviceName}, endpoint=${this.config.endpoint}`,
       );
     } catch (error) {
-      this.logger.error(`Failed to initialize OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : String(error));
+      this.logger.error(
+        `Failed to initialize OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 
@@ -116,7 +119,9 @@ export class TracingService implements OnModuleInit, OnModuleDestroy {
         await this.sdk.shutdown();
         this.logger.log('OpenTelemetry SDK shut down successfully');
       } catch (error) {
-        this.logger.error(`Error shutting down OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.error(
+          `Error shutting down OpenTelemetry: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }
   }

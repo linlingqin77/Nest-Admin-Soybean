@@ -5,7 +5,7 @@
  * 测试序列化工具函数触发装饰器转换和向后兼容性
  */
 import * as fc from 'fast-check';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { toDto, toDtoList, toDtoPage } from '@/shared/utils/serialize.util';
 import { DateFormat } from '@/shared/decorators/date-format.decorator';
 

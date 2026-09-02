@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CacheService } from './cache.service';
 import { Api } from 'src/core/http/decorators/api.decorator';
 import {
   CacheInfoResponseDto,
   CacheKeyResponseDto,
-  CacheNamesResponseDto,
   CacheKeysResponseDto,
+  CacheNamesResponseDto,
   ClearCacheResultResponseDto,
 } from 'src/modules/monitors/dto/responses';
 import { Operlog } from 'src/core/audit/decorators/operlog.decorator';

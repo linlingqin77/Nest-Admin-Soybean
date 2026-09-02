@@ -372,7 +372,9 @@ describe('TenantAuditLog Property-Based Tests', () => {
             const log = findAuditLogById(result.auditLogId);
 
             // Property: Audit log should exist with platform/config change type
-            return result.success && log !== null && log.actionType === 'config_change' && log.modules === 'platform/config';
+            return (
+              result.success && log !== null && log.actionType === 'config_change' && log.modules === 'platform/config'
+            );
           },
         ),
         { numRuns: 100 },

@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { IGNORE_TENANT_KEY } from '../decorators/tenant.decorator';

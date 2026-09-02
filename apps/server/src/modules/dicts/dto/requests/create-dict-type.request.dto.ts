@@ -1,4 +1,4 @@
-import { IsString, IsEnum, Length, IsOptional } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusEnum, StatusEnumSchema } from 'src/shared/enums';
 
@@ -9,7 +9,7 @@ export class CreateDictTypeRequestDto {
   })
   @IsString()
   @Length(0, 100)
-  dictName!:  string;
+  dictName!: string;
 
   @ApiProperty({
     required: true,
@@ -17,7 +17,7 @@ export class CreateDictTypeRequestDto {
   })
   @IsString()
   @Length(0, 100)
-  dictType!:  string;
+  dictType!: string;
 
   @ApiProperty({
     required: true,

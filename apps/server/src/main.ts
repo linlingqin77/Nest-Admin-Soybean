@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { mw as requestIpMw } from 'request-ip';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
-import { ValidationPipe, Logger, ShutdownSignal, VersioningType } from '@nestjs/common';
+import { Logger, ShutdownSignal, ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppConfigService } from 'src/platform/config/app-config.service';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import path from 'path';
@@ -194,8 +194,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerOptions);
 
   // 异步保存 OpenAPI 规范文件（不阻塞启动）
-  writeFile(path.posix.join(process.cwd(), 'public', 'openApi.json'), JSON.stringify(document, null, 2)).catch(
-    (err) => new Logger('Bootstrap').warn(`Failed to write OpenAPI spec file: ${err.message}`),
+  writeFile(path.posix.join(process.cwd(), 'public', 'openApi.json'), JSON.stringify(document, null, 2)).catch((err) =>
+    new Logger('Bootstrap').warn(`Failed to write OpenAPI spec file: ${err.message}`),
   );
 
   // 项目依赖当前文档功能，最好不要改变当前地址

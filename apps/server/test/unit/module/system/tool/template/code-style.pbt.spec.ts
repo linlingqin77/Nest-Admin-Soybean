@@ -8,18 +8,18 @@ import * as fc from 'fast-check';
 import {
   CodeFormatter,
   formatCode,
-  toPascalCase,
-  toCamelCase,
-  toKebabCase,
-  toSnakeCase,
-  toUpperSnakeCase,
-  isPascalCase,
+  generateClassName,
+  generateFileName,
   isCamelCase,
   isKebabCase,
+  isPascalCase,
   isSnakeCase,
   isUpperSnakeCase,
-  generateFileName,
-  generateClassName,
+  toCamelCase,
+  toKebabCase,
+  toPascalCase,
+  toSnakeCase,
+  toUpperSnakeCase,
 } from '@/modules/tools/template/utils';
 
 describe('Code Style - Property Tests', () => {
