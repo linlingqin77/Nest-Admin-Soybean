@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { h, ref, watch } from 'vue';
+import { computed, h, ref, watch } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { getToken } from '@/store/modules/auth/shared';
 import { useDownload } from '@/hooks/business/download';
 import { getServiceBaseURL } from '@/utils/service';
 import type FileUpload from '@/components/custom/file-upload.vue';
 import { $t } from '@/locales';
+import { sanitizeHtml } from '@/utils/sanitize';
 
 defineOptions({
   name: 'UserImportModal'
@@ -27,7 +28,8 @@ const headers: Record<string, string> = {
 const emit = defineEmits<Emits>();
 
 const uploadRef = ref<typeof FileUpload>();
-const message = ref<string>('');
+const rawMessage = ref<string>(''); // C7：保存原始消息，使用 computed 派生安全版本
+const message = computed(() => sanitizeHtml(rawMessage.value));
 const success = ref<boolean>(false);
 
 const visible = defineModel<boolean>('visible', {
@@ -65,7 +67,7 @@ function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) 
   // @ts-expect-error Ignore type errors
   const responseText = event?.target?.responseText;
   const response = JSON.parse(responseText);
-  message.value = response.msg;
+  rawMessage.value = response.msg;
   window.$message?.success($t('common.importSuccess'));
   success.value = true;
   return file;
@@ -76,8 +78,10 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
   // @ts-expect-error Ignore type errors
   const responseText = event?.target?.responseText;
   const msg = JSON.parse(responseText).msg;
-  message.value = msg;
-  window.$message?.error(() => h('div', { innerHTML: msg || $t('common.importFail') }));
+  rawMessage.value = msg;
+  // C7：toast 中的 innerHTML 也要清理，防止服务器返回的恶意消息脚本注入
+  const safeMsg = sanitizeHtml(msg || $t('common.importFail'));
+  window.$message?.error(() => h('div', { innerHTML: safeMsg }));
   success.value = false;
 }
 
@@ -94,7 +98,7 @@ watch(visible, () => {
     data.value.updateSupport = false;
     fileList.value = [];
     success.value = false;
-    message.value = '';
+    rawMessage.value = '';
   }
 });
 </script>
@@ -146,7 +150,7 @@ watch(visible, () => {
 
     <NAlert v-if="message" :title="$t('common.importResult')" :type="success ? 'success' : 'error'" :bordered="false">
       <NScrollbar class="max-h-200px">
-        <!-- eslint-disable-next-line vue/no-v-html -->
+        <!-- C7：message 经 sanitizeHtml 清洗，但仍需注意后端消息的可信度 -->
         <span v-html="message" />
       </NScrollbar>
     </NAlert>

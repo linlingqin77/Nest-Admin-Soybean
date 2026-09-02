@@ -94,10 +94,11 @@ handleFetchTenantList();
 
 async function handleSubmit() {
   await validate();
-  // 勾选了需要记住密码设置在 localStorage 中设置记住用户名和密码
+  // C6 安全修复：绝不在 localStorage 中明文存储密码
+  // 仅记住租户ID和用户名，密码必须由用户每次输入
   if (remberMe.value) {
-    const { tenantId, username, password } = model;
-    localStg.set('loginRember', { tenantId, username, password });
+    const { tenantId, username } = model;
+    localStg.set('loginRember', { tenantId, username });
   } else {
     // 否则移除
     localStg.remove('loginRember');
@@ -147,7 +148,10 @@ function handleLoginRember() {
   const loginRember = localStg.get('loginRember');
   if (!loginRember) return;
   remberMe.value = true;
-  Object.assign(model, loginRember);
+  // 安全：只读取 tenantId 和 username，忽略可能存在的 password 字段
+  if (loginRember.tenantId) model.tenantId = loginRember.tenantId;
+  if (loginRember.username) model.username = loginRember.username;
+  // 不恢复 password，用户必须重新输入
 }
 
 handleLoginRember();
