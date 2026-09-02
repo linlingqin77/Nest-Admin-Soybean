@@ -140,7 +140,7 @@ export class MailSendService {
       this.logger.log(`Mail sent successfully to ${toMail}`);
 
       return Result.ok({
-        logId: log.id.toString(),
+        logId: log.id,
       });
     } catch (error: any) {
       this.logger.error(`Mail send error: ${error.message}`);
@@ -173,7 +173,7 @@ export class MailSendService {
     const uniqueMails = [...new Set(toMails)];
 
     // 逐个发送
-    const results: { toMail: string; success: boolean; logId?: string; error?: string }[] = [];
+    const results: { toMail: string; success: boolean; logId?: number; error?: string }[] = [];
 
     for (const toMail of uniqueMails) {
       try {
@@ -206,8 +206,8 @@ export class MailSendService {
   /**
    * 重发邮件
    */
-  async resend(logId: string) {
-    const log = await this.mailLogRepo.findById(BigInt(logId));
+  async resend(logId: number) {
+    const log = await this.mailLogRepo.findById(Number(logId));
     if (!log) {
       throw new BadRequestException('邮件日志不存在');
     }

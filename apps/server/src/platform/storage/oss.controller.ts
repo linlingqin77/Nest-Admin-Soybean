@@ -35,7 +35,7 @@ export class OssController {
   @RequirePermission('system:oss:query')
   @Get('/listByIds/:ids')
   findByIds(@Param('ids') ids: string) {
-    const ossIds = ids.split(',').map((id) => BigInt(id));
+    const ossIds = ids.split(',').map((id) => Number(id));
     return this.ossService.findByIds(ossIds);
   }
 
@@ -48,7 +48,7 @@ export class OssController {
   @RequirePermission('system:oss:query')
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ossService.findOne(BigInt(id));
+    return this.ossService.findOne(Number(id));
   }
 
   @Api({
@@ -86,7 +86,7 @@ export class OssController {
   @Operlog({ businessType: BusinessType.DELETE })
   @Delete(':ids')
   remove(@Param('ids') ids: string) {
-    const ossIds = ids.split(',').map((id) => BigInt(id));
+    const ossIds = ids.split(',').map((id) => Number(id));
     return this.ossService.remove(ossIds);
   }
 }

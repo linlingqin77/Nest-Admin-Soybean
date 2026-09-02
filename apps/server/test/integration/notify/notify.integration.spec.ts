@@ -43,7 +43,7 @@ describe('Notify Integration Tests', () => {
   let notifyMessageService: NotifyMessageService;
 
   const createdTemplateIds: number[] = [];
-  const createdMessageIds: bigint[] = [];
+  const createdMessageIds: number[] = [];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

@@ -64,7 +64,7 @@ export class OssService {
   /**
    * 根据ID列表查询OSS文件
    */
-  async findByIds(ossIds: bigint[]) {
+  async findByIds(ossIds: number[]) {
     const list = await this.ossRepo.findByIds(ossIds);
     return Result.ok(list.map((item) => toDto(OssResponseDto, item)));
   }
@@ -72,7 +72,7 @@ export class OssService {
   /**
    * 根据ID查询OSS文件详情
    */
-  async findOne(ossId: bigint) {
+  async findOne(ossId: number) {
     const data = await this.ossRepo.findByOssId(ossId);
     BusinessException.throwIfNull(data, 'OSS文件不存在', ResponseCode.DATA_NOT_FOUND);
 
@@ -95,7 +95,7 @@ export class OssService {
       originalName: fileInfo.fileName,
       fileSuffix: extname(fileInfo.fileName).replace('.', ''),
       url: fileInfo.url,
-      size: BigInt(file.size || 0),
+      size: file.size || 0,
       service: 'local',
       createBy,
     });
@@ -107,7 +107,7 @@ export class OssService {
    * 批量删除OSS文件
    */
   @Transactional()
-  async remove(ossIds: bigint[]) {
+  async remove(ossIds: number[]) {
     await this.ossRepo.softDeleteByOssIds(ossIds);
     return Result.ok(null, '删除成功');
   }

@@ -157,7 +157,7 @@ export class TenantAuditService {
     this.logger.debug(`获取审计日志详情: ${id}`);
 
     const log = await this.prisma.sysTenantAuditLog.findUnique({
-      where: { id: BigInt(id) },
+      where: { id: Number(id) },
     });
 
     if (!log) {

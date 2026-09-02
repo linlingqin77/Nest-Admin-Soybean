@@ -45,7 +45,7 @@ export class SmsSendController {
   @RequirePermission('system:sms:send')
   @Operlog({ businessType: BusinessType.OTHER })
   @Post('/resend/:logId')
-  resend(@Param('logId') logId: string) {
-    return this.smsSendService.resend(logId);
+  resend(@Param('logId') logId: number) {
+    return this.smsSendService.resend(Number(logId));
   }
 }

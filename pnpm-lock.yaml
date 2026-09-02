@@ -749,6 +749,8 @@ importers:
         specifier: 4.2.2
         version: 4.2.2
 
+  packages/contracts: {}
+
   packages/types:
     devDependencies:
       tsup:

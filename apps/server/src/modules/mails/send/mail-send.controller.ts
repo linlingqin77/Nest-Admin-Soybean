@@ -45,8 +45,8 @@ export class MailSendController {
   @RequirePermission('system:mail:send')
   @Operlog({ businessType: BusinessType.OTHER })
   @Post('/resend/:logId')
-  resend(@Param('logId') logId: string) {
-    return this.mailSendService.resend(logId);
+  resend(@Param('logId') logId: number) {
+    return this.mailSendService.resend(Number(logId));
   }
 
   @Api({

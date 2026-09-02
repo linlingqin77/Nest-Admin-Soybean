@@ -23,7 +23,7 @@ export class OssRepository extends SoftDeleteRepository<SysOss, Prisma.SysOssDel
   /**
    * 根据 ossId 查询（bigint 类型）
    */
-  async findByOssId(ossId: bigint): Promise<SysOss | null> {
+  async findByOssId(ossId: number): Promise<SysOss | null> {
     return this.delegate.findFirst({
       where: {
         ossId,
@@ -35,7 +35,7 @@ export class OssRepository extends SoftDeleteRepository<SysOss, Prisma.SysOssDel
   /**
    * 根据ID列表查询
    */
-  async findByIds(ossIds: bigint[]): Promise<SysOss[]> {
+  async findByIds(ossIds: number[]): Promise<SysOss[]> {
     return this.delegate.findMany({
       where: {
         ossId: { in: ossIds },
@@ -47,7 +47,7 @@ export class OssRepository extends SoftDeleteRepository<SysOss, Prisma.SysOssDel
   /**
    * 批量软删除（bigint 类型）
    */
-  async softDeleteByOssIds(ossIds: bigint[]): Promise<number> {
+  async softDeleteByOssIds(ossIds: number[]): Promise<number> {
     const result = await this.delegate.updateMany({
       where: {
         ossId: { in: ossIds },

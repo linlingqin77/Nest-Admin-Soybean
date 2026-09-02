@@ -810,7 +810,7 @@ model SysSmsTemplate {
 
 /// 短信发送日志表
 model SysSmsLog {
-  id             BigInt    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   channelId      Int       @map("channel_id")
   channelCode    String    @map("channel_code") @db.VarChar(50)
   templateId     Int       @map("template_id")
@@ -885,7 +885,7 @@ model SysMailTemplate {
 
 /// 邮件发送日志表
 model SysMailLog {
-  id               BigInt    @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   userId           Int?      @map("user_id")
   userType         Int?      @map("user_type")
   toMail           String    @map("to_mail") @db.VarChar(255)
@@ -934,7 +934,7 @@ model SysNotifyTemplate {
 
 /// 站内信消息表
 model SysNotifyMessage {
-  id               BigInt    @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   tenantId         String    @default("000000") @map("tenant_id") @db.VarChar(20)
   userId           Int       @map("user_id")
   userType         Int       @default(1) @map("user_type")
@@ -962,8 +962,8 @@ model SysTenantQuota {
   tenantId     String    @unique @map("tenant_id") @db.VarChar(20)
   userQuota    Int       @default(-1) @map("user_quota")      // 用户数量配额，-1表示不限
   userUsed     Int       @default(0) @map("user_used")        // 已使用用户数
-  storageQuota BigInt    @default(-1) @map("storage_quota")   // 存储配额（MB），-1表示不限
-  storageUsed  BigInt    @default(0) @map("storage_used")     // 已使用存储（MB）
+  storageQuota Int       @default(-1) @map("storage_quota")   // 存储配额（MB），-1表示不限
+  storageUsed  Int       @default(0) @map("storage_used")     // 已使用存储（MB）
   apiQuota     Int       @default(-1) @map("api_quota")       // API调用配额（月），-1表示不限
   apiUsed      Int       @default(0) @map("api_used")         // 本月已调用次数
   createTime   DateTime  @default(now()) @map("create_time") @db.Timestamp(6)
@@ -978,8 +978,8 @@ model SysTenantQuotaLog {
   id         Int       @id @default(autoincrement())
   tenantId   String    @map("tenant_id") @db.VarChar(20)
   quotaType  String    @map("quota_type") @db.VarChar(50)  // user, storage, api
-  oldValue   BigInt    @map("old_value")
-  newValue   BigInt    @map("new_value")
+  oldValue   Int           @map("old_value")
+  newValue   Int           @map("new_value")
   changeBy   String    @map("change_by") @db.VarChar(64)
   changeTime DateTime  @default(now()) @map("change_time") @db.Timestamp(6)
 
@@ -1029,7 +1029,7 @@ model SysTenantBillingItem {
 
 /// 租户审计日志表（增强版）
 model SysTenantAuditLog {
-  id            BigInt    @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   tenantId      String    @map("tenant_id") @db.VarChar(20)
   operatorId    Int       @map("operator_id")
   operatorName  String    @map("operator_name") @db.VarChar(50)
@@ -1087,13 +1087,13 @@ model SysOssConfig {
 
 /// OSS 文件表
 model SysOss {
-  ossId         BigInt    @id @default(autoincrement()) @map("oss_id")
+  ossId         Int       @id @default(autoincrement()) @map("oss_id")
   tenantId      String    @default("000000") @map("tenant_id") @db.VarChar(20)
   fileName      String    @map("file_name") @db.VarChar(255)
   originalName  String    @map("original_name") @db.VarChar(255)
   fileSuffix    String    @map("file_suffix") @db.VarChar(50)
   url           String    @db.VarChar(500)
-  size          BigInt    @default(0)
+  size          Int       @default(0)
   service       String    @default("local") @db.VarChar(50)
   delFlag         String         @default("0") @map("del_flag") @db.Char(1)
   createBy      String    @default("") @map("create_by") @db.VarChar(64)

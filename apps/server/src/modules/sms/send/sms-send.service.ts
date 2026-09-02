@@ -116,7 +116,7 @@ export class SmsSendService {
     }
 
     return Result.ok({
-      logId: log.id.toString(),
+      logId: log.id,
       apiSendCode: sendResult.apiSendCode,
     });
   }
@@ -139,7 +139,7 @@ export class SmsSendService {
     const uniqueMobiles = [...new Set(mobiles)];
 
     // 逐个发送
-    const results: { mobile: string; success: boolean; logId?: string; error?: string }[] = [];
+    const results: { mobile: string; success: boolean; logId?: number; error?: string }[] = [];
 
     for (const mobile of uniqueMobiles) {
       try {
@@ -172,8 +172,8 @@ export class SmsSendService {
   /**
    * 重发短信
    */
-  async resend(logId: string) {
-    const log = await this.smsLogRepo.findById(BigInt(logId));
+  async resend(logId: number) {
+    const log = await this.smsLogRepo.findById(Number(logId));
     if (!log) {
       throw new BadRequestException('短信日志不存在');
     }

@@ -287,8 +287,8 @@ export class TenantQuotaService {
       quotaLogs.push({
         tenantId: dto.tenantId,
         quotaType: 'user',
-        oldValue: BigInt(tenant.accountCount),
-        newValue: BigInt(dto.userQuota),
+        oldValue: tenant.accountCount,
+        newValue: dto.userQuota,
         changeBy: operatorName,
       });
     }
@@ -299,8 +299,8 @@ export class TenantQuotaService {
       quotaLogs.push({
         tenantId: dto.tenantId,
         quotaType: 'storage',
-        oldValue: BigInt(tenant.storageQuota),
-        newValue: BigInt(dto.storageQuota),
+        oldValue: tenant.storageQuota,
+        newValue: dto.storageQuota,
         changeBy: operatorName,
       });
     }
@@ -311,8 +311,8 @@ export class TenantQuotaService {
       quotaLogs.push({
         tenantId: dto.tenantId,
         quotaType: 'api',
-        oldValue: BigInt(tenant.apiQuota),
-        newValue: BigInt(dto.apiQuota),
+        oldValue: tenant.apiQuota,
+        newValue: dto.apiQuota,
         changeBy: operatorName,
       });
     }

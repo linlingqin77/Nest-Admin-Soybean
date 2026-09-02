@@ -63,7 +63,7 @@ describe('Dict Integration Tests', () => {
       if (result.data.length > 1) {
         // Verify sorting - each item's dictSort should be <= next item's dictSort
         for (let i = 0; i < result.data.length - 1; i++) {
-          expect(result.data[i].dictSort).toBeLessThanOrEqual(result.data[i + 1].dictSort);
+          expect(result.data[i].dictSort!).toBeLessThanOrEqual(result.data[i + 1].dictSort!);
         }
       }
     });

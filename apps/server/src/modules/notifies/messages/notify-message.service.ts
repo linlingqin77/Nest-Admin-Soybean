@@ -144,10 +144,9 @@ export class NotifyMessageService {
 
     const { list, total } = await this.notifyMessageRepo.findPageWithFilter(where, query.skip, query.take);
 
-    // 转换BigInt为字符串
     const rows = list.map((item) => ({
       ...item,
-      id: item.id.toString(),
+      id: item.id,
     }));
 
     return Result.ok({
@@ -180,10 +179,9 @@ export class NotifyMessageService {
 
     const { list, total } = await this.notifyMessageRepo.findPageWithFilter(where, query.skip, query.take);
 
-    // 转换BigInt为字符串
     const rows = list.map((item) => ({
       ...item,
-      id: item.id.toString(),
+      id: item.id,
     }));
 
     return Result.ok({
@@ -195,7 +193,7 @@ export class NotifyMessageService {
   /**
    * 根据ID查询站内信详情
    */
-  async findOne(id: bigint) {
+  async findOne(id: number) {
     const data = await this.notifyMessageRepo.findById(id);
     if (!data) {
       throw new BadRequestException('站内信不存在');
@@ -203,7 +201,7 @@ export class NotifyMessageService {
 
     return Result.ok({
       ...data,
-      id: data.id.toString(),
+      id: data.id,
     });
   }
 
@@ -219,7 +217,7 @@ export class NotifyMessageService {
   /**
    * 标记消息为已读
    */
-  async markAsRead(id: bigint, userId: number) {
+  async markAsRead(id: number, userId: number) {
     const message = await this.notifyMessageRepo.findById(id);
     if (!message) {
       throw new BadRequestException('站内信不存在');
@@ -241,7 +239,7 @@ export class NotifyMessageService {
   /**
    * 批量标记消息为已读
    */
-  async markAsReadBatch(ids: bigint[], userId: number) {
+  async markAsReadBatch(ids: number[], userId: number) {
     // 验证所有消息都属于当前用户
     for (const id of ids) {
       const message = await this.notifyMessageRepo.findById(id);
@@ -266,7 +264,7 @@ export class NotifyMessageService {
   /**
    * 删除站内信（软删除）
    */
-  async remove(id: bigint, userId: number) {
+  async remove(id: number, userId: number) {
     const message = await this.notifyMessageRepo.findById(id);
     if (!message) {
       throw new BadRequestException('站内信不存在');
@@ -284,7 +282,7 @@ export class NotifyMessageService {
   /**
    * 批量删除站内信（软删除）
    */
-  async removeBatch(ids: bigint[], userId: number) {
+  async removeBatch(ids: number[], userId: number) {
     // 验证所有消息都属于当前用户
     for (const id of ids) {
       const message = await this.notifyMessageRepo.findById(id);
@@ -304,10 +302,9 @@ export class NotifyMessageService {
     const tenantId = this.cls.get('tenantId') || '000000';
     const list = await this.notifyMessageRepo.findRecentByUserId(userId, limit, tenantId);
 
-    // 转换BigInt为字符串
     const rows = list.map((item) => ({
       ...item,
-      id: item.id.toString(),
+      id: item.id,
     }));
 
     return Result.ok(toDtoList(NotifyMessageResponseDto, rows));

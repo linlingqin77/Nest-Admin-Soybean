@@ -88,7 +88,7 @@ export class NotifyMessageController {
   })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.notifyMessageService.findOne(BigInt(id));
+    return this.notifyMessageService.findOne(Number(id));
   }
 
   @Api({
@@ -99,7 +99,7 @@ export class NotifyMessageController {
   @Put('/read/:id')
   @Operlog({ businessType: BusinessType.UPDATE })
   markAsRead(@Param('id') id: string, @User() user: UserDto) {
-    return this.notifyMessageService.markAsRead(BigInt(id), user.userId);
+    return this.notifyMessageService.markAsRead(Number(id), user.userId);
   }
 
   @Api({
@@ -110,7 +110,7 @@ export class NotifyMessageController {
   @Put('/read-batch/:ids')
   @Operlog({ businessType: BusinessType.UPDATE })
   markAsReadBatch(@Param('ids') ids: string, @User() user: UserDto) {
-    const messageIds = ids.split(',').map((id) => BigInt(id));
+    const messageIds = ids.split(',').map((id) => Number(id));
     return this.notifyMessageService.markAsReadBatch(messageIds, user.userId);
   }
 
@@ -132,7 +132,7 @@ export class NotifyMessageController {
   @Operlog({ businessType: BusinessType.DELETE })
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: UserDto) {
-    return this.notifyMessageService.remove(BigInt(id), user.userId);
+    return this.notifyMessageService.remove(Number(id), user.userId);
   }
 
   @Api({
@@ -143,7 +143,7 @@ export class NotifyMessageController {
   @Operlog({ businessType: BusinessType.DELETE })
   @Delete('/batch/:ids')
   removeBatch(@Param('ids') ids: string, @User() user: UserDto) {
-    const messageIds = ids.split(',').map((id) => BigInt(id));
+    const messageIds = ids.split(',').map((id) => Number(id));
     return this.notifyMessageService.removeBatch(messageIds, user.userId);
   }
 }

@@ -8,7 +8,7 @@ import { BaseResponseDto } from 'src/shared/dto/base.response.dto';
 export class OssResponseDto extends BaseResponseDto {
   @Expose()
   @ApiProperty({ description: '对象存储主键' })
-  ossId!:  bigint;
+  ossId!:  number;
 
   @Expose()
   @ApiProperty({ description: '文件名' })
@@ -28,7 +28,7 @@ export class OssResponseDto extends BaseResponseDto {
 
   @Expose()
   @ApiProperty({ description: '文件大小（字节）' })
-  size!:  bigint;
+  size!:  number;
 
   @Expose()
   @ApiProperty({ description: '服务商' })

@@ -28,7 +28,7 @@ export class NotifyMessageRepository {
   /**
    * 根据ID查询消息
    */
-  async findById(id: bigint): Promise<SysNotifyMessage | null> {
+  async findById(id: number): Promise<SysNotifyMessage | null> {
     return this.prisma.sysNotifyMessage.findFirst({
       where: { id, delFlag: '0' },
     });
@@ -75,7 +75,7 @@ export class NotifyMessageRepository {
   /**
    * 标记消息为已读
    */
-  async markAsRead(id: bigint): Promise<SysNotifyMessage> {
+  async markAsRead(id: number): Promise<SysNotifyMessage> {
     return this.prisma.sysNotifyMessage.update({
       where: { id },
       data: {
@@ -88,7 +88,7 @@ export class NotifyMessageRepository {
   /**
    * 批量标记消息为已读
    */
-  async markAsReadBatch(ids: bigint[]): Promise<number> {
+  async markAsReadBatch(ids: number[]): Promise<number> {
     const result = await this.prisma.sysNotifyMessage.updateMany({
       where: { id: { in: ids }, delFlag: '0' },
       data: {
@@ -126,7 +126,7 @@ export class NotifyMessageRepository {
   /**
    * 软删除消息
    */
-  async softDelete(id: bigint): Promise<SysNotifyMessage> {
+  async softDelete(id: number): Promise<SysNotifyMessage> {
     return this.prisma.sysNotifyMessage.update({
       where: { id },
       data: { delFlag: '1' },
@@ -136,7 +136,7 @@ export class NotifyMessageRepository {
   /**
    * 批量软删除消息
    */
-  async softDeleteBatch(ids: bigint[]): Promise<number> {
+  async softDeleteBatch(ids: number[]): Promise<number> {
     const result = await this.prisma.sysNotifyMessage.updateMany({
       where: { id: { in: ids } },
       data: { delFlag: '1' },
@@ -147,7 +147,7 @@ export class NotifyMessageRepository {
   /**
    * 根据ID查询消息（包含已删除的，用于验证软删除）
    */
-  async findByIdIncludeDeleted(id: bigint): Promise<SysNotifyMessage | null> {
+  async findByIdIncludeDeleted(id: number): Promise<SysNotifyMessage | null> {
     return this.prisma.sysNotifyMessage.findUnique({
       where: { id },
     });
